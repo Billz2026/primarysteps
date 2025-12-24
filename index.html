@@ -297,22 +297,8 @@ canvas{border:2px dashed #cbd5e1;border-radius:16px;background:#fff}
   .progressRow{grid-template-columns: 76px 1fr 36px;}
 }
 
-.card:focus{
-  outline: none;
-  box-shadow: 0 10px 24px rgba(2,6,23,.10), 0 0 0 4px var(--ring);
-  border-color: rgba(47,128,237,.28);
-}
 
-/* Home layout polish */
-#home .grid{
-  max-width: 860px;
-  margin: 0 auto;
-}
-#home .card{
-  min-height: 92px;
-}
-
-/* --- Topbar / nav (NextGenSessions-inspired layout) --- */
+/* Topbar inspired layout */
 header.topbar{
   background: rgba(255,255,255,.88);
   backdrop-filter: blur(12px);
@@ -322,12 +308,27 @@ header.topbar{
   border-bottom: 1px solid rgba(15,23,42,.06);
   box-shadow: 0 2px 14px rgba(2,6,23,.06);
 }
-.brand{max-width:1040px}
-.brandText .brandTitle{font-weight:950;letter-spacing:-.3px}
-.brandText .brandSub{color:var(--muted);font-weight:650;font-size:.95rem}
+.topbarInner{
+  max-width: 1040px;
+  margin: 0 auto;
+  padding: 14px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+}
+.brandLeft{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  cursor:pointer;
+  user-select:none;
+}
+.brandTitle{font-weight:950;letter-spacing:-.3px}
+.brandSub{color:var(--muted);font-weight:650;font-size:.95rem;line-height:1.15}
 .navLinks{
   display:flex;
-  gap:14px;
+  gap:10px;
   align-items:center;
   justify-content:center;
   flex:1;
@@ -349,8 +350,6 @@ header.topbar{
   display:flex;
   align-items:center;
   gap:10px;
-  justify-content:flex-end;
-  min-width: 210px;
 }
 .starsPill{
   display:inline-flex;
@@ -377,183 +376,167 @@ header.topbar{
   user-select:none;
 }
 .soundPill input{transform: translateY(1px) scale(1.1);}
-
 @media (max-width: 920px){
   .navLinks{display:none;}
-  .topbarRight{min-width:auto;}
 }
 
-/* --- Home hero --- */
-.hero{
+/* Home hero */
+.heroPanel{
   background: radial-gradient(900px 420px at 15% 0%, rgba(14,165,233,.18), transparent 55%),
               radial-gradient(900px 420px at 85% 0%, rgba(47,128,237,.16), transparent 55%),
               rgba(255,255,255,.65);
-  border: 1px solid rgba(15,23,42,.06);
-  border-radius: 24px;
-  padding: 26px 22px;
-  box-shadow: var(--shadow2);
 }
-.heroTop{
-  display:flex;
-  align-items:flex-start;
-  justify-content:space-between;
+.heroGrid{
+  display:grid;
+  grid-template-columns: 1.3fr .7fr;
   gap:18px;
-  flex-wrap:wrap;
+  align-items:start;
 }
-.hero h2{
-  margin:0;
-  font-size: 2.0rem;
-  letter-spacing: -.6px;
-  line-height:1.12;
-}
-.hero p{
-  margin:10px 0 0;
-  color: var(--muted);
-  font-size: 1.05rem;
-  max-width: 60ch;
-}
-.heroCtas{
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  align-items:center;
-}
-.heroMeta{
-  margin-top: 14px;
-  display:flex;
-  gap:10px;
-  flex-wrap:wrap;
-  color: var(--muted);
-  font-weight:700;
-}
-.metaChip{
+.heroTitle{margin:0;font-size:2.1rem;letter-spacing:-.8px;line-height:1.08}
+.heroText{margin:10px 0 0;color:var(--muted);font-size:1.05rem;max-width:60ch}
+.heroChips{margin-top:12px;display:flex;gap:10px;flex-wrap:wrap}
+.chip{
   background: rgba(255,255,255,.85);
   border:1px solid rgba(15,23,42,.08);
   border-radius: 999px;
   padding: 8px 12px;
+  color: var(--muted);
+  font-weight:800;
 }
-
-/* Stronger activity tiles */
-.card{
-  position:relative;
-  overflow:hidden;
+.heroCtas{margin-top:14px;display:flex;gap:10px;flex-wrap:wrap}
+.heroSide{display:flex;flex-direction:column;gap:12px}
+.miniCard{
+  background: rgba(255,255,255,.9);
+  border:1px solid rgba(15,23,42,.06);
+  border-radius: 18px;
+  padding: 14px;
+  box-shadow: 0 10px 22px rgba(2,6,23,.06);
 }
-.card::after{
-  content:"";
-  position:absolute;
-  inset:-40px -40px auto auto;
-  width:120px;height:120px;
-  border-radius: 999px;
-  background: radial-gradient(circle at 30% 30%, rgba(14,165,233,.18), transparent 60%);
-  pointer-events:none;
-}
-
+.miniTitle{font-weight:950;margin-bottom:6px}
+.miniText{color:var(--muted);font-weight:700}
+.sectionHeading{margin:18px 2px 10px;font-size:1.15rem;letter-spacing:-.2px}
 .cardBtn{
   text-align:left;
-  border: none;
-  width: 100%;
+  border:none;
+  width:100%;
   background: var(--card);
 }
 .cardBtn:active{transform: translateY(0px) scale(.99);}
-</style>
+@media (max-width: 800px){
+  .heroGrid{grid-template-columns: 1fr;}
+}</style>
 </head>
 
 <body>
 
-<header>
-  <div class="brand">
-    <div class="brand-left">
-      <div class="logoMark" aria-hidden="true" style="background:none;box-shadow:none;padding:0;">
-  <svg width="46" height="46" viewBox="0 0 64 64" role="img" aria-label="Primary Steps logo">
-    <defs>
-      <linearGradient id="psg" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#0ea5e9"/>
-        <stop offset="1" stop-color="#2f80ed"/>
-      </linearGradient>
-      <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="0" dy="6" stdDeviation="6" flood-color="#2f80ed" flood-opacity=".25"/>
-      </filter>
-    </defs>
-    <rect x="6" y="6" width="52" height="52" rx="18" fill="url(#psg)" filter="url(#soft)"/>
-    <!-- simple "steps" icon -->
-    <g fill="#ffffff" opacity=".95">
-      <path d="M24 39c3 0 6-2 6-5s-3-6-6-6-6 3-6 6 3 5 6 5z"/>
-      <path d="M22 46c2 0 4-1 4-3s-2-4-4-4-4 2-4 4 2 3 4 3z" opacity=".9"/>
-      <path d="M40 34c3 0 6-2 6-5s-3-6-6-6-6 3-6 6 3 5 6 5z"/>
-      <path d="M42 42c2 0 4-1 4-3s-2-4-4-4-4 2-4 4 2 3 4 3z" opacity=".9"/>
-    </g>
-    <!-- tiny sparkle -->
-    <path d="M46 18l1.6 3.6L51 23l-3.4 1.4L46 28l-1.6-3.6L41 23l3.4-1.4L46 18z" fill="#ffffff" opacity=".8"/>
-  </svg>
-</div>
-      <div>
-  <svg width="210" height="44" viewBox="0 0 420 88" role="img" aria-label="Primary Steps" style="display:block;">
-    <defs>
-      <linearGradient id="wm" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#0ea5e9"/>
-        <stop offset="1" stop-color="#1d4ed8"/>
-      </linearGradient>
-      <filter id="wmShadow" x="-20%" y="-20%" width="140%" height="140%">
-        <feDropShadow dx="0" dy="3" stdDeviation="3" flood-color="#0b4a6e" flood-opacity=".25"/>
-      </filter>
-    </defs>
-    <text x="0" y="42" font-size="40" font-weight="900" font-family="ui-sans-serif,system-ui" fill="url(#wm)" stroke="#ffffff" stroke-width="6" paint-order="stroke fill" filter="url(#wmShadow)">Primary</text>
-    <text x="0" y="78" font-size="40" font-weight="900" font-family="ui-sans-serif,system-ui" fill="url(#wm)" stroke="#ffffff" stroke-width="6" paint-order="stroke fill" filter="url(#wmShadow)">Steps</text>
-  </svg>
-  <div style="color:var(--muted);font-weight:700;margin-top:-2px;">Calm, fun learning for primary school children</div>
-</div>
+<header class="topbar">
+  <div class="topbarInner">
+    <div class="brandLeft" onclick="show('home')" role="button" tabindex="0" aria-label="Go home">
+      <div class="logoMark" aria-hidden="true">
+        <svg width="44" height="44" viewBox="0 0 64 64" role="img" aria-label="Primary Steps logo">
+          <defs>
+            <linearGradient id="psg" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0" stop-color="#0ea5e9"/>
+              <stop offset="1" stop-color="#2f80ed"/>
+            </linearGradient>
+          </defs>
+          <rect x="6" y="6" width="52" height="52" rx="18" fill="url(#psg)"/>
+          <g fill="#ffffff" opacity=".95">
+            <path d="M24 39c3 0 6-2 6-5s-3-6-6-6-6 3-6 6 3 5 6 5z"/>
+            <path d="M22 46c2 0 4-1 4-3s-2-4-4-4-4 2-4 4 2 3 4 3z" opacity=".9"/>
+            <path d="M40 34c3 0 6-2 6-5s-3-6-6-6-6 3-6 6 3 5 6 5z"/>
+            <path d="M42 42c2 0 4-1 4-3s-2-4-4-4-4 2-4 4 2 3 4 3z" opacity=".9"/>
+          </g>
+        </svg>
+      </div>
+      <div class="brandText">
+        <div class="brandTitle">Primary Steps</div>
+        <div class="brandSub">Calm, fun learning for primary school children</div>
+      </div>
     </div>
 
-    <div class="toggle" style="margin:0;">
-      <input type="checkbox" id="s<section id="home" class="screen active">
-  <div class="hero">
-    <div class="heroTop">
+    <nav class="navLinks" aria-label="Primary navigation">
+      <a href="#home" onclick="show('home');return false;">Home</a>
+      <a href="#letters" onclick="show('letters');return false;">Letters</a>
+      <a href="#numbers" onclick="show('numbers');return false;">Numbers</a>
+      <a href="#phonics" onclick="show('phonics');return false;">Phonics</a>
+      <a href="#maths" onclick="show('maths');return false;">Maths</a>
+      <a href="#handwriting" onclick="show('handwriting');return false;">Handwriting</a>
+      <a href="#progress" onclick="show('progress');return false;">Progress</a>
+    </nav>
+
+    <div class="topbarRight">
+      <div class="starsPill" title="Stars saved on this device">
+        <span id="stars">⭐ 0</span>
+      </div>
+      <label class="soundPill">
+        <input type="checkbox" id="soundToggle">
+        <span>Sound</span>
+      </label>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+<section id="home" class="screen active">
+  <div class="panel heroPanel">
+    <div class="heroGrid">
       <div>
-        <h2>Welcome to Primary Steps</h2>
-        <p>Short, calm learning games for primary school children — built for focus, confidence, and steady progress.</p>
-        <div class="heroMeta" aria-label="Site highlights">
-          <div class="metaChip">ASD-friendly</div>
-          <div class="metaChip">No ads</div>
-          <div class="metaChip">Progress saved on this device</div>
+        <h2 class="heroTitle">Welcome to Primary Steps</h2>
+        <p class="heroText">Short, calm learning games for primary school children — built for focus, confidence, and steady progress.</p>
+        <div class="heroChips" aria-label="Highlights">
+          <span class="chip">ASD-friendly</span>
+          <span class="chip">No ads</span>
+          <span class="chip">Progress saved on this device</span>
+        </div>
+        <div class="heroCtas">
+          <button class="btnPrimary" type="button" onclick="show('letters')">Start with Letters</button>
+          <button class="btnGhost" type="button" onclick="show('progress')">View Progress</button>
         </div>
       </div>
 
-      <div class="heroCtas">
-        <button class="btnPrimary" onclick="show('letters')">Start with Letters</button>
-        <button class="btnGhost" onclick="show('progress')">View Progress</button>
+      <div class="heroSide">
+        <div class="miniCard">
+          <div class="miniTitle">Today’s tip</div>
+          <div class="miniText">Try 5 minutes per activity. Short sessions help children stay calm and focused.</div>
+        </div>
+        <div class="miniCard">
+          <div class="miniTitle">Sound</div>
+          <div class="miniText">Use sound for feedback and phonics practice. Turn it off anytime.</div>
+        </div>
       </div>
-    </button>
+    </div>
   </div>
 
-  <h3 style="margin:18px 2px 10px;font-size:1.15rem;letter-spacing:-.2px;">Activities</h3>
+  <h3 class="sectionHeading">Activities</h3>
   <div class="grid">
-    <button type="button" class="card cardBtn" data-target="letters" onclick="show('letters')">
-      <div style="font-size:1.15rem;font-weight:950;">🔤 Letters</div>
-      <div style="color:var(--muted);margin-top:6px;">Match the target letter (A–Z)</div>
+    <button class="card cardBtn" type="button" onclick="show('letters')">
+      <div class="cardTitle">🔤 Letters</div>
+      <div class="cardDesc">Match the target letter (A–Z)</div>
     </button>
-<button type="button" class="card cardBtn" data-target="numbers" onclick="show('numbers')">
-      <div style="font-size:1.15rem;font-weight:950;">🔢 Numbers</div>
-      <div style="color:var(--muted);margin-top:6px;">Count, pick and practise</div>
+    <button class="card cardBtn" type="button" onclick="show('numbers')">
+      <div class="cardTitle">🔢 Numbers</div>
+      <div class="cardDesc">Count, pick and practise</div>
     </button>
-<button type="button" class="card cardBtn" data-target="memory" onclick="show('memory')">
-      <div style="font-size:1.15rem;font-weight:950;">🧠 Memory</div>
-      <div style="color:var(--muted);margin-top:6px;">Focus and matching</div>
+    <button class="card cardBtn" type="button" onclick="show('memory')">
+      <div class="cardTitle">🧠 Memory</div>
+      <div class="cardDesc">Focus and matching</div>
     </button>
-<button type="button" class="card cardBtn" data-target="phonics" onclick="show('phonics')">
-      <div style="font-size:1.15rem;font-weight:950;">🔊 Phonics</div>
-      <div style="color:var(--muted);margin-top:6px;">Listen and pick the word</div>
+    <button class="card cardBtn" type="button" onclick="show('phonics')">
+      <div class="cardTitle">🔊 Phonics</div>
+      <div class="cardDesc">Listen and pick the word</div>
     </button>
-<button type="button" class="card cardBtn" data-target="maths" onclick="show('maths')">
-      <div style="font-size:1.15rem;font-weight:950;">➕ Maths</div>
-      <div style="color:var(--muted);margin-top:6px;">Add, subtract, divide & time</div>
+    <button class="card cardBtn" type="button" onclick="show('maths')">
+      <div class="cardTitle">➕ Maths</div>
+      <div class="cardDesc">Add, subtract, divide &amp; time</div>
     </button>
-<button type="button" class="card cardBtn" data-target="handwriting" onclick="show('handwriting')">
-      <div style="font-size:1.15rem;font-weight:950;">✍️ Handwriting</div>
-      <div style="color:var(--muted);margin-top:6px;">Trace words smoothly</div>
+    <button class="card cardBtn" type="button" onclick="show('handwriting')">
+      <div class="cardTitle">✍️ Handwriting</div>
+      <div class="cardDesc">Trace words smoothly</div>
     </button>
-<button type="button" class="card cardBtn" data-target="progress" onclick="show('progress')">
-      <div style="font-size:1.15rem;font-weight:950;">⭐ Progress</div>
-      <div style="color:var(--muted);margin-top:6px;">Stars and activity breakdown</div>
+    <button class="card cardBtn" type="button" onclick="show('progress')">
+      <div class="cardTitle">⭐ Progress</div>
+      <div class="cardDesc">Stars and activity breakdown</div>
     </button>
   </div>
 
@@ -563,19 +546,15 @@ header.topbar{
       <div class="card" style="cursor:default;">
         <div style="font-weight:950;">Step 1</div>
         <div style="color:var(--muted);margin-top:6px;">Pick an activity.</div>
-    </button>
-<div class="card" style="cursor:default;">
+      </div>
+      <div class="card" style="cursor:default;">
         <div style="font-weight:950;">Step 2</div>
         <div style="color:var(--muted);margin-top:6px;">Answer at your pace (sound optional).</div>
-    </button>
-<div class="card" style="cursor:default;">
+      </div>
+      <div class="card" style="cursor:default;">
         <div style="font-weight:950;">Step 3</div>
         <div style="color:var(--muted);margin-top:6px;">Earn stars and track progress.</div>
       </div>
-    </button>
-  </div>
-</section>t:900;">⭐ Progress</div>
-      <div style="color:var(--muted);margin-top:6px;">Stars earned and reset</div>
     </div>
   </div>
 </section>
@@ -947,8 +926,8 @@ header.topbar{
 <script>
 let stars=Number(localStorage.getItem('stars')||0);
 let traceInited=false;
-const starsEl=document.getElementById('stars');
-if(starsEl) starsEl.innerText="⭐ "+stars;
+document.getElementById('stars').innerText="⭐ "+stars;
+
 function show(id){
   document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
@@ -962,9 +941,7 @@ function show(id){
   }
 
  
-  
-window.show = show;
-if(id === 'progress'){
+  if(id === 'progress'){
     refreshProgress();
   }
  if(id === 'numbers'){
@@ -1200,8 +1177,7 @@ else alert('Try again');
 
 function save(){
   localStorage.setItem('stars',stars);
-  const starsEl=document.getElementById('stars');
-if(starsEl) starsEl.innerText="⭐ "+stars;
+  document.getElementById('stars').innerText="⭐ "+stars;
 }
 
 function resetProgress(){
@@ -2169,44 +2145,6 @@ function resetProgressConfirm(){
   ["sets_letters","sets_numbers","sets_memory","sets_phonics","sets_maths","sets_timing","sets_tracing"].forEach(k=>setStat(k,0));
   refreshProgress();
 }
-
-// --- Home card binding (click + keyboard) ---
-function bindHomeCards(){
-  document.querySelectorAll('#home .card').forEach(card=>{
-    const target = card.getAttribute('data-target');
-    if(!target) return;
-
-    card.setAttribute('role','button');
-    card.setAttribute('tabindex','0');
-
-    // If onclick wasn't added for any reason, bind it here too:
-    if(!card.onclick){
-      card.addEventListener('click', ()=>show(target));
-    }
-
-    card.addEventListener('keydown', (e)=>{
-      if(e.key === 'Enter' || e.key === ' '){
-        e.preventDefault();
-        show(target);
-      }
-    });
-  });
-}
-
-document.addEventListener('DOMContentLoaded', ()=>{
-  bindHomeCards();
-});
-
-function updateStarsUI(){
-  const top = document.getElementById('starsCountTop');
-  if(top) top.textContent = String(stars);
-}
-const _save = save;
-save = function(){
-  _save();
-  updateStarsUI();
-};
-document.addEventListener('DOMContentLoaded', ()=>{ updateStarsUI(); });
 </script>
 
 </body>
