@@ -3,72 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Numbers Activity</title>
-  <link rel="icon" type="image/png" href="assets/primary-steps-icon-512.png" />
-  <link rel="stylesheet" href="styles.css" />
+  <title>Primary Steps — Numbers</title>
+  <style>
+    html,body{height:100%;margin:0}
+    .frame{position:fixed;inset:0;border:0;width:100%;height:100%}
+  </style>
 </head>
 <body>
-  <div class="container">
-    <header class="topbar">
-      <div class="brand">
-        <div class="mark" aria-hidden="true"><img src="assets/primary-steps-icon-512.png" alt="Primary Steps logo"></div>
-        <div style="min-width:0">
-          <h1>Numbers Activity</h1>
-          <p>numbers.html</p>
-        </div>
-      </div>
-      <div class="pills">
-        <span class="badge">⭐ Stars: <span class="starsCount kpi">0</span></span>
-        <label class="pill" style="padding:10px 12px;">
-          <input id="soundToggle" type="checkbox" style="accent-color: var(--gold);" />
-          Sound
-        </label>
-        <button class="pill goHome" type="button">Home</button>
-      </div>
-    </header>
-
-    
-<section class="hero">
-  <h2>Numbers</h2>
-  <p> Numbers activity — simple practice with calm feedback.</p>
-</section>
-
-
-<div class="pageNav" role="navigation" aria-label="Activity navigation">
-  <div class="left">
-    <a class="btn secondary" href="index.html">← Home</a>
-    <span class="crumb">Home → Numbers</span>
-  </div>
-  <div class="right">
-    <a class="btn secondary" href="letters.html">← Prev</a>
-    <a class="btn" href="maths.html">Next →</a>
-  </div>
-</div>
-
-<section class="section">
-  <div class="controls">
-    <label>Difficulty
-      <select id="numLevel">
-        <option value="easy">Easy (0–10)</option>
-        <option value="medium">Medium (0–20)</option>
-        <option value="hard">Hard (0–100)</option>
-      </select>
-    </label>
-    <button class="btn" id="numNext" type="button">Next</button>
-  </div>
-
-  <div class="big" id="numBig" aria-label="Target number">5</div>
-  <div class="choices" id="numChoices"></div>
-  <div class="notice" id="numMsg">Pick the correct number.</div>
-</section>
-
-
-    <div class="footer">v1 • separate pages • works on GitHub Pages</div>
-  </div>
-
-  <script src="app.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", ()=>{ initNumbers(); });
-  </script>
+  <iframe class="frame" src="index.html?screen=numbers&embed=1" title="Numbers"></iframe>
 </body>
 </html>

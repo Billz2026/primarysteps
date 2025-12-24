@@ -3,78 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Letters Activity</title>
-  <link rel="icon" type="image/png" href="assets/primary-steps-icon-512.png" />
-  <link rel="stylesheet" href="styles.css" />
+  <title>Primary Steps — Letters</title>
+  <style>
+    html,body{height:100%;margin:0}
+    .frame{position:fixed;inset:0;border:0;width:100%;height:100%}
+  </style>
 </head>
 <body>
-  <div class="container">
-    <header class="topbar">
-      <div class="brand">
-        <div class="mark" aria-hidden="true"><img src="assets/primary-steps-icon-512.png" alt="Primary Steps logo"></div>
-        <div style="min-width:0">
-          <h1>Letters Activity</h1>
-          <p>letters.html</p>
-        </div>
-      </div>
-      <div class="pills">
-        <span class="badge">⭐ Stars: <span class="starsCount kpi">0</span></span>
-        <label class="pill" style="padding:10px 12px;">
-          <input id="soundToggle" type="checkbox" style="accent-color: var(--gold);" />
-          Sound
-        </label>
-        <button class="pill goHome" type="button">Home</button>
-      </div>
-    </header>
-
-    
-<section class="hero">
-  <h2>Letters</h2>
-  <p> Letters activity — simple practice with calm feedback.</p>
-</section>
-
-
-<div class="pageNav" role="navigation" aria-label="Activity navigation">
-  <div class="left">
-    <a class="btn secondary" href="index.html">← Home</a>
-    <span class="crumb">Home → Letters</span>
-  </div>
-  <div class="right">
-    <a class="btn secondary" href="handwriting.html">← Prev</a>
-    <a class="btn" href="numbers.html">Next →</a>
-  </div>
-</div>
-
-<section class="section">
-  <div class="controls">
-    <label>Difficulty
-      <select id="letterLevel">
-        <option value="easy">Easy (A–H)</option>
-        <option value="medium">Medium (A–N)</option>
-        <option value="hard">Hard (A–Z)</option>
-      </select>
-    </label>
-    <label class="pill" style="padding:10px 12px;">
-      <input id="letterLower" type="checkbox" style="accent-color: var(--gold);" />
-      Lowercase
-    </label>
-    <button class="btn secondary" id="letterSpeak" type="button">🔊 Say letter</button>
-    <button class="btn" id="letterNext" type="button">Next</button>
-  </div>
-
-  <div class="big" id="letterBig" aria-label="Target letter">A</div>
-  <div class="small">Target (internal): <span id="letterTarget">A</span></div>
-  <div class="choices" id="letterChoices"></div>
-  <div class="notice" id="letterMsg">Pick the correct letter.</div>
-</section>
-
-
-    <div class="footer">v1 • separate pages • works on GitHub Pages</div>
-  </div>
-
-  <script src="app.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", ()=>{ initLetters(); });
-  </script>
+  <iframe class="frame" src="index.html?screen=letters&embed=1" title="Letters"></iframe>
 </body>
 </html>

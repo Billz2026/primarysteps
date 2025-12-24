@@ -3,65 +3,13 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Phonics Practice</title>
-  <link rel="icon" type="image/png" href="assets/primary-steps-icon-512.png" />
-  <link rel="stylesheet" href="styles.css" />
+  <title>Primary Steps — Phonics</title>
+  <style>
+    html,body{height:100%;margin:0}
+    .frame{position:fixed;inset:0;border:0;width:100%;height:100%}
+  </style>
 </head>
 <body>
-  <div class="container">
-    <header class="topbar">
-      <div class="brand">
-        <div class="mark" aria-hidden="true"><img src="assets/primary-steps-icon-512.png" alt="Primary Steps logo"></div>
-        <div style="min-width:0">
-          <h1>Phonics Practice</h1>
-          <p>phonics.html</p>
-        </div>
-      </div>
-      <div class="pills">
-        <span class="badge">⭐ Stars: <span class="starsCount kpi">0</span></span>
-        <label class="pill" style="padding:10px 12px;">
-          <input id="soundToggle" type="checkbox" style="accent-color: var(--gold);" />
-          Sound
-        </label>
-        <button class="pill goHome" type="button">Home</button>
-      </div>
-    </header>
-
-    
-<section class="hero">
-  <h2>Phonics</h2>
-  <p> Phonics activity — simple practice with calm feedback.</p>
-</section>
-
-
-<div class="pageNav" role="navigation" aria-label="Activity navigation">
-  <div class="left">
-    <a class="btn secondary" href="index.html">← Home</a>
-    <span class="crumb">Home → Phonics</span>
-  </div>
-  <div class="right">
-    <a class="btn secondary" href="maths.html">← Prev</a>
-    <a class="btn" href="memory.html">Next →</a>
-  </div>
-</div>
-
-<section class="section">
-  <div class="controls">
-    <label>Search words
-      <input id="phonicsInput" type="text" placeholder="Type e.g. cat" />
-    </label>
-    <button class="btn secondary" id="phonicsSpeak" type="button">🔊 Speak typed word</button>
-  </div>
-  <div id="phonicsList"></div>
-</section>
-
-
-    <div class="footer">v1 • separate pages • works on GitHub Pages</div>
-  </div>
-
-  <script src="app.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", ()=>{ initPhonics(); });
-  </script>
+  <iframe class="frame" src="index.html?screen=phonics&embed=1" title="Phonics"></iframe>
 </body>
 </html>

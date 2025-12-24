@@ -1070,6 +1070,13 @@
       background: rgba(255,255,255,0.76);
       color: var(--accentDeep);
     }
+
+/* ---------- Embed mode (used by activity wrapper pages) ---------- */
+body.embed .topbar{ display:none !important; }
+body.embed .hero{ display:none !important; }
+body.embed #homeScreen{ display:none !important; }
+body.embed .app{ padding-top:18px; }
+
 </style>
 </head>
 
@@ -1126,7 +1133,7 @@
   <!-- HOME -->
   <section id="homeScreen" class="screen active" aria-label="Home">
     <div class="grid">
-      <a class="card" href="#letters" data-nav="letters">
+      <a class="card" href="letters.html" data-nav="letters">
         <div class="left">
           <div class="badge">🔤</div>
           <div>
@@ -1137,7 +1144,7 @@
         <div class="chip">Play</div>
       </a>
 
-      <a class="card" href="#numbers" data-nav="numbers">
+      <a class="card" href="numbers.html" data-nav="numbers">
         <div class="left">
           <div class="badge">🔢</div>
           <div>
@@ -1148,7 +1155,7 @@
         <div class="chip">Play</div>
       </a>
 
-      <a class="card" href="#memory" data-nav="memory">
+      <a class="card" href="memory.html" data-nav="memory">
         <div class="left">
           <div class="badge">🧠</div>
           <div>
@@ -1160,7 +1167,7 @@
       </a>
 
 
-      <a class="card" href="#games" data-nav="games">
+      <a class="card" href="games.html" data-nav="games">
         <div class="left">
           <div class="badge">🎮</div>
           <div>
@@ -1171,7 +1178,7 @@
         <div class="chip">Play</div>
       </a>
 
-      <a class="card" href="#phonics" data-nav="phonics">
+      <a class="card" href="phonics.html" data-nav="phonics">
         <div class="left">
           <div class="badge">🔊</div>
           <div>
@@ -1182,7 +1189,7 @@
         <div class="chip">Blend</div>
       </a>
 
-      <a class="card" href="#maths" data-nav="maths">
+      <a class="card" href="maths.html" data-nav="maths">
         <div class="left">
           <div class="badge">➕</div>
           <div>
@@ -1194,7 +1201,7 @@
       </a>
 
 
-      <a class="card" href="#clock" data-nav="clock">
+      <a class="card" href="clock.html" data-nav="clock">
         <div class="left">
           <div class="badge">🕒</div>
           <div>
@@ -1205,7 +1212,7 @@
         <div class="chip">Time</div>
       </a>
 
-      <a class="card" href="#handwriting" data-nav="handwriting">
+      <a class="card" href="handwriting.html" data-nav="handwriting">
         <div class="left">
           <div class="badge">✍️</div>
           <div>
@@ -1216,7 +1223,7 @@
         <div class="chip">Trace</div>
       </a>
 
-      <a class="card" href="#progress" data-nav="progress">
+      <a class="card" href="progress.html" data-nav="progress">
         <div class="left">
           <div class="badge">⭐</div>
           <div>
@@ -1416,8 +1423,7 @@
         <p class="sub">Trace the letter or word. Tap Clear if you want to try again.</p>
       </div>
       <div class="row">
-        <button class="btn ghost" id="traceClear" type="button">Clear</button>
-        <button class="btn" id="traceNext" type="button">Next</button>
+        <!-- controls moved below -->
       </div>
     </div>
 
@@ -1473,12 +1479,6 @@
         </div>
         <div id="traceFeedback" class="feedback" aria-live="polite"></div>
       </div>
-        <canvas id="traceCanvas" width="900" height="260" aria-label="Tracing canvas"></canvas>
-        
-        <div class="row">
-          <button class="btn ghost" id="traceHear" type="button">Hear</button>
-          <button class="btn secondary" id="traceDone" type="button">Done</button>
-        </div>
         <div id="traceFeedback" class="feedback" aria-live="polite"></div>
       </div>
     </div>
@@ -1806,10 +1806,15 @@ function updateProgressUI(){
 /* ---------- Home cards wiring ---------- */
 $$("[data-nav]").forEach(a => {
   a.addEventListener("click", (e) => {
-    e.preventDefault();
-    const name = a.getAttribute("data-nav");
-    navTo(name);
+    const href = a.getAttribute("href") || "";
+    // Only hijack in-page hash navigation. If it's a real page link, let the browser navigate.
+    if(href.startsWith("#")){
+      e.preventDefault();
+      const name = a.getAttribute("data-nav");
+      navTo(name);
+    }
     // initialize screens for good UX
+
     if(name === "letters") lettersNewRound();
     if(name === "numbers") numbersNewRound();
     if(name === "memory") memoryNewGame();
@@ -3150,8 +3155,6 @@ function renderGames(){
     const c = document.getElementById("tetrisCanvas");
     c.addEventListener("touchmove", (e)=>e.preventDefault(), {passive:false});
     tetrisDraw();
-  }
-
   } else {
     // Money game (UK)
     area.innerHTML = `
@@ -3359,6 +3362,39 @@ window.addEventListener("resize", () => {
     resizeTraceForDevice();
   }
 });
+
+/* ---------- URL routing (multi-page wrappers) ---------- */
+function initRoute(){
+  const params = new URLSearchParams(window.location.search);
+  const screenParam = (params.get("screen") || "").toLowerCase();
+  const hashParam = (window.location.hash || "").replace("#","").toLowerCase();
+  const route = screenParam || hashParam;
+
+  // Optional embed mode for wrapper pages (iframe)
+  if(params.get("embed") === "1"){
+    document.body.classList.add("embed");
+  }
+
+  const valid = new Set(["home","letters","numbers","memory","phonics","maths","clock","handwriting","games","progress"]);
+  const target = valid.has(route) ? route : "home";
+
+  showScreen(target);
+
+  // Per-screen initialisers so the activity is ready immediately
+  if(target === "letters") lettersNewRound();
+  if(target === "numbers") numbersNewRound();
+  if(target === "memory") memoryNewGame();
+  if(target === "phonics") phonicsInit();
+  if(target === "maths") nextMath();
+  if(target === "clock") clockInit();
+  if(target === "handwriting") traceInit();
+  if(target === "games") renderGames();
+  if(target === "progress") updateProgressUI();
+}
+
+window.addEventListener("load", initRoute);
+window.addEventListener("hashchange", initRoute);
+
 </script>
 </body>
 </html>
