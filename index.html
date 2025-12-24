@@ -924,149 +924,103 @@ header.topbar{
 </div>
 
 <script>
-let stars=Number(localStorage.getItem('stars')||0);
-let traceInited=false;
-document.getElementById('stars').innerText="⭐ "+stars;
+let stars = Number(localStorage.getItem("stars") || 0);
+let traceInited = false;
 
-function show(id){
-  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+function updateStarsUI(){
+  const el = document.getElementById("stars");
+  if(el) el.innerText = "⭐ " + String(stars);
+}
+updateStarsUI();
 
-  if(id === 'letters'){
-    const diff = document.getElementById('letterDifficulty')?.value || "6";
+function save(){
+  localStorage.setItem("stars", String(stars));
+  updateStarsUI();
+}
+
+// --- Simple sound (WebAudio). Controlled by the Sound toggle ---
+let audioCtx = null;
+function tone(freq, ms, type="sine", gain=0.06){
+  if(!document.getElementById("soundToggle")?.checked) return;
+  try{
+    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.type = type;
+    o.frequency.value = freq;
+    g.gain.value = gain;
+    o.connect(g);
+    g.connect(audioCtx.destination);
+    o.start();
+    setTimeout(()=>{ try{ o.stop(); }catch(e){} }, ms);
+  }catch(e){}
+}
+function playSuccess(){ tone(660, 120, "sine", 0.06); tone(880, 120, "sine", 0.05); }
+function playError(){ tone(220, 180, "square", 0.05); }
+
+// --- Navigation / routing (hash acts like a new page URL) ---
+function show(id, opts = { setHash: true }){
+  const el = document.getElementById(id);
+  if(!el) return;
+
+  if(opts.setHash){
+    const newHash = "#" + id;
+    if(location.hash !== newHash) location.hash = newHash;
+  }
+
+  document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+  el.classList.add("active");
+
+  if(id === "letters"){
+    const diff = document.getElementById("letterDifficulty")?.value || "6";
     setLettersDifficulty(diff);
-    const lower = document.getElementById('letterLowercase')?.checked || false;
+    const lower = document.getElementById("letterLowercase")?.checked || false;
     setLettersCase(lower);
     startLettersGame();
-  }
-
- 
-  if(id === 'progress'){
-    refreshProgress();
-  }
- if(id === 'numbers'){
-    const diff = document.getElementById('numberDifficulty')?.value || "6";
+  } else if(id === "numbers"){
+    const diff = document.getElementById("numberDifficulty")?.value || "6";
     setNumbersDifficulty(diff);
-    const rng = document.getElementById('numberRange')?.value || "10";
+    const rng = document.getElementById("numberRange")?.value || "10";
     setNumbersRange(rng);
-    const mode = document.getElementById('numberMode')?.value || "digits";
+    const mode = document.getElementById("numberMode")?.value || "digits";
     setNumbersMode(mode);
     startNumbersGame();
-  }
-
-  if(id === 'memory'){
-    const diff = document.getElementById('memoryDifficulty')?.value || "6";
+  } else if(id === "memory"){
+    const diff = document.getElementById("memoryDifficulty")?.value || "6";
     setMemoryDifficulty(diff);
     restartMemory();
-  }
-
-  if(id === 'phonics'){
-    const diff = document.getElementById('phonicsDifficulty')?.value || "4";
+  } else if(id === "phonics"){
+    const diff = document.getElementById("phonicsDifficulty")?.value || "4";
     setPhonicsDifficulty(diff);
     startPhonicsGame();
-  }
-
-  if(id === 'maths'){
-    const diff = document.getElementById('mathsDifficulty')?.value || "normal";
+  } else if(id === "maths"){
+    const diff = document.getElementById("mathsDifficulty")?.value || "normal";
     setMathsDifficulty(diff);
-    if(!mathsMode || mathsMode === "choose") setMathsMode('add');
+    if(!mathsMode || mathsMode === "choose") setMathsMode("add");
     else restartMaths();
-  }
-
-  if(id === 'handwriting'){
+  } else if(id === "handwriting"){
     if(!traceInited){
       initTrace();
       traceInited = true;
     }
-    const lvl = document.getElementById('traceLevel')?.value || "easy";
+    const lvl = document.getElementById("traceLevel")?.value || "easy";
     setTraceLevel(lvl);
+  } else if(id === "progress"){
+    refreshProgress();
   }
+
+  try{ window.scrollTo({top:0, behavior:"smooth"}); }catch(e){ window.scrollTo(0,0); }
 }
 
-if(id === 'numbers'){
-    const diff = document.getElementById('numberDifficulty')?.value || "6";
-    setNumbersDifficulty(diff);
-    const rng = document.getElementById('numberRange')?.value || "10";
-    setNumbersRange(rng);
-    const mode = document.getElementById('numberMode')?.value || "digits";
-    setNumbersMode(mode);
-    startNumbersGame();
-  }
-
-  if(id === 'memory'){
-    const diff = document.getElementById('memoryDifficulty')?.value || "6";
-    setMemoryDifficulty(diff);
-    restartMemory();
-  }
-
-  if(id === 'phonics'){
-    const diff = document.getElementById('phonicsDifficulty')?.value || "4";
-    setPhonicsDifficulty(diff);
-    startPhonicsGame();
-  }
-
-  if(id === 'maths'){
-    const diff = document.getElementById('mathsDifficulty')?.value || "normal";
-    setMathsDifficulty(diff);
-    // default mode if none chosen yet
-    if(!mathsMode || mathsMode === "choose") setMathsMode('add');
-    else restartMaths();
-  }
+function routeFromHash(){
+  const id = (location.hash || "#home").replace("#", "");
+  const target = document.getElementById(id) ? id : "home";
+  show(target, { setHash:false });
 }
 
-if(id === 'numbers'){
-    const diff = document.getElementById('numberDifficulty')?.value || "6";
-    setNumbersDifficulty(diff);
-    const rng = document.getElementById('numberRange')?.value || "10";
-    setNumbersRange(rng);
-    const mode = document.getElementById('numberMode')?.value || "digits";
-    setNumbersMode(mode);
-    startNumbersGame();
-  }
+window.addEventListener("hashchange", routeFromHash);
+window.addEventListener("DOMContentLoaded", routeFromHash);
 
-  if(id === 'memory'){
-    const diff = document.getElementById('memoryDifficulty')?.value || "6";
-    setMemoryDifficulty(diff);
-    restartMemory();
-  }
-
-  if(id === 'phonics'){
-    const diff = document.getElementById('phonicsDifficulty')?.value || "4";
-    setPhonicsDifficulty(diff);
-    startPhonicsGame();
-  }
-}
-
-if(id === 'numbers'){
-    const diff = document.getElementById('numberDifficulty')?.value || "6";
-    setNumbersDifficulty(diff);
-    const rng = document.getElementById('numberRange')?.value || "10";
-    setNumbersRange(rng);
-    const mode = document.getElementById('numberMode')?.value || "digits";
-    setNumbersMode(mode);
-    startNumbersGame();
-  }
-
-  if(id === 'memory'){
-    const diff = document.getElementById('memoryDifficulty')?.value || "6";
-    setMemoryDifficulty(diff);
-    restartMemory();
-  }
-}
-
-if(id === 'numbers'){
-    const diff = document.getElementById('numberDifficulty')?.value || "6";
-    setNumbersDifficulty(diff);
-    const rng = document.getElementById('numberRange')?.value || "10";
-    // setNumbersRange calls restartNumbers, so call it before mode/game start
-    setNumbersRange(rng);
-    const mode = document.getElementById('numberMode')?.value || "digits";
-    setNumbersMode(mode);
-    startNumbersGame();
-  }
-}
-
-}
 
 function speak(text){
   if(!document.getElementById('soundToggle').checked)return;
@@ -1074,11 +1028,31 @@ function speak(text){
   speechSynthesis.speak(u);
 }
 
-// --- Letters game: full alphabet, random order, feedback sounds ---
+// --- Letters game: full alphabet, random order, difficulty + case ---
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
 let letterQueue = [];
 let currentLetter = "A";
 let letterIndex = 0;
+let lettersChoicesCount = 6;     // Easy=2, Normal=4, Challenge=6
+let lettersLowercase = false;
+
+function setLettersDifficulty(val){
+  const n = Number(val);
+  lettersChoicesCount = [2,4,6].includes(n) ? n : 6;
+  renderLetterChoices();
+}
+
+function setLettersCase(isLower){
+  lettersLowercase = !!isLower;
+  const target = document.getElementById("letterTarget");
+  if(target) target.textContent = displayLetter(currentLetter);
+  renderLetterChoices();
+}
+
+function displayLetter(l){
+  return lettersLowercase ? l.toLowerCase() : l;
+}
 
 function shuffle(arr){
   for(let i=arr.length-1;i>0;i--){
@@ -1091,6 +1065,8 @@ function shuffle(arr){
 function startLettersGame(){
   letterQueue = shuffle([...ALPHABET]);
   letterIndex = 0;
+  const totalEl = document.getElementById("letterTotal");
+  if(totalEl) totalEl.textContent = String(ALPHABET.length);
   nextLetter();
 }
 
@@ -1102,9 +1078,8 @@ function renderLetterChoices(){
   const wrap = document.getElementById("letterChoices");
   if(!wrap) return;
 
-  const CHOICES = 6; // kid-friendly: enough variety without overwhelming
   const opts = new Set([currentLetter]);
-  while(opts.size < CHOICES){
+  while(opts.size < lettersChoicesCount){
     opts.add(ALPHABET[Math.floor(Math.random()*ALPHABET.length)]);
   }
   const options = shuffle([...opts]);
@@ -1112,77 +1087,47 @@ function renderLetterChoices(){
   wrap.innerHTML = "";
   options.forEach(l=>{
     const b = document.createElement("button");
-    b.textContent = l;
+    b.textContent = displayLetter(l);
+    b.classList.add("btnGhost");
     b.onclick = ()=>pickLetter(l);
     wrap.appendChild(b);
   });
+
+  const btns = wrap.querySelectorAll("button");
+  if(btns[0]) btns[0].classList.add("btnPrimary");
 }
 
 function nextLetter(){
   if(!letterQueue.length){
-    // finished
     const prog = document.getElementById("letterProgress");
-    if(prog) prog.textContent = "26";
-    if(document.getElementById('soundToggle')?.checked) playSuccess();
+    if(prog) prog.textContent = String(ALPHABET.length);
+    if(document.getElementById("soundToggle")?.checked) playSuccess();
     incStat("sets_letters");
-alert("Nice! You finished the alphabet 🎉");
+    alert("Nice! You finished the alphabet 🎉");
     startLettersGame();
     return;
   }
+
   currentLetter = letterQueue.pop();
   letterIndex++;
+
   const target = document.getElementById("letterTarget");
-  if(target) target.textContent = currentLetter;
+  if(target) target.textContent = displayLetter(currentLetter);
+
   const prog = document.getElementById("letterProgress");
   if(prog) prog.textContent = String(letterIndex);
+
   renderLetterChoices();
 }
 
-// Simple built-in sounds (no files): WebAudio beeps
-let audioCtx;
-function tone(freq, ms, type="sine", gainVal=0.12){
-  try{
-    audioCtx = audioCtx || new (window.AudioContext || window.webkitAudioContext)();
-    const o = audioCtx.createOscillator();
-    const g = audioCtx.createGain();
-    o.type = type;
-    o.frequency.value = freq;
-    g.gain.value = gainVal;
-    o.connect(g);
-    g.connect(audioCtx.destination);
-    o.start();
-    setTimeout(()=>{ try{o.stop();}catch(e){} }, ms);
-  }catch(e){
-    // Audio not available; silently ignore
+function pickLetter(letter){
+  if(letter === currentLetter){
+    stars++; save();
+    playSuccess();
+    setTimeout(nextLetter, 320);
+  } else {
+    playError();
   }
-}
-function playSuccess(){
-  if(!document.getElementById('soundToggle')?.checked) return;
-  tone(660, 90, "sine", 0.10);
-  setTimeout(()=>tone(880, 120, "sine", 0.10), 110);
-}
-function playError(){
-  if(!document.getElementById('soundToggle')?.checked) return;
-  tone(220, 180, "square", 0.08);
-}
-
-}
-
-
-  else alert('Try again');
-}
-
-else alert('Try again');
-}
-
-function save(){
-  localStorage.setItem('stars',stars);
-  document.getElementById('stars').innerText="⭐ "+stars;
-}
-
-function resetProgress(){
-  stars=0;save();
-  if(typeof refreshProgress==='function') refreshProgress();
 }
 
 
