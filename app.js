@@ -104,7 +104,7 @@ function initLetters(){
           addStars(1);
           setTimeout(makeQuestion, 650);
         }else{
-          msg.innerHTML = "<strong>Try again.</strong> You can do it.";
+          msg.innerHTML = "<strong>Try again — you're close.</strong>";
           beep("bad", soundOn());
         }
       });
@@ -166,7 +166,7 @@ function initNumbers(){
           addStars(1);
           setTimeout(makeQuestion, 650);
         }else{
-          msg.innerHTML = "<strong>Not quite.</strong> Try again.";
+          msg.innerHTML = "<strong>Try again — you're close.</strong>";
           beep("bad", soundOn());
         }
       });
