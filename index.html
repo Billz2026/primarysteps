@@ -4,6 +4,7 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Primary Steps</title>
+  <link rel="icon" type="image/png" href="assets/primary-steps-icon-512.png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -26,12 +27,19 @@
     </header>
 
     <section class="hero">
-      <h2>Learning made clear and calm.</h2>
-      <p>
-        Choose an activity below. Each button opens a dedicated page (letters, numbers, maths, phonics, memory, handwriting).
-        Stars save automatically across pages.
-      </p>
-    </section>
+  <div class="heroLogoWrap">
+    <img class="heroLogo" src="assets/primary-steps-logo.png" alt="Primary Steps" loading="eager"
+         onerror="this.style.display='none'; document.getElementById('heroLogoFallback').style.display='block';" />
+    <div id="heroLogoFallback" style="display:none;text-align:center;font-weight:900;font-size:40px;letter-spacing:.6px;">
+      Primary Steps
+    </div>
+  </div>
+  <div class="heroTitle">Learning made clear and calm.</div>
+  <p class="heroSub">
+    Choose an activity below. Each button opens a dedicated page (letters, numbers, maths, phonics,
+    memory, handwriting). Stars save automatically across pages.
+  </p>
+</section>
 
     <section class="grid">
       <article class="card">

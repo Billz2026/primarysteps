@@ -278,3 +278,76 @@ canvas{
   background: rgba(0,0,0,.35);
 }
 .small{ font-size:12px; color: var(--muted); }
+
+
+/* v3 theme refinements */
+.topbar{
+  border-color: rgba(255,255,255,.12);
+  background:
+    radial-gradient(700px 120px at 18% 40%, rgba(42,168,255,.20), transparent 65%),
+    linear-gradient(180deg, rgba(255,255,255,.035), rgba(255,255,255,.01));
+}
+
+.pill:hover{
+  border-color: rgba(42,168,255,.38);
+  background: rgba(42,168,255,.10);
+}
+
+.badge{
+  border-color: rgba(255,255,255,.12);
+  background: rgba(255,255,255,.025);
+  color: rgba(244,247,255,.78);
+}
+
+.hero{
+  border-color: rgba(255,255,255,.12);
+  background:
+    radial-gradient(700px 220px at 30% 18%, rgba(42,168,255,.18), transparent 72%),
+    radial-gradient(520px 260px at 82% 30%, rgba(29,92,255,.14), transparent 72%),
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.01));
+}
+
+/* HERO LOGO BANNER */
+.heroLogoWrap{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  margin: 8px 0 12px;
+}
+.heroLogo{
+  width:min(820px, 92%);
+  height:auto;
+  filter: drop-shadow(0 18px 40px rgba(0,0,0,.45));
+}
+.heroTitle{
+  text-align:center;
+  margin: 8px 0 6px;
+  font-size:22px;
+  letter-spacing:.2px;
+}
+.heroSub{
+  text-align:center;
+  margin:0 auto;
+  max-width:78ch;
+}
+
+.card{
+  border-color: rgba(255,255,255,.12);
+  background:
+    radial-gradient(520px 180px at 30% 0%, rgba(42,168,255,.10), transparent 60%),
+    linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.012));
+}
+
+/* Make primary buttons clearly blue (avoid any warm tint) */
+.btn{
+  border-color: rgba(42,168,255,.36) !important;
+  background: linear-gradient(180deg, rgba(42,168,255,.24), rgba(29,92,255,.11)) !important;
+}
+.btn.secondary{
+  border-color: rgba(255,255,255,.14) !important;
+  background: rgba(255,255,255,.03) !important;
+}
+
+/* Larger logo mark in header, but keep tidy */
+.brand .mark{ width:52px; height:52px; border-radius:16px; }
+.brand h1{ font-size:16px; }
