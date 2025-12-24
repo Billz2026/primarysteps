@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<title>Handwriting • Primary Steps</title>
+<title>Settings • Primary Steps</title>
 
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -327,55 +327,96 @@ footer{
   <div class="breadcrumb">
     <a href="index.html">← Back to Home</a>
   </div>
-  <h1 class="h1">✍️ Handwriting</h1>
-  <p class="p">Trace letters and simple words.</p>
+  <h1 class="h1">Settings</h1>
+  <p class="p">Simple options to keep the experience calm. These are saved on this device.</p>
 
   <div style="margin-top:14px; display:grid; gap:12px;">
     <div class="card" href="#" style="cursor:default;">
       <div class="left">
-        <div class="icon" aria-hidden="true">✅</div>
+        <div class="icon" aria-hidden="true">🔊</div>
         <div class="meta">
-          <p class="name">Quick tips</p>
-          <p class="desc">Keep it calm and short</p>
+          <p class="name">Sound</p>
+          <p class="desc">Turn effects on or off</p>
         </div>
       </div>
-      <span class="badge">Ready</span>
+      <button class="badge" id="soundBtn" type="button">On</button>
     </div>
 
-    <div style="border:1px solid var(--stroke); border-radius: var(--radius2); padding:14px; background: rgba(255,255,255,.62); box-shadow: var(--shadow2);">
-      <ul style="margin:0; padding-left: 18px; color: var(--muted); font-weight:750; line-height:1.55;">
-        <li>Use slow, smooth movements.</li><li>Short practice (2–3 minutes).</li><li>Encourage relaxed grip.</li>
-      </ul>
+    <div class="card" href="#" style="cursor:default;">
+      <div class="left">
+        <div class="icon" aria-hidden="true">🌈</div>
+        <div class="meta">
+          <p class="name">Contrast</p>
+          <p class="desc">Gentle or stronger contrast</p>
+        </div>
+      </div>
+      <button class="badge" id="contrastBtn" type="button">Gentle</button>
     </div>
 
     <div class="card" href="#" style="cursor:default;">
       <div class="left">
         <div class="icon" aria-hidden="true">⭐</div>
         <div class="meta">
-          <p class="name">Earn a star</p>
-          <p class="desc">Tap when you finish a small goal</p>
+          <p class="name">Reset Stars</p>
+          <p class="desc">Start the star counter from 0</p>
         </div>
       </div>
-      <button class="badge" id="starBtn" type="button">Add ⭐</button>
+      <button class="badge" id="resetStarsBtn" type="button">Reset</button>
     </div>
   </div>
 </section>
 
 <script>
 (function(){
-  var btn = document.getElementById("starBtn");
-  if(!btn) return;
-  btn.addEventListener("click", function(){
-    var n = Number(localStorage.getItem("ps_stars") || "0");
-    n += 1;
-    localStorage.setItem("ps_stars", String(n));
-    btn.textContent = "Added! ⭐";
-    setTimeout(function(){ btn.textContent = "Add ⭐"; }, 900);
-    var top = document.getElementById("starsCount");
-    if(top) top.textContent = n;
-  });
+  var soundBtn = document.getElementById("soundBtn");
+  var contrastBtn = document.getElementById("contrastBtn");
+  var resetBtn = document.getElementById("resetStarsBtn");
+
+  var sound = localStorage.getItem("ps_sound") || "on";
+  var contrast = localStorage.getItem("ps_contrast") || "gentle";
+
+  function apply(){
+    if(soundBtn) soundBtn.textContent = (sound === "on" ? "On" : "Off");
+    if(contrastBtn) contrastBtn.textContent = (contrast === "gentle" ? "Gentle" : "Strong");
+    document.documentElement.dataset.contrast = contrast;
+  }
+
+  if(soundBtn){
+    soundBtn.addEventListener("click", function(){
+      sound = (sound === "on") ? "off" : "on";
+      localStorage.setItem("ps_sound", sound);
+      apply();
+    });
+  }
+
+  if(contrastBtn){
+    contrastBtn.addEventListener("click", function(){
+      contrast = (contrast === "gentle") ? "strong" : "gentle";
+      localStorage.setItem("ps_contrast", contrast);
+      apply();
+    });
+  }
+
+  if(resetBtn){
+    resetBtn.addEventListener("click", function(){
+      localStorage.setItem("ps_stars", "0");
+      location.reload();
+    });
+  }
+
+  apply();
 })();
 </script>
+
+<style>
+/* Optional stronger contrast */
+:root[data-contrast="strong"]{
+  --bg0:#ffffff;
+  --bg1:#e7f1ff;
+  --stroke:rgba(16,60,120,.22);
+  --muted:#2f4766;
+}
+</style>
 
 
   <footer>© 2025 Primary Steps</footer>
