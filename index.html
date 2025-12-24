@@ -3,7 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Primary Steps</title>
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/png" sizes="512x512" href="assets/primary-steps-icon-512.png">
+  <link rel="apple-touch-icon" sizes="512x512" href="assets/primary-steps-icon-512.png">
+  <meta name="theme-color" content="#0b3a79">
+<title>Primary Steps</title>
   <meta name="description" content="Primary Steps — calm, fun learning for primary school children." />
 
   <style>
@@ -57,12 +62,11 @@
       min-width: 0;
     }
     .logoWrap{
-      width:64px;
-      height:64px;
-      flex:0 0 auto;
-      border-radius: 999px;
-      display:grid;
-      place-items:center;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding: 2px 0;
+      flex: 0 0 auto;
     }
     .brandText{
       min-width:0;
@@ -1070,13 +1074,6 @@
       background: rgba(255,255,255,0.76);
       color: var(--accentDeep);
     }
-
-/* ---------- Embed mode (used by activity wrapper pages) ---------- */
-body.embed .topbar{ display:none !important; }
-body.embed .hero{ display:none !important; }
-body.embed #homeScreen{ display:none !important; }
-body.embed .app{ padding-top:18px; }
-
 </style>
 </head>
 
@@ -1084,29 +1081,8 @@ body.embed .app{ padding-top:18px; }
 <header>
   <div class="topbar">
     <div class="brand">
-      <div class="logoWrap" aria-hidden="true">
-        <!-- Circular badge logo (inline SVG) -->
-        <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 360 360" role="img" aria-label="Primary Steps logo">
-          <defs>
-            <linearGradient id="rainbow" x1="0" y1="0" x2="1" y2="1">
-              <stop offset="0%" stop-color="#ef4444"/>
-              <stop offset="16%" stop-color="#f59e0b"/>
-              <stop offset="32%" stop-color="#eab308"/>
-              <stop offset="48%" stop-color="#22c55e"/>
-              <stop offset="64%" stop-color="#3b82f6"/>
-              <stop offset="80%" stop-color="#6366f1"/>
-              <stop offset="100%" stop-color="#8b5cf6"/>
-            </linearGradient>
-          </defs>
-          <circle cx="180" cy="180" r="165" fill="none" stroke="url(#rainbow)" stroke-width="18"/>
-          <circle cx="180" cy="180" r="140" fill="#ffffff"/>
-          <g fill="#0f172a">
-            <circle cx="180" cy="135" r="22"/>
-            <path d="M160 178 Q180 160 200 178 L200 232 Q180 252 160 232 Z"/>
-            <path d="M168 232 L162 270 Q180 282 188 270 L182 232 Z"/>
-            <path d="M192 232 L198 270 Q180 282 172 270 L178 232 Z"/>
-          </g>
-        </svg>
+      <div class="logoWrap">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps" class="siteLogo" />
       </div>
       <div class="brandText">
         <h1>Primary Steps</h1>
@@ -1133,7 +1109,7 @@ body.embed .app{ padding-top:18px; }
   <!-- HOME -->
   <section id="homeScreen" class="screen active" aria-label="Home">
     <div class="grid">
-      <a class="card" href="letters.html" data-nav="letters">
+      <a class="card" href="#letters" data-nav="letters">
         <div class="left">
           <div class="badge">🔤</div>
           <div>
@@ -1144,7 +1120,7 @@ body.embed .app{ padding-top:18px; }
         <div class="chip">Play</div>
       </a>
 
-      <a class="card" href="numbers.html" data-nav="numbers">
+      <a class="card" href="#numbers" data-nav="numbers">
         <div class="left">
           <div class="badge">🔢</div>
           <div>
@@ -1155,7 +1131,7 @@ body.embed .app{ padding-top:18px; }
         <div class="chip">Play</div>
       </a>
 
-      <a class="card" href="memory.html" data-nav="memory">
+      <a class="card" href="#memory" data-nav="memory">
         <div class="left">
           <div class="badge">🧠</div>
           <div>
@@ -1167,7 +1143,7 @@ body.embed .app{ padding-top:18px; }
       </a>
 
 
-      <a class="card" href="games.html" data-nav="games">
+      <a class="card" href="#games" data-nav="games">
         <div class="left">
           <div class="badge">🎮</div>
           <div>
@@ -1178,7 +1154,7 @@ body.embed .app{ padding-top:18px; }
         <div class="chip">Play</div>
       </a>
 
-      <a class="card" href="phonics.html" data-nav="phonics">
+      <a class="card" href="#phonics" data-nav="phonics">
         <div class="left">
           <div class="badge">🔊</div>
           <div>
@@ -1189,7 +1165,7 @@ body.embed .app{ padding-top:18px; }
         <div class="chip">Blend</div>
       </a>
 
-      <a class="card" href="maths.html" data-nav="maths">
+      <a class="card" href="#maths" data-nav="maths">
         <div class="left">
           <div class="badge">➕</div>
           <div>
@@ -1201,7 +1177,7 @@ body.embed .app{ padding-top:18px; }
       </a>
 
 
-      <a class="card" href="clock.html" data-nav="clock">
+      <a class="card" href="#clock" data-nav="clock">
         <div class="left">
           <div class="badge">🕒</div>
           <div>
@@ -1212,7 +1188,7 @@ body.embed .app{ padding-top:18px; }
         <div class="chip">Time</div>
       </a>
 
-      <a class="card" href="handwriting.html" data-nav="handwriting">
+      <a class="card" href="#handwriting" data-nav="handwriting">
         <div class="left">
           <div class="badge">✍️</div>
           <div>
@@ -1223,7 +1199,7 @@ body.embed .app{ padding-top:18px; }
         <div class="chip">Trace</div>
       </a>
 
-      <a class="card" href="progress.html" data-nav="progress">
+      <a class="card" href="#progress" data-nav="progress">
         <div class="left">
           <div class="badge">⭐</div>
           <div>
@@ -1423,7 +1399,8 @@ body.embed .app{ padding-top:18px; }
         <p class="sub">Trace the letter or word. Tap Clear if you want to try again.</p>
       </div>
       <div class="row">
-        <!-- controls moved below -->
+        <button class="btn ghost" id="traceClear" type="button">Clear</button>
+        <button class="btn" id="traceNext" type="button">Next</button>
       </div>
     </div>
 
@@ -1479,6 +1456,12 @@ body.embed .app{ padding-top:18px; }
         </div>
         <div id="traceFeedback" class="feedback" aria-live="polite"></div>
       </div>
+        <canvas id="traceCanvas" width="900" height="260" aria-label="Tracing canvas"></canvas>
+        
+        <div class="row">
+          <button class="btn ghost" id="traceHear" type="button">Hear</button>
+          <button class="btn secondary" id="traceDone" type="button">Done</button>
+        </div>
         <div id="traceFeedback" class="feedback" aria-live="polite"></div>
       </div>
     </div>
@@ -1806,15 +1789,10 @@ function updateProgressUI(){
 /* ---------- Home cards wiring ---------- */
 $$("[data-nav]").forEach(a => {
   a.addEventListener("click", (e) => {
-    const href = a.getAttribute("href") || "";
-    // Only hijack in-page hash navigation. If it's a real page link, let the browser navigate.
-    if(href.startsWith("#")){
-      e.preventDefault();
-      const name = a.getAttribute("data-nav");
-      navTo(name);
-    }
+    e.preventDefault();
+    const name = a.getAttribute("data-nav");
+    navTo(name);
     // initialize screens for good UX
-
     if(name === "letters") lettersNewRound();
     if(name === "numbers") numbersNewRound();
     if(name === "memory") memoryNewGame();
@@ -3155,6 +3133,8 @@ function renderGames(){
     const c = document.getElementById("tetrisCanvas");
     c.addEventListener("touchmove", (e)=>e.preventDefault(), {passive:false});
     tetrisDraw();
+  }
+
   } else {
     // Money game (UK)
     area.innerHTML = `
@@ -3362,39 +3342,6 @@ window.addEventListener("resize", () => {
     resizeTraceForDevice();
   }
 });
-
-/* ---------- URL routing (multi-page wrappers) ---------- */
-function initRoute(){
-  const params = new URLSearchParams(window.location.search);
-  const screenParam = (params.get("screen") || "").toLowerCase();
-  const hashParam = (window.location.hash || "").replace("#","").toLowerCase();
-  const route = screenParam || hashParam;
-
-  // Optional embed mode for wrapper pages (iframe)
-  if(params.get("embed") === "1"){
-    document.body.classList.add("embed");
-  }
-
-  const valid = new Set(["home","letters","numbers","memory","phonics","maths","clock","handwriting","games","progress"]);
-  const target = valid.has(route) ? route : "home";
-
-  showScreen(target);
-
-  // Per-screen initialisers so the activity is ready immediately
-  if(target === "letters") lettersNewRound();
-  if(target === "numbers") numbersNewRound();
-  if(target === "memory") memoryNewGame();
-  if(target === "phonics") phonicsInit();
-  if(target === "maths") nextMath();
-  if(target === "clock") clockInit();
-  if(target === "handwriting") traceInit();
-  if(target === "games") renderGames();
-  if(target === "progress") updateProgressUI();
-}
-
-window.addEventListener("load", initRoute);
-window.addEventListener("hashchange", initRoute);
-
 </script>
 </body>
 </html>
