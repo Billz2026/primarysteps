@@ -1,53 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Primary Steps</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <style>
-    body {
-      margin: 0;
-      font-family: Arial, Helvetica, sans-serif;
-      background: #f5f7fa;
-      color: #333;
-      text-align: center;
-    }
-    header {
-      background: #2f80ed;
-      color: white;
-      padding: 20px;
-    }
-    h1 {
-      margin: 0;
-      font-size: 2rem;
-    }
-    p {
-      max-width: 600px;
-      margin: 10px auto;
-    }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 20px;
-      padding: 30px;
-    }
-    .card {
-      background: white;
-      border-radius: 12px;
-      padding: 20px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-      cursor: pointer;
-    }
-    .card:hover {
-      transform: scale(1.02);
-    }
-    footer {
-      padding: 20px;
-      font-size: 0.9rem;
-      color: #666;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Primary Steps</title>
+<meta name="description" content="Primary Steps - Calm, fun learning for primary school children">
+
+<style>
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#f5f7fa;color:#0f172a}
+header{background:#fff;padding:16px;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+h1{margin:0;font-size:1.4rem}
+p{color:#475569}
+.container{max-width:960px;margin:0 auto;padding:20px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px}
+.card{background:#fff;border-radius:16px;padding:20px;box-shadow:0 6px 14px rgba(0,0,0,.08);cursor:pointer}
+.card:hover{transform:scale(1.02)}
+button{padding:10px 16px;border-radius:999px;border:none;background:#2f80ed;color:#fff;font-weight:700;cursor:pointer}
+.screen{display:none}
+.screen.active{display:block}
+.toggle{display:flex;gap:8px;align-items:center}
+canvas{border:2px dashed #cbd5e1;border-radius:16px;background:#fff}
+.footer{text-align:center;color:#64748b;padding:20px}
+</style>
 </head>
+
 <body>
 
 <header>
@@ -55,23 +31,142 @@
   <p>Calm, fun learning for primary school children</p>
 </header>
 
-<main>
-  <p>
-    Welcome to Primary Steps.  
-    Short, friendly activities to help children learn at their own pace.
-  </p>
+<div class="container">
 
+<div class="toggle">
+  <input type="checkbox" id="soundToggle">
+  <label for="soundToggle">Sound</label>
+</div>
+
+<section id="home" class="screen active">
   <div class="grid">
-    <div class="card">🔤 Letters</div>
-    <div class="card">🔢 Numbers</div>
-    <div class="card">🧠 Memory Game</div>
-    <div class="card">⭐ Progress</div>
+    <div class="card" onclick="show('letters')">🔤 Letters</div>
+    <div class="card" onclick="show('numbers')">🔢 Numbers</div>
+    <div class="card" onclick="show('memory')">🧠 Memory</div>
+    <div class="card" onclick="show('phonics')">🔊 Phonics</div>
+    <div class="card" onclick="show('maths')">➕ Maths</div>
+    <div class="card" onclick="show('handwriting')">✍️ Handwriting</div>
+    <div class="card" onclick="show('progress')">⭐ Progress</div>
   </div>
-</main>
+</section>
 
-<footer>
-  © 2025 Primary Steps
-</footer>
+<section id="letters" class="screen">
+  <h2>Letters Game</h2>
+  <p>Find the matching letter</p>
+  <h1 id="letterTarget">A</h1>
+  <div class="grid">
+    <button onclick="pickLetter('A')">A</button>
+    <button onclick="pickLetter('B')">B</button>
+    <button onclick="pickLetter('C')">C</button>
+  </div>
+  <button onclick="show('home')">Home</button>
+</section>
+
+<section id="numbers" class="screen">
+  <h2>Numbers Game</h2>
+  <p>How many?</p>
+  <h1 id="numberTarget">3</h1>
+  <div class="grid">
+    <button onclick="pickNumber(2)">2</button>
+    <button onclick="pickNumber(3)">3</button>
+    <button onclick="pickNumber(4)">4</button>
+  </div>
+  <button onclick="show('home')">Home</button>
+</section>
+
+<section id="memory" class="screen">
+  <h2>Memory Match</h2>
+  <p>Simple matching game (starter version)</p>
+  <button onclick="show('home')">Home</button>
+</section>
+
+<section id="phonics" class="screen">
+  <h2>Phonics – Blend Builder</h2>
+  <p>Tap sounds then blend</p>
+  <button onclick="speak('cat')">Hear CAT</button>
+  <button onclick="show('home')">Home</button>
+</section>
+
+<section id="maths" class="screen">
+  <h2>Maths</h2>
+  <p>Addition, subtraction, division & time</p>
+  <canvas id="clock" width="200" height="200"></canvas>
+  <button onclick="show('home')">Home</button>
+</section>
+
+<section id="handwriting" class="screen">
+  <h2>Handwriting Practice</h2>
+  <p>Trace the letter</p>
+  <canvas id="trace" width="300" height="200"></canvas><br><br>
+  <button onclick="clearCanvas()">Clear</button>
+  <button onclick="show('home')">Home</button>
+</section>
+
+<section id="progress" class="screen">
+  <h2>Your Progress</h2>
+  <p>Stars earned:</p>
+  <h1 id="stars">⭐ 0</h1>
+  <button onclick="resetProgress()">Reset</button>
+  <button onclick="show('home')">Home</button>
+</section>
+
+</div>
+
+<div class="footer">
+© 2025 Primary Steps
+</div>
+
+<script>
+let stars=Number(localStorage.getItem('stars')||0);
+document.getElementById('stars').innerText="⭐ "+stars;
+
+function show(id){
+  document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function speak(text){
+  if(!document.getElementById('soundToggle').checked)return;
+  const u=new SpeechSynthesisUtterance(text);
+  speechSynthesis.speak(u);
+}
+
+function pickLetter(l){
+  if(l==='A'){stars++;save();alert('Good job!');}
+  else alert('Try again');
+}
+
+function pickNumber(n){
+  if(n===3){stars++;save();alert('Correct!');}
+  else alert('Try again');
+}
+
+function save(){
+  localStorage.setItem('stars',stars);
+  document.getElementById('stars').innerText="⭐ "+stars;
+}
+
+function resetProgress(){
+  stars=0;save();
+}
+
+const canvas=document.getElementById('trace');
+const ctx=canvas.getContext('2d');
+let drawing=false;
+canvas.addEventListener('mousedown',()=>drawing=true);
+canvas.addEventListener('mouseup',()=>drawing=false);
+canvas.addEventListener('mousemove',e=>{
+  if(!drawing)return;
+  ctx.lineWidth=6;
+  ctx.lineCap='round';
+  ctx.strokeStyle='#2f80ed';
+  ctx.lineTo(e.offsetX,e.offsetY);
+  ctx.stroke();
+  ctx.beginPath();
+  ctx.moveTo(e.offsetX,e.offsetY);
+});
+function clearCanvas(){ctx.clearRect(0,0,canvas.width,canvas.height);}
+</script>
 
 </body>
 </html>
