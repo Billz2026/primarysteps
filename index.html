@@ -3,12 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  
-  <!-- Favicons -->
-  <link rel="icon" type="image/png" sizes="512x512" href="assets/primary-steps-icon-512.png">
-  <link rel="apple-touch-icon" sizes="512x512" href="assets/primary-steps-icon-512.png">
-  <meta name="theme-color" content="#0b3a79">
-<title>Primary Steps</title>
+  <title>Primary Steps</title>
   <meta name="description" content="Primary Steps — calm, fun learning for primary school children." />
 
   <style>
@@ -62,12 +57,29 @@
       min-width: 0;
     }
     .logoWrap{
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 2px 0;
-      flex: 0 0 auto;
+      width:64px;
+      height:64px;
+      flex:0 0 auto;
+      border-radius: 999px;
+      display:grid;
+      place-items:center;
     }
+    /* Uploaded logo (from /assets) */
+    .site-logo{
+      height: 38px;
+      width: auto;
+      max-width: 220px;
+      object-fit: contain;
+      display:block;
+      filter: drop-shadow(0 6px 14px rgba(15,23,42,0.14));
+    }
+    @media (max-width: 520px){
+      .site-logo{ height: 32px; max-width: 180px; }
+    }
+
+    body.embed .hero{ display:none !important; }
+    body.embed #homeScreen{ padding-top: 14px; }
+
     .brandText{
       min-width:0;
     }
@@ -1074,23 +1086,6 @@
       background: rgba(255,255,255,0.76);
       color: var(--accentDeep);
     }
-
-    /* --- Brand logo image --- */
-    .siteLogo{
-      height: 40px; /* smaller + professional */
-      width: auto;
-      object-fit: contain;
-      display:block;
-      filter: drop-shadow(0 6px 14px rgba(15,23,42,0.18));
-    }
-    @media (max-width: 640px){
-      .siteLogo{ height: 34px; }
-    }
-
-    /* --- Embed mode (used by activity wrapper pages) --- */
-    body.embed #homeScreen{ display:none !important; }
-    body.embed .topbar{ position: sticky; top:0; z-index:50; }
-
 </style>
 </head>
 
@@ -1098,9 +1093,8 @@
 <header>
   <div class="topbar">
     <div class="brand">
-      <div class="logoWrap">
-        <img src="assets/primary-steps-logo.png" alt="Primary Steps" class="siteLogo" />
-      </div>
+      <div class="logoWrap" aria-hidden="true">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps" class="site-logo" loading="eager" /></div>
       <div class="brandText">
         <h1>Primary Steps</h1>
         <p>Calm, fun learning for primary school children</p>
@@ -1803,31 +1797,28 @@ function updateProgressUI(){
   $("#traceStars").textContent = progress.stars;
 }
 
-
 /* ---------- Home cards wiring ---------- */
-/* If a card links to a hash (single-page mode), we intercept and show the screen.
-   If it links to a separate .html page, let the browser navigate normally. */
 $$("[data-nav]").forEach(a => {
   a.addEventListener("click", (e) => {
-    const href = a.getAttribute("href") || "";
-    if(href.startsWith("#")){
-      e.preventDefault();
-      const name = a.getAttribute("data-nav");
-      navTo(name);
-      if(name === "letters") lettersNewRound();
-      if(name === "numbers") numbersNewRound();
-      if(name === "memory") memoryNewGame();
-      if(name === "phonics") phonicsInit();
-      if(name === "maths") mathsInit();
-      if(name === "clock") clockInit();
-      if(name === "games") gamesInit();
-      if(name === "handwriting") traceInit();
-    }
+    const href = (a.getAttribute("href") || "").toLowerCase();
+    // If this is a real page link (e.g. letters.html), allow normal navigation.
+    if(href.endsWith(".html")) return;
+    e.preventDefault();
+    const name = a.getAttribute("data-nav");
+    navTo(name);
+    // initialize screens for good UX
+    if(name === "letters") lettersNewRound();
+    if(name === "numbers") numbersNewRound();
+    if(name === "memory") memoryNewGame();
+    if(name === "phonics") phonicsInit();
+    if(name === "maths") mathsInit();
+    if(name === "clock") clockInit();
+    if(name === "games") gamesInit();
+    if(name === "handwriting") traceInit();
   });
 });
 
-$("#goHome").addEventListener("click", () => showScreen("home"));
-("click", () => showScreen("home"));
+$("#goHome").addEventListener("click", () => location.href = "index.html");
 
 /* ---------- Settings modal ---------- */
 const backdrop = $("#settingsBackdrop");
@@ -3156,7 +3147,9 @@ function renderGames(){
     const c = document.getElementById("tetrisCanvas");
     c.addEventListener("touchmove", (e)=>e.preventDefault(), {passive:false});
     tetrisDraw();
-  } else if(currentGame === "money") {
+  }
+
+  } else {
     // Money game (UK)
     area.innerHTML = `
       <div class="moneyWrap">
@@ -3355,36 +3348,7 @@ if(gh) gh.addEventListener("click", ()=>showScreen("home"));
 /* ---------- Init ---------- */
 $("#year").textContent = new Date().getFullYear();
 applySettings();
-
-// Route: support wrapper pages like index.html?screen=letters&embed=1
-try{
-  const params = new URLSearchParams(window.location.search);
-  const screen = (params.get("screen") || "home").toLowerCase();
-  const embed = params.get("embed") === "1";
-  if(embed) document.body.classList.add("embed");
-
-  if(embed){
-    const homeBtn = document.getElementById("goHome");
-    if(homeBtn){
-      homeBtn.textContent = "Back";
-      homeBtn.addEventListener("click", () => { window.location.href = "index.html"; });
-    }
-  }
-
-  showScreen(screen);
-
-  // seed initial state for common screens
-  if(screen === "letters") lettersNewRound();
-  if(screen === "numbers") numbersNewRound();
-  if(screen === "memory") memoryNewGame();
-  if(screen === "phonics") phonicsInit();
-  if(screen === "maths") mathsInit();
-  if(screen === "clock") clockInit();
-  if(screen === "games") gamesInit();
-  if(screen === "handwriting") traceInit();
-}catch(e){
-  showScreen("home");
-}
+showScreen("home");
 
 // If user resizes, keep trace crisp
 window.addEventListener("resize", () => {
@@ -3392,6 +3356,38 @@ window.addEventListener("resize", () => {
     resizeTraceForDevice();
   }
 });
+
+/* ---------- URL routing (wrapper pages) ---------- */
+(function(){
+  const params = new URLSearchParams(location.search);
+  const screen = (params.get("screen") || "").toLowerCase();
+  const embed = params.get("embed") === "1";
+  if(embed) document.body.classList.add("embed");
+  const map = {
+    "home":"home",
+    "letters":"letters",
+    "numbers":"numbers",
+    "memory":"memory",
+    "phonics":"phonics",
+    "maths":"maths",
+    "clock":"clock",
+    "handwriting":"handwriting",
+    "games":"games",
+    "progress":"progress"
+  };
+  if(screen && map[screen]){
+    showScreen(map[screen]);
+    // Start the requested activity quickly
+    if(screen==="letters") lettersNewRound();
+    if(screen==="numbers") numbersNewRound();
+    if(screen==="memory") memoryNewGame();
+    if(screen==="phonics") phonicsInit();
+    if(screen==="maths") mathsInit();
+    if(screen==="clock") clockInit();
+    if(screen==="games") gamesInit();
+    if(screen==="handwriting") traceInit();
+  }
+})();
 </script>
 </body>
 </html>
