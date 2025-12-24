@@ -447,6 +447,14 @@ header.topbar{
   background: radial-gradient(circle at 30% 30%, rgba(14,165,233,.18), transparent 60%);
   pointer-events:none;
 }
+
+.cardBtn{
+  text-align:left;
+  border: none;
+  width: 100%;
+  background: var(--card);
+}
+.cardBtn:active{transform: translateY(0px) scale(.99);}
 </style>
 </head>
 
@@ -514,39 +522,39 @@ header.topbar{
         <button class="btnPrimary" onclick="show('letters')">Start with Letters</button>
         <button class="btnGhost" onclick="show('progress')">View Progress</button>
       </div>
-    </div>
+    </button>
   </div>
 
   <h3 style="margin:18px 2px 10px;font-size:1.15rem;letter-spacing:-.2px;">Activities</h3>
   <div class="grid">
-    <div class="card" data-target="letters" onclick="show('letters')">
+    <button type="button" class="card cardBtn" data-target="letters" onclick="show('letters')">
       <div style="font-size:1.15rem;font-weight:950;">🔤 Letters</div>
       <div style="color:var(--muted);margin-top:6px;">Match the target letter (A–Z)</div>
-    </div>
-    <div class="card" data-target="numbers" onclick="show('numbers')">
+    </button>
+<button type="button" class="card cardBtn" data-target="numbers" onclick="show('numbers')">
       <div style="font-size:1.15rem;font-weight:950;">🔢 Numbers</div>
       <div style="color:var(--muted);margin-top:6px;">Count, pick and practise</div>
-    </div>
-    <div class="card" data-target="memory" onclick="show('memory')">
+    </button>
+<button type="button" class="card cardBtn" data-target="memory" onclick="show('memory')">
       <div style="font-size:1.15rem;font-weight:950;">🧠 Memory</div>
       <div style="color:var(--muted);margin-top:6px;">Focus and matching</div>
-    </div>
-    <div class="card" data-target="phonics" onclick="show('phonics')">
+    </button>
+<button type="button" class="card cardBtn" data-target="phonics" onclick="show('phonics')">
       <div style="font-size:1.15rem;font-weight:950;">🔊 Phonics</div>
       <div style="color:var(--muted);margin-top:6px;">Listen and pick the word</div>
-    </div>
-    <div class="card" data-target="maths" onclick="show('maths')">
+    </button>
+<button type="button" class="card cardBtn" data-target="maths" onclick="show('maths')">
       <div style="font-size:1.15rem;font-weight:950;">➕ Maths</div>
       <div style="color:var(--muted);margin-top:6px;">Add, subtract, divide & time</div>
-    </div>
-    <div class="card" data-target="handwriting" onclick="show('handwriting')">
+    </button>
+<button type="button" class="card cardBtn" data-target="handwriting" onclick="show('handwriting')">
       <div style="font-size:1.15rem;font-weight:950;">✍️ Handwriting</div>
       <div style="color:var(--muted);margin-top:6px;">Trace words smoothly</div>
-    </div>
-    <div class="card" data-target="progress" onclick="show('progress')">
+    </button>
+<button type="button" class="card cardBtn" data-target="progress" onclick="show('progress')">
       <div style="font-size:1.15rem;font-weight:950;">⭐ Progress</div>
       <div style="color:var(--muted);margin-top:6px;">Stars and activity breakdown</div>
-    </div>
+    </button>
   </div>
 
   <div class="panel" style="margin-top:16px;">
@@ -555,16 +563,16 @@ header.topbar{
       <div class="card" style="cursor:default;">
         <div style="font-weight:950;">Step 1</div>
         <div style="color:var(--muted);margin-top:6px;">Pick an activity.</div>
-      </div>
-      <div class="card" style="cursor:default;">
+    </button>
+<div class="card" style="cursor:default;">
         <div style="font-weight:950;">Step 2</div>
         <div style="color:var(--muted);margin-top:6px;">Answer at your pace (sound optional).</div>
-      </div>
-      <div class="card" style="cursor:default;">
+    </button>
+<div class="card" style="cursor:default;">
         <div style="font-weight:950;">Step 3</div>
         <div style="color:var(--muted);margin-top:6px;">Earn stars and track progress.</div>
       </div>
-    </div>
+    </button>
   </div>
 </section>t:900;">⭐ Progress</div>
       <div style="color:var(--muted);margin-top:6px;">Stars earned and reset</div>
@@ -954,7 +962,9 @@ function show(id){
   }
 
  
-  if(id === 'progress'){
+  
+window.show = show;
+if(id === 'progress'){
     refreshProgress();
   }
  if(id === 'numbers'){
