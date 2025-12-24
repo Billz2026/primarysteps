@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Maths Activity</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true"></div>
+        <div style="min-width:0">
+          <h1>Maths Activity</h1>
+          <p>maths.html</p>
+        </div>
+      </div>
+      <div class="pills">
+        <span class="badge">⭐ Stars: <span class="starsCount kpi">0</span></span>
+        <label class="pill" style="padding:10px 12px;">
+          <input id="soundToggle" type="checkbox" style="accent-color: var(--gold);" />
+          Sound
+        </label>
+        <button class="pill goHome" type="button">Home</button>
+      </div>
+    </header>
+
+    
+<section class="hero">
+  <h2>Maths</h2>
+  <p>Practise operations + tell the time on an analogue clock.</p>
+</section>
+
+<section class="section">
+  <h3 style="margin:0 0 8px;">Quick Questions</h3>
+  <div class="controls">
+    <label>Operation
+      <select id="mathOp">
+        <option value="+">Add (+)</option>
+        <option value="−">Subtract (−)</option>
+        <option value="×">Multiply (×)</option>
+        <option value="÷">Divide (÷)</option>
+      </select>
+    </label>
+    <label>Difficulty
+      <select id="mathLevel">
+        <option value="easy">Easy</option>
+        <option value="medium">Medium</option>
+        <option value="hard">Hard</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="big" id="mathQ">1 + 1 = ?</div>
+  <div class="controls">
+    <label>Your answer
+      <input id="mathA" type="number" inputmode="numeric" />
+    </label>
+    <button class="btn" id="mathCheck" type="button">Check</button>
+    <button class="btn secondary" id="mathNext" type="button">Next</button>
+  </div>
+  <div class="notice" id="mathMsg"></div>
+</section>
+
+<section class="section" style="margin-top:14px;">
+  <h3 style="margin:0 0 8px;">Analogue Clock</h3>
+  <div class="small">Type the time in HH:MM (e.g. 03:15)</div>
+  <div style="margin-top:10px;">
+    <canvas id="clock" width="520" height="320" aria-label="Analogue clock"></canvas>
+  </div>
+  <div class="controls" style="margin-top:10px;">
+    <input id="clockInput" type="text" placeholder="HH:MM" />
+    <button class="btn" id="clockCheck" type="button">Check</button>
+    <button class="btn secondary" id="clockNew" type="button">New time</button>
+    <span class="badge" id="clockTime">What time is it?</span>
+  </div>
+  <div class="notice" id="clockMsg"></div>
+</section>
+
+
+    <div class="footer">v1 • separate pages • works on GitHub Pages</div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", ()=>{ initMaths(); });
+  </script>
+</body>
+</html>

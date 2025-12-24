@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Memory Match</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true"></div>
+        <div style="min-width:0">
+          <h1>Memory Match</h1>
+          <p>memory.html</p>
+        </div>
+      </div>
+      <div class="pills">
+        <span class="badge">⭐ Stars: <span class="starsCount kpi">0</span></span>
+        <label class="pill" style="padding:10px 12px;">
+          <input id="soundToggle" type="checkbox" style="accent-color: var(--gold);" />
+          Sound
+        </label>
+        <button class="pill goHome" type="button">Home</button>
+      </div>
+    </header>
+
+    
+<section class="hero">
+  <h2>Memory Match</h2>
+  <p>Flip two cards. Match pairs to win stars.</p>
+</section>
+
+<section class="section">
+  <div class="controls">
+    <label>Board
+      <select id="mmSize">
+        <option value="3x4">3 x 4 (12 cards)</option>
+        <option value="4x4">4 x 4 (16 cards)</option>
+      </select>
+    </label>
+    <button class="btn danger" id="mmReset" type="button">Reset</button>
+  </div>
+  <div id="mmBoard"></div>
+  <div class="notice" id="mmMsg"></div>
+</section>
+
+
+    <div class="footer">v1 • separate pages • works on GitHub Pages</div>
+  </div>
+
+  <script src="app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", ()=>{ initMemory(); });
+  </script>
+</body>
+</html>
