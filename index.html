@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head><title>Primary Steps</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#1f78ff">
+<link rel="icon" type="image/png" href="assets/primary-steps-icon-512.png">
+<style>
+:root{
+  --bg:#f5fbff;
+  --panel:#ffffff;
+  --ink:#0b1b33;
+  --muted:#4b6488;
+  --blue:#1f78ff;
+  --blue2:#0f5fe6;
+  --stroke: rgba(31,120,255,.18);
+  --shadow: 0 18px 50px rgba(16, 60, 120, .14);
+  --shadow2: 0 10px 26px rgba(16, 60, 120, .10);
+  --r: 18px;
+  --max: 1100px;
+  --font: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:var(--font);
+  color:var(--ink);
+  background:
+    radial-gradient(900px 360px at 30% -10%, rgba(31,120,255,.14), transparent 55%),
+    radial-gradient(900px 360px at 85% 10%, rgba(31,120,255,.10), transparent 55%),
+    linear-gradient(180deg, var(--bg), #eaf4ff);
+}
+a{color:inherit}
+.container{width:min(var(--max), 92vw); margin:0 auto; padding:18px 0 60px;}
+.header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:12px 14px;
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.72);
+  backdrop-filter: blur(10px);
+  border-radius: 22px;
+  box-shadow: var(--shadow2);
+  position: sticky;
+  top: 10px;
+  z-index: 20;
+}
+.brand{display:flex; align-items:center; gap:12px; min-width:0;}
+.brand img{
+  height: 34px;
+  width:auto;
+  display:block;
+  filter: drop-shadow(0 10px 18px rgba(16,60,120,.16));
+}
+.brand .title{margin:0; font-weight:950; letter-spacing:.2px; font-size:1.05rem;}
+.brand .tag{margin:2px 0 0; color:var(--muted); font-weight:700; font-size:.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.actions{display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+.pill{
+  display:inline-flex; align-items:center; gap:8px;
+  height:40px; padding:0 14px;
+  border-radius:999px;
+  border:1px solid rgba(31,120,255,.18);
+  background: rgba(255,255,255,.70);
+  font-weight:900;
+  text-decoration:none;
+  box-shadow: 0 10px 22px rgba(16,60,120,.07);
+  transition:.16s ease;
+}
+.pill:hover{transform: translateY(-1px); border-color: rgba(31,120,255,.30);}
+.pill.primary{
+  background: linear-gradient(180deg, var(--blue), var(--blue2));
+  color:#fff;
+  border-color: rgba(31,120,255,.35);
+  box-shadow: 0 16px 30px rgba(16,60,120,.16);
+}
+.hero{
+  margin-top:16px;
+  padding:24px;
+  border-radius: 24px;
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.78);
+  box-shadow: var(--shadow);
+}
+.hero h1{margin:0 0 6px; font-weight:980; letter-spacing:.2px; font-size:1.45rem;}
+.hero p{margin:0; color:var(--muted); font-weight:750; line-height:1.45;}
+.grid{
+  margin-top:16px;
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap:14px;
+}
+.card{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 16px;
+  border-radius: var(--r);
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.85);
+  box-shadow: var(--shadow2);
+  text-decoration:none;
+  transition: .16s ease;
+  cursor:pointer;
+  position:relative;
+}
+.card:hover{transform: translateY(-2px); border-color: rgba(31,120,255,.30);}
+.card:active{transform: translateY(0);}
+.left{display:flex; align-items:center; gap:12px; min-width:0;}
+.ico{
+  width:44px; height:44px; border-radius:14px;
+  display:grid; place-items:center;
+  background: rgba(31,120,255,.10);
+  border:1px solid rgba(31,120,255,.18);
+  font-size: 1.15rem;
+}
+.meta{min-width:0}
+.meta .name{margin:0; font-weight:950; letter-spacing:.2px; font-size:1.05rem;}
+.meta .desc{margin:2px 0 0; color:var(--muted); font-weight:700; font-size:.92rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.badge{
+  height:36px; padding:0 16px;
+  border-radius:999px;
+  background: rgba(18,51,95,.92);
+  color:#fff;
+  font-weight:900;
+  display:inline-flex; align-items:center; justify-content:center;
+}
+.footer{margin-top:18px; text-align:center; color: rgba(11,27,51,.55); font-weight:750;}
+.page{
+  margin-top:16px;
+  padding:22px;
+  border-radius: 24px;
+  border:1px solid var(--stroke);
+  background: rgba(255,255,255,.78);
+  box-shadow: var(--shadow);
+}
+.breadcrumb{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px;}
+.breadcrumb a{color: var(--blue2); font-weight:900; text-decoration:none;}
+.breadcrumb a:hover{text-decoration: underline; text-underline-offset: 4px;}
+@media (max-width: 980px){ .grid{grid-template-columns: repeat(2, minmax(0,1fr));} }
+@media (max-width: 560px){
+  .container{width:min(var(--max), 94vw);}
+  .brand img{height:30px;}
+  .grid{grid-template-columns: 1fr;}
+  .meta .desc{white-space:normal;}
+  .actions{width:100%; justify-content:flex-start;}
+}
+</style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" onerror="this.style.display='none'">
+        <div style="min-width:0">
+          <p class="title">Primary Steps</p>
+          <p class="tag">Calm, fun learning for primary school children</p>
+        </div>
+      </div>
+      <div class="actions">
+        <span class="pill" style="cursor:default">⭐ <span id="starsCount">0</span> stars</span>
+        <a class="pill" href="settings.html">Settings</a>
+        <a class="pill primary" href="index.html">Home</a>
+      </div>
+    </header>
+
+    
+<section class="hero">
+  <h1>Choose an activity</h1>
+  <p>Tap a card to open a new page. No stuck clicks, no hidden overlays — just simple navigation.</p>
+  <div class="grid">
+    <a class="card" href="letters.html" aria-label="Letters">
+      <div class="left">
+        <div class="ico" aria-hidden="true">🔤</div>
+        <div class="meta">
+          <p class="name">Letters</p>
+          <p class="desc">Pick the matching letter</p>
+        </div>
+      </div>
+      <span class="badge">Play</span>
+    </a>
+<a class="card" href="numbers.html" aria-label="Numbers">
+      <div class="left">
+        <div class="ico" aria-hidden="true">🔢</div>
+        <div class="meta">
+          <p class="name">Numbers</p>
+          <p class="desc">Count the objects and choose the number</p>
+        </div>
+      </div>
+      <span class="badge">Play</span>
+    </a>
+<a class="card" href="memory.html" aria-label="Memory Match">
+      <div class="left">
+        <div class="ico" aria-hidden="true">🧠</div>
+        <div class="meta">
+          <p class="name">Memory Match</p>
+          <p class="desc">Find pairs to build focus and memory</p>
+        </div>
+      </div>
+      <span class="badge">Game</span>
+    </a>
+<a class="card" href="games.html" aria-label="Games">
+      <div class="left">
+        <div class="ico" aria-hidden="true">🎮</div>
+        <div class="meta">
+          <p class="name">Games</p>
+          <p class="desc">Short brain breaks & mini challenges</p>
+        </div>
+      </div>
+      <span class="badge">Play</span>
+    </a>
+<a class="card" href="phonics.html" aria-label="Phonics">
+      <div class="left">
+        <div class="ico" aria-hidden="true">🔊</div>
+        <div class="meta">
+          <p class="name">Phonics</p>
+          <p class="desc">Blend sounds to form words</p>
+        </div>
+      </div>
+      <span class="badge">Blend</span>
+    </a>
+<a class="card" href="maths.html" aria-label="Maths">
+      <div class="left">
+        <div class="ico" aria-hidden="true">➕</div>
+        <div class="meta">
+          <p class="name">Maths</p>
+          <p class="desc">Add, subtract, multiply and divide</p>
+        </div>
+      </div>
+      <span class="badge">Learn</span>
+    </a>
+<a class="card" href="clock.html" aria-label="Clock">
+      <div class="left">
+        <div class="ico" aria-hidden="true">🕒</div>
+        <div class="meta">
+          <p class="name">Clock</p>
+          <p class="desc">Practise telling the time</p>
+        </div>
+      </div>
+      <span class="badge">Time</span>
+    </a>
+<a class="card" href="handwriting.html" aria-label="Handwriting">
+      <div class="left">
+        <div class="ico" aria-hidden="true">✍️</div>
+        <div class="meta">
+          <p class="name">Handwriting</p>
+          <p class="desc">Trace letters and simple words</p>
+        </div>
+      </div>
+      <span class="badge">Trace</span>
+    </a>
+<a class="card" href="progress.html" aria-label="Progress">
+      <div class="left">
+        <div class="ico" aria-hidden="true">⭐</div>
+        <div class="meta">
+          <p class="name">Progress</p>
+          <p class="desc">Stars earned on this device</p>
+        </div>
+      </div>
+      <span class="badge">View</span>
+    </a>
+  </div>
+</section>
+
+
+    <div class="footer">© 2025 Primary Steps</div>
+  </div>
+
+<script>
+(function(){
+  var el = document.getElementById("starsCount");
+  if(!el) return;
+  el.textContent = String(Number(localStorage.getItem("ps_stars") || "0"));
+})();
+</script>
+</body>
+</html>
