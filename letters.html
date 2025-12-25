@@ -174,13 +174,13 @@ a{color:inherit}
     <div style="min-width:260px;flex:1 1 420px">
       <h2 style="margin:0 0 6px; font-weight:980; letter-spacing:.2px;">🔤 Letters</h2>
       <p style="margin:0; color:var(--muted); font-weight:750; line-height:1.5;">
-        Choose an activity below. Keep it short, keep it fun — 3–5 minutes is perfect.
+        Play quick letter games with voice prompts. Start easy, then level up.
       </p>
     </div>
 
     <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
-      <button class="pill" id="soundToggle" type="button" aria-pressed="false" title="Sound is coming soon">
-        🔇 Sound: Off
+      <button class="pill" id="soundToggle" type="button" aria-pressed="false" title="Toggle voice prompts">
+        🔇 Voice: Off
       </button>
       <button class="pill primary" id="resetBtn" type="button" title="Reset this page (keeps total stars)">
         Reset activity
@@ -195,7 +195,7 @@ a{color:inherit}
         <div class="ico" aria-hidden="true">🎯</div>
         <div class="meta">
           <p class="name">Find the Letter</p>
-          <p class="desc">Tap the correct letter from a few choices</p>
+          <p class="desc">Listen, then tap the correct letter</p>
         </div>
       </div>
       <span class="badge">Play</span>
@@ -215,12 +215,30 @@ a{color:inherit}
 
   <!-- Play Area -->
   <div id="playArea" style="margin-top:14px; border:1px solid var(--stroke); border-radius: 24px; padding:14px; background: rgba(255,255,255,.70); box-shadow: var(--shadow2);">
-    <div id="activityHeader" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
-      <div>
-        <p id="activityTitle" style="margin:0; font-weight:950;">Select an activity</p>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div style="min-width:260px;flex:1 1 420px">
+        <p id="activityTitle" style="margin:0; font-weight:980; font-size:1.05rem;">Select an activity</p>
         <p id="activitySub" style="margin:4px 0 0; color:var(--muted); font-weight:750;">Pick a game above to start.</p>
+
+        <div style="margin-top:10px; display:flex; gap:10px; flex-wrap:wrap; align-items:center">
+          <button class="pill" id="repeatPrompt" type="button" title="Repeat the instruction" disabled style="opacity:.6">
+            🔁 Say again
+          </button>
+          <span id="feedback" style="font-weight:950; color: rgba(11,27,51,.78);" aria-live="polite"></span>
+        </div>
+
+        <div style="margin-top:10px">
+          <div style="display:flex;align-items:center;justify-content:space-between;gap:10px">
+            <span style="font-weight:900;color:var(--muted)">Streak</span>
+            <span id="streakLabel" style="font-weight:950;color:rgba(11,27,51,.72)">0 / 3</span>
+          </div>
+          <div style="margin-top:6px; height:10px; border-radius:999px; background: rgba(31,120,255,.10); border:1px solid rgba(31,120,255,.18); overflow:hidden">
+            <div id="streakBar" style="height:100%; width:0%; border-radius:999px; background: linear-gradient(180deg, var(--blue), var(--blue2));"></div>
+          </div>
+        </div>
       </div>
-      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
         <div style="display:flex;gap:8px;align-items:center">
           <span style="font-weight:900;color:var(--muted)">Difficulty</span>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -228,14 +246,23 @@ a{color:inherit}
             <button class="pill" id="diffHard" type="button" aria-pressed="false">Hard (6)</button>
           </div>
         </div>
+
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-weight:900;color:var(--muted)">Set</span>
+          <select id="setSelect" class="pill" style="height:40px; padding-right:10px; cursor:pointer">
+            <option value="0">Set 1</option>
+            <option value="1">Set 2</option>
+            <option value="2">Set 3</option>
+          </select>
+        </div>
+
         <span class="pill" style="cursor:default">⭐ Session: <span id="sessionStars">0</span></span>
       </div>
     </div>
 
     <div id="activityBody" style="margin-top:12px; display:grid; gap:12px;">
-      <!-- injected by JS -->
       <div style="padding:12px;border-radius:18px;border:1px dashed rgba(31,120,255,.28);color:var(--muted);font-weight:750;">
-        Tip: Start on Easy, get 3 correct in a row, then try Hard.
+        Tip: Turn Voice on, then tap <b>Play</b> above. Use <b>Say again</b> any time.
       </div>
     </div>
   </div>
@@ -265,16 +292,18 @@ a{color:inherit}
 </section>
 
 <script>
-/* Primary Steps — Letters (Step 2: first real activities) */
+/* Primary Steps — Letters (Step 3: voice prompts + pro feedback) */
 (function(){
-  // ---------- Global stars (existing behaviour) ----------
-  var starBtn = document.getElementById("starBtn");
+  // ---------- Total stars (shared across site) ----------
   function getTotalStars(){ return Number(localStorage.getItem("ps_stars") || "0"); }
   function setTotalStars(n){ localStorage.setItem("ps_stars", String(n)); }
   function refreshTopStars(){
     var top = document.getElementById("starsCount");
     if(top) top.textContent = String(getTotalStars());
   }
+  refreshTopStars();
+
+  var starBtn = document.getElementById("starBtn");
   if(starBtn){
     starBtn.addEventListener("click", function(){
       var n = getTotalStars() + 1;
@@ -285,51 +314,132 @@ a{color:inherit}
     });
   }
 
+  // ---------- Voice (SpeechSynthesis) ----------
+  var voiceBtn = document.getElementById("soundToggle");
+  var voicePref = localStorage.getItem("ps_voice") || "off"; // on/off
+  var selectedVoiceName = localStorage.getItem("ps_voice_name") || ""; // best-effort
+  var voices = [];
+
+  function loadVoices(){
+    try{
+      voices = window.speechSynthesis ? window.speechSynthesis.getVoices() : [];
+      // If no saved voice, attempt to pick a friendly female-ish voice (best effort).
+      if(!selectedVoiceName && voices && voices.length){
+        var preferred = voices.find(v => /female|woman|susan|serena|karen|moira|amelia|samantha/i.test(v.name))
+                    || voices.find(v => /en-GB|English \(United Kingdom\)|UK/i.test(v.lang || ""))
+                    || voices.find(v => /en/i.test(v.lang || ""))
+                    || voices[0];
+        if(preferred){
+          selectedVoiceName = preferred.name;
+          localStorage.setItem("ps_voice_name", selectedVoiceName);
+        }
+      }
+    }catch(e){}
+  }
+
+  if(window.speechSynthesis){
+    loadVoices();
+    window.speechSynthesis.onvoiceschanged = function(){ loadVoices(); };
+  }
+
+  function getVoice(){
+    if(!voices || !voices.length) return null;
+    if(selectedVoiceName){
+      var v = voices.find(x => x.name === selectedVoiceName);
+      if(v) return v;
+    }
+    // fallback
+    return voices.find(v => /en/i.test(v.lang || "")) || voices[0] || null;
+  }
+
+  function speak(text){
+    if(voicePref !== "on") return;
+    if(!window.speechSynthesis || !window.SpeechSynthesisUtterance) return;
+    try{
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(text);
+      var v = getVoice();
+      if(v) u.voice = v;
+      // Calm, friendly defaults (best effort)
+      u.rate = 0.92;
+      u.pitch = 1.05;
+      u.volume = 1.0;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  function renderVoiceBtn(){
+    if(!voiceBtn) return;
+    voiceBtn.setAttribute("aria-pressed", String(voicePref === "on"));
+    voiceBtn.textContent = (voicePref === "on") ? "🔊 Voice: On" : "🔇 Voice: Off";
+    voiceBtn.title = "Voice prompts use your device voice (best effort).";
+  }
+
+  if(voiceBtn){
+    renderVoiceBtn();
+    voiceBtn.addEventListener("click", function(){
+      voicePref = (voicePref === "on") ? "off" : "on";
+      localStorage.setItem("ps_voice", voicePref);
+      renderVoiceBtn();
+      if(voicePref === "on"){
+        speak("Voice is on.");
+      }
+    });
+  }
+
   // ---------- Session stars ----------
   var sessionStarsEl = document.getElementById("sessionStars");
   var sessionStars = 0;
   function addSessionStar(){
     sessionStars += 1;
     if(sessionStarsEl) sessionStarsEl.textContent = String(sessionStars);
+    setFeedback("⭐ Star earned!", true);
+    speak("Great job. You earned a star.");
   }
   function resetSession(){
     sessionStars = 0;
     if(sessionStarsEl) sessionStarsEl.textContent = "0";
   }
 
-  // ---------- Sound toggle placeholder ----------
-  var soundBtn = document.getElementById("soundToggle");
-  if(soundBtn){
-    // Keep off for now, but remember user's preference for later.
-    var pref = localStorage.getItem("ps_sound") || "off";
-    function renderSound(){
-      soundBtn.setAttribute("aria-pressed", String(pref === "on"));
-      soundBtn.textContent = (pref === "on") ? "🔊 Sound: On" : "🔇 Sound: Off";
-      soundBtn.title = "Sound is coming soon — this button saves your preference";
-    }
-    renderSound();
-    soundBtn.addEventListener("click", function(){
-      pref = (pref === "on") ? "off" : "on";
-      localStorage.setItem("ps_sound", pref);
-      renderSound();
-    });
-  }
-
-  // ---------- Difficulty ----------
+  // ---------- Difficulty + Sets ----------
   var easyBtn = document.getElementById("diffEasy");
   var hardBtn = document.getElementById("diffHard");
+  var setSelect = document.getElementById("setSelect");
   var difficulty = Number(localStorage.getItem("ps_letters_diff") || "3"); // 3 or 6
+  var setIndex = Number(localStorage.getItem("ps_letters_set") || "0");
+
+  var LETTER_SETS = [
+    ["A","S","T","P","I","N"],
+    ["M","D","G","O","C","K"],
+    ["E","R","H","L","B","F"]
+  ];
+
+  function currentLetters(){
+    var base = LETTER_SETS[setIndex] || LETTER_SETS[0];
+    return base.slice(0, difficulty);
+  }
+
   function setDifficulty(n){
     difficulty = n;
     localStorage.setItem("ps_letters_diff", String(n));
     if(easyBtn) easyBtn.setAttribute("aria-pressed", String(n === 3));
     if(hardBtn) hardBtn.setAttribute("aria-pressed", String(n === 6));
-    // Restart current activity
-    if(currentActivity === "find") startFind();
-    if(currentActivity === "match") startMatch();
+    restartActivity();
   }
+  function setSet(i){
+    setIndex = i;
+    localStorage.setItem("ps_letters_set", String(i));
+    restartActivity();
+  }
+
   if(easyBtn) easyBtn.addEventListener("click", function(){ setDifficulty(3); });
   if(hardBtn) hardBtn.addEventListener("click", function(){ setDifficulty(6); });
+  if(setSelect){
+    setSelect.value = String(setIndex);
+    setSelect.addEventListener("change", function(){
+      setSet(Number(setSelect.value || "0"));
+    });
+  }
   setDifficulty(difficulty);
 
   // ---------- UI elements ----------
@@ -337,11 +447,21 @@ a{color:inherit}
   var title = document.getElementById("activityTitle");
   var sub = document.getElementById("activitySub");
   var resetBtn = document.getElementById("resetBtn");
+  var repeatBtn = document.getElementById("repeatPrompt");
+  var feedbackEl = document.getElementById("feedback");
+  var streakLabel = document.getElementById("streakLabel");
+  var streakBar = document.getElementById("streakBar");
+
+  var currentActivity = null;
+  var lastPrompt = "";
+  var streak = 0;
 
   function setHeader(t, s){
     if(title) title.textContent = t;
     if(sub) sub.textContent = s;
   }
+
+  function clearBody(){ if(body) body.innerHTML = ""; }
 
   function el(tag, attrs, children){
     var node = document.createElement(tag);
@@ -359,11 +479,6 @@ a{color:inherit}
     return node;
   }
 
-  function clearBody(){
-    if(!body) return;
-    body.innerHTML = "";
-  }
-
   function shimmer(node){
     node.animate([
       { transform:"translateY(0)", boxShadow:"0 10px 22px rgba(16,60,120,.07)" },
@@ -371,7 +486,6 @@ a{color:inherit}
       { transform:"translateY(0)", boxShadow:"0 10px 22px rgba(16,60,120,.07)" }
     ], { duration: 260, iterations: 1, easing:"ease-out" });
   }
-
   function shake(node){
     node.animate([
       { transform:"translateX(0)" },
@@ -383,86 +497,113 @@ a{color:inherit}
     ], { duration: 240, iterations: 1, easing:"ease-out" });
   }
 
+  function setFeedback(text, good){
+    if(!feedbackEl) return;
+    feedbackEl.textContent = text || "";
+    feedbackEl.style.color = good ? "rgba(18,51,95,.92)" : "rgba(75,100,136,1)";
+  }
+
+  function setStreak(n){
+    streak = n;
+    if(streakLabel) streakLabel.textContent = streak + " / 3";
+    if(streakBar) streakBar.style.width = (streak/3*100) + "%";
+  }
+
+  function setPrompt(text){
+    lastPrompt = text || "";
+    if(repeatBtn){
+      repeatBtn.disabled = !lastPrompt;
+      repeatBtn.style.opacity = lastPrompt ? "1" : ".6";
+    }
+  }
+
+  if(repeatBtn){
+    repeatBtn.addEventListener("click", function(){
+      if(lastPrompt) speak(lastPrompt);
+    });
+  }
+
   // ---------- Activities ----------
-  var currentActivity = null;
-  var letters = ["A","S","T","P","I","N"]; // early set (can expand later)
-
-  // Find the Letter
-  var targetLetter = null;
-  var streak = 0;
-
   function pickTarget(pool){
     return pool[Math.floor(Math.random() * pool.length)];
   }
 
+  // Find the Letter
+  var targetLetter = null;
+
   function startFind(){
     currentActivity = "find";
     resetSession();
-    streak = 0;
+    setStreak(0);
+    setFeedback("", true);
 
-    setHeader("Find the Letter", "Tap the correct letter. Get 3 in a row to earn a session star.");
+    setHeader("Find the Letter", "Listen, then tap the correct letter. 3 correct in a row earns a session star.");
 
-    var pool = letters.slice(0, difficulty);
+    var pool = currentLetters();
     targetLetter = pickTarget(pool);
 
     clearBody();
 
-    var prompt = el("div", {
-      style: "display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
+    var promptRow = el("div", {
+      style:"display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
     }, [
       el("div", {}, [
-        el("div", {style:"font-weight:950;font-size:1.05rem;"}, ["Find: ", targetLetter]),
-        el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Streak: ", String(streak), " / 3"])
+        el("div", {style:"font-weight:980;font-size:1.10rem;"}, ["Find: ", targetLetter]),
+        el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Tap the matching letter below."])
       ]),
-      el("button", {class:"pill primary", type:"button", id:"nextFind"}, [ "New letter" ])
+      el("button", {class:"pill primary", type:"button", id:"newFind"}, ["New letter"])
     ]);
 
-    var grid = el("div", {style:"display:grid;grid-template-columns: repeat(6, minmax(0,1fr));gap:10px;"});
-    // responsive columns
-    grid.style.gridTemplateColumns = (difficulty === 3) ? "repeat(3, minmax(0,1fr))" : "repeat(3, minmax(0,1fr))";
-
+    var grid = el("div", {style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;"});
     pool.forEach(function(L){
       var b = el("button", {
         type:"button",
         class:"card",
-        style:"justify-content:center; padding:18px; text-align:center; min-height:72px; font-size:1.6rem; font-weight:980;"
+        style:"justify-content:center; padding:18px; text-align:center; min-height:76px; font-size:1.8rem; font-weight:980;"
       }, [L]);
       b.addEventListener("click", function(){
         if(L === targetLetter){
-          streak += 1;
           shimmer(b);
-          // Earn session star each time you reach 3
+          setFeedback("✅ Well done!", true);
+          speak("Well done.");
+          setStreak(streak + 1);
           if(streak >= 3){
             addSessionStar();
-            streak = 0;
+            setStreak(0);
           }
           targetLetter = pickTarget(pool);
-          // refresh prompt
-          prompt.querySelector("div div").textContent = "Find: " + targetLetter;
-          prompt.querySelector("div div + div").textContent = "Streak: " + streak + " / 3";
+          promptRow.querySelector("div div").textContent = "Find: " + targetLetter;
+          var p = "Find the letter " + targetLetter;
+          setPrompt(p); speak(p);
         }else{
           shake(b);
-          streak = 0;
-          prompt.querySelector("div div + div").textContent = "Streak: " + streak + " / 3";
+          setFeedback("Try again.", false);
+          speak("Try again.");
+          setStreak(0);
         }
       });
       grid.appendChild(b);
     });
 
-    body.appendChild(prompt);
+    body.appendChild(promptRow);
     body.appendChild(grid);
 
-    var nextBtn = document.getElementById("nextFind");
-    if(nextBtn){
-      nextBtn.addEventListener("click", function(){
+    // First prompt (after user started activity)
+    var p = "Find the letter " + targetLetter;
+    setPrompt(p);
+    speak(p);
+
+    var newBtn = document.getElementById("newFind");
+    if(newBtn){
+      newBtn.addEventListener("click", function(){
+        setFeedback("", true);
         targetLetter = pickTarget(pool);
-        prompt.querySelector("div div").textContent = "Find: " + targetLetter;
+        promptRow.querySelector("div div").textContent = "Find: " + targetLetter;
+        var p2 = "Find the letter " + targetLetter;
+        setPrompt(p2);
+        speak(p2);
       });
     }
-
-    body.appendChild(el("div", {style:"color:var(--muted);font-weight:750;font-size:.92rem;"}, [
-      "Tip: Start with Easy (3 letters). When confident, switch to Hard (6 letters)."
-    ]));
   }
 
   // Upper & Lower Match
@@ -471,85 +612,96 @@ a{color:inherit}
   function startMatch(){
     currentActivity = "match";
     resetSession();
+    setStreak(0);
+    setFeedback("", true);
 
-    setHeader("Upper & Lower Match", "Tap the matching small letter. Get 3 correct in a row to earn a session star.");
+    setHeader("Upper & Lower Match", "Tap the matching small letter. 3 correct in a row earns a session star.");
 
-    var poolUpper = letters.slice(0, difficulty);
+    var poolUpper = currentLetters();
     var poolLower = poolUpper.map(function(x){ return x.toLowerCase(); });
-
-    matchTarget = pickTarget(poolUpper);
-    streak = 0;
 
     clearBody();
 
-    var prompt = el("div", {
-      style: "display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
+    var promptRow = el("div", {
+      style:"display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
     }, [
       el("div", {}, [
-        el("div", {style:"font-weight:980;font-size:1.15rem;"}, ["Match this: ", matchTarget]),
-        el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Streak: ", String(streak), " / 3"])
+        el("div", {style:"font-weight:980;font-size:1.15rem;"}, ["Match this: ", "A"]),
+        el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Tap the matching small letter."])
       ]),
-      el("button", {class:"pill primary", type:"button", id:"nextMatch"}, [ "New letter" ])
+      el("button", {class:"pill primary", type:"button", id:"newMatch"}, ["New letter"])
     ]);
 
     var grid = el("div", {style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;"});
 
-    // Shuffle choices but always include correct one
     function newRound(){
       matchTarget = pickTarget(poolUpper);
+      promptRow.querySelector("div div").textContent = "Match this: " + matchTarget;
+
+      // prompt voice
+      var p = "Match " + matchTarget;
+      setPrompt(p);
+      speak(p);
+
       var correct = matchTarget.toLowerCase();
-      // Build options: correct + 2 random others
       var options = [correct];
       while(options.length < 3){
         var o = pickTarget(poolLower);
         if(options.indexOf(o) === -1) options.push(o);
       }
-      // Shuffle
+      // shuffle
       for(var i=options.length-1;i>0;i--){
         var j = Math.floor(Math.random()*(i+1));
         var tmp = options[i]; options[i]=options[j]; options[j]=tmp;
       }
-      prompt.querySelector("div div").textContent = "Match this: " + matchTarget;
-      prompt.querySelector("div div + div").textContent = "Streak: " + streak + " / 3";
 
       grid.innerHTML = "";
       options.forEach(function(ch){
         var b = el("button", {
           type:"button",
           class:"card",
-          style:"justify-content:center; padding:18px; text-align:center; min-height:72px; font-size:1.6rem; font-weight:980;"
+          style:"justify-content:center; padding:18px; text-align:center; min-height:76px; font-size:1.8rem; font-weight:980;"
         }, [ch]);
         b.addEventListener("click", function(){
           if(ch === matchTarget.toLowerCase()){
-            streak += 1;
             shimmer(b);
+            setFeedback("✅ Great match!", true);
+            speak("Well done.");
+            setStreak(streak + 1);
             if(streak >= 3){
               addSessionStar();
-              streak = 0;
+              setStreak(0);
             }
             newRound();
           }else{
             shake(b);
-            streak = 0;
-            prompt.querySelector("div div + div").textContent = "Streak: " + streak + " / 3";
+            setFeedback("Try again.", false);
+            speak("Try again.");
+            setStreak(0);
           }
         });
         grid.appendChild(b);
       });
     }
 
-    body.appendChild(prompt);
+    body.appendChild(promptRow);
     body.appendChild(grid);
 
-    var nextBtn = document.getElementById("nextMatch");
-    if(nextBtn){
-      nextBtn.addEventListener("click", function(){
-        streak = 0;
+    var newBtn = document.getElementById("newMatch");
+    if(newBtn){
+      newBtn.addEventListener("click", function(){
+        setFeedback("", true);
+        setStreak(0);
         newRound();
       });
     }
 
     newRound();
+  }
+
+  function restartActivity(){
+    if(currentActivity === "find") startFind();
+    else if(currentActivity === "match") startMatch();
   }
 
   // Launch buttons
@@ -562,20 +714,20 @@ a{color:inherit}
   if(resetBtn){
     resetBtn.addEventListener("click", function(){
       resetSession();
-      if(currentActivity === "find") startFind();
-      else if(currentActivity === "match") startMatch();
+      setStreak(0);
+      setFeedback("", true);
+      if(window.speechSynthesis) try{ window.speechSynthesis.cancel(); }catch(e){}
+      if(currentActivity) restartActivity();
       else {
         clearBody();
         setHeader("Select an activity", "Pick a game above to start.");
+        setPrompt("");
         body.appendChild(el("div", {style:"padding:12px;border-radius:18px;border:1px dashed rgba(31,120,255,.28);color:var(--muted);font-weight:750;"}, [
-          "Tip: Start on Easy, get 3 correct in a row, then try Hard."
+          "Tip: Turn Voice on, then tap Play above. Use Say again any time."
         ]));
       }
     });
   }
-
-  // Initial stars in header
-  refreshTopStars();
 })();
 </script>
 
