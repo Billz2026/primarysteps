@@ -201,7 +201,7 @@ a{color:inherit}
     radial-gradient(circle at 25% 85%, rgba(31,120,255,.08), rgba(31,120,255,0) 60%),
     linear-gradient(180deg, rgba(247,250,255,.92), rgba(245,248,255,.74));
   pointer-events:none;
-  z-index: -1;
+  z-index: -5;
 }
 .card{
   transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
@@ -337,6 +337,7 @@ a{color:inherit}
   .hubGrid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 .hubTile{
+  pointer-events: auto;
   cursor: pointer;
   text-align:left;
   min-height: 122px;
@@ -649,6 +650,15 @@ a{color:inherit}
 @media (max-width: 560px){
   .illusSvg{ height: 86px; }
 }
+
+
+/* --- Clickability guard (prevents invisible overlays blocking taps) --- */
+header, .header, .hub, .goalStrip, #playArea, #lettersPage, main, .page{
+  position: relative;
+  z-index: 1;
+}
+.psModal{ z-index: 9999; } /* keep modal above when shown */
+.psConfetti{ pointer-events:none; }
 
 </style>
 </head>
