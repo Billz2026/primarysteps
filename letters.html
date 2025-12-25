@@ -575,73 +575,220 @@ a{color:inherit}
     setStreak(0);
     setFeedback("", true);
 
-    setHeader("Find the Letter", "Listen, then tap the correct letter. 3 correct in a row earns a session star.");
+    setHeader("Find the Letter", "Play 5 quick rounds. Each correct answer moves you forward.");
 
     var pool = currentLetters();
-    targetLetter = pickTarget(pool);
+
+    // Premium mini-game state
+    var TOTAL_ROUNDS = 5;
+    var round = 0;
+    var score = 0;
+    var targetLetter = null;
 
     clearBody();
 
-    var promptRow = el("div", {
-      style:"display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
-    }, [
-      el("div", {}, [
-        el("div", {style:"font-weight:980;font-size:1.10rem;"}, ["Find: ", targetLetter]),
-        el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Tap the matching letter below."])
-      ]),
-      el("button", {class:"pill primary", type:"button", id:"newFind"}, ["New letter"])
-    ]);
-
-    var grid = el("div", {style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;"});
-    pool.forEach(function(L){
-      var b = el("button", {
-        type:"button",
-        class:"card",
-        style:"justify-content:center; padding:18px; text-align:center; min-height:76px; font-size:1.8rem; font-weight:980;"
-      }, [L]);
-      b.addEventListener("click", function(){
-        if(L === targetLetter){
-          shimmer(b);
-          setFeedback("✅ Well done!", true);
-          speak("Well done.");
-          setStreak(streak + 1);
-          if(streak >= 3){
-            addSessionStar();
-            setStreak(0);
-          }
-          targetLetter = pickTarget(pool);
-          promptRow.querySelector("div div").textContent = "Find: " + targetLetter;
-          var p = "Find the letter " + targetLetter;
-          setPrompt(p); speak(p);
-        }else{
-          shake(b);
-          setFeedback("Try again.", false);
-          speak("Try again.");
-          setStreak(0);
-        }
-      });
-      grid.appendChild(b);
+    // --- UI blocks ---
+    var frame = el("div", {style:
+      "border:1px solid var(--stroke);background:rgba(255,255,255,.86);border-radius:22px;box-shadow: var(--shadow2);padding:14px;display:grid;gap:12px;"
     });
 
-    body.appendChild(promptRow);
-    body.appendChild(grid);
+    var topRow = el("div", {style:"display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"}, [
+      el("div", {}, [
+        el("div", {style:"font-weight:980;font-size:1.05rem;"}, ["Level: 5 rounds"]),
+        el("div", {id:"roundMeta", style:"margin-top:4px;color:var(--muted);font-weight:800;font-size:.92rem;"}, ["Round 0 / 5 • Score 0"])
+      ]),
+      el("div", {style:"display:flex;gap:8px;flex-wrap:wrap;align-items:center"}, [
+        el("button", {class:"pill", type:"button", id:"repeatBtnMini", title:"Repeat the instruction"}, ["🔁 Say again"]),
+        el("button", {class:"pill primary", type:"button", id:"startFindGame"}, ["Start"])
+      ])
+    ]);
 
-    // First prompt (after user started activity)
-    var p = "Find the letter " + targetLetter;
-    setPrompt(p);
-    speak(p);
+    // Progress dots (premium feel)
+    var dots = el("div", {style:"display:flex;gap:8px;align-items:center;justify-content:flex-start"}, []);
+    for(var i=0;i<TOTAL_ROUNDS;i++){
+      dots.appendChild(el("div", {class:"psDot", "data-i": String(i), style:
+        "width:12px;height:12px;border-radius:999px;background:rgba(31,120,255,.10);border:1px solid rgba(31,120,255,.22);"
+      }));
+    }
 
-    var newBtn = document.getElementById("newFind");
-    if(newBtn){
-      newBtn.addEventListener("click", function(){
-        setFeedback("", true);
-        targetLetter = pickTarget(pool);
-        promptRow.querySelector("div div").textContent = "Find: " + targetLetter;
-        var p2 = "Find the letter " + targetLetter;
-        setPrompt(p2);
-        speak(p2);
+    // Prompt card
+    var promptCard = el("div", {style:
+      "border:1px solid rgba(31,120,255,.18);background:linear-gradient(180deg, rgba(31,120,255,.10), rgba(255,255,255,.76));border-radius:22px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;"
+    }, [
+      el("div", {}, [
+        el("div", {style:"font-weight:950;color:rgba(11,27,51,.78);"}, ["Instruction"]),
+        el("div", {id:"bigPrompt", style:"margin-top:6px;font-weight:990;font-size:2.1rem;letter-spacing:.5px;"}, ["Tap Start"])
+      ]),
+      el("div", {style:"display:flex;gap:10px;align-items:center;flex-wrap:wrap"}, [
+        el("span", {class:"pill", style:"cursor:default"}, ["✅ Correct: ", el("span",{id:"scoreNum"},["0"])]),
+        el("span", {class:"pill", style:"cursor:default"}, ["⏱️ Rounds: ", el("span",{id:"roundNum"},["0"]), "/", String(TOTAL_ROUNDS)])
+      ])
+    ]);
+
+    // Choices grid
+    var grid = el("div", {id:"findGrid", style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;opacity:.55;pointer-events:none;"});
+
+    // Feedback panel
+    var feedbackPanel = el("div", {id:"findFeedbackPanel", style:
+      "border-radius:18px;padding:12px;border:1px solid rgba(31,120,255,.18);background:rgba(255,255,255,.78);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;"
+    }, [
+      el("div", {id:"findFeedbackText", style:"font-weight:950;color:rgba(75,100,136,1);"}, ["Press Start to begin."]),
+      el("button", {class:"pill primary", type:"button", id:"nextRoundBtn", style:"display:none"}, ["Next"])
+    ]);
+
+    frame.appendChild(topRow);
+    frame.appendChild(dots);
+    frame.appendChild(promptCard);
+    frame.appendChild(grid);
+    frame.appendChild(feedbackPanel);
+
+    body.appendChild(frame);
+    body.appendChild(el("div", {style:"color:var(--muted);font-weight:800;font-size:.92rem;"}, [
+      "Tip: If it’s tricky, switch to Easy (3 letters) or choose a different Set."
+    ]));
+
+    // --- helpers ---
+    var roundMeta = document.getElementById("roundMeta");
+    var bigPrompt = document.getElementById("bigPrompt");
+    var scoreNum = document.getElementById("scoreNum");
+    var roundNum = document.getElementById("roundNum");
+    var nextBtn = document.getElementById("nextRoundBtn");
+    var startBtn = document.getElementById("startFindGame");
+    var repeatMini = document.getElementById("repeatBtnMini");
+    var fbText = document.getElementById("findFeedbackText");
+
+    function setDots(){
+      var all = frame.querySelectorAll(".psDot");
+      all.forEach(function(d, i){
+        if(i < round){
+          d.style.background = "linear-gradient(180deg, var(--blue), var(--blue2))";
+          d.style.borderColor = "rgba(31,120,255,.35)";
+        }else{
+          d.style.background = "rgba(31,120,255,.10)";
+          d.style.borderColor = "rgba(31,120,255,.22)";
+        }
       });
     }
+
+    function updateMeta(){
+      if(roundMeta) roundMeta.textContent = "Round " + round + " / " + TOTAL_ROUNDS + " • Score " + score;
+      if(scoreNum) scoreNum.textContent = String(score);
+      if(roundNum) roundNum.textContent = String(round);
+      setDots();
+    }
+
+    function newTarget(){
+      targetLetter = pool[Math.floor(Math.random() * pool.length)];
+      var promptText = "Find the letter " + targetLetter;
+      bigPrompt.textContent = targetLetter;
+      setPrompt(promptText);
+      speak(promptText);
+    }
+
+    function lockGrid(locked){
+      var g = document.getElementById("findGrid");
+      if(!g) return;
+      g.style.opacity = locked ? ".55" : "1";
+      g.style.pointerEvents = locked ? "none" : "auto";
+    }
+
+    function setFB(msg, good){
+      fbText.textContent = msg;
+      fbText.style.color = good ? "rgba(18,51,95,.92)" : "rgba(75,100,136,1)";
+    }
+
+    function showNext(show){
+      nextBtn.style.display = show ? "" : "none";
+    }
+
+    function buildGrid(){
+      grid.innerHTML = "";
+      pool.forEach(function(L){
+        var b = el("button", {
+          type:"button",
+          class:"card",
+          style:"justify-content:center; padding:18px; text-align:center; min-height:84px; font-size:2rem; font-weight:990;"
+        }, [L]);
+
+        b.addEventListener("click", function(){
+          if(L === targetLetter){
+            shimmer(b);
+            score += 1;
+            setFB("✅ Correct! Nice one.", true);
+            speak("Well done.");
+            lockGrid(true);
+            showNext(true);
+          }else{
+            shake(b);
+            setFB("Try again.", false);
+            speak("Try again.");
+            setStreak(0);
+          }
+        });
+
+        grid.appendChild(b);
+      });
+    }
+
+    function startRound(){
+      round += 1;
+      updateMeta();
+      lockGrid(false);
+      showNext(false);
+      setFB("Tap the letter you hear.", true);
+      newTarget();
+    }
+
+    function finish(){
+      lockGrid(true);
+      showNext(false);
+      var msg = "Finished! You got " + score + " out of " + TOTAL_ROUNDS + ".";
+      setFB(msg, true);
+      speak("Great work. " + msg);
+      // award session stars based on score: 5/5 -> 2 stars, 4/5 -> 1 star
+      if(score >= 4){
+        addSessionStar();
+        if(score === 5) addSessionStar();
+      }
+      // Show a replay button
+      startBtn.textContent = "Play again";
+      startBtn.style.display = "";
+    }
+
+    // Wire buttons
+    if(repeatMini){
+      repeatMini.addEventListener("click", function(){
+        if(lastPrompt) speak(lastPrompt);
+      });
+    }
+
+    if(startBtn){
+      startBtn.addEventListener("click", function(){
+        setFB("Get ready…", true);
+        speak("Let's play.");
+        score = 0;
+        round = 0;
+        updateMeta();
+        buildGrid();
+        startBtn.style.display = "none";
+        startRound();
+      });
+    }
+
+    if(nextBtn){
+      nextBtn.addEventListener("click", function(){
+        if(round >= TOTAL_ROUNDS){
+          finish();
+        }else{
+          startRound();
+        }
+      });
+    }
+
+    // Initial UI state
+    updateMeta();
+    buildGrid();
+    lockGrid(true);
   }
 
   // Upper & Lower Match
