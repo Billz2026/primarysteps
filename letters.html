@@ -293,6 +293,126 @@ a{color:inherit}
   10%{ opacity: 1;}
   100%{ transform: translateY(420px) rotate(220deg); opacity: 0;}
 }
+
+/* --- Premium Hub (Launcher) --- */
+.hub{
+  margin-top: 14px;
+  border: 1px solid var(--stroke);
+  border-radius: 26px;
+  padding: 14px;
+  background: rgba(255,255,255,.72);
+  box-shadow: var(--shadow2);
+}
+.hubTop{
+  display:flex;
+  align-items:flex-start;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.hubTitle{
+  margin:0;
+  font-weight: 990;
+  letter-spacing:.2px;
+  font-size: 1.12rem;
+}
+.hubSub{
+  margin:4px 0 0;
+  color: var(--muted);
+  font-weight: 780;
+}
+.hubActions{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.hubGrid{
+  margin-top: 12px;
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+}
+@media (min-width: 860px){
+  .hubGrid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.hubTile{
+  text-align:left;
+  min-height: 122px;
+  padding: 14px;
+  border-radius: 22px;
+  border: 1px solid rgba(31,120,255,.18);
+  background: linear-gradient(180deg, rgba(31,120,255,.08), rgba(255,255,255,.84));
+  box-shadow: 0 18px 34px rgba(16,60,120,.10);
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:10px;
+}
+.hubTile .row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+}
+.hubIcon{
+  width: 44px;
+  height: 44px;
+  border-radius: 16px;
+  display:grid;
+  place-items:center;
+  background: rgba(255,255,255,.78);
+  border: 1px solid rgba(31,120,255,.18);
+  font-size: 1.35rem;
+}
+.hubName{
+  margin:0;
+  font-weight: 990;
+  font-size: 1.02rem;
+}
+.hubDesc{
+  margin:4px 0 0;
+  color: rgba(75,100,136,1);
+  font-weight: 800;
+  font-size: .92rem;
+  line-height: 1.35;
+}
+.hubChips{
+  display:flex;
+  gap:8px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+.chip{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  padding: 7px 10px;
+  border-radius: 999px;
+  font-weight: 900;
+  font-size: .78rem;
+  border: 1px solid rgba(31,120,255,.18);
+  background: rgba(255,255,255,.78);
+  color: rgba(18,51,95,.92);
+}
+.chip.reco{
+  background: linear-gradient(180deg, rgba(31,120,255,.18), rgba(255,255,255,.82));
+  border-color: rgba(31,120,255,.28);
+}
+.hubFoot{
+  margin-top: 10px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.hubMini{
+  color: var(--muted);
+  font-weight: 800;
+  font-size: .92rem;
+}
+
 </style>
 </head>
 <body>
@@ -337,69 +457,90 @@ a{color:inherit}
   </div>
 
   <!-- Activity Launcher -->
-  <div style="margin-top:14px; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px;">
-    <button class="card" id="launchFind" type="button" aria-controls="playArea" aria-label="Play Find the Letter">
-      <div class="left">
-        <div class="ico" aria-hidden="true">🎯</div>
-        <div class="meta">
-          <p class="name">Find the Letter</p>
-          <p class="desc">Listen, then tap the correct letter</p>
-        </div>
+  <div class="hub" id="activityHub">
+    <div class="hubTop">
+      <div>
+        <p class="hubTitle">Choose a game</p>
+        <p class="hubSub">Quick, calm activities with clear goals — like a proper learning site.</p>
       </div>
-      <span class="badge">Play</span>
-    </button>
-
-    <button class="card" id="launchMatch" type="button" aria-controls="playArea" aria-label="Play Upper & Lower Match">
-      <div class="left">
-        <div class="ico" aria-hidden="true">🔁</div>
-        <div class="meta">
-          <p class="name">Upper & Lower Match</p>
-          <p class="desc">Match BIG letters to small letters</p>
-        </div>
+      <div class="hubActions">
+        <button class="pill" id="quickStart" type="button" title="Start the recommended game">⚡ Quick start</button>
+        <button class="pill" id="viewBadges" type="button" title="Scroll to badges">🏅 Badges</button>
       </div>
-      <span class="badge">Play</span>
-    </button>
+    </div>
 
-    <button class="card" id="launchSoundTap" type="button" aria-controls="playArea" aria-label="Play Letter Sound Tap">
-      <div class="left">
-        <div class="ico" aria-hidden="true">🔊</div>
-        <div class="meta">
-          <p class="name">Letter Sound Tap</p>
-          <p class="desc">Tap a letter to hear it spoken</p>
+    <div class="hubGrid">
+      <button class="hubTile" id="launchFind" type="button" aria-controls="playArea">
+        <div class="row">
+          <div class="hubIcon" aria-hidden="true">🔎</div>
+          <span class="chip reco" id="recoFind" style="display:none">Recommended</span>
         </div>
-      </div>
-      <span class="badge">Play</span>
-    </button>
-
-  </div>
-
-  <!-- Added activity -->
-  <div style="margin-top:12px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px;">
-    <button class="card" id="launchSoundMatch" type="button" aria-controls="playArea" aria-label="Play Beginning Sound Match">
-      <div class="left">
-        <div class="ico" aria-hidden="true">🧠</div>
-        <div class="meta">
-          <p class="name">Beginning Sound Match</p>
-          <p class="desc">Pick the picture that starts with the letter</p>
+        <div>
+          <p class="hubName">Find the Letter</p>
+          <p class="hubDesc">Listen, then tap the correct letter (5 rounds)</p>
         </div>
-      </div>
-      <span class="badge">Play</span>
-    </button>
-
-    <div class="card" style="cursor:default; opacity:.92">
-      <div class="left">
-        <div class="ico" aria-hidden="true">✨</div>
-        <div class="meta">
-          <p class="name">Pro tip</p>
-          <p class="desc">Say the word out loud together</p>
+        <div class="hubChips">
+          <span class="chip">Level game</span>
+          <span class="chip">Voice</span>
         </div>
+      </button>
+
+      <button class="hubTile" id="launchMatch" type="button" aria-controls="playArea">
+        <div class="row">
+          <div class="hubIcon" aria-hidden="true">🔤</div>
+          <span class="chip reco" id="recoMatch" style="display:none">Recommended</span>
+        </div>
+        <div>
+          <p class="hubName">Upper & Lower Match</p>
+          <p class="hubDesc">Match BIG letters to small letters (5 rounds)</p>
+        </div>
+        <div class="hubChips">
+          <span class="chip">Matching</span>
+          <span class="chip">Level game</span>
+        </div>
+      </button>
+
+      <button class="hubTile" id="launchSoundMatch" type="button" aria-controls="playArea">
+        <div class="row">
+          <div class="hubIcon" aria-hidden="true">🧠</div>
+          <span class="chip reco" id="recoSound" style="display:none">Recommended</span>
+        </div>
+        <div>
+          <p class="hubName">Beginning Sound Match</p>
+          <p class="hubDesc">Pick the picture that starts with the letter (5 rounds)</p>
+        </div>
+        <div class="hubChips">
+          <span class="chip">Sounds</span>
+          <span class="chip">Level game</span>
+        </div>
+      </button>
+
+      <button class="hubTile" id="launchSoundTap" type="button" aria-controls="playArea">
+        <div class="row">
+          <div class="hubIcon" aria-hidden="true">🔊</div>
+          <span class="chip reco" id="recoTap" style="display:none">Recommended</span>
+        </div>
+        <div>
+          <p class="hubName">Letter Sound Tap</p>
+          <p class="hubDesc">Tap a letter to hear it spoken (practice mode)</p>
+        </div>
+        <div class="hubChips">
+          <span class="chip">Warm‑up</span>
+          <span class="chip">Easy</span>
+        </div>
+      </button>
+    </div>
+
+    <div class="hubFoot">
+      <div class="hubMini" id="hubMiniText">Tip: Start with Level 1 for confidence, then move up.</div>
+      <div class="hubActions">
+        <span class="pill" style="cursor:default">🎯 Goal: 5 rounds</span>
+        <span class="pill" style="cursor:default">⭐ Stars & badges</span>
       </div>
-      <span class="badge">Parent</span>
     </div>
   </div>
 
-
-  <!-- Play Area -->
+<!-- Play Area -->
   <div id="playArea" style="margin-top:14px; border:1px solid var(--stroke); border-radius: 24px; padding:14px; background: rgba(255,255,255,.70); box-shadow: var(--shadow2);">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
       <div style="min-width:260px;flex:1 1 420px">
@@ -1705,15 +1846,8 @@ function restartActivity(){
   // Launch buttons
   var launchFind = document.getElementById("launchFind");
   var launchMatch = document.getElementById("launchMatch");
-  if(launchFind) launchFind.addEventListener("click", startFind);
-  if(launchMatch) launchMatch.addEventListener("click", startMatch);
-
   var launchSoundMatch = document.getElementById("launchSoundMatch");
-  if(launchSoundMatch) launchSoundMatch.addEventListener("click", startSoundMatch);
-
   var launchSoundTap = document.getElementById("launchSoundTap");
-  if(launchSoundTap) launchSoundTap.addEventListener("click", startSoundTap);
-
   // Reset button: reset session + restart current activity
   if(resetBtn){
     resetBtn.addEventListener("click", function(){
@@ -1813,6 +1947,80 @@ function restartActivity(){
       speak("Pick another game.");
     });
   }
+
+
+  // ---------- Hub (launcher) polish ----------
+  var quickStartBtn = document.getElementById("quickStart");
+  var viewBadgesBtn = document.getElementById("viewBadges");
+  var hubMiniText = document.getElementById("hubMiniText");
+
+  function setRecommended(which){
+    ["recoFind","recoMatch","recoSound","recoTap"].forEach(function(id){
+      var t = document.getElementById(id);
+      if(t) t.style.display = "none";
+    });
+    var map = {find:"recoFind", match:"recoMatch", sound:"recoSound", tap:"recoTap"};
+    var id = map[which];
+    var tag = id ? document.getElementById(id) : null;
+    if(tag) tag.style.display = "inline-flex";
+  }
+
+  function recommendedForLevel(){
+    var lvl = levelSelect ? Number(levelSelect.value || "0") : 0;
+    if(lvl === 1) return "tap";
+    if(lvl === 2) return "find";
+    if(lvl === 3) return "sound";
+    return "find";
+  }
+
+  function goActivity(key){
+    try{ localStorage.setItem("ps_letters_last_activity", key); }catch(e){}
+    if(key === "find") startFind();
+    else if(key === "match") startMatch();
+    else if(key === "sound") startSoundMatch();
+    else if(key === "tap") startSoundTap();
+    var pa = document.getElementById("playArea");
+    if(pa) pa.scrollIntoView({behavior:"smooth", block:"start"});
+  }
+
+  function refreshHub(){
+    var rec = recommendedForLevel();
+    setRecommended(rec);
+    if(hubMiniText){
+      var lvl = levelSelect ? Number(levelSelect.value || "0") : 0;
+      var t = "Tip: Start with Level 1 for confidence, then move up.";
+      if(lvl === 1) t = "Level 1 tip: Warm up with Letter Sound Tap, then try Find the Letter.";
+      if(lvl === 2) t = "Level 2 tip: Use Find the Letter, then Upper & Lower Match.";
+      if(lvl === 3) t = "Level 3 tip: Try Beginning Sound Match for a phonics-style challenge.";
+      hubMiniText.textContent = t;
+    }
+  }
+
+  // Wire hub buttons
+  if(launchFind) launchFind.addEventListener("click", function(){ goActivity("find"); });
+  if(launchMatch) launchMatch.addEventListener("click", function(){ goActivity("match"); });
+  if(launchSoundMatch) launchSoundMatch.addEventListener("click", function(){ goActivity("sound"); });
+  if(launchSoundTap) launchSoundTap.addEventListener("click", function(){ goActivity("tap"); });
+
+  if(quickStartBtn){
+    quickStartBtn.addEventListener("click", function(){
+      var last = "";
+      try{ last = localStorage.getItem("ps_letters_last_activity") || ""; }catch(e){}
+      goActivity(last || recommendedForLevel());
+    });
+  }
+
+  if(viewBadgesBtn){
+    viewBadgesBtn.addEventListener("click", function(){
+      var b = document.getElementById("badgesGrid");
+      if(b) b.scrollIntoView({behavior:"smooth", block:"start"});
+    });
+  }
+
+  if(levelSelect){
+    levelSelect.addEventListener("change", function(){ refreshHub(); });
+  }
+  refreshHub();
 
 })();
 </script>
