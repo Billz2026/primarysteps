@@ -278,6 +278,15 @@ a{color:inherit}
 
       <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;justify-content:flex-end">
         <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-weight:900;color:var(--muted)">Level</span>
+          <select id="levelSelect" class="pill" style="height:40px; padding-right:10px; cursor:pointer">
+            <option value="1">Level 1 • 3 letters (Set 1)</option>
+            <option value="2">Level 2 • 6 letters (Set 1)</option>
+            <option value="3">Level 3 • 6 letters (Set 2)</option>
+          </select>
+        </div>
+
+        <div style="display:flex;gap:8px;align-items:center">
           <span style="font-weight:900;color:var(--muted)">Difficulty</span>
           <div style="display:flex;gap:8px;flex-wrap:wrap">
             <button class="pill" id="diffEasy" type="button" aria-pressed="true">Easy (3)</button>
@@ -304,6 +313,19 @@ a{color:inherit}
       </div>
     </div>
   </div>
+  <!-- Badges -->
+  <div style="margin-top:14px; border:1px solid var(--stroke); border-radius: 24px; padding:14px; background: rgba(255,255,255,.70); box-shadow: var(--shadow2);">
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+      <div>
+        <p style="margin:0; font-weight:980;">🏅 Badges</p>
+        <p style="margin:4px 0 0; color:var(--muted); font-weight:750;">Earn badges by completing levels. Badges save on this device.</p>
+      </div>
+      <button class="pill" id="resetBadges" type="button" title="Clear badges on this device">Reset badges</button>
+    </div>
+
+    <div id="badgesGrid" style="margin-top:12px; display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px;"></div>
+  </div>
+
 
   <!-- Earn a star (global) -->
   <div style="margin-top:14px; display:grid; gap:12px;">
@@ -434,7 +456,23 @@ a{color:inherit}
     setFeedback("⭐ Star earned!", true);
     speak("Great job. You earned a star.");
   }
-  function resetSession(){
+  
+  function awardLevelBadges(score, total){
+    // Determine which level we're on (or saved selection)
+    var lvl = 0;
+    if(levelSelect){
+      lvl = Number(levelSelect.value || "0");
+    }else{
+      lvl = inferLevel();
+    }
+    if(lvl === 1) awardBadge("lvl1");
+    if(lvl === 2) awardBadge("lvl2");
+    if(lvl === 3) awardBadge("lvl3");
+    if(score === total) awardBadge("perfect");
+    // 3 session stars in one visit
+    if(sessionStars >= 3) awardBadge("triple");
+  }
+function resetSession(){
     sessionStars = 0;
     if(sessionStarsEl) sessionStarsEl.textContent = "0";
   }
@@ -451,6 +489,147 @@ a{color:inherit}
     ["M","D","G","O","C","K"],
     ["E","R","H","L","B","F"]
   ];
+
+  // ---------- Levels (simple kid-friendly presets) ----------
+  // Level 1: 3 letters (Set 1)
+  // Level 2: 6 letters (Set 1)
+  // Level 3: 6 letters (Set 2)
+  var LEVELS = {
+    1: {difficulty: 3, setIndex: 0, label: "Level 1"},
+    2: {difficulty: 6, setIndex: 0, label: "Level 2"},
+    3: {difficulty: 6, setIndex: 1, label: "Level 3"}
+  };
+  var levelSelect = document.getElementById("levelSelect");
+
+  function inferLevel(){
+    // try to map current difficulty+set to a level
+    var keys = Object.keys(LEVELS);
+    for(var i=0;i<keys.length;i++){
+      var k = Number(keys[i]);
+      var L = LEVELS[k];
+      if(L.difficulty === difficulty && L.setIndex === setIndex) return k;
+    }
+    return 0; // custom
+  }
+
+  function applyLevel(k){
+    var L = LEVELS[k];
+    if(!L) return;
+    // Update internal state and UI using existing setters
+    difficulty = L.difficulty;
+    setIndex = L.setIndex;
+    localStorage.setItem("ps_letters_diff", String(difficulty));
+    localStorage.setItem("ps_letters_set", String(setIndex));
+    if(setSelect) setSelect.value = String(setIndex);
+    if(easyBtn) easyBtn.setAttribute("aria-pressed", String(difficulty === 3));
+    if(hardBtn) hardBtn.setAttribute("aria-pressed", String(difficulty === 6));
+    if(levelSelect) levelSelect.value = String(k);
+    restartActivity();
+  }
+
+  if(levelSelect){
+    // set initial dropdown to inferred level
+    var initial = inferLevel();
+    if(initial) levelSelect.value = String(initial);
+    levelSelect.addEventListener("change", function(){
+      var k = Number(levelSelect.value || "1");
+      localStorage.setItem("ps_letters_level", String(k));
+      applyLevel(k);
+    });
+
+    // If user previously picked a level, apply it on load (keeps experience consistent)
+    var saved = Number(localStorage.getItem("ps_letters_level") || "0");
+    if(saved && LEVELS[saved]){
+      applyLevel(saved);
+    }
+  }
+
+  // ---------- Badges ----------
+  var BADGE_KEY = "ps_letters_badges_v1";
+  var badgesGrid = document.getElementById("badgesGrid");
+  var resetBadgesBtn = document.getElementById("resetBadges");
+
+  var BADGES = [
+    {id:"lvl1", title:"Level 1 Complete", desc:"Complete any Level 1 game", icon:"🥉"},
+    {id:"lvl2", title:"Level 2 Complete", desc:"Complete any Level 2 game", icon:"🥈"},
+    {id:"lvl3", title:"Level 3 Complete", desc:"Complete any Level 3 game", icon:"🥇"},
+    {id:"perfect", title:"Perfect Score", desc:"Get 5/5 in a level", icon:"✨"},
+    {id:"triple", title:"Three Stars", desc:"Earn 3 session stars in one visit", icon:"⭐"}
+  ];
+
+  function getEarnedBadges(){
+    try{
+      var raw = localStorage.getItem(BADGE_KEY);
+      var arr = raw ? JSON.parse(raw) : [];
+      if(Array.isArray(arr)) return arr;
+      return [];
+    }catch(e){ return []; }
+  }
+  function setEarnedBadges(arr){
+    try{ localStorage.setItem(BADGE_KEY, JSON.stringify(arr)); }catch(e){}
+  }
+  function hasBadge(id){
+    return getEarnedBadges().indexOf(id) !== -1;
+  }
+  function awardBadge(id){
+    var earned = getEarnedBadges();
+    if(earned.indexOf(id) !== -1) return;
+    earned.push(id);
+    setEarnedBadges(earned);
+    renderBadges();
+    // Gentle reward
+    setFeedback("🏅 Badge earned!", true);
+    speak("Badge earned.");
+  }
+
+  function renderBadges(){
+    if(!badgesGrid) return;
+    var earned = getEarnedBadges();
+    badgesGrid.innerHTML = "";
+    BADGES.forEach(function(b){
+      var got = earned.indexOf(b.id) !== -1;
+      var card = document.createElement("div");
+      card.className = "card";
+      card.style.cursor = "default";
+      card.style.minHeight = "90px";
+      card.style.opacity = got ? "1" : ".55";
+
+      var left = document.createElement("div");
+      left.className = "left";
+      var ico = document.createElement("div");
+      ico.className = "ico";
+      ico.textContent = got ? b.icon : "🔒";
+      var meta = document.createElement("div");
+      meta.className = "meta";
+      var name = document.createElement("p");
+      name.className = "name";
+      name.textContent = b.title;
+      var desc = document.createElement("p");
+      desc.className = "desc";
+      desc.textContent = b.desc;
+      meta.appendChild(name); meta.appendChild(desc);
+      left.appendChild(ico); left.appendChild(meta);
+
+      var tag = document.createElement("span");
+      tag.className = "badge";
+      tag.textContent = got ? "Earned" : "Locked";
+
+      card.appendChild(left);
+      card.appendChild(tag);
+      badgesGrid.appendChild(card);
+    });
+  }
+
+  if(resetBadgesBtn){
+    resetBadgesBtn.addEventListener("click", function(){
+      setEarnedBadges([]);
+      renderBadges();
+      setFeedback("Badges reset.", false);
+      speak("Badges reset.");
+    });
+  }
+
+  renderBadges();
 
   function currentLetters(){
     var base = LETTER_SETS[setIndex] || LETTER_SETS[0];
@@ -750,7 +929,10 @@ a{color:inherit}
         addSessionStar();
         if(score === 5) addSessionStar();
       }
-      // Show a replay button
+                        awardLevelBadges(score, TOTAL_ROUNDS);
+awardLevelBadges(score, TOTAL_ROUNDS);
+awardLevelBadges(score, TOTAL_ROUNDS);
+// Show a replay button
       startBtn.textContent = "Play again";
       startBtn.style.display = "";
     }
