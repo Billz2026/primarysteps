@@ -677,10 +677,8 @@ body{
 }
 
 
-/* hard click fix */
-#activityHub, #goalStrip, #playArea{ position: relative; z-index: 5; }
-.hubTile{ cursor:pointer; pointer-events:auto; position:relative; z-index:6; }
-.hubTile *{ pointer-events:none; }
+/* hubForceClick */
+#activityHub, .hub, .goalStrip{ pointer-events:auto; }
 
 </style>
 </head>
@@ -744,7 +742,7 @@ body{
     </div>
 
     <div class="hubGrid">
-      <button class="hubTile" id="launchFind" type="button" aria-controls="playArea"  onclick="window.psStartActivity && window.psStartActivity('find')" >
+      <button class="hubTile" id="launchFind" type="button" aria-controls="playArea" onclick="window.psStartActivity && window.psStartActivity(\'find\')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🔎</div>
           <span class="chip reco" id="recoFind" style="display:none">Recommended</span>
@@ -759,7 +757,7 @@ body{
         </div>
       </button>
 
-      <button class="hubTile" id="launchMatch" type="button" aria-controls="playArea"  onclick="window.psStartActivity && window.psStartActivity('match')" >
+      <button class="hubTile" id="launchMatch" type="button" aria-controls="playArea" onclick="window.psStartActivity && window.psStartActivity(\'match\')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🔤</div>
           <span class="chip reco" id="recoMatch" style="display:none">Recommended</span>
@@ -774,7 +772,7 @@ body{
         </div>
       </button>
 
-      <button class="hubTile" id="launchSoundMatch" type="button" aria-controls="playArea"  onclick="window.psStartActivity && window.psStartActivity('sound')" >
+      <button class="hubTile" id="launchSoundMatch" type="button" aria-controls="playArea" onclick="window.psStartActivity && window.psStartActivity(\'sound\')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🧠</div>
           <span class="chip reco" id="recoSound" style="display:none">Recommended</span>
@@ -789,7 +787,7 @@ body{
         </div>
       </button>
 
-      <button class="hubTile" id="launchSoundTap" type="button" aria-controls="playArea"  onclick="window.psStartActivity && window.psStartActivity('tap')" >
+      <button class="hubTile" id="launchSoundTap" type="button" aria-controls="playArea" onclick="window.psStartActivity && window.psStartActivity(\'tap\')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🔊</div>
           <span class="chip reco" id="recoTap" style="display:none">Recommended</span>
@@ -2195,301 +2193,16 @@ function restartActivity(){
     <div class="footer">© 2025 Primary Steps</div>
   </div>
 
-<script>
-(function(){
-  var el = document.getElementById("starsCount");
-  if(!el) return;
-  el.textContent = String(Number(localStorage.getItem("ps_stars") || "0"));
 
-  // ---------- Premium finish modal ----------
-  var psModal = document.getElementById("psModal");
-  var psModalTitle = document.getElementById("psModalTitle");
-  var psModalMsg = document.getElementById("psModalMsg");
-  var psModalClose = document.getElementById("psModalClose");
-  var psModalAgain = document.getElementById("psModalAgain");
-  var psModalNext = document.getElementById("psModalNext");
-  var psConfetti = document.getElementById("psConfetti");
-
-  function burstConfetti(){
-    if(!psConfetti) return;
-    psConfetti.innerHTML = "";
-    var pieces = 18;
-    for(var i=0;i<pieces;i++){
-      var p = document.createElement("i");
-      var left = Math.random()*100;
-      var delay = Math.random()*120;
-      var w = 8 + Math.random()*8;
-      var h = 12 + Math.random()*14;
-      p.style.left = left + "%";
-      p.style.top = (-10 - Math.random()*40) + "px";
-      p.style.width = w + "px";
-      p.style.height = h + "px";
-      p.style.animationDelay = (delay/1000) + "s";
-      // alternate subtle tones
-      p.style.background = (i%3===0) ? "rgba(31,120,255,.60)" : (i%3===1 ? "rgba(88,173,255,.55)" : "rgba(255,255,255,.75)");
-      psConfetti.appendChild(p);
-    }
-  }
-
-  function openModal(title, msg){
-    if(!psModal) return;
-    psModalTitle.textContent = title || "Great job!";
-    psModalMsg.textContent = msg || "You finished the level.";
-    psModal.classList.add("show");
-    burstConfetti();
-  }
-  function closeModal(){
-    if(!psModal) return;
-    psModal.classList.remove("show");
-  }
-
-  if(psModalClose) psModalClose.addEventListener("click", closeModal);
-  if(psModal) psModal.addEventListener("click", function(e){
-    if(e.target === psModal) closeModal();
-  });
-
-  // Buttons (wired by current activity finish)
-  var lastFinishedActivity = null;
-  if(psModalAgain){
-    psModalAgain.addEventListener("click", function(){
-      closeModal();
-      if(lastFinishedActivity === "find") startFind();
-      else if(lastFinishedActivity === "match") startMatch();
-      else if(lastFinishedActivity === "sound") startSoundMatch();
-      else if(lastFinishedActivity === "tap") startSoundTap();
-    });
-  }
-  if(psModalNext){
-    psModalNext.addEventListener("click", function(){
-      closeModal();
-      // Soft nudge back to launcher area
-      var area = document.getElementById("lettersPage");
-      if(area) area.scrollIntoView({behavior:"smooth", block:"start"});
-      setFeedback("Pick another game above.", true);
-      speak("Pick another game.");
-    });
-  }
-
-
-  // ---------- Hub (launcher) polish ----------
-  var quickStartBtn = document.getElementById("quickStart");
-  var viewBadgesBtn = document.getElementById("viewBadges");
-  var hubMiniText = document.getElementById("hubMiniText");
-
-  function setRecommended(which){
-    ["recoFind","recoMatch","recoSound","recoTap"].forEach(function(id){
-      var t = document.getElementById(id);
-      if(t) t.style.display = "none";
-    });
-    var map = {find:"recoFind", match:"recoMatch", sound:"recoSound", tap:"recoTap"};
-    var id = map[which];
-    var tag = id ? document.getElementById(id) : null;
-    if(tag) tag.style.display = "inline-flex";
-  }
-
-  function recommendedForLevel(){
-    var lvl = levelSelect ? Number(levelSelect.value || "0") : 0;
-    if(lvl === 1) return "tap";
-    if(lvl === 2) return "find";
-    if(lvl === 3) return "sound";
-    return "find";
-  }
-
-  function goActivity(key){
-    try{ localStorage.setItem("ps_letters_last_activity", key); }catch(e){}
-    if(key === "find") startFind();
-    else if(key === "match") startMatch();
-    else if(key === "sound") startSoundMatch();
-    else if(key === "tap") startSoundTap();
-    var pa = document.getElementById("playArea");
-    if(pa) pa.scrollIntoView({behavior:"smooth", block:"start"});
-  }
-  window.psGoActivity = goActivity;
-
-
-  function refreshHub(){
-    var rec = recommendedForLevel();
-    setRecommended(rec);
-    if(hubMiniText){
-      var lvl = levelSelect ? Number(levelSelect.value || "0") : 0;
-      var t = "Tip: Start with Level 1 for confidence, then move up.";
-      if(lvl === 1) t = "Level 1 tip: Warm up with Letter Sound Tap, then try Find the Letter.";
-      if(lvl === 2) t = "Level 2 tip: Use Find the Letter, then Upper & Lower Match.";
-      if(lvl === 3) t = "Level 3 tip: Try Beginning Sound Match for a phonics-style challenge.";
-      hubMiniText.textContent = t;
-    }
-  }
-
-  // Wire hub buttons
-  if(launchFind) launchFind.addEventListener("click", function(){ goActivity("find"); });
-  if(launchMatch) launchMatch.addEventListener("click", function(){ goActivity("match"); });
-  if(launchSoundMatch) launchSoundMatch.addEventListener("click", function(){ goActivity("sound"); });
-  if(launchSoundTap) launchSoundTap.addEventListener("click", function(){ goActivity("tap"); });
-
-  if(quickStartBtn){
-    quickStartBtn.addEventListener("click", function(){
-      var last="";
-      try{ last = localStorage.getItem("ps_letters_last_activity") || ""; }catch(e){}
-      var pick = last || (typeof recommendedForLevel === "function" ? recommendedForLevel() : "find");
-      if(window.psStartActivity) window.psStartActivity(pick);
-    });
-  }
-
-  if(viewBadgesBtn){
-    viewBadgesBtn.addEventListener("click", function(){
-      var b = document.getElementById("badgesGrid");
-      if(b) b.scrollIntoView({behavior:"smooth", block:"start"});
-    });
-  }
-
-  if(levelSelect){
-    levelSelect.addEventListener("change", function(){ refreshHub(); });
-  }
-  refreshHub();
-
-
-  // ---------- Today's Goal (2 games) ----------
-  var GOAL_N = 2;
-  var goalFill = document.getElementById("goalFill");
-  var goalCount = document.getElementById("goalCount");
-  var goalSub = document.getElementById("goalSub");
-  var continueBtn = document.getElementById("continueBtn");
-  var resetTodayBtn = document.getElementById("resetTodayBtn");
-
-  function todayKey(){
-    var d = new Date();
-    // local day key YYYY-MM-DD
-    var yyyy = d.getFullYear();
-    var mm = String(d.getMonth()+1).padStart(2,"0");
-    var dd = String(d.getDate()).padStart(2,"0");
-    return yyyy + "-" + mm + "-" + dd;
-  }
-  function getTodayProgress(){
-    try{
-      var raw = localStorage.getItem("ps_letters_goal_v1");
-      var obj = raw ? JSON.parse(raw) : null;
-      if(!obj || obj.day !== todayKey()) return {day: todayKey(), done: 0};
-      return obj;
-    }catch(e){
-      return {day: todayKey(), done: 0};
-    }
-  }
-  function setTodayProgress(done){
-    try{
-      localStorage.setItem("ps_letters_goal_v1", JSON.stringify({day: todayKey(), done: done}));
-    }catch(e){}
-  }
-  function renderGoal(){
-    var p = getTodayProgress();
-    var done = Math.max(0, Math.min(GOAL_N, p.done||0));
-    if(goalFill) goalFill.style.width = Math.round((done/GOAL_N)*100) + "%";
-    if(goalCount) goalCount.textContent = done + " / " + GOAL_N;
-    if(goalSub){
-      goalSub.textContent = (done >= GOAL_N)
-        ? "Goal complete! Bonus badge unlocked."
-        : "Complete " + (GOAL_N - done) + " more game" + ((GOAL_N-done)===1 ? "" : "s") + " to earn a bonus badge.";
-    }
-    // unlock badge
-    if(done >= GOAL_N && typeof awardBadge === "function"){
-      awardBadge("daily2");
-    }
-  }
-  function bumpGoal(){
-    var p = getTodayProgress();
-    var done = (p.done||0) + 1;
-    setTodayProgress(done);
-    renderGoal();
-    // little pop
-    if(goalCount){ goalCount.classList.remove("pop"); void goalCount.offsetWidth; goalCount.classList.add("pop"); }
-  }
-
-  if(resetTodayBtn){
-    resetTodayBtn.addEventListener("click", function(){
-      setTodayProgress(0);
-      renderGoal();
-      setFeedback("Today’s goal reset.", false);
-      speak("Goal reset.");
-    });
-  }
-
-  if(continueBtn){
-    continueBtn.addEventListener("click", function(){
-      // continue = last activity, otherwise recommended
-      var last = "";
-      try{ last = localStorage.getItem("ps_letters_last_activity") || ""; }catch(e){}
-      var pick = last || (typeof recommendedForLevel === "function" ? recommendedForLevel() : "find");
-      if(typeof goActivity === "function") goActivity(pick);
-      else{
-        // fallback
-        if(pick === "find") startFind();
-        else if(pick === "match") startMatch();
-        else if(pick === "sound") startSoundMatch();
-        else startSoundTap();
-      }
-    });
-  }
-
-  renderGoal();
-
-
-  // ---------- Feedback toast ----------
-  var feedbackToast = document.getElementById("feedbackToast");
-  var toastTimer = null;
-
-  function toast(msg){
-    if(!feedbackToast) return;
-    feedbackToast.textContent = msg;
-    feedbackToast.classList.add("show");
-    if(toastTimer) clearTimeout(toastTimer);
-    toastTimer = setTimeout(function(){
-      feedbackToast.classList.remove("show");
-    }, 1200);
-  }
-
-
-  // ---------- Illustrated picture cards (SVG templates) ----------
-  function makeIllustrationSvg(emoji, seed){
-    // Seed influences small decorative shapes so cards feel different
-    seed = String(seed || "");
-    var a = (seed.charCodeAt(0) || 65) % 3;
-    var b = (seed.charCodeAt(1) || 90) % 3;
-
-    var glow1 = a === 0 ? "rgba(31,120,255,.22)" : (a === 1 ? "rgba(88,173,255,.22)" : "rgba(255,255,255,.30)");
-    var glow2 = b === 0 ? "rgba(31,120,255,0)" : (b === 1 ? "rgba(88,173,255,0)" : "rgba(255,255,255,0)");
-
-    // Note: Using <text> keeps it lightweight (no external images)
-    return (
-      '<svg class="illusSvg" viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Picture">' +
-        '<defs>' +
-          '<linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">' +
-            '<stop offset="0" stop-color="rgba(31,120,255,.14)"/>' +
-            '<stop offset="1" stop-color="rgba(255,255,255,.86)"/>' +
-          '</linearGradient>' +
-          '<radialGradient id="rg" cx="30%" cy="22%" r="70%">' +
-            '<stop offset="0" stop-color="'+glow1+'"/>' +
-            '<stop offset="1" stop-color="'+glow2+'"/>' +
-          '</radialGradient>' +
-          '<filter id="s" x="-20%" y="-20%" width="140%" height="160%">' +
-            '<feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="rgba(16,60,120,.18)"/>' +
-          '</filter>' +
-        '</defs>' +
-        '<rect x="10" y="10" width="400" height="160" rx="32" fill="url(#g1)" stroke="rgba(31,120,255,.18)" />' +
-        '<rect x="10" y="10" width="400" height="160" rx="32" fill="url(#rg)" opacity=".95"/>' +
-        // Decorative bubbles
-        '<circle cx="'+(320 + a*18)+'" cy="'+(48 + b*10)+'" r="16" fill="rgba(255,255,255,.55)" />' +
-        '<circle cx="'+(350 + b*12)+'" cy="'+(86 + a*8)+'" r="10" fill="rgba(31,120,255,.18)" />' +
-        '<circle cx="'+(70 + a*10)+'" cy="'+(120 + b*8)+'" r="12" fill="rgba(88,173,255,.18)" />' +
-        // Emoji badge
-        '<g filter="url(#s)">' +
-          '<rect x="150" y="36" width="120" height="108" rx="28" fill="rgba(255,255,255,.78)" stroke="rgba(31,120,255,.18)"/>' +
-          '<text x="210" y="114" text-anchor="middle" font-size="64" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif">'+emoji+'</text>' +
-        '</g>' +
-      '</svg>'
-    );
-  }
-
-})();
-</script>
 <div class="feedbackToast" id="feedbackToast" role="status" aria-live="polite"></div>
+
+<script>
+  window.addEventListener('error', function(e){
+    try{
+      alert("Primary Steps error: " + (e && e.message ? e.message : "Unknown error"));
+    }catch(_){}
+  });
+</script>
+
 </body>
 </html>
