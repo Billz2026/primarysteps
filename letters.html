@@ -1,0 +1,722 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Letters • Primary Steps</title>
+  <style>
+    :root{
+      --bg:#0b0d12;
+      --panel:#121621;
+      --panel2:#0f1320;
+      --text:#eef2ff;
+      --muted:#a9b2c7;
+      --brand:#7dd3fc;
+      --brand2:#a78bfa;
+      --ok:#34d399;
+      --bad:#fb7185;
+      --btn:#1f2937;
+      --btn2:#111827;
+      --ring:rgba(125,211,252,.35);
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --shadow2: 0 8px 18px rgba(0,0,0,.25);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(900px 500px at 20% 0%, rgba(167,139,250,.16), transparent 60%),
+                  radial-gradient(900px 500px at 85% 20%, rgba(125,211,252,.18), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit}
+    .wrap{max-width:1080px;margin:0 auto;padding:22px 18px 60px}
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      padding:14px 14px;border-radius:22px;background:rgba(18,22,33,.75);
+      border:1px solid rgba(255,255,255,.08); box-shadow:var(--shadow2);
+      position:sticky;top:10px;backdrop-filter: blur(10px); z-index:50;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;min-width: 240px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:14px;
+      background: radial-gradient(circle at 30% 30%, rgba(125,211,252,.9), rgba(167,139,250,.65)),
+                  linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.02));
+      box-shadow: 0 12px 30px rgba(125,211,252,.12);
+      border:1px solid rgba(255,255,255,.14);
+    }
+    .brand h1{font-size:16px;margin:0;letter-spacing:.3px}
+    .brand p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+    .controls{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;
+    }
+    .pill{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:999px;background:rgba(17,24,39,.72);
+      border:1px solid rgba(255,255,255,.09);
+    }
+    label{font-size:12px;color:var(--muted)}
+    select, button{
+      font:inherit;
+    }
+    select{
+      background:rgba(15,19,32,.95);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      padding:10px 12px;border-radius:999px;
+      outline:none;
+    }
+    select:focus{box-shadow:0 0 0 4px var(--ring)}
+    .btn{
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(31,41,55,.95), rgba(17,24,39,.95));
+      color:var(--text);
+      padding:10px 14px;border-radius:999px;
+      cursor:pointer;transition:.15s transform ease, .15s filter ease;
+      box-shadow: var(--shadow2);
+      user-select:none;
+    }
+    .btn:hover{filter:brightness(1.06)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      background: linear-gradient(180deg, rgba(125,211,252,.35), rgba(167,139,250,.22));
+      border:1px solid rgba(125,211,252,.35);
+    }
+    .btn.ghost{background:rgba(15,19,32,.6);box-shadow:none}
+    .grid{
+      margin-top:18px;
+      display:grid;gap:14px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .card{
+      grid-column: span 6;
+      background: linear-gradient(180deg, rgba(18,22,33,.92), rgba(11,13,18,.75));
+      border:1px solid rgba(255,255,255,.09);
+      border-radius: var(--radius);
+      padding:16px;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-120px -120px auto auto;
+      width:240px;height:240px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(125,211,252,.22), transparent 62%);
+      transform: rotate(10deg);
+      pointer-events:none;
+    }
+    .card h2{margin:0;font-size:16px}
+    .card p{margin:8px 0 14px;color:var(--muted);font-size:13px;line-height:1.35}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .card .meta{
+      display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;
+      color:rgba(169,178,199,.9);font-size:12px
+    }
+    .tag{
+      padding:6px 10px;border-radius:999px;
+      background:rgba(15,19,32,.65);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    /* Game shell */
+    .stage{
+      margin-top:16px;
+      background: linear-gradient(180deg, rgba(18,22,33,.92), rgba(11,13,18,.75));
+      border:1px solid rgba(255,255,255,.09);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:none;
+    }
+    .stage.show{display:block}
+    .stageHead{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px 14px;border-bottom:1px solid rgba(255,255,255,.08);
+      background:rgba(15,19,32,.65);
+    }
+    .stageHead .title{display:flex;flex-direction:column;gap:2px}
+    .stageHead .title strong{font-size:14px}
+    .stageHead .title span{font-size:12px;color:var(--muted)}
+    .stageBody{padding:16px}
+    .bigLetter{
+      font-size:96px; font-weight:800; line-height:1;
+      display:flex;align-items:center;justify-content:center;
+      width:100%; padding:18px 0; user-select:none;
+      letter-spacing:.02em;
+      text-shadow: 0 18px 40px rgba(0,0,0,.35);
+    }
+    .prompt{
+      margin:0 0 12px; font-size:14px;color:var(--muted)
+    }
+    .choices{
+      display:grid;grid-template-columns: repeat(3, 1fr); gap:12px;
+    }
+    .choice{
+      padding:16px 10px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(15,19,32,.75);
+      cursor:pointer;
+      font-size:22px;font-weight:800;
+      user-select:none;
+      transition:.12s transform ease, .12s filter ease;
+    }
+    .choice:hover{filter:brightness(1.06)}
+    .choice:active{transform:translateY(1px)}
+    .choice[disabled]{opacity:.55;cursor:not-allowed}
+    .feedback{
+      margin-top:12px;
+      padding:12px 14px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(17,24,39,.62);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      min-height:48px;
+    }
+    .feedback b{font-size:14px}
+    .feedback small{color:var(--muted)}
+    .ok{color:var(--ok)}
+    .bad{color:var(--bad)}
+
+    /* Trace */
+    .traceRow{display:grid;grid-template-columns: 1fr; gap:14px}
+    .traceCanvas{
+      width:100%; height:320px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        radial-gradient(circle at 20% 10%, rgba(125,211,252,.10), transparent 55%),
+        radial-gradient(circle at 85% 25%, rgba(167,139,250,.10), transparent 60%),
+        rgba(15,19,32,.8);
+      position:relative;
+      overflow:hidden;
+      touch-action:none;
+    }
+    .traceOverlay{
+      position:absolute; inset:0;
+      display:flex;align-items:center;justify-content:center;
+      font-size:220px;font-weight:900;
+      color: rgba(255,255,255,.06);
+      user-select:none; pointer-events:none;
+    }
+    .traceTools{display:flex;gap:10px;flex-wrap:wrap}
+    .muted{color:var(--muted)}
+    .hidden{display:none!important}
+    @media (max-width:860px){
+      .card{grid-column: span 12}
+      .choices{grid-template-columns:1fr}
+      .bigLetter{font-size:82px}
+      header{position:static}
+      .brand{min-width:auto}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">
+      <div class="logo" aria-hidden="true"></div>
+      <div>
+        <h1>Letters</h1>
+        <p>Simple, calm learning activities</p>
+      </div>
+    </div>
+
+    <div class="controls">
+      <div class="pill">
+        <label for="setSel">Set</label>
+        <select id="setSel" aria-label="Choose letter set">
+          <option value="0">Set 1 (A–I)</option>
+          <option value="1">Set 2 (J–R)</option>
+          <option value="2">Set 3 (S–Z)</option>
+        </select>
+      </div>
+
+      <button class="btn ghost" id="soundBtn" type="button" aria-pressed="true">🔊 Sound: On</button>
+      <button class="btn" id="homeBtn" type="button">← Menu</button>
+    </div>
+  </header>
+
+  <!-- Menu -->
+  <section class="grid" id="menu">
+    <article class="card">
+      <h2>Find the Letter</h2>
+      <p>Tap the letter that matches the target. Correct answers move to the next round automatically.</p>
+      <div class="actions">
+        <button class="btn primary" type="button" data-play="find">▶ Play</button>
+      </div>
+      <div class="meta">
+        <span class="tag">Quick • 10 rounds</span>
+        <span class="tag">Good for focus</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2>Upper / Lower Match</h2>
+      <p>Match the same letter in the correct case (uppercase ↔ lowercase). Great for recognition.</p>
+      <div class="actions">
+        <button class="btn primary" type="button" data-play="match">▶ Play</button>
+      </div>
+      <div class="meta">
+        <span class="tag">Case recognition</span>
+        <span class="tag">10 rounds</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2>Trace a Letter</h2>
+      <p>Trace the letter on the screen. Use “Clear” to try again. Calm practice with a soft guide.</p>
+      <div class="actions">
+        <button class="btn primary" type="button" data-play="trace">▶ Play</button>
+      </div>
+      <div class="meta">
+        <span class="tag">Handwriting</span>
+        <span class="tag">Touch-friendly</span>
+      </div>
+    </article>
+
+    <article class="card">
+      <h2>Letter Sound</h2>
+      <p>Hear the letter sound and tap the matching letter. (Coming next)</p>
+      <div class="actions">
+        <button class="btn" type="button" id="comingSoonBtn">⭐ Coming soon</button>
+      </div>
+      <div class="meta">
+        <span class="tag">Phonics</span>
+        <span class="tag">Next upgrade</span>
+      </div>
+    </article>
+  </section>
+
+  <!-- Stage -->
+  <section class="stage" id="stage" aria-live="polite">
+    <div class="stageHead">
+      <div class="title">
+        <strong id="stageTitle">Activity</strong>
+        <span id="stageSub">Round <span id="roundNow">1</span> of <span id="roundTotal">10</span></span>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" type="button" id="repeatBtn">↻ Repeat</button>
+        <button class="btn" type="button" id="nextBtn">Next →</button>
+      </div>
+    </div>
+    <div class="stageBody" id="stageBody"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  const LETTER_SETS = [
+    "ABCDEFGHI".split(""),
+    "JKLMNOPQR".split(""),
+    "STUVWXYZ".split("")
+  ];
+
+  const $ = (s, r=document) => r.querySelector(s);
+  const $$ = (s, r=document) => Array.from(r.querySelectorAll(s));
+
+  const menu = $("#menu");
+  const stage = $("#stage");
+  const stageTitle = $("#stageTitle");
+  const stageSub = $("#stageSub");
+  const stageBody = $("#stageBody");
+  const roundNowEl = $("#roundNow");
+  const roundTotalEl = $("#roundTotal");
+  const nextBtn = $("#nextBtn");
+  const repeatBtn = $("#repeatBtn");
+  const homeBtn = $("#homeBtn");
+
+  const setSel = $("#setSel");
+  const soundBtn = $("#soundBtn");
+
+  let soundOn = true;
+
+  function speak(text){
+    try{
+      if(!soundOn) return;
+      if(!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.95;
+      u.pitch = 1.0;
+      u.lang = "en-GB";
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+
+  function getSetLetters(){
+    const idx = parseInt(setSel.value, 10);
+    return LETTER_SETS[Math.max(0, Math.min(2, idx))];
+  }
+
+  function showMenu(){
+    stage.classList.remove("show");
+    menu.classList.remove("hidden");
+  }
+  function showStage(){
+    menu.classList.add("hidden");
+    stage.classList.add("show");
+  }
+
+  // ---------- Activity engine ----------
+  const TOTAL = 10;
+  let activity = null;
+  let round = 0;
+  let current = null;
+  let locked = false;
+
+  function setRoundUI(){
+    roundNowEl.textContent = String(round+1);
+    roundTotalEl.textContent = String(TOTAL);
+  }
+
+  function lockChoices(disabled){
+    locked = disabled;
+    $$(".choice", stageBody).forEach(btn => btn.disabled = disabled);
+  }
+
+  function setFeedback(kind, title, subtitle){
+    const box = $("#feedbackBox");
+    if(!box) return;
+    const t = $("#fbTitle");
+    const s = $("#fbSub");
+    box.classList.remove("ok","bad");
+    if(kind) box.classList.add(kind);
+    t.textContent = title || "";
+    s.textContent = subtitle || "";
+  }
+
+  function advance(){
+    // bullet-proof advance
+    if(round >= TOTAL-1){
+      finish();
+      return;
+    }
+    round++;
+    startRound();
+  }
+
+  function finish(){
+    stageBody.innerHTML = `
+      <p class="prompt">Nice work.</p>
+      <div class="bigLetter">⭐</div>
+      <div class="feedback ok">
+        <div>
+          <b class="ok">All done!</b><br/>
+          <small>Press Menu to pick another activity.</small>
+        </div>
+        <button class="btn primary" type="button" id="doneMenuBtn">Back to Menu</button>
+      </div>
+    `;
+    $("#doneMenuBtn").addEventListener("click", showMenu);
+    nextBtn.classList.add("hidden");
+    repeatBtn.classList.add("hidden");
+    stageSub.textContent = "Finished";
+    speak("All done. Well done!");
+  }
+
+  function startActivity(type){
+    activity = type;
+    round = 0;
+    nextBtn.classList.remove("hidden");
+    repeatBtn.classList.remove("hidden");
+    nextBtn.textContent = "Next →";
+    showStage();
+
+    if(type === "find"){
+      stageTitle.textContent = "Find the Letter";
+      stageSub.innerHTML = `Round <span id="roundNow">1</span> of <span id="roundTotal">10</span>`;
+    }else if(type === "match"){
+      stageTitle.textContent = "Upper / Lower Match";
+      stageSub.innerHTML = `Round <span id="roundNow">1</span> of <span id="roundTotal">10</span>`;
+    }else if(type === "trace"){
+      stageTitle.textContent = "Trace a Letter";
+      stageSub.innerHTML = `Practice`;
+      nextBtn.textContent = "New letter →";
+    }
+
+    // rebind round elements because stageSub innerHTML replaced
+    // (simple approach)
+    window.roundNowEl = null;
+    window.roundTotalEl = null;
+    // Instead, query fresh each time
+    startRound();
+  }
+
+  function getRoundEls(){
+    // pull current round nodes inside stageSub
+    const rn = $("#roundNow", stageSub) || $("#roundNow");
+    const rt = $("#roundTotal", stageSub) || $("#roundTotal");
+    return {rn, rt};
+  }
+
+  function setRoundUI2(){
+    const {rn, rt} = getRoundEls();
+    if(rn) rn.textContent = String(round+1);
+    if(rt) rt.textContent = String(TOTAL);
+  }
+
+  function startRound(){
+    locked = false;
+    if(activity === "find") roundFind();
+    if(activity === "match") roundMatch();
+    if(activity === "trace") roundTrace();
+  }
+
+  // ---------- Find the Letter ----------
+  function roundFind(){
+    setRoundUI2();
+    const letters = getSetLetters();
+    const target = letters[Math.floor(Math.random()*letters.length)];
+    const pool = shuffle(letters.filter(l => l!==target)).slice(0,2);
+    const choices = shuffle([target, ...pool]);
+
+    current = { target, choices };
+
+    stageBody.innerHTML = `
+      <p class="prompt">Tap the letter <b>${target}</b></p>
+      <div class="choices" role="group" aria-label="Letter choices">
+        ${choices.map(ch => `<button class="choice" type="button" data-ch="${ch}">${ch}</button>`).join("")}
+      </div>
+      <div class="feedback" id="feedbackBox">
+        <div>
+          <b id="fbTitle">Ready</b><br/>
+          <small id="fbSub">Pick the correct letter.</small>
+        </div>
+        <small class="muted">Auto-advances on correct</small>
+      </div>
+    `;
+
+    speak(`Find the letter ${target}`);
+
+    $$(".choice", stageBody).forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(locked) return;
+        const picked = btn.getAttribute("data-ch");
+        if(picked === target){
+          lockChoices(true);
+          setFeedback("ok","Correct ✅","Next one…");
+          speak("Well done");
+          // reliable advance
+          setTimeout(()=>advance(), 450);
+        }else{
+          setFeedback("bad","Try again","That one is not correct.");
+          speak("Try again");
+        }
+      });
+    });
+  }
+
+  // ---------- Upper/Lower Match ----------
+  function roundMatch(){
+    setRoundUI2();
+    const letters = getSetLetters();
+    const base = letters[Math.floor(Math.random()*letters.length)];
+    const showUpper = Math.random() < 0.5;
+    const targetDisplay = showUpper ? base : base.toLowerCase();
+    const correct = showUpper ? base.toLowerCase() : base;
+
+    const distractors = shuffle(letters.filter(l => l !== base)).slice(0,2).map(l => showUpper ? l.toLowerCase() : l);
+    const choices = shuffle([correct, ...distractors]);
+
+    current = { base, targetDisplay, correct, choices };
+
+    stageBody.innerHTML = `
+      <p class="prompt">Match the same letter in the other case</p>
+      <div class="bigLetter" aria-label="Target letter">${targetDisplay}</div>
+      <div class="choices" role="group" aria-label="Match choices">
+        ${choices.map(ch => `<button class="choice" type="button" data-ch="${ch}">${ch}</button>`).join("")}
+      </div>
+      <div class="feedback" id="feedbackBox">
+        <div>
+          <b id="fbTitle">Ready</b><br/>
+          <small id="fbSub">Pick the matching letter.</small>
+        </div>
+        <small class="muted">Auto-advances on correct</small>
+      </div>
+    `;
+
+    speak(`Match ${base}`);
+
+    $$(".choice", stageBody).forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(locked) return;
+        const picked = btn.getAttribute("data-ch");
+        if(picked === correct){
+          lockChoices(true);
+          setFeedback("ok","Correct ✅","Next one…");
+          speak("Well done");
+          setTimeout(()=>advance(), 500);
+        }else{
+          setFeedback("bad","Try again","Look for the same letter.");
+          speak("Try again");
+        }
+      });
+    });
+  }
+
+  // ---------- Trace a Letter ----------
+  let trace = { letter:"A", canvas:null, ctx:null, drawing:false, last:null };
+
+  function roundTrace(){
+    const letters = getSetLetters();
+    trace.letter = letters[Math.floor(Math.random()*letters.length)];
+    stageSub.textContent = "Practice";
+    stageBody.innerHTML = `
+      <p class="prompt">Trace the letter <b>${trace.letter}</b> on the screen.</p>
+      <div class="traceRow">
+        <div class="traceCanvas" id="traceBox" aria-label="Tracing area">
+          <div class="traceOverlay" aria-hidden="true">${trace.letter}</div>
+          <canvas id="traceCanvas" style="width:100%;height:100%"></canvas>
+        </div>
+        <div class="traceTools">
+          <button class="btn primary" type="button" id="clearTrace">Clear</button>
+          <button class="btn" type="button" id="newLetter">New letter</button>
+          <button class="btn ghost" type="button" id="tipTrace">Tip</button>
+        </div>
+        <div class="feedback" id="feedbackBox">
+          <div>
+            <b id="fbTitle">Ready</b><br/>
+            <small id="fbSub">Use your finger (or mouse) to trace.</small>
+          </div>
+          <small class="muted">No scoring</small>
+        </div>
+      </div>
+    `;
+
+    // hide next/repeat for trace? keep repeat = speak
+    nextBtn.classList.remove("hidden");
+    repeatBtn.classList.remove("hidden");
+
+    const canvas = $("#traceCanvas");
+    const box = $("#traceBox");
+
+    // high DPI
+    function resize(){
+      const r = box.getBoundingClientRect();
+      const dpr = window.devicePixelRatio || 1;
+      canvas.width = Math.floor(r.width*dpr);
+      canvas.height = Math.floor(r.height*dpr);
+      const ctx = canvas.getContext("2d");
+      ctx.scale(dpr,dpr);
+      ctx.lineCap = "round";
+      ctx.lineJoin = "round";
+      ctx.lineWidth = 8;
+      ctx.strokeStyle = "rgba(125,211,252,.95)";
+      trace.canvas = canvas; trace.ctx = ctx;
+      clearCanvas();
+    }
+
+    function clearCanvas(){
+      const r = box.getBoundingClientRect();
+      trace.ctx.clearRect(0,0,r.width,r.height);
+      setFeedback(null,"Ready","Trace slowly. You can clear anytime.");
+    }
+
+    function posFromEvent(ev){
+      const rect = box.getBoundingClientRect();
+      const x = (ev.touches ? ev.touches[0].clientX : ev.clientX) - rect.left;
+      const y = (ev.touches ? ev.touches[0].clientY : ev.clientY) - rect.top;
+      return {x,y};
+    }
+
+    function down(ev){
+      ev.preventDefault();
+      trace.drawing = true;
+      trace.last = posFromEvent(ev);
+    }
+    function move(ev){
+      if(!trace.drawing) return;
+      ev.preventDefault();
+      const p = posFromEvent(ev);
+      const ctx = trace.ctx;
+      ctx.beginPath();
+      ctx.moveTo(trace.last.x, trace.last.y);
+      ctx.lineTo(p.x,p.y);
+      ctx.stroke();
+      trace.last = p;
+    }
+    function up(){
+      trace.drawing = false;
+      trace.last = null;
+      setFeedback("ok","Nice ✅","Great practice. Try again or pick a new letter.");
+    }
+
+    box.addEventListener("mousedown", down);
+    box.addEventListener("mousemove", move);
+    window.addEventListener("mouseup", up);
+
+    box.addEventListener("touchstart", down, {passive:false});
+    box.addEventListener("touchmove", move, {passive:false});
+    box.addEventListener("touchend", up);
+
+    $("#clearTrace").addEventListener("click", clearCanvas);
+    $("#newLetter").addEventListener("click", ()=>roundTrace());
+    $("#tipTrace").addEventListener("click", ()=>{
+      speak(`Trace the letter ${trace.letter}`);
+      setFeedback(null,"Tip","Start at the top and go slowly.");
+    });
+
+    // sync on load/resize
+    setTimeout(resize, 0);
+    window.addEventListener("resize", resize, {passive:true});
+
+    speak(`Trace the letter ${trace.letter}`);
+  }
+
+  // ---------- Controls ----------
+  soundBtn.addEventListener("click", ()=>{
+    soundOn = !soundOn;
+    soundBtn.textContent = soundOn ? "🔊 Sound: On" : "🔇 Sound: Off";
+    soundBtn.setAttribute("aria-pressed", String(soundOn));
+    if(soundOn) speak("Sound on");
+  });
+
+  homeBtn.addEventListener("click", showMenu);
+
+  nextBtn.addEventListener("click", ()=>{
+    if(activity === "trace"){
+      roundTrace();
+      return;
+    }
+    advance();
+  });
+
+  repeatBtn.addEventListener("click", ()=>{
+    if(activity === "find") speak(`Find the letter ${current?.target || ""}`.trim());
+    if(activity === "match") speak(`Match ${current?.base || ""}`.trim());
+    if(activity === "trace") speak(`Trace the letter ${trace.letter}`);
+  });
+
+  $("#comingSoonBtn").addEventListener("click", ()=>{
+    alert("Coming soon: Letter Sounds / Phonics. Next we’ll add short CVC words and blending.");
+  });
+
+  // Menu Play buttons
+  $$("[data-play]").forEach(btn=>{
+    btn.addEventListener("click", ()=>{
+      const type = btn.getAttribute("data-play");
+      startActivity(type);
+    });
+  });
+
+  // Default view
+  showMenu();
+})();
+</script>
+</body>
+</html>
