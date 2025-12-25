@@ -185,6 +185,114 @@ a{color:inherit}
   .meta .desc{white-space:normal;}
   .actions{width:100%; justify-content:flex-start;}
 }
+
+
+/* --- Premium depth layer (Letters) --- */
+.page{
+  position: relative;
+}
+.page::before{
+  content:"";
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(31,120,255,.10), rgba(31,120,255,0) 55%),
+    radial-gradient(circle at 80% 18%, rgba(88,173,255,.12), rgba(88,173,255,0) 58%),
+    radial-gradient(circle at 25% 85%, rgba(31,120,255,.08), rgba(31,120,255,0) 60%),
+    linear-gradient(180deg, rgba(247,250,255,.92), rgba(245,248,255,.74));
+  pointer-events:none;
+  z-index: -1;
+}
+.card{
+  transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+}
+.card:hover{
+  transform: translateY(-1px);
+  box-shadow: 0 18px 36px rgba(16,60,120,.12);
+  border-color: rgba(31,120,255,.28);
+}
+.card:active{
+  transform: translateY(0);
+  box-shadow: 0 10px 22px rgba(16,60,120,.10);
+}
+.badge{
+  box-shadow: 0 10px 20px rgba(16,60,120,.10);
+}
+#playArea{
+  backdrop-filter: blur(8px);
+}
+.premiumDivider{
+  height:1px;
+  background: linear-gradient(90deg, rgba(31,120,255,0), rgba(31,120,255,.20), rgba(31,120,255,0));
+  margin: 12px 0;
+  border-radius:999px;
+}
+.kidHint{
+  display:flex; gap:10px; align-items:flex-start;
+  border:1px solid rgba(31,120,255,.18);
+  background: rgba(255,255,255,.78);
+  border-radius: 18px;
+  padding: 12px;
+}
+.kidHint .ico{
+  width:40px;height:40px;border-radius:14px;
+  display:grid;place-items:center;
+  background: linear-gradient(180deg, rgba(31,120,255,.14), rgba(255,255,255,.75));
+  border:1px solid rgba(31,120,255,.18);
+  font-size:1.2rem;
+}
+.kidHint b{ font-weight: 980; }
+
+/* Finish modal + confetti */
+.psModal{
+  position: fixed;
+  inset: 0;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding: 18px;
+  background: rgba(11,27,51,.46);
+  z-index: 9999;
+}
+.psModal.show{ display:flex; }
+.psModalCard{
+  width: min(560px, 96vw);
+  border-radius: 26px;
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(255,255,255,.50);
+  box-shadow: 0 30px 80px rgba(0,0,0,.22);
+  padding: 16px;
+  position: relative;
+  overflow:hidden;
+}
+.psModalTop{
+  display:flex; align-items:flex-start; justify-content:space-between; gap:12px;
+}
+.psModalTitle{
+  margin:0; font-weight: 990; font-size: 1.25rem; letter-spacing:.2px;
+}
+.psModalMsg{
+  margin:6px 0 0; color: rgba(75,100,136,1); font-weight: 800; line-height:1.5;
+}
+.psModalActions{
+  margin-top: 12px;
+  display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+}
+.psConfetti{
+  position:absolute; inset:0; pointer-events:none; opacity:.9;
+}
+.psConfetti i{
+  position:absolute;
+  width:10px; height:16px;
+  border-radius: 4px;
+  background: rgba(31,120,255,.55);
+  animation: psFall 1.35s ease-in forwards;
+}
+@keyframes psFall{
+  0%{ transform: translateY(-18px) rotate(0deg); opacity: 0;}
+  10%{ opacity: 1;}
+  100%{ transform: translateY(420px) rotate(220deg); opacity: 0;}
+}
 </style>
 </head>
 <body>
@@ -389,7 +497,33 @@ a{color:inherit}
       <button class="badge" id="starBtn" type="button" style="border:none; cursor:pointer;">Add ⭐</button>
     </div>
   </div>
+
+  <!-- Premium finish modal -->
+  <div class="psModal" id="psModal" role="dialog" aria-modal="true" aria-label="Activity result">
+    <div class="psModalCard">
+      <div class="psConfetti" id="psConfetti" aria-hidden="true"></div>
+      <div class="psModalTop">
+        <div>
+          <p class="psModalTitle" id="psModalTitle">Great job!</p>
+          <p class="psModalMsg" id="psModalMsg">You finished the level.</p>
+        </div>
+        <button class="pill" id="psModalClose" type="button" aria-label="Close">✕</button>
+      </div>
+      <div class="premiumDivider"></div>
+      <div class="kidHint" style="margin-top:2px">
+        <div class="ico" aria-hidden="true">💡</div>
+        <div style="font-weight:800;color:rgba(75,100,136,1);line-height:1.45">
+          <b>Tip:</b> Keep it short. Two great minutes beats ten tired minutes.
+        </div>
+      </div>
+      <div class="psModalActions">
+        <button class="pill" id="psModalAgain" type="button">Play again</button>
+        <button class="pill primary" id="psModalNext" type="button">Try another game</button>
+      </div>
+    </div>
+  </div>
 </section>
+
 
 <script>
 /* Primary Steps — Letters (Step 3: voice prompts + pro feedback) */
@@ -964,6 +1098,12 @@ function resetSession(){
       var msg = "Finished! You got " + score + " out of " + TOTAL_ROUNDS + ".";
       setFB(msg, true);
       speak("Great work. " + msg);
+      lastFinishedActivity = "sound";
+      openModal("Great listening!", msg);
+      lastFinishedActivity = "match";
+      openModal("Great matching!", msg);
+      lastFinishedActivity = "find";
+      openModal("Level complete!", msg);
       // award session stars based on score: 5/5 -> 2 stars, 4/5 -> 1 star
       if(score >= 4){
         addSessionStar();
@@ -1604,6 +1744,76 @@ function restartActivity(){
   var el = document.getElementById("starsCount");
   if(!el) return;
   el.textContent = String(Number(localStorage.getItem("ps_stars") || "0"));
+
+  // ---------- Premium finish modal ----------
+  var psModal = document.getElementById("psModal");
+  var psModalTitle = document.getElementById("psModalTitle");
+  var psModalMsg = document.getElementById("psModalMsg");
+  var psModalClose = document.getElementById("psModalClose");
+  var psModalAgain = document.getElementById("psModalAgain");
+  var psModalNext = document.getElementById("psModalNext");
+  var psConfetti = document.getElementById("psConfetti");
+
+  function burstConfetti(){
+    if(!psConfetti) return;
+    psConfetti.innerHTML = "";
+    var pieces = 18;
+    for(var i=0;i<pieces;i++){
+      var p = document.createElement("i");
+      var left = Math.random()*100;
+      var delay = Math.random()*120;
+      var w = 8 + Math.random()*8;
+      var h = 12 + Math.random()*14;
+      p.style.left = left + "%";
+      p.style.top = (-10 - Math.random()*40) + "px";
+      p.style.width = w + "px";
+      p.style.height = h + "px";
+      p.style.animationDelay = (delay/1000) + "s";
+      // alternate subtle tones
+      p.style.background = (i%3===0) ? "rgba(31,120,255,.60)" : (i%3===1 ? "rgba(88,173,255,.55)" : "rgba(255,255,255,.75)");
+      psConfetti.appendChild(p);
+    }
+  }
+
+  function openModal(title, msg){
+    if(!psModal) return;
+    psModalTitle.textContent = title || "Great job!";
+    psModalMsg.textContent = msg || "You finished the level.";
+    psModal.classList.add("show");
+    burstConfetti();
+  }
+  function closeModal(){
+    if(!psModal) return;
+    psModal.classList.remove("show");
+  }
+
+  if(psModalClose) psModalClose.addEventListener("click", closeModal);
+  if(psModal) psModal.addEventListener("click", function(e){
+    if(e.target === psModal) closeModal();
+  });
+
+  // Buttons (wired by current activity finish)
+  var lastFinishedActivity = null;
+  if(psModalAgain){
+    psModalAgain.addEventListener("click", function(){
+      closeModal();
+      if(lastFinishedActivity === "find") startFind();
+      else if(lastFinishedActivity === "match") startMatch();
+      else if(lastFinishedActivity === "sound") startSoundMatch();
+      else if(lastFinishedActivity === "tap") startSoundTap();
+    });
+  }
+  if(psModalNext){
+    psModalNext.addEventListener("click", function(){
+      closeModal();
+      // Soft nudge back to launcher area
+      var area = document.getElementById("lettersPage");
+      if(area) area.scrollIntoView({behavior:"smooth", block:"start"});
+      setFeedback("Pick another game above.", true);
+      speak("Pick another game.");
+    });
+  }
+
 })();
 </script>
 </body>
