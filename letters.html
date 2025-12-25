@@ -502,6 +502,134 @@ a{color:inherit}
   }
 }
 
+
+/* --- Deeper in-game polish --- */
+#playArea{
+  border-radius: 28px;
+  padding: 16px;
+}
+.gameShell{
+  display:grid;
+  grid-template-columns: 1.35fr .65fr;
+  gap: 12px;
+  align-items:start;
+}
+@media (max-width: 920px){
+  .gameShell{ grid-template-columns: 1fr; }
+}
+.gameMain{
+  border:1px solid rgba(31,120,255,.16);
+  background: rgba(255,255,255,.78);
+  border-radius: 26px;
+  padding: 14px;
+  box-shadow: 0 18px 34px rgba(16,60,120,.10);
+}
+.gameSide{
+  border:1px solid rgba(31,120,255,.16);
+  background: rgba(255,255,255,.70);
+  border-radius: 26px;
+  padding: 14px;
+  box-shadow: 0 18px 34px rgba(16,60,120,.08);
+  position: sticky;
+  top: 12px;
+}
+@media (max-width: 920px){
+  .gameSide{ position: static; }
+}
+.bigPromptCard{
+  border: 1px solid rgba(31,120,255,.18);
+  background: linear-gradient(180deg, rgba(31,120,255,.12), rgba(255,255,255,.86));
+  border-radius: 26px;
+  padding: 14px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.bigPromptTitle{
+  margin:0;
+  font-weight: 980;
+  color: rgba(11,27,51,.78);
+}
+.bigPromptLetter{
+  margin-top: 6px;
+  font-weight: 990;
+  font-size: 2.5rem;
+  letter-spacing: .6px;
+}
+.promptMetaRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+}
+.kpi{
+  display:flex;
+  flex-direction:column;
+  gap:2px;
+  padding: 10px 12px;
+  border-radius: 18px;
+  border:1px solid rgba(31,120,255,.16);
+  background: rgba(255,255,255,.78);
+  min-width: 112px;
+}
+.kpi .label{
+  font-weight: 900;
+  color: var(--muted);
+  font-size: .78rem;
+}
+.kpi .value{
+  font-weight: 990;
+  color: rgba(18,51,95,.92);
+}
+.grid3{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap: 10px;
+}
+@media (max-width: 560px){
+  .grid3{ grid-template-columns: repeat(2, minmax(0,1fr)); }
+}
+.choiceBtn{
+  min-height: 94px;
+  font-size: 2.2rem;
+  font-weight: 990;
+  border-radius: 22px;
+}
+.choiceBtn small{
+  display:block;
+  margin-top: 8px;
+  font-size: .95rem;
+  font-weight: 850;
+  color: rgba(75,100,136,1);
+  text-transform: capitalize;
+}
+.feedbackToast{
+  position: fixed;
+  left: 50%;
+  bottom: 18px;
+  transform: translateX(-50%) translateY(8px);
+  background: rgba(255,255,255,.92);
+  border: 1px solid rgba(31,120,255,.18);
+  border-radius: 999px;
+  padding: 10px 14px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.18);
+  font-weight: 950;
+  color: rgba(18,51,95,.92);
+  display:none;
+  z-index: 9998;
+}
+.feedbackToast.show{
+  display:block;
+  animation: toastIn .22s ease forwards;
+}
+@keyframes toastIn{
+  from{ opacity:0; transform: translateX(-50%) translateY(14px); }
+  to{ opacity:1; transform: translateX(-50%) translateY(0); }
+}
+
 </style>
 </head>
 <body>
@@ -1224,7 +1352,7 @@ function resetSession(){
     }, [
       el("div", {}, [
         el("div", {style:"font-weight:950;color:rgba(11,27,51,.78);"}, ["Instruction"]),
-        el("div", {id:"bigPrompt", style:"margin-top:6px;font-weight:990;font-size:2.1rem;letter-spacing:.5px;"}, ["Tap Start"])
+        el("div", {id:"bigPrompt", style:"margin-top:6px;font-weight:990;font-size:2.55rem;letter-spacing:.5px;"}, ["Tap Start"])
       ]),
       el("div", {style:"display:flex;gap:10px;align-items:center;flex-wrap:wrap"}, [
         el("span", {class:"pill", style:"cursor:default"}, ["✅ Correct: ", el("span",{id:"scoreNum"},["0"])]),
@@ -1233,7 +1361,7 @@ function resetSession(){
     ]);
 
     // Choices grid
-    var grid = el("div", {id:"findGrid", style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;opacity:.55;pointer-events:none;"});
+    var grid = el("div", {id:"findGrid", class:"grid3", style:"display:grid;gap:10px;opacity:.55;pointer-events:none;"});
 
     // Feedback panel
     var feedbackPanel = el("div", {id:"findFeedbackPanel", style:
@@ -1302,6 +1430,7 @@ function resetSession(){
     function setFB(msg, good){
       fbText.textContent = msg;
       fbText.style.color = good ? "rgba(18,51,95,.92)" : "rgba(75,100,136,1)";
+      toast(msg);
     }
 
     function showNext(show){
@@ -1313,8 +1442,7 @@ function resetSession(){
       pool.forEach(function(L){
         var b = el("button", {
           type:"button",
-          class:"card",
-          style:"justify-content:center; padding:18px; text-align:center; min-height:84px; font-size:2rem; font-weight:990;"
+          class:"card choiceBtn", style:"justify-content:center; padding:18px; text-align:center;"
         }, [L]);
 
         b.addEventListener("click", function(){
@@ -1459,7 +1587,7 @@ awardLevelBadges(score, TOTAL_ROUNDS);
     }, [
       el("div", {}, [
         el("div", {style:"font-weight:950;color:rgba(11,27,51,.78);"}, ["Match this letter"]),
-        el("div", {id:"matchPrompt", style:"margin-top:6px;font-weight:990;font-size:2.1rem;letter-spacing:.5px;"}, ["Tap Start"])
+        el("div", {id:"matchPrompt", style:"margin-top:6px;font-weight:990;font-size:2.55rem;letter-spacing:.5px;"}, ["Tap Start"])
       ]),
       el("div", {style:"display:flex;gap:10px;align-items:center;flex-wrap:wrap"}, [
         el("span", {class:"pill", style:"cursor:default"}, ["✅ Correct: ", el("span",{id:"matchScore"},["0"])]),
@@ -1467,7 +1595,7 @@ awardLevelBadges(score, TOTAL_ROUNDS);
       ])
     ]);
 
-    var grid = el("div", {id:"matchGrid", style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;opacity:.55;pointer-events:none;"});
+    var grid = el("div", {id:"matchGrid", class:"grid3", style:"display:grid;gap:10px;opacity:.55;pointer-events:none;"});
 
     var feedbackPanel = el("div", {style:
       "border-radius:18px;padding:12px;border:1px solid rgba(31,120,255,.18);background:rgba(255,255,255,.78);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;"
@@ -1523,6 +1651,7 @@ awardLevelBadges(score, TOTAL_ROUNDS);
     function setFB(msg, good){
       fb.textContent = msg;
       fb.style.color = good ? "rgba(18,51,95,.92)" : "rgba(75,100,136,1)";
+      toast(msg);
     }
 
     function showNext(show){
@@ -1553,8 +1682,7 @@ awardLevelBadges(score, TOTAL_ROUNDS);
       options.forEach(function(ch){
         var b = el("button", {
           type:"button",
-          class:"card",
-          style:"justify-content:center; padding:18px; text-align:center; min-height:84px; font-size:2rem; font-weight:990;"
+          class:"card choiceBtn", style:"justify-content:center; padding:18px; text-align:center;"
         }, [ch]);
 
         b.addEventListener("click", function(){
@@ -1694,7 +1822,7 @@ awardLevelBadges(score, TOTAL_ROUNDS);
     }, [
       el("div", {}, [
         el("div", {style:"font-weight:950;color:rgba(11,27,51,.78);"}, ["Letter"]),
-        el("div", {id:"soundPrompt", style:"margin-top:6px;font-weight:990;font-size:2.1rem;letter-spacing:.5px;"}, ["Tap Start"])
+        el("div", {id:"soundPrompt", style:"margin-top:6px;font-weight:990;font-size:2.55rem;letter-spacing:.5px;"}, ["Tap Start"])
       ]),
       el("div", {style:"display:flex;gap:10px;align-items:center;flex-wrap:wrap"}, [
         el("span", {class:"pill", style:"cursor:default"}, ["✅ Correct: ", el("span",{id:"soundScore"},["0"])]),
@@ -1702,7 +1830,7 @@ awardLevelBadges(score, TOTAL_ROUNDS);
       ])
     ]);
 
-    var grid = el("div", {id:"soundGrid", style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;opacity:.55;pointer-events:none;"});
+    var grid = el("div", {id:"soundGrid", class:"grid3", style:"display:grid;gap:10px;opacity:.55;pointer-events:none;"});
 
     var feedbackPanel = el("div", {style:
       "border-radius:18px;padding:12px;border:1px solid rgba(31,120,255,.18);background:rgba(255,255,255,.78);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;"
@@ -1758,6 +1886,7 @@ awardLevelBadges(score, TOTAL_ROUNDS);
     function setFB(msg, good){
       fb.textContent = msg;
       fb.style.color = good ? "rgba(18,51,95,.92)" : "rgba(75,100,136,1)";
+      toast(msg);
     }
 
     function showNext(show){
@@ -1792,11 +1921,10 @@ awardLevelBadges(score, TOTAL_ROUNDS);
       options.forEach(function(opt){
         var b = el("button", {
           type:"button",
-          class:"card",
-          style:"justify-content:center; padding:16px; text-align:center; min-height:110px; font-weight:990;"
+          class:"card", style:"justify-content:center; padding:16px; text-align:center; min-height:118px; border-radius:22px;"
         });
 
-        b.appendChild(el("div", {style:"font-size:2.1rem; line-height:1; margin-bottom:10px;"}, [opt.e]));
+        b.appendChild(el("div", {style:"font-size:2.55rem; line-height:1; margin-bottom:10px;"}, [opt.e]));
         b.appendChild(el("div", {style:"font-size:1.05rem; text-transform:capitalize;"}, [opt.w]));
 
         b.addEventListener("click", function(){
@@ -2222,7 +2350,23 @@ function restartActivity(){
 
   renderGoal();
 
+
+  // ---------- Feedback toast ----------
+  var feedbackToast = document.getElementById("feedbackToast");
+  var toastTimer = null;
+
+  function toast(msg){
+    if(!feedbackToast) return;
+    feedbackToast.textContent = msg;
+    feedbackToast.classList.add("show");
+    if(toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){
+      feedbackToast.classList.remove("show");
+    }, 1200);
+  }
+
 })();
 </script>
+<div class="feedbackToast" id="feedbackToast" role="status" aria-live="polite"></div>
 </body>
 </html>
