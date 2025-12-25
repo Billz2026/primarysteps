@@ -630,6 +630,25 @@ a{color:inherit}
   to{ opacity:1; transform: translateX(-50%) translateY(0); }
 }
 
+
+/* --- Illustrated picture cards (Sound Match) --- */
+.illusWrap{
+  width: 100%;
+  display:grid;
+  place-items:center;
+  margin-bottom: 8px;
+}
+.illusSvg{
+  width: 100%;
+  max-width: 220px;
+  height: 92px;
+  border-radius: 18px;
+  overflow: hidden;
+}
+@media (max-width: 560px){
+  .illusSvg{ height: 86px; }
+}
+
 </style>
 </head>
 <body>
@@ -1925,7 +1944,9 @@ awardLevelBadges(score, TOTAL_ROUNDS);
         });
 
         b.appendChild(el("div", {style:"font-size:2.55rem; line-height:1; margin-bottom:10px;"}, [opt.e]));
-        b.appendChild(el("div", {style:"font-size:1.05rem; text-transform:capitalize;"}, [opt.w]));
+        var lbl = document.createElement("small");
+        lbl.textContent = opt.w;
+        b.appendChild(lbl);
 
         b.addEventListener("click", function(){
           if(opt.w === correct.w){
@@ -2363,6 +2384,48 @@ function restartActivity(){
     toastTimer = setTimeout(function(){
       feedbackToast.classList.remove("show");
     }, 1200);
+  }
+
+
+  // ---------- Illustrated picture cards (SVG templates) ----------
+  function makeIllustrationSvg(emoji, seed){
+    // Seed influences small decorative shapes so cards feel different
+    seed = String(seed || "");
+    var a = (seed.charCodeAt(0) || 65) % 3;
+    var b = (seed.charCodeAt(1) || 90) % 3;
+
+    var glow1 = a === 0 ? "rgba(31,120,255,.22)" : (a === 1 ? "rgba(88,173,255,.22)" : "rgba(255,255,255,.30)");
+    var glow2 = b === 0 ? "rgba(31,120,255,0)" : (b === 1 ? "rgba(88,173,255,0)" : "rgba(255,255,255,0)");
+
+    // Note: Using <text> keeps it lightweight (no external images)
+    return (
+      '<svg class="illusSvg" viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Picture">' +
+        '<defs>' +
+          '<linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">' +
+            '<stop offset="0" stop-color="rgba(31,120,255,.14)"/>' +
+            '<stop offset="1" stop-color="rgba(255,255,255,.86)"/>' +
+          '</linearGradient>' +
+          '<radialGradient id="rg" cx="30%" cy="22%" r="70%">' +
+            '<stop offset="0" stop-color="'+glow1+'"/>' +
+            '<stop offset="1" stop-color="'+glow2+'"/>' +
+          '</radialGradient>' +
+          '<filter id="s" x="-20%" y="-20%" width="140%" height="160%">' +
+            '<feDropShadow dx="0" dy="10" stdDeviation="10" flood-color="rgba(16,60,120,.18)"/>' +
+          '</filter>' +
+        '</defs>' +
+        '<rect x="10" y="10" width="400" height="160" rx="32" fill="url(#g1)" stroke="rgba(31,120,255,.18)" />' +
+        '<rect x="10" y="10" width="400" height="160" rx="32" fill="url(#rg)" opacity=".95"/>' +
+        // Decorative bubbles
+        '<circle cx="'+(320 + a*18)+'" cy="'+(48 + b*10)+'" r="16" fill="rgba(255,255,255,.55)" />' +
+        '<circle cx="'+(350 + b*12)+'" cy="'+(86 + a*8)+'" r="10" fill="rgba(31,120,255,.18)" />' +
+        '<circle cx="'+(70 + a*10)+'" cy="'+(120 + b*8)+'" r="12" fill="rgba(88,173,255,.18)" />' +
+        // Emoji badge
+        '<g filter="url(#s)">' +
+          '<rect x="150" y="36" width="120" height="108" rx="28" fill="rgba(255,255,255,.78)" stroke="rgba(31,120,255,.18)"/>' +
+          '<text x="210" y="114" text-anchor="middle" font-size="64" font-family="Apple Color Emoji, Segoe UI Emoji, Noto Color Emoji, sans-serif">'+emoji+'</text>' +
+        '</g>' +
+      '</svg>'
+    );
   }
 
 })();
