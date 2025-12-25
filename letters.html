@@ -167,18 +167,91 @@ a{color:inherit}
     </header>
 
     
-<section class="page">
+<section class="page" id="lettersPage">
   <div class="breadcrumb"><a href="index.html">← Back to Home</a></div>
-  <h2 style="margin:0 0 6px; font-weight:980; letter-spacing:.2px;">🔤 Letters</h2>
-  <p style="margin:0; color:var(--muted); font-weight:750; line-height:1.5;">Pick a letter, hear the sound, and match it.</p>
 
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+    <div style="min-width:260px;flex:1 1 420px">
+      <h2 style="margin:0 0 6px; font-weight:980; letter-spacing:.2px;">🔤 Letters</h2>
+      <p style="margin:0; color:var(--muted); font-weight:750; line-height:1.5;">
+        Choose an activity below. Keep it short, keep it fun — 3–5 minutes is perfect.
+      </p>
+    </div>
+
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+      <button class="pill" id="soundToggle" type="button" aria-pressed="false" title="Sound is coming soon">
+        🔇 Sound: Off
+      </button>
+      <button class="pill primary" id="resetBtn" type="button" title="Reset this page (keeps total stars)">
+        Reset activity
+      </button>
+    </div>
+  </div>
+
+  <!-- Activity Launcher -->
+  <div style="margin-top:14px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px;">
+    <button class="card" id="launchFind" type="button" aria-controls="playArea" aria-label="Play Find the Letter">
+      <div class="left">
+        <div class="ico" aria-hidden="true">🎯</div>
+        <div class="meta">
+          <p class="name">Find the Letter</p>
+          <p class="desc">Tap the correct letter from a few choices</p>
+        </div>
+      </div>
+      <span class="badge">Play</span>
+    </button>
+
+    <button class="card" id="launchMatch" type="button" aria-controls="playArea" aria-label="Play Upper & Lower Match">
+      <div class="left">
+        <div class="ico" aria-hidden="true">🔁</div>
+        <div class="meta">
+          <p class="name">Upper & Lower Match</p>
+          <p class="desc">Match BIG letters to small letters</p>
+        </div>
+      </div>
+      <span class="badge">Play</span>
+    </button>
+  </div>
+
+  <!-- Play Area -->
+  <div id="playArea" style="margin-top:14px; border:1px solid var(--stroke); border-radius: 24px; padding:14px; background: rgba(255,255,255,.70); box-shadow: var(--shadow2);">
+    <div id="activityHeader" style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+      <div>
+        <p id="activityTitle" style="margin:0; font-weight:950;">Select an activity</p>
+        <p id="activitySub" style="margin:4px 0 0; color:var(--muted); font-weight:750;">Pick a game above to start.</p>
+      </div>
+      <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <div style="display:flex;gap:8px;align-items:center">
+          <span style="font-weight:900;color:var(--muted)">Difficulty</span>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <button class="pill" id="diffEasy" type="button" aria-pressed="true">Easy (3)</button>
+            <button class="pill" id="diffHard" type="button" aria-pressed="false">Hard (6)</button>
+          </div>
+        </div>
+        <span class="pill" style="cursor:default">⭐ Session: <span id="sessionStars">0</span></span>
+      </div>
+    </div>
+
+    <div id="activityBody" style="margin-top:12px; display:grid; gap:12px;">
+      <!-- injected by JS -->
+      <div style="padding:12px;border-radius:18px;border:1px dashed rgba(31,120,255,.28);color:var(--muted);font-weight:750;">
+        Tip: Start on Easy, get 3 correct in a row, then try Hard.
+      </div>
+    </div>
+  </div>
+
+  <!-- Earn a star (global) -->
   <div style="margin-top:14px; display:grid; gap:12px;">
     <div style="border:1px solid var(--stroke); border-radius: var(--r); padding:14px; background: rgba(255,255,255,.70); box-shadow: var(--shadow2);">
       <p style="margin:0 0 8px; font-weight:900;">Quick tips</p>
-      <ul style="margin:0; padding-left:18px; color:var(--muted); font-weight:750; line-height:1.55;"><li>Start with 3 options, then increase.</li><li>Celebrate correct answers quickly.</li><li>Keep sessions under 5 minutes.</li></ul>
+      <ul style="margin:0; padding-left:18px; color:var(--muted); font-weight:750; line-height:1.55;">
+        <li>Keep sessions under 5 minutes.</li>
+        <li>Celebrate quickly, then move on.</li>
+        <li>If it feels hard, go back to Easy.</li>
+      </ul>
     </div>
 
-    <div class="card" style="cursor:default;" href="#">
+    <div class="card" style="cursor:default;">
       <div class="left">
         <div class="ico" aria-hidden="true">⭐</div>
         <div class="meta">
@@ -192,18 +265,317 @@ a{color:inherit}
 </section>
 
 <script>
+/* Primary Steps — Letters (Step 2: first real activities) */
 (function(){
-  var btn = document.getElementById("starBtn");
-  if(!btn) return;
-  btn.addEventListener("click", function(){
-    var n = Number(localStorage.getItem("ps_stars") || "0");
-    n += 1;
-    localStorage.setItem("ps_stars", String(n));
+  // ---------- Global stars (existing behaviour) ----------
+  var starBtn = document.getElementById("starBtn");
+  function getTotalStars(){ return Number(localStorage.getItem("ps_stars") || "0"); }
+  function setTotalStars(n){ localStorage.setItem("ps_stars", String(n)); }
+  function refreshTopStars(){
     var top = document.getElementById("starsCount");
-    if(top) top.textContent = String(n);
-    btn.textContent = "Added! ⭐";
-    setTimeout(function(){ btn.textContent = "Add ⭐"; }, 900);
-  });
+    if(top) top.textContent = String(getTotalStars());
+  }
+  if(starBtn){
+    starBtn.addEventListener("click", function(){
+      var n = getTotalStars() + 1;
+      setTotalStars(n);
+      refreshTopStars();
+      starBtn.textContent = "Added! ⭐";
+      setTimeout(function(){ starBtn.textContent = "Add ⭐"; }, 900);
+    });
+  }
+
+  // ---------- Session stars ----------
+  var sessionStarsEl = document.getElementById("sessionStars");
+  var sessionStars = 0;
+  function addSessionStar(){
+    sessionStars += 1;
+    if(sessionStarsEl) sessionStarsEl.textContent = String(sessionStars);
+  }
+  function resetSession(){
+    sessionStars = 0;
+    if(sessionStarsEl) sessionStarsEl.textContent = "0";
+  }
+
+  // ---------- Sound toggle placeholder ----------
+  var soundBtn = document.getElementById("soundToggle");
+  if(soundBtn){
+    // Keep off for now, but remember user's preference for later.
+    var pref = localStorage.getItem("ps_sound") || "off";
+    function renderSound(){
+      soundBtn.setAttribute("aria-pressed", String(pref === "on"));
+      soundBtn.textContent = (pref === "on") ? "🔊 Sound: On" : "🔇 Sound: Off";
+      soundBtn.title = "Sound is coming soon — this button saves your preference";
+    }
+    renderSound();
+    soundBtn.addEventListener("click", function(){
+      pref = (pref === "on") ? "off" : "on";
+      localStorage.setItem("ps_sound", pref);
+      renderSound();
+    });
+  }
+
+  // ---------- Difficulty ----------
+  var easyBtn = document.getElementById("diffEasy");
+  var hardBtn = document.getElementById("diffHard");
+  var difficulty = Number(localStorage.getItem("ps_letters_diff") || "3"); // 3 or 6
+  function setDifficulty(n){
+    difficulty = n;
+    localStorage.setItem("ps_letters_diff", String(n));
+    if(easyBtn) easyBtn.setAttribute("aria-pressed", String(n === 3));
+    if(hardBtn) hardBtn.setAttribute("aria-pressed", String(n === 6));
+    // Restart current activity
+    if(currentActivity === "find") startFind();
+    if(currentActivity === "match") startMatch();
+  }
+  if(easyBtn) easyBtn.addEventListener("click", function(){ setDifficulty(3); });
+  if(hardBtn) hardBtn.addEventListener("click", function(){ setDifficulty(6); });
+  setDifficulty(difficulty);
+
+  // ---------- UI elements ----------
+  var body = document.getElementById("activityBody");
+  var title = document.getElementById("activityTitle");
+  var sub = document.getElementById("activitySub");
+  var resetBtn = document.getElementById("resetBtn");
+
+  function setHeader(t, s){
+    if(title) title.textContent = t;
+    if(sub) sub.textContent = s;
+  }
+
+  function el(tag, attrs, children){
+    var node = document.createElement(tag);
+    if(attrs){
+      Object.keys(attrs).forEach(function(k){
+        if(k === "class") node.className = attrs[k];
+        else if(k === "html") node.innerHTML = attrs[k];
+        else node.setAttribute(k, attrs[k]);
+      });
+    }
+    (children || []).forEach(function(c){
+      if(typeof c === "string") node.appendChild(document.createTextNode(c));
+      else node.appendChild(c);
+    });
+    return node;
+  }
+
+  function clearBody(){
+    if(!body) return;
+    body.innerHTML = "";
+  }
+
+  function shimmer(node){
+    node.animate([
+      { transform:"translateY(0)", boxShadow:"0 10px 22px rgba(16,60,120,.07)" },
+      { transform:"translateY(-1px)", boxShadow:"0 16px 30px rgba(16,60,120,.12)" },
+      { transform:"translateY(0)", boxShadow:"0 10px 22px rgba(16,60,120,.07)" }
+    ], { duration: 260, iterations: 1, easing:"ease-out" });
+  }
+
+  function shake(node){
+    node.animate([
+      { transform:"translateX(0)" },
+      { transform:"translateX(-6px)" },
+      { transform:"translateX(6px)" },
+      { transform:"translateX(-4px)" },
+      { transform:"translateX(4px)" },
+      { transform:"translateX(0)" }
+    ], { duration: 240, iterations: 1, easing:"ease-out" });
+  }
+
+  // ---------- Activities ----------
+  var currentActivity = null;
+  var letters = ["A","S","T","P","I","N"]; // early set (can expand later)
+
+  // Find the Letter
+  var targetLetter = null;
+  var streak = 0;
+
+  function pickTarget(pool){
+    return pool[Math.floor(Math.random() * pool.length)];
+  }
+
+  function startFind(){
+    currentActivity = "find";
+    resetSession();
+    streak = 0;
+
+    setHeader("Find the Letter", "Tap the correct letter. Get 3 in a row to earn a session star.");
+
+    var pool = letters.slice(0, difficulty);
+    targetLetter = pickTarget(pool);
+
+    clearBody();
+
+    var prompt = el("div", {
+      style: "display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
+    }, [
+      el("div", {}, [
+        el("div", {style:"font-weight:950;font-size:1.05rem;"}, ["Find: ", targetLetter]),
+        el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Streak: ", String(streak), " / 3"])
+      ]),
+      el("button", {class:"pill primary", type:"button", id:"nextFind"}, [ "New letter" ])
+    ]);
+
+    var grid = el("div", {style:"display:grid;grid-template-columns: repeat(6, minmax(0,1fr));gap:10px;"});
+    // responsive columns
+    grid.style.gridTemplateColumns = (difficulty === 3) ? "repeat(3, minmax(0,1fr))" : "repeat(3, minmax(0,1fr))";
+
+    pool.forEach(function(L){
+      var b = el("button", {
+        type:"button",
+        class:"card",
+        style:"justify-content:center; padding:18px; text-align:center; min-height:72px; font-size:1.6rem; font-weight:980;"
+      }, [L]);
+      b.addEventListener("click", function(){
+        if(L === targetLetter){
+          streak += 1;
+          shimmer(b);
+          // Earn session star each time you reach 3
+          if(streak >= 3){
+            addSessionStar();
+            streak = 0;
+          }
+          targetLetter = pickTarget(pool);
+          // refresh prompt
+          prompt.querySelector("div div").textContent = "Find: " + targetLetter;
+          prompt.querySelector("div div + div").textContent = "Streak: " + streak + " / 3";
+        }else{
+          shake(b);
+          streak = 0;
+          prompt.querySelector("div div + div").textContent = "Streak: " + streak + " / 3";
+        }
+      });
+      grid.appendChild(b);
+    });
+
+    body.appendChild(prompt);
+    body.appendChild(grid);
+
+    var nextBtn = document.getElementById("nextFind");
+    if(nextBtn){
+      nextBtn.addEventListener("click", function(){
+        targetLetter = pickTarget(pool);
+        prompt.querySelector("div div").textContent = "Find: " + targetLetter;
+      });
+    }
+
+    body.appendChild(el("div", {style:"color:var(--muted);font-weight:750;font-size:.92rem;"}, [
+      "Tip: Start with Easy (3 letters). When confident, switch to Hard (6 letters)."
+    ]));
+  }
+
+  // Upper & Lower Match
+  var matchTarget = null;
+
+  function startMatch(){
+    currentActivity = "match";
+    resetSession();
+
+    setHeader("Upper & Lower Match", "Tap the matching small letter. Get 3 correct in a row to earn a session star.");
+
+    var poolUpper = letters.slice(0, difficulty);
+    var poolLower = poolUpper.map(function(x){ return x.toLowerCase(); });
+
+    matchTarget = pickTarget(poolUpper);
+    streak = 0;
+
+    clearBody();
+
+    var prompt = el("div", {
+      style: "display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
+    }, [
+      el("div", {}, [
+        el("div", {style:"font-weight:980;font-size:1.15rem;"}, ["Match this: ", matchTarget]),
+        el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Streak: ", String(streak), " / 3"])
+      ]),
+      el("button", {class:"pill primary", type:"button", id:"nextMatch"}, [ "New letter" ])
+    ]);
+
+    var grid = el("div", {style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;"});
+
+    // Shuffle choices but always include correct one
+    function newRound(){
+      matchTarget = pickTarget(poolUpper);
+      var correct = matchTarget.toLowerCase();
+      // Build options: correct + 2 random others
+      var options = [correct];
+      while(options.length < 3){
+        var o = pickTarget(poolLower);
+        if(options.indexOf(o) === -1) options.push(o);
+      }
+      // Shuffle
+      for(var i=options.length-1;i>0;i--){
+        var j = Math.floor(Math.random()*(i+1));
+        var tmp = options[i]; options[i]=options[j]; options[j]=tmp;
+      }
+      prompt.querySelector("div div").textContent = "Match this: " + matchTarget;
+      prompt.querySelector("div div + div").textContent = "Streak: " + streak + " / 3";
+
+      grid.innerHTML = "";
+      options.forEach(function(ch){
+        var b = el("button", {
+          type:"button",
+          class:"card",
+          style:"justify-content:center; padding:18px; text-align:center; min-height:72px; font-size:1.6rem; font-weight:980;"
+        }, [ch]);
+        b.addEventListener("click", function(){
+          if(ch === matchTarget.toLowerCase()){
+            streak += 1;
+            shimmer(b);
+            if(streak >= 3){
+              addSessionStar();
+              streak = 0;
+            }
+            newRound();
+          }else{
+            shake(b);
+            streak = 0;
+            prompt.querySelector("div div + div").textContent = "Streak: " + streak + " / 3";
+          }
+        });
+        grid.appendChild(b);
+      });
+    }
+
+    body.appendChild(prompt);
+    body.appendChild(grid);
+
+    var nextBtn = document.getElementById("nextMatch");
+    if(nextBtn){
+      nextBtn.addEventListener("click", function(){
+        streak = 0;
+        newRound();
+      });
+    }
+
+    newRound();
+  }
+
+  // Launch buttons
+  var launchFind = document.getElementById("launchFind");
+  var launchMatch = document.getElementById("launchMatch");
+  if(launchFind) launchFind.addEventListener("click", startFind);
+  if(launchMatch) launchMatch.addEventListener("click", startMatch);
+
+  // Reset button: reset session + restart current activity
+  if(resetBtn){
+    resetBtn.addEventListener("click", function(){
+      resetSession();
+      if(currentActivity === "find") startFind();
+      else if(currentActivity === "match") startMatch();
+      else {
+        clearBody();
+        setHeader("Select an activity", "Pick a game above to start.");
+        body.appendChild(el("div", {style:"padding:12px;border-radius:18px;border:1px dashed rgba(31,120,255,.28);color:var(--muted);font-weight:750;"}, [
+          "Tip: Start on Easy, get 3 correct in a row, then try Hard."
+        ]));
+      }
+    });
+  }
+
+  // Initial stars in header
+  refreshTopStars();
 })();
 </script>
 
