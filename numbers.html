@@ -1,0 +1,863 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Numbers • Primary Steps</title>
+  <style>
+
+    :root{
+      --bg:#0b0d12;
+      --panel:#121621;
+      --panel2:#0f1320;
+      --text:#eef2ff;
+      --muted:#a9b2c7;
+      --brand:#7dd3fc;
+      --brand2:#a78bfa;
+      --ok:#34d399;
+      --bad:#fb7185;
+      --btn:#1f2937;
+      --btn2:#111827;
+      --ring:rgba(125,211,252,.35);
+      --shadow: 0 12px 40px rgba(0,0,0,.35);
+      --shadow2: 0 8px 18px rgba(0,0,0,.25);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(900px 500px at 20% 0%, rgba(167,139,250,.16), transparent 60%),
+                  radial-gradient(900px 500px at 85% 20%, rgba(125,211,252,.18), transparent 60%),
+                  var(--bg);
+      color:var(--text);
+    }
+    a{color:inherit}
+    .wrap{max-width:1080px;margin:0 auto;padding:22px 18px 60px}
+    header{
+      display:flex;align-items:center;justify-content:space-between;gap:14px;
+      padding:14px 14px;border-radius:22px;background:rgba(18,22,33,.75);
+      border:1px solid rgba(255,255,255,.08); box-shadow:var(--shadow2);
+      position:sticky;top:10px;backdrop-filter: blur(10px); z-index:50;
+    }
+    .brand{
+      display:flex;align-items:center;gap:12px;min-width: 240px;
+    }
+    .logo{
+      width:44px;height:44px;border-radius:14px;
+      background: radial-gradient(circle at 30% 30%, rgba(125,211,252,.9), rgba(167,139,250,.65)),
+                  linear-gradient(135deg, rgba(255,255,255,.12), rgba(255,255,255,.02));
+      box-shadow: 0 12px 30px rgba(125,211,252,.12);
+      border:1px solid rgba(255,255,255,.14);
+    }
+    .logoImg{height:44px;width:auto;display:block;filter: drop-shadow(0 16px 30px rgba(125,211,252,.12));}
+    .brand h1{font-size:16px;margin:0;letter-spacing:.3px}
+    .brand p{margin:2px 0 0;font-size:12px;color:var(--muted)}
+    .controls{
+      display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:flex-end;
+    }
+    .pill{
+      display:flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:999px;background:rgba(17,24,39,.72);
+      border:1px solid rgba(255,255,255,.09);
+    }
+    label{font-size:12px;color:var(--muted)}
+    select, button{
+      font:inherit;
+    }
+    select{
+      background:rgba(15,19,32,.95);
+      border:1px solid rgba(255,255,255,.12);
+      color:var(--text);
+      padding:10px 12px;border-radius:999px;
+      outline:none;
+    }
+    select:focus{box-shadow:0 0 0 4px var(--ring)}
+    .btn{
+      border:1px solid rgba(255,255,255,.12);
+      background:linear-gradient(180deg, rgba(31,41,55,.95), rgba(17,24,39,.95));
+      color:var(--text);
+      padding:10px 14px;border-radius:999px;
+      cursor:pointer;transition:.15s transform ease, .15s filter ease;
+      box-shadow: var(--shadow2);
+      user-select:none;
+    }
+    .btn:hover{filter:brightness(1.06)}
+    .btn:active{transform:translateY(1px)}
+    .btn.primary{
+      background: linear-gradient(180deg, rgba(125,211,252,.35), rgba(167,139,250,.22));
+      border:1px solid rgba(125,211,252,.35);
+    }
+    .btn.ghost{background:rgba(15,19,32,.6);box-shadow:none}
+    .grid{
+      margin-top:18px;
+      display:grid;gap:14px;
+      grid-template-columns: repeat(12, 1fr);
+    }
+    .card{
+      grid-column: span 6;
+      background: linear-gradient(180deg, rgba(18,22,33,.92), rgba(11,13,18,.75));
+      border:1px solid rgba(255,255,255,.09);
+      border-radius: var(--radius);
+      padding:16px;
+      box-shadow: var(--shadow);
+      position:relative;
+      overflow:hidden;
+    }
+    .card::before{
+      content:"";
+      position:absolute; inset:-120px -120px auto auto;
+      width:240px;height:240px;border-radius:50%;
+      background: radial-gradient(circle at 30% 30%, rgba(125,211,252,.22), transparent 62%);
+      transform: rotate(10deg);
+      pointer-events:none;
+    }
+    .card h2{margin:0;font-size:16px}
+    .card p{margin:8px 0 14px;color:var(--muted);font-size:13px;line-height:1.35}
+    .actions{display:flex;gap:10px;flex-wrap:wrap}
+    .card .meta{
+      display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;
+      color:rgba(169,178,199,.9);font-size:12px
+    }
+    .tag{
+      padding:6px 10px;border-radius:999px;
+      background:rgba(15,19,32,.65);
+      border:1px solid rgba(255,255,255,.08);
+    }
+
+    /* Game shell */
+    .stage{
+      margin-top:16px;
+      background: linear-gradient(180deg, rgba(18,22,33,.92), rgba(11,13,18,.75));
+      border:1px solid rgba(255,255,255,.09);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      overflow:hidden;
+      display:none;
+    }
+    .stage.show{display:block}
+    .stageHead{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      padding:14px 14px;border-bottom:1px solid rgba(255,255,255,.08);
+      background:rgba(15,19,32,.65);
+    }
+    .stageHead .title{display:flex;flex-direction:column;gap:2px}
+    .stageHead .title strong{font-size:14px}
+    .stageHead .title span{font-size:12px;color:var(--muted)}
+    .stageBody{padding:16px}
+    .bigLetter{
+      font-size:96px; font-weight:800; line-height:1;
+      display:flex;align-items:center;justify-content:center;
+      width:100%; padding:18px 0; user-select:none;
+      letter-spacing:.02em;
+      text-shadow: 0 18px 40px rgba(0,0,0,.35);
+    }
+    .prompt{
+      margin:0 0 12px; font-size:14px;color:var(--muted)
+    }
+    .choices{
+      display:grid;grid-template-columns: repeat(3, 1fr); gap:12px;
+    }
+    .choice{
+      padding:16px 10px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(15,19,32,.75);
+      cursor:pointer;
+      font-size:22px;font-weight:800;
+      user-select:none;
+      transition:.12s transform ease, .12s filter ease;
+    }
+    .choice:hover{filter:brightness(1.06)}
+    .choice:active{transform:translateY(1px)}
+    .choice[disabled]{opacity:.55;cursor:not-allowed}
+    .feedback{
+      margin-top:12px;
+      padding:12px 14px;border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background: rgba(17,24,39,.62);
+      display:flex;align-items:center;justify-content:space-between;gap:12px;
+      min-height:48px;
+    }
+    .feedback b{font-size:14px}
+    .feedback small{color:var(--muted)}
+    .ok{color:var(--ok)}
+    .bad{color:var(--bad)}
+
+    /* Trace */
+    .traceRow{display:grid;grid-template-columns: 1fr; gap:14px}
+    .traceCanvas{
+      width:100%; height:320px;
+      border-radius:18px;
+      border:1px solid rgba(255,255,255,.10);
+      background:
+        linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px) 0 22%/100% 120px,
+        linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px) 0 50%/100% 120px,
+        linear-gradient(to bottom, rgba(255,255,255,.06) 1px, transparent 1px) 0 78%/100% 120px,
+        radial-gradient(circle at 20% 10%, rgba(125,211,252,.10), transparent 55%),
+        radial-gradient(circle at 85% 25%, rgba(167,139,250,.10), transparent 60%),
+        rgba(15,19,32,.8);
+      position:relative;
+      overflow:hidden;
+      touch-action:none;
+    }
+    .traceOverlay{
+      position:absolute; inset:0;
+      display:flex;align-items:center;justify-content:center;
+      font-size:220px;font-weight:900;
+      color: rgba(255,255,255,.06);
+      user-select:none; pointer-events:none;
+    }
+    .traceTools{display:flex;gap:10px;flex-wrap:wrap}
+    .muted{color:var(--muted)}
+    .hidden{display:none!important}
+    @media (max-width:860px){
+      .card{grid-column: span 12}
+      .choices{grid-template-columns:1fr}
+      .bigLetter{font-size:82px}
+      header{position:static}
+      .brand{min-width:auto}
+    }
+  
+    .btn{position:relative}
+    .btn::after{
+      content:"";
+      position:absolute; inset:-1px;
+      border-radius:999px;
+      background: linear-gradient(90deg, rgba(125,211,252,.0), rgba(167,139,250,.22), rgba(125,211,252,.0));
+      opacity:0; filter:blur(10px);
+      transition:opacity .2s ease;
+      pointer-events:none;
+      z-index:-1;
+    }
+    .btn.primary:hover::after{opacity:.9}
+    .feedback{
+      transition: transform .18s ease, border-color .18s ease, background .18s ease;
+    }
+    .feedback.ok{
+      border-color: rgba(52,211,153,.35);
+      background: rgba(16,185,129,.10);
+      transform: translateY(-1px);
+    }
+    .feedback.bad{
+      border-color: rgba(251,113,133,.35);
+      background: rgba(251,113,133,.08);
+    }
+    .traceCanvas{
+      outline: none;
+    }
+    .traceCanvas:focus-within{
+      box-shadow: 0 0 0 4px rgba(125,211,252,.20), var(--shadow);
+    }
+    .successPulse{
+      animation: successPulse .65s ease both;
+    }
+    @keyframes successPulse{
+      0%{transform:scale(1); filter:brightness(1)}
+      45%{transform:scale(1.01); filter:brightness(1.08)}
+      100%{transform:scale(1); filter:brightness(1)}
+    }
+
+  
+
+  /* Numbers-specific tiny tweaks */
+  .bigNumber {
+    font-size: clamp(54px, 7vw, 88px);
+    font-weight: 900;
+    letter-spacing: .5px;
+  }
+  .dots {
+    display:flex;
+    flex-wrap:wrap;
+    gap:10px;
+    padding:12px 0 2px;
+  }
+  .dot {
+    width:22px;height:22px;border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    background: radial-gradient(circle at 30% 30%, rgba(125,211,252,.55), rgba(167,139,250,.20));
+    box-shadow: 0 12px 26px rgba(0,0,0,.22);
+  }
+  .seg {
+    display:inline-flex; gap:8px; align-items:center;
+    background: rgba(15,19,32,.75);
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:999px;
+    padding:6px;
+  }
+  .seg button{
+    border:0;
+    background:transparent;
+    color:var(--muted);
+    padding:8px 10px;
+    border-radius:999px;
+    font-weight:800;
+    cursor:pointer;
+  }
+  .seg button.active{
+    color:var(--text);
+    background: rgba(125,211,252,.14);
+    border:1px solid rgba(125,211,252,.18);
+  }
+  
+  /* Trace number */
+  .traceWrap{display:grid;gap:12px}
+  .traceTop{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+  .traceTarget{
+    display:flex;align-items:center;gap:12px;
+    padding:12px 14px;border-radius:18px;
+    background: rgba(15,19,32,.55);
+    border: 1px solid rgba(255,255,255,.10);
+  }
+  .traceTarget .n{font-size:56px;font-weight:950;letter-spacing:.5px}
+  .traceCanvas{
+    width:100%;
+    height:320px;
+    border-radius:22px;
+    background: rgba(12,16,28,.62);
+    border: 1px solid rgba(255,255,255,.10);
+    box-shadow: var(--shadow);
+    touch-action:none;
+  }
+  @media (max-width:560px){
+    .traceCanvas{height:280px}
+    .traceTarget .n{font-size:48px}
+  }
+
+  /* Bonds */
+  .bondsWrap{display:grid;gap:14px}
+  .bondsRow{
+    display:flex;flex-wrap:wrap;gap:12px;align-items:center;justify-content:space-between;
+    padding:12px 14px;border-radius:18px;
+    background: rgba(15,19,32,.55);
+    border: 1px solid rgba(255,255,255,.10);
+  }
+  .bondSlots{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+  .slot{
+    min-width:72px;
+    padding:14px 14px;
+    border-radius:16px;
+    background: rgba(12,16,28,.62);
+    border:1px solid rgba(255,255,255,.10);
+    text-align:center;
+    font-weight:950;
+    font-size:28px;
+  }
+  .plusEq{color:var(--muted);font-weight:900;font-size:18px}
+  .choicesGrid{
+    display:grid;
+    grid-template-columns:repeat(5, minmax(0,1fr));
+    gap:10px;
+  }
+  @media (max-width:560px){
+    .choicesGrid{grid-template-columns:repeat(3, minmax(0,1fr))}
+    .slot{min-width:64px}
+  }
+  .numChoice{
+    padding:14px 12px;
+    border-radius:16px;
+    background: rgba(15,19,32,.55);
+    border:1px solid rgba(255,255,255,.10);
+    color:var(--text);
+    font-weight:900;
+    cursor:pointer;
+    transition: transform .12s ease, border-color .12s ease, background .12s ease;
+  }
+  .numChoice:hover{transform: translateY(-1px);border-color: rgba(125,211,252,.22)}
+  .numChoice:active{transform: translateY(0px) scale(.99)}
+
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="app" role="application">
+      <header>
+        <div class="brand">
+          <img class="logoImg" src="assets/primary-steps-logo.png" alt="Primary Steps logo" />
+          <div>
+            <div style="display:flex;align-items:baseline;gap:10px;">
+              <h1 style="margin:0;">Numbers</h1>
+              <span class="muted" style="font-weight:800;">Simple, calm number activities</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="controls">
+          <div class="pill">
+            <span class="muted" style="font-weight:800;">Range</span>
+            <div class="seg" aria-label="Number range">
+              <button type="button" id="rangeEasy" class="active">1–5</button>
+              <button type="button" id="rangeHard">1–10</button>
+            </div>
+          </div>
+          <button class="btn" id="soundBtn" type="button">🔊 Sound: On</button>
+          <button class="btn" id="homeBtn" type="button">← Menu</button>
+          <button class="btn ghost" id="siteHomeBtn" type="button">🏠 Home</button>
+        </div>
+      </header>
+
+      <section class="menu show" id="menu">
+        <div class="grid">
+          
+          
+          <article class="card">
+            <h2>Number Bonds</h2>
+            <p>Make number pairs that add up to the target. Great for mental maths.</p>
+            <div class="actions">
+              <button class="btn primary" type="button" data-play="bonds">▶ Play</button>
+            </div>
+            <div class="tags">
+              <span class="tag">Addition</span>
+              <span class="tag">10 rounds</span>
+            </div>
+          </article>
+
+        </div>
+
+        <div class="footerCard">
+          <h3>Quick tips</h3>
+          <ul>
+            <li>Keep sessions under 5 minutes.</li>
+            <li>Celebrate quickly, then move on.</li>
+            <li>If it feels hard, switch to 1–5.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="stage hidden" id="stage" aria-live="polite">
+        <div class="stageTop">
+          <div>
+            <div class="stageTitle" id="stageTitle">Activity</div>
+            <div class="stageSub" id="stageSub">Round</div>
+          </div>
+          <div class="stageMeta">
+            <div class="metaBox">
+              <div class="muted">Round</div>
+              <div><span id="roundNow">1</span>/<span id="roundTotal">10</span></div>
+            </div>
+            <div class="metaBox">
+              <div class="muted">Score</div>
+              <div id="scoreNow">0</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stageBody" id="stageBody"></div>
+
+        <div class="stageBottom">
+          <div class="feedback" id="feedbackBox">
+            <div>
+              <b id="fbTitle">Ready</b><br/>
+              <small id="fbSub">Tap the correct number.</small>
+            </div>
+            <small class="muted">Auto-advances on correct</small>
+          </div>
+          <div class="stageActions">
+            <button class="btn" id="repeatBtn" type="button">🔁 Repeat</button>
+            <button class="btn primary hidden" id="nextBtn" type="button">Next →</button>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+<script>
+  const $ = (s, r=document)=>r.querySelector(s);
+  const $$ = (s, r=document)=>Array.from(r.querySelectorAll(s));
+  const menu = $("#menu");
+  const stage = $("#stage");
+  const stageTitle = $("#stageTitle");
+  const stageSub = $("#stageSub");
+  const stageBody = $("#stageBody");
+  const roundNowEl = $("#roundNow");
+  const roundTotalEl = $("#roundTotal");
+  const scoreNowEl = $("#scoreNow");
+  const fbTitle = $("#fbTitle");
+  const fbSub = $("#fbSub");
+  const feedbackBox = $("#feedbackBox");
+  const repeatBtn = $("#repeatBtn");
+  const homeBtn = $("#homeBtn");
+  const siteHomeBtn = $("#siteHomeBtn");
+  const soundBtn = $("#soundBtn");
+  const rangeEasy = $("#rangeEasy");
+  const rangeHard = $("#rangeHard");
+
+  let soundOn = true;
+  let rangeMax = 5;
+
+  function speak(text){
+    if(!soundOn) return;
+    try{
+      if(!("speechSynthesis" in window)) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.95; u.pitch = 1.0; u.lang = "en-GB";
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  function setFeedback(kind, title, subtitle){
+    feedbackBox.classList.remove("ok","bad");
+    if(kind) feedbackBox.classList.add(kind);
+    fbTitle.textContent = title;
+    fbSub.textContent = subtitle;
+  }
+
+  function showMenu(){
+    stage.classList.add("hidden"); stage.classList.remove("show");
+    menu.classList.add("show"); menu.classList.remove("hidden");
+    setFeedback(null,"Ready","Pick a game to start.");
+  }
+  function showStage(){
+    menu.classList.add("hidden"); menu.classList.remove("show");
+    stage.classList.add("show"); stage.classList.remove("hidden");
+  }
+
+  function setRange(max){
+    rangeMax = max;
+    rangeEasy.classList.toggle("active", max===5);
+    rangeHard.classList.toggle("active", max===10);
+  }
+  rangeEasy.addEventListener("click", ()=>setRange(5));
+  rangeHard.addEventListener("click", ()=>setRange(10));
+
+  soundBtn.addEventListener("click", ()=>{
+    soundOn = !soundOn;
+    soundBtn.textContent = soundOn ? "🔊 Sound: On" : "🔇 Sound: Off";
+    if(soundOn) speak("Sound on");
+  });
+  homeBtn.addEventListener("click", showMenu);
+  siteHomeBtn.addEventListener("click", ()=>window.location.href="index.html");
+
+  const TOTAL = 10;
+  let activity = null;
+  let round = 0;
+  let score = 0;
+  let current = null;
+  let locked = false;
+
+  function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+  function numberPool(){ return Array.from({length: rangeMax}, (_,i)=>i+1); }
+
+  function startActivity(type){
+    activity = type;
+    round = 0;
+    score = 0;
+    locked = false;
+    scoreNowEl.textContent = "0";
+    roundTotalEl.textContent = String(TOTAL);
+    showStage();
+
+    if(type==="count"){
+      stageTitle.textContent = "Count & Choose";
+      stageSub.textContent = "Count the dots, then tap the number.";
+    }else if(type==="find"){
+      stageTitle.textContent = "Find the Number";
+      stageSub.textContent = "Listen, then tap the correct number.";
+    }else if(type==="trace"){
+      stageTitle.textContent = "Trace a Number";
+      stageSub.textContent = "Practice mode — press Next when you’re ready.";
+    }else if(type==="bonds"){
+      stageTitle.textContent = "Number Bonds";
+      stageSub.textContent = "Make two numbers that add up to the target.";
+    }
+    doRound();
+  }
+
+  function doRound(){
+    locked = false;
+    round++;
+    roundNowEl.textContent = String(round);
+    setFeedback(null,"Ready","Tap the correct number.");
+    if(activity==="count") roundCount();
+    else if(activity==="find") roundFind();
+    else if(activity==="trace") roundTrace();
+    else if(activity==="bonds") roundBonds();
+  }
+
+  function roundCount(){
+    const pool = numberPool();
+    const target = pool[Math.floor(Math.random()*pool.length)];
+    const choices = shuffle(pool.filter(n=>n!==target)).slice(0,2);
+    current = { target, choices: shuffle([target, ...choices]) };
+
+    stageBody.innerHTML = `
+      <p class="prompt">How many dots?</p>
+      <div class="dots" aria-label="Dots">
+        ${Array.from({length: target}, ()=>'<span class="dot" aria-hidden="true"></span>').join("")}
+      </div>
+      <div class="choices" role="group" aria-label="Number choices" style="margin-top:14px">
+        ${current.choices.map(n=>`<button class="choice" type="button" data-n="${n}">${n}</button>`).join("")}
+      </div>
+    `;
+    speak("Count the dots. Then tap the answer.");
+    bindChoices();
+  }
+
+  function roundFind(){
+    const pool = numberPool();
+    const target = pool[Math.floor(Math.random()*pool.length)];
+    const choices = shuffle(pool.filter(n=>n!==target)).slice(0,2);
+    current = { target, choices: shuffle([target, ...choices]) };
+
+    stageBody.innerHTML = `
+      <p class="prompt">Find this number</p>
+      <div class="bigNumber" aria-label="Target number">${target}</div>
+      <div class="choices" role="group" aria-label="Number choices" style="margin-top:14px">
+        ${current.choices.map(n=>`<button class="choice" type="button" data-n="${n}">${n}</button>`).join("")}
+      </div>
+    `;
+    speak("Find the number " + target);
+    bindChoices();
+  }
+
+  function bindChoices(){
+    $$(".choice", stageBody).forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(locked) return;
+        const picked = Number(btn.getAttribute("data-n"));
+        if(picked === current.target){
+          locked = true;
+          score++;
+          scoreNowEl.textContent = String(score);
+          setFeedback("ok","Correct ✅","Next one…");
+          speak("Well done");
+          setTimeout(()=>{
+            if(round>=TOTAL) finish();
+            else doRound();
+          }, 650);
+        }else{
+          setFeedback("bad","Try again","Tap a different number.");
+          speak("Try again");
+        }
+      });
+    });
+  }
+
+
+  // ----- Trace a Number (practice) -----
+  const TRACE_SEQ = [0,1,2,3,4,5,6,7,8,9];
+  let trace = { canvas:null, ctx:null, drawing:false, last:null, strokeLen:0, n:1 };
+
+  function setupTraceCanvas(canvas){
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    canvas.width = Math.floor(rect.width * dpr);
+    canvas.height = Math.floor(rect.height * dpr);
+    const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.lineCap="round"; ctx.lineJoin="round";
+    ctx.strokeStyle="rgba(255,255,255,.92)";
+    ctx.lineWidth=10;
+    return ctx;
+  }
+
+  function drawTraceGuide(ctx, canvas, n){
+    const w = canvas.clientWidth;
+    const h = canvas.clientHeight;
+    ctx.clearRect(0,0,w,h);
+    ctx.save();
+    ctx.globalAlpha = 0.16;
+    ctx.fillStyle = "rgba(125,211,252,.9)";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = `900 ${Math.floor(Math.min(w,h)*0.62)}px system-ui, -apple-system, Segoe UI, Roboto, Arial`;
+    ctx.fillText(String(n), w/2, h/2 + 4);
+    ctx.restore();
+  }
+
+  function roundTrace(){
+    locked = false;
+    repeatBtn.classList.add("hidden");
+
+    const max = rangeMax;
+    const seq = TRACE_SEQ.filter(x=>x>=0 && x<=max);
+    trace.n = seq[(round-1) % seq.length];
+
+    stageBody.innerHTML = `
+      <div class="traceWrap">
+        <div class="traceTop">
+          <div class="traceTarget">
+            <div class="muted" style="font-weight:900">Trace this</div>
+            <div class="n">${trace.n}</div>
+          </div>
+          <div class="actions" style="justify-content:flex-end;gap:10px">
+            <button class="btn" type="button" id="clearTrace">Clear</button>
+            <button class="btn primary" type="button" id="nextTrace">Next number →</button>
+          </div>
+        </div>
+        <canvas class="traceCanvas" id="traceCanvas" aria-label="Trace canvas"></canvas>
+        <div class="muted">Tip: take your time. Press “Next number” when you’re ready.</div>
+      </div>
+    `;
+    setFeedback(null,"Ready","Trace the number, then press Next.");
+
+    const canvas = $("#traceCanvas", stageBody);
+    trace.canvas = canvas;
+    trace.ctx = setupTraceCanvas(canvas);
+    drawTraceGuide(trace.ctx, canvas, trace.n);
+    trace.strokeLen = 0;
+
+    function posFromEvent(ev){
+      const r = canvas.getBoundingClientRect();
+      const t = ev.touches ? ev.touches[0] : null;
+      const x = (t ? t.clientX : ev.clientX) - r.left;
+      const y = (t ? t.clientY : ev.clientY) - r.top;
+      return {x, y};
+    }
+
+    function down(ev){
+      ev.preventDefault();
+      trace.drawing = true;
+      trace.last = posFromEvent(ev);
+    }
+    function move(ev){
+      if(!trace.drawing) return;
+      ev.preventDefault();
+      const p = posFromEvent(ev);
+      const ctx = trace.ctx;
+      ctx.save();
+      ctx.globalAlpha = 0.92;
+      ctx.beginPath();
+      ctx.moveTo(trace.last.x, trace.last.y);
+      ctx.lineTo(p.x,p.y);
+      ctx.stroke();
+      ctx.restore();
+      const dx = p.x-trace.last.x, dy = p.y-trace.last.y;
+      trace.strokeLen += Math.sqrt(dx*dx+dy*dy);
+      trace.last = p;
+    }
+    function up(){
+      trace.drawing = false;
+      trace.last = null;
+    }
+
+    canvas.addEventListener("pointerdown", down);
+    canvas.addEventListener("pointermove", move);
+    window.addEventListener("pointerup", up);
+
+    $("#clearTrace", stageBody).addEventListener("click", ()=>{
+      trace.strokeLen = 0;
+      drawTraceGuide(trace.ctx, canvas, trace.n);
+      setFeedback(null,"Ready","Trace the number, then press Next.");
+    });
+
+    $("#nextTrace", stageBody).addEventListener("click", ()=>{
+      setFeedback("ok","Nice ✅","Next one…");
+      speak("Well done");
+      setTimeout(()=>{
+        if(round>=TOTAL) finish();
+        else doRound();
+      }, 450);
+    });
+
+    speak("Trace the number " + trace.n);
+  }
+
+  // ----- Number Bonds -----
+  let bonds = { target:5, pickA:null, pickB:null };
+
+  function roundBonds(){
+    locked = false;
+    repeatBtn.classList.add("hidden");
+
+    const pool = numberPool();
+    const target = pool[Math.floor(Math.random()*pool.length)];
+    bonds.target = target;
+    bonds.pickA = null; bonds.pickB = null;
+
+    stageBody.innerHTML = `
+      <div class="bondsWrap">
+        <div class="bondsRow">
+          <div>
+            <div class="muted" style="font-weight:900">Make a bond to</div>
+            <div class="bigNumber" style="margin-top:4px">${target}</div>
+          </div>
+          <div class="bondSlots" aria-label="Bond slots">
+            <div class="slot" id="slotA">?</div>
+            <div class="plusEq">+</div>
+            <div class="slot" id="slotB">?</div>
+            <div class="plusEq">=</div>
+            <div class="slot" style="opacity:.9">${target}</div>
+          </div>
+        </div>
+
+        <div class="choicesGrid" id="bondChoices" aria-label="Bond choices">
+          ${pool.map(n=>`<button class="numChoice" type="button" data-n="${n}">${n}</button>`).join("")}
+        </div>
+      </div>
+    `;
+
+    setFeedback(null,"Ready","Pick two numbers that add up to " + target + ".");
+    speak("Make a number bond to " + target);
+
+    const slotA = $("#slotA", stageBody);
+    const slotB = $("#slotB", stageBody);
+
+    $$(".numChoice", stageBody).forEach(btn=>{
+      btn.addEventListener("click", ()=>{
+        if(locked) return;
+        const n = Number(btn.getAttribute("data-n"));
+        if(bonds.pickA === null){
+          bonds.pickA = n; slotA.textContent = String(n);
+        }else if(bonds.pickB === null){
+          bonds.pickB = n; slotB.textContent = String(n);
+          const ok = (bonds.pickA + bonds.pickB) === bonds.target;
+          if(ok){
+            locked = true;
+            score++;
+            scoreNowEl.textContent = String(score);
+            setFeedback("ok","Correct ✅","Next one…");
+            speak("Well done");
+            setTimeout(()=>{
+              if(round>=TOTAL) finish();
+              else doRound();
+            }, 650);
+          }else{
+            setFeedback("bad","Try again","Pick a different pair.");
+            speak("Try again");
+            setTimeout(()=>{
+              bonds.pickA = null; bonds.pickB = null;
+              slotA.textContent = "?"; slotB.textContent = "?";
+              setFeedback(null,"Ready","Pick two numbers that add up to " + bonds.target + ".");
+            }, 650);
+          }
+        }else{
+          bonds.pickA = n; bonds.pickB = null;
+          slotA.textContent = String(n); slotB.textContent = "?";
+        }
+      });
+    });
+  }
+  function finish(){
+    stageTitle.textContent = "Well done!";
+    stageSub.textContent = "Session complete";
+    stageBody.innerHTML = `
+      <p class="prompt">You finished ${TOTAL} rounds.</p>
+      <div class="bigLetter">⭐</div>
+      <div class="feedback ok" style="margin-top:12px">
+        <div>
+          <b>Score: ${score}/${TOTAL}</b><br/>
+          <small>Great work. Want to play again?</small>
+        </div>
+        <button class="btn primary" type="button" id="playAgainBtn">🔁 Play again</button>
+      </div>
+    `;
+    repeatBtn.classList.add("hidden");
+    $("#playAgainBtn").addEventListener("click", ()=>startActivity(activity));
+    speak("Well done. Session complete.");
+  }
+
+  repeatBtn.addEventListener("click", ()=>{
+    if(activity==="find") speak("Find the number " + (current ? current.target : ""));
+    if(activity==="count") speak("Count the dots and tap the answer.");
+    if(activity==="trace") speak("Trace the number " + (trace ? trace.n : ""));
+    if(activity==="bonds") speak("Make a number bond to " + (bonds ? bonds.target : ""));
+  });
+
+  $$("[data-play]").forEach(btn=>btn.addEventListener("click", ()=>startActivity(btn.getAttribute("data-play"))));
+
+  setRange(5);
+  showMenu();
+</script>
+</body>
+</html>
