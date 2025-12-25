@@ -66,8 +66,48 @@
   .brand{
     display:flex; align-items:center; gap:12px; min-width: 220px;
   }
-  .brand img{height:56px; width:auto; display:block}
-  .brand .name{display:flex; flex-direction:column}
+  .brand img{height:56px; width:auto; display:block  filter: drop-shadow(0 14px 24px rgba(31,120,255,.22)) drop-shadow(0 6px 14px rgba(16,60,120,.14));
+}
+
+  
+.brand{
+  position: relative;
+}
+.brand::before{
+  content:"";
+  position:absolute;
+  left: -14px;
+  top: -14px;
+  width: 132px;
+  height: 132px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 30%, rgba(31,120,255,.22), rgba(31,120,255,0) 62%);
+  filter: blur(6px);
+  pointer-events:none;
+  z-index: 0;
+}
+.brand a, .brandLink, .brandText, .brand img{ position: relative; z-index: 1; }
+
+.tagline{
+  font-weight: 980;
+  letter-spacing: .2px;
+  color: rgba(11,27,51,.88);
+  font-size: 1.18rem;
+}
+@media (max-width: 560px){
+  .tagline{ font-size: 1.02rem; }
+}
+
+@media (max-width: 560px){
+  .brand::before{
+    width: 110px;
+    height: 110px;
+    left: -10px;
+    top: -10px;
+    background: radial-gradient(circle at 35% 30%, rgba(31,120,255,.18), rgba(31,120,255,0) 62%);
+  }
+}
+.brand .name{display:flex; flex-direction:column}
   .brand .name b{font-size:14px; letter-spacing:.02em}
   .brand .name span{font-size:12px;color:var(--muted)}
   nav{
@@ -252,6 +292,8 @@
     .brand{min-width:auto}
   }
   @media (max-width: 560px){
+  .brand img{height:60px;}
+
     .topbar{gap:8px}
     nav{gap:8px}
     .pill{padding:9px 11px}
