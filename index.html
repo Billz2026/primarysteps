@@ -1,98 +1,649 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Primary Steps</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="icon" href="assets/primary-steps-icon-512.png">
+<link rel="icon" href="assets/primary-steps-icon-512.png" />
+<meta name="description" content="Primary Steps — playful, calm learning activities for early years: letters, numbers, phonics, maths and more." />
 <style>
-body {
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  background: #f5f9ff;
-  color: #123;
-}
-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 16px 24px;
-  background: white;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-}
-header img {
-  height: 60px;
-}
-nav a {
-  margin-left: 12px;
-  text-decoration: none;
-  padding: 8px 14px;
-  border-radius: 999px;
-  background: #1e6cff;
-  color: white;
-  font-weight: 600;
-}
-main {
-  max-width: 1100px;
-  margin: 40px auto;
-  padding: 0 20px;
-}
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 20px;
-}
-.card {
-  background: white;
-  border-radius: 16px;
-  padding: 24px;
-  text-align: center;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
-  text-decoration: none;
-  color: inherit;
-  transition: transform .15s ease, box-shadow .15s ease;
-}
-.card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.12);
-}
-.card h3 {
-  margin-top: 0;
-  color: #1e6cff;
-}
-footer {
-  text-align: center;
-  padding: 24px;
-  color: #666;
-}
+  :root{
+    --bg: #f5f9ff;
+    --surface: #ffffff;
+    --text: #0f2233;
+    --muted: #53606b;
+    --primary: #1e6cff;
+    --primary-2: #1656cc;
+    --ring: rgba(30,108,255,.25);
+    --shadow: 0 8px 24px rgba(15,34,51,.10);
+    --shadow-2: 0 14px 38px rgba(15,34,51,.14);
+    --radius: 18px;
+  }
+
+  /* Accessibility toggles */
+  [data-contrast="high"]{
+    --bg:#0b1220;
+    --surface:#0f1a2d;
+    --text:#f4f7ff;
+    --muted:#c6d2ff;
+    --primary:#7fb2ff;
+    --primary-2:#a6c9ff;
+    --ring: rgba(127,178,255,.35);
+    --shadow: 0 10px 28px rgba(0,0,0,.45);
+    --shadow-2: 0 16px 44px rgba(0,0,0,.55);
+  }
+  [data-font="dyslexic"]{
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif; /* fallback */
+    letter-spacing: .01em;
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    background: radial-gradient(1200px 600px at 15% -10%, rgba(30,108,255,.15), transparent 60%),
+                radial-gradient(900px 500px at 100% 0%, rgba(0,190,255,.12), transparent 60%),
+                var(--bg);
+    color:var(--text);
+    line-height:1.35;
+  }
+  a{color:inherit}
+  .container{max-width:1150px;margin:0 auto;padding:0 18px}
+
+  /* Header */
+  header{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter:saturate(150%) blur(10px);
+    background: rgba(255,255,255,.85);
+    border-bottom:1px solid rgba(15,34,51,.06);
+  }
+  [data-contrast="high"] header{background: rgba(15,26,45,.9); border-bottom:1px solid rgba(255,255,255,.08)}
+  .topbar{
+    display:flex; align-items:center; justify-content:space-between;
+    gap:12px; padding:12px 0;
+  }
+  .brand{
+    display:flex; align-items:center; gap:12px; min-width: 220px;
+  }
+  .brand img{height:56px; width:auto; display:block}
+  .brand .name{display:flex; flex-direction:column}
+  .brand .name b{font-size:14px; letter-spacing:.02em}
+  .brand .name span{font-size:12px;color:var(--muted)}
+  nav{
+    display:flex; align-items:center; gap:10px; flex-wrap:wrap; justify-content:flex-end;
+  }
+  .pill{
+    appearance:none; border:1px solid rgba(15,34,51,.12);
+    background:var(--surface);
+    color:var(--text);
+    padding:10px 12px;
+    border-radius:999px;
+    font-weight:650;
+    font-size:13px;
+    cursor:pointer;
+    transition: transform .12s ease, box-shadow .12s ease, border-color .12s ease, background .12s ease;
+    box-shadow: 0 2px 10px rgba(15,34,51,.05);
+    text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .pill:hover{transform:translateY(-1px); box-shadow: 0 8px 22px rgba(15,34,51,.10); border-color: rgba(30,108,255,.25)}
+  .pill.primary{
+    background: linear-gradient(180deg, var(--primary), var(--primary-2));
+    border-color: transparent;
+    color:#fff;
+    box-shadow: 0 10px 26px rgba(30,108,255,.22);
+  }
+  .pill.primary:hover{box-shadow: 0 16px 34px rgba(30,108,255,.28)}
+  .icon{
+    width:18px; height:18px; display:inline-block;
+  }
+
+  /* Hero */
+  .hero{padding:22px 0 10px}
+  .heroCard{
+    border-radius: calc(var(--radius) + 6px);
+    background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.78));
+    border:1px solid rgba(15,34,51,.08);
+    box-shadow: var(--shadow);
+    padding:18px;
+    display:grid;
+    grid-template-columns: 1.3fr .9fr;
+    gap:16px;
+    overflow:hidden;
+    position:relative;
+  }
+  [data-contrast="high"] .heroCard{
+    background: linear-gradient(180deg, rgba(15,26,45,.92), rgba(15,26,45,.82));
+    border:1px solid rgba(255,255,255,.10);
+  }
+  .heroCard:before{
+    content:"";
+    position:absolute; inset:-2px;
+    background: radial-gradient(600px 240px at 20% 15%, rgba(30,108,255,.18), transparent 60%),
+                radial-gradient(460px 240px at 80% 0%, rgba(0,190,255,.12), transparent 60%);
+    pointer-events:none;
+  }
+  .heroLeft,.heroRight{position:relative}
+  .hero h1{margin:0 0 8px; font-size: clamp(22px, 2.5vw, 32px); letter-spacing:-.02em}
+  .hero p{margin:0 0 14px; color:var(--muted); font-size:14px; max-width:58ch}
+  .quickRow{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+  .searchWrap{
+    display:flex; align-items:center; gap:10px;
+    background:var(--surface);
+    border:1px solid rgba(15,34,51,.12);
+    border-radius: 999px;
+    padding:10px 12px;
+    box-shadow: 0 2px 12px rgba(15,34,51,.06);
+    width:min(520px, 100%);
+  }
+  .searchWrap:focus-within{border-color: rgba(30,108,255,.45); box-shadow: 0 0 0 6px var(--ring)}
+  .searchWrap input{
+    border:none; outline:none; background:transparent;
+    width:100%; font-size:14px; color:var(--text);
+  }
+  .hint{font-size:12px; color:var(--muted)}
+  .heroRight{
+    display:flex; flex-direction:column; gap:10px; align-items:stretch; justify-content:center;
+  }
+  .mini{
+    background:rgba(255,255,255,.85);
+    border:1px solid rgba(15,34,51,.08);
+    border-radius: var(--radius);
+    padding:12px 12px;
+    box-shadow: 0 6px 18px rgba(15,34,51,.08);
+  }
+  [data-contrast="high"] .mini{background:rgba(15,26,45,.9); border:1px solid rgba(255,255,255,.10)}
+  .mini b{display:block; font-size:13px}
+  .mini span{display:block; font-size:12px; color:var(--muted); margin-top:4px}
+
+  /* Section controls */
+  .controls{
+    display:flex; gap:10px; flex-wrap:wrap; align-items:center;
+    margin:16px 0 12px;
+  }
+  .chipGroup{display:flex; gap:8px; flex-wrap:wrap}
+  .chip{
+    appearance:none; border:1px solid rgba(15,34,51,.12);
+    background:rgba(255,255,255,.75);
+    color:var(--text);
+    padding:8px 10px;
+    border-radius:999px;
+    font-weight:650;
+    font-size:12px;
+    cursor:pointer;
+    transition: background .12s ease, transform .12s ease, border-color .12s ease;
+  }
+  [data-contrast="high"] .chip{background:rgba(15,26,45,.85); border:1px solid rgba(255,255,255,.14)}
+  .chip:hover{transform:translateY(-1px); border-color: rgba(30,108,255,.25)}
+  .chip[aria-pressed="true"]{
+    background: rgba(30,108,255,.14);
+    border-color: rgba(30,108,255,.35);
+  }
+
+  /* Grid */
+  main{padding: 10px 0 40px}
+  .grid{
+    display:grid;
+    grid-template-columns: repeat(12, 1fr);
+    gap:14px;
+  }
+  .card{
+    grid-column: span 4;
+    background: rgba(255,255,255,.92);
+    border:1px solid rgba(15,34,51,.08);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 16px 16px;
+    text-decoration:none;
+    transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
+    display:flex; gap:12px; align-items:flex-start;
+    min-height: 112px;
+  }
+  [data-contrast="high"] .card{background: rgba(15,26,45,.92); border:1px solid rgba(255,255,255,.10)}
+  .card:hover{
+    transform: translateY(-3px);
+    box-shadow: var(--shadow-2);
+    border-color: rgba(30,108,255,.22);
+  }
+  .badge{
+    width:44px; height:44px; border-radius:14px;
+    display:grid; place-items:center;
+    background: rgba(30,108,255,.12);
+    border:1px solid rgba(30,108,255,.20);
+    flex:0 0 auto;
+  }
+  .badge svg{width:22px;height:22px}
+  .card h3{margin:0; font-size:15px; letter-spacing:-.01em}
+  .card p{margin:6px 0 0; color:var(--muted); font-size:12.5px}
+  .meta{margin-top:10px; display:flex; gap:8px; flex-wrap:wrap}
+  .tag{
+    font-size:11px; font-weight:650;
+    padding:6px 8px; border-radius:999px;
+    background: rgba(15,34,51,.05);
+    border: 1px solid rgba(15,34,51,.06);
+    color: var(--muted);
+  }
+  [data-contrast="high"] .tag{background: rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.10); color: var(--muted)}
+  .empty{
+    display:none;
+    margin-top:14px;
+    padding:14px;
+    border-radius: var(--radius);
+    background: rgba(255,255,255,.85);
+    border:1px dashed rgba(15,34,51,.18);
+    color: var(--muted);
+  }
+  [data-contrast="high"] .empty{background: rgba(15,26,45,.88); border:1px dashed rgba(255,255,255,.22)}
+  .empty.show{display:block}
+
+  /* Footer */
+  footer{
+    border-top:1px solid rgba(15,34,51,.06);
+    padding:22px 0 26px;
+    color: var(--muted);
+    font-size:12px;
+  }
+
+  /* Responsive */
+  @media (max-width: 900px){
+    .heroCard{grid-template-columns: 1fr; padding:16px}
+    .card{grid-column: span 6}
+    .brand{min-width:auto}
+  }
+  @media (max-width: 560px){
+    .topbar{gap:8px}
+    nav{gap:8px}
+    .pill{padding:9px 11px}
+    .card{grid-column: span 12}
+    .searchWrap{padding:9px 11px}
+  }
+
+  /* Reduced motion */
+  @media (prefers-reduced-motion: reduce){
+    *{scroll-behavior:auto !important}
+    .card,.pill,.chip{transition:none !important}
+    .card:hover,.pill:hover,.chip:hover{transform:none !important}
+  }
+
+  /* Focus */
+  a:focus-visible, button:focus-visible, input:focus-visible{
+    outline:none;
+    box-shadow: 0 0 0 6px var(--ring);
+    border-radius: 12px;
+  }
 </style>
 </head>
 <body>
-
 <header>
-  <img src="assets/primary-steps-logo.png" alt="Primary Steps">
-  <nav>
-    <a href="settings.html">Settings</a>
-  </nav>
+  <div class="container">
+    <div class="topbar">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" />
+        <div class="name">
+          <b>Primary Steps</b>
+          <span>Simple, calm learning activities</span>
+        </div>
+      </a>
+
+      <nav aria-label="Top navigation">
+        <a class="pill" href="progress.html" title="View stars and progress">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2l2.9 6.3 6.8.6-5.1 4.4 1.6 6.6L12 16.9 5.8 19.9l1.6-6.6-5.1-4.4 6.8-.6L12 2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          Progress
+        </a>
+        <a class="pill" href="settings.html">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 15.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M19.4 15a7.9 7.9 0 0 0 .1-1 7.9 7.9 0 0 0-.1-1l2-1.5-2-3.5-2.4 1a7.4 7.4 0 0 0-1.7-1l-.4-2.6H9.1L8.7 6a7.4 7.4 0 0 0-1.7 1l-2.4-1-2 3.5 2 1.5a7.9 7.9 0 0 0-.1 1 7.9 7.9 0 0 0 .1 1l-2 1.5 2 3.5 2.4-1a7.4 7.4 0 0 0 1.7 1l.4 2.6h5.8l.4-2.6a7.4 7.4 0 0 0 1.7-1l2.4 1 2-3.5-2-1.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          Settings
+        </a>
+        <button class="pill primary" id="toggleContrast" type="button" title="Toggle high contrast">
+          <span class="icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 3a9 9 0 1 0 0 18V3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+              <path d="M12 3v18" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+          </span>
+          Contrast
+        </button>
+      </nav>
+    </div>
+
+    <section class="hero">
+      <div class="heroCard" role="region" aria-label="Welcome">
+        <div class="heroLeft">
+          <h1>Pick an activity and start learning</h1>
+          <p>
+            A calm, kid-friendly learning hub for early years. Big buttons, clear layouts, and quick activities you can do in a few minutes.
+          </p>
+
+          <div class="quickRow">
+            <div class="searchWrap" role="search">
+              <span class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M10.5 18a7.5 7.5 0 1 1 0-15 7.5 7.5 0 0 1 0 15z" stroke="currentColor" stroke-width="1.8"/>
+                  <path d="M16.2 16.2L21 21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+                </svg>
+              </span>
+              <input id="search" type="search" placeholder="Search activities (e.g., letters, time, tracing)" autocomplete="off" />
+            </div>
+            <span class="hint" id="resultHint" aria-live="polite"></span>
+          </div>
+
+          <div class="controls" aria-label="Quick filters">
+            <div class="chipGroup" role="group" aria-label="Age group">
+              <button class="chip" type="button" data-filter="age" data-value="reception" aria-pressed="false">Reception</button>
+              <button class="chip" type="button" data-filter="age" data-value="year1" aria-pressed="false">Year 1</button>
+              <button class="chip" type="button" data-filter="age" data-value="year2" aria-pressed="false">Year 2</button>
+            </div>
+            <div class="chipGroup" role="group" aria-label="Difficulty">
+              <button class="chip" type="button" data-filter="level" data-value="easy" aria-pressed="false">Easy</button>
+              <button class="chip" type="button" data-filter="level" data-value="medium" aria-pressed="false">Medium</button>
+              <button class="chip" type="button" data-filter="level" data-value="hard" aria-pressed="false">Hard</button>
+            </div>
+            <button class="chip" type="button" id="toggleFont" aria-pressed="false" title="Toggle dyslexia-friendly spacing">
+              Dyslexia-friendly
+            </button>
+            <button class="chip" type="button" id="clearFilters" title="Clear filters">Clear</button>
+          </div>
+        </div>
+
+        <div class="heroRight" aria-label="Tips">
+          <div class="mini">
+            <b>Parent tip</b>
+            <span>Try 5–10 minutes per activity. Stop while it’s still fun.</span>
+          </div>
+          <div class="mini">
+            <b>Sound ready</b>
+            <span>Use Settings to turn sounds on/off when you add audio later.</span>
+          </div>
+          <div class="mini">
+            <b>Progress</b>
+            <span>Stars can be stored on this device (no login needed).</span>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
 </header>
 
-<main>
-  <div class="grid">
-    <a class="card" href="letters.html"><h3>Letters</h3><p>Learn the alphabet</p></a>
-    <a class="card" href="numbers.html"><h3>Numbers</h3><p>Count and recognise</p></a>
-    <a class="card" href="phonics.html"><h3>Phonics</h3><p>Blend sounds</p></a>
-    <a class="card" href="maths.html"><h3>Maths</h3><p>Add, subtract & more</p></a>
-    <a class="card" href="memory.html"><h3>Memory</h3><p>Match and focus</p></a>
-    <a class="card" href="games.html"><h3>Games</h3><p>Fun learning breaks</p></a>
-    <a class="card" href="handwriting.html"><h3>Handwriting</h3><p>Trace letters</p></a>
-    <a class="card" href="clock.html"><h3>Clock</h3><p>Learn time</p></a>
-    <a class="card" href="progress.html"><h3>Progress</h3><p>Track stars</p></a>
+<main class="container" aria-label="Activity categories">
+  <div class="grid" id="grid">
+    <!-- Cards: each includes tags so search/filter works -->
+    <a class="card" href="letters.html" data-tags="letters alphabet sounds reception year1 easy">
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 20V4h7a4 4 0 0 1 0 8H7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M7 12h8a4 4 0 0 1 0 8H7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <h3>Letters</h3>
+        <p>Learn the alphabet, sounds, and early spelling.</p>
+        <div class="meta">
+          <span class="tag">Reception</span><span class="tag">Easy</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="numbers.html" data-tags="numbers counting maths reception year1 easy">
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 7h8M8 12h8M8 17h8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M6 4v16M18 4v16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity=".6"/>
+        </svg>
+      </div>
+      <div>
+        <h3>Numbers</h3>
+        <p>Counting, number recognition, and simple patterns.</p>
+        <div class="meta">
+          <span class="tag">Reception</span><span class="tag">Easy</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="phonics.html" data-tags="phonics sounds blending cvc reception year1 medium">
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 16c3-6 6-6 9 0s6 6 7-2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M7 9h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <h3>Phonics</h3>
+        <p>Blend sounds and build simple words.</p>
+        <div class="meta">
+          <span class="tag">Year 1</span><span class="tag">Medium</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="maths.html" data-tags="maths add subtract multiply divide year1 year2 medium">
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 8h10M7 12h10M7 16h6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M16 15l2 2m0-2l-2 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <div>
+        <h3>Maths</h3>
+        <p>Add, subtract, and build confidence with numbers.</p>
+        <div class="meta">
+          <span class="tag">Year 1–2</span><span class="tag">Medium</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="memory.html" data-tags="memory match focus games reception year1 easy">
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M8 7h8v10H8z" stroke="currentColor" stroke-width="1.8" />
+          <path d="M6 9h2M16 9h2M6 12h2M16 12h2M6 15h2M16 15h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity=".6"/>
+        </svg>
+      </div>
+      <div>
+        <h3>Memory</h3>
+        <p>Matching games to support focus and attention.</p>
+        <div class="meta">
+          <span class="tag">Reception</span><span class="tag">Easy</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="games.html" data-tags="games break brain fun reception year1 easy">
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M7 14h2m6 0h2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M9 12v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M6 9h12a3 3 0 0 1 3 3v3a3 3 0 0 1-3 3h-1l-2-2H9l-2 2H6a3 3 0 0 1-3-3v-3a3 3 0 0 1 3-3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <h3>Games</h3>
+        <p>Short learning breaks: fun, calm, and simple.</p>
+        <div class="meta">
+          <span class="tag">All</span><span class="tag">Easy</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="handwriting.html" data-tags="handwriting tracing fine-motor reception year1 easy">
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 20h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M8 16l8-8 2 2-8 8H8v-2z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <h3>Handwriting</h3>
+        <p>Trace letters and build pencil control.</p>
+        <div class="meta">
+          <span class="tag">Reception</span><span class="tag">Easy</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="clock.html" data-tags="time clock analogue maths year1 year2 medium">
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18z" stroke="currentColor" stroke-width="1.8"/>
+          <path d="M12 7v6l4 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div>
+        <h3>Clock</h3>
+        <p>Learn to tell the time with an analogue clock.</p>
+        <div class="meta">
+          <span class="tag">Year 1–2</span><span class="tag">Medium</span>
+        </div>
+      </div>
+    </a>
+
+    <a class="card" href="progress.html" data-tags="progress stars rewards all easy">
+      <div class="badge" aria-hidden="true">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M6 18V7m6 11V5m6 13V9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M4 20h16" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" opacity=".6"/>
+        </svg>
+      </div>
+      <div>
+        <h3>Progress</h3>
+        <p>Track stars and see what you’ve completed.</p>
+        <div class="meta">
+          <span class="tag">All</span><span class="tag">Easy</span>
+        </div>
+      </div>
+    </a>
+  </div>
+
+  <div class="empty" id="emptyState">
+    No matches. Try clearing filters or searching for something broader (e.g., “maths”, “letters”, “time”).
   </div>
 </main>
 
 <footer>
-  © 2025 Primary Steps
+  <div class="container">
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between">
+      <span>© 2025 Primary Steps</span>
+      <span>Built for quick learning moments — calm, clear, and mobile-friendly.</span>
+    </div>
+  </div>
 </footer>
 
+<script>
+  (function(){
+    const root = document.documentElement;
+    const search = document.getElementById('search');
+    const cards = Array.from(document.querySelectorAll('.card'));
+    const hint = document.getElementById('resultHint');
+    const empty = document.getElementById('emptyState');
+
+    const state = {
+      q: '',
+      age: new Set(),
+      level: new Set(),
+      contrast: localStorage.getItem('ps_contrast') || 'normal',
+      font: localStorage.getItem('ps_font') || 'system'
+    };
+
+    function applyPrefs(){
+      if(state.contrast === 'high'){ root.setAttribute('data-contrast','high'); }
+      else { root.removeAttribute('data-contrast'); }
+      if(state.font === 'dyslexic'){ root.setAttribute('data-font','dyslexic'); }
+      else { root.removeAttribute('data-font'); }
+    }
+
+    function normalize(s){ return (s || '').toLowerCase().trim(); }
+
+    function matchesFilters(tags){
+      // Age filter: if none selected, pass
+      if(state.age.size){
+        let ok = false;
+        state.age.forEach(a => { if(tags.includes(a)) ok = true; });
+        if(!ok) return false;
+      }
+      // Level filter: if none selected, pass
+      if(state.level.size){
+        let ok = false;
+        state.level.forEach(l => { if(tags.includes(l)) ok = true; });
+        if(!ok) return false;
+      }
+      return true;
+    }
+
+    function render(){
+      const q = normalize(state.q);
+      let shown = 0;
+
+      cards.forEach(card => {
+        const tags = normalize(card.getAttribute('data-tags') || '');
+        const text = normalize(card.innerText);
+        const inSearch = !q || tags.includes(q) || text.includes(q);
+        const inFilters = matchesFilters(tags);
+        const show = inSearch && inFilters;
+
+        card.style.display = show ? '' : 'none';
+        if(show) shown++;
+      });
+
+      hint.textContent = shown ? (shown + ' activity' + (shown===1?'':'ies') + ' shown') : '';
+      empty.classList.toggle('show', shown === 0);
+    }
+
+    // Search
+    search.addEventListener('input', () => { state.q = search.value; render(); });
+
+    // Chips
+    document.querySelectorAll('.chip[data-filter]').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const filter = btn.getAttribute('data-filter');
+        const value = btn.getAttribute('data-value');
+        const set = filter === 'age' ? state.age : state.level;
+
+        const pressed = btn.getAttribute('aria-pressed') === 'true';
+        btn.setAttribute('aria-pressed', String(!pressed));
+        if(pressed) set.delete(value); else set.add(value);
+        render();
+      });
+    });
+
+    // Clear
+    document.getElementById('clearFilters').addEventListener('click', () => {
+      state.age.clear(); state.level.clear();
+      document.querySelectorAll('.chip[data-filter]').forEach(b => b.setAttribute('aria-pressed','false'));
+      search.value = '';
+      state.q = '';
+      render();
+    });
+
+    // Contrast
+    const contrastBtn = document.getElementById('toggleContrast');
+    contrastBtn.addEventListener('click', () => {
+      state.contrast = (state.contrast === 'high') ? 'normal' : 'high';
+      localStorage.setItem('ps_contrast', state.contrast);
+      applyPrefs();
+    });
+
+    // Dyslexia-friendly
+    const fontBtn = document.getElementById('toggleFont');
+    fontBtn.addEventListener('click', () => {
+      const pressed = fontBtn.getAttribute('aria-pressed') === 'true';
+      fontBtn.setAttribute('aria-pressed', String(!pressed));
+      state.font = pressed ? 'system' : 'dyslexic';
+      localStorage.setItem('ps_font', state.font);
+      applyPrefs();
+    });
+
+    applyPrefs();
+    render();
+  })();
+</script>
 </body>
 </html>
