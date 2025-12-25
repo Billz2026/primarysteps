@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Phonics – Primary Steps</title>
+
+  <style>
+    :root{
+      --bg:#0b0d12;
+      --panel:#121621;
+      --panel2:#0f1320;
+      --text:#eef2ff;
+      --muted:#a9b2c7;
+      --brand:#7dd3fc;
+      --brand2:#a78bfa;
+      --ok:#34d399;
+      --bad:#fb7185;
+      --border:rgba(255,255,255,.10);
+      --ring:rgba(125,211,252,.32);
+      --radius:18px;
+      --shadow:0 12px 40px rgba(0,0,0,.35);
+      --shadow2:0 8px 18px rgba(0,0,0,.25);
+    }
+
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%}
+    body{
+      font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+      background:
+        radial-gradient(900px 500px at 20% 0%, rgba(167,139,250,.16), transparent 60%),
+        radial-gradient(900px 500px at 85% 20%, rgba(125,211,252,.18), transparent 60%),
+        var(--bg);
+      color:var(--text);
+    }
+
+    /* Header (matches Letters/Numbers kit) */
+    header{
+      position:sticky;
+      top:0;
+      z-index:10;
+      backdrop-filter: blur(12px);
+      background: rgba(18,22,33,.75);
+      border-bottom:1px solid var(--border);
+    }
+    .topbar{
+      max-width:1150px;
+      margin:auto;
+      padding:12px 18px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+      text-decoration:none;
+      color:var(--text);
+      min-width: 200px;
+    }
+    .brand img{
+      height:52px;
+      width:auto;
+      filter:drop-shadow(0 10px 25px rgba(125,211,252,.25));
+    }
+    .brand span{
+      font-weight:750;
+      font-size:14px;
+      letter-spacing:.04em;
+    }
+    .nav{
+      display:flex;
+      gap:10px;
+      align-items:center;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+    .pill{
+      text-decoration:none;
+      color:var(--text);
+      padding:9px 14px;
+      border-radius:999px;
+      background:rgba(15,19,32,.7);
+      border:1px solid rgba(255,255,255,.12);
+      font-size:13px;
+      font-weight:700;
+      transition:.2s ease;
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      white-space:nowrap;
+    }
+    .pill:hover{transform:translateY(-1px); border-color:rgba(125,211,252,.35)}
+    .pill strong{font-weight:850}
+
+    /* Page */
+    .container{max-width:1150px;margin:auto;padding:28px 18px 60px}
+    .hero{margin-bottom:18px}
+    .hero h1{margin:0 0 6px;font-size:clamp(22px,3vw,30px)}
+    .hero p{margin:0;color:var(--muted);font-size:14px;line-height:1.45}
+
+    .panel{
+      background:linear-gradient(180deg, rgba(18,22,33,.95), rgba(11,13,18,.85));
+      border:1px solid rgba(255,255,255,.10);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      padding:18px;
+    }
+
+    /* Tabs */
+    .tabs{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .tab{
+      padding:10px 14px;
+      border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text);
+      font-weight:800;
+      font-size:13px;
+      cursor:pointer;
+      transition:.18s ease;
+      text-decoration:none;
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .tab:hover{transform:translateY(-1px); border-color:var(--ring); background:rgba(125,211,252,.10)}
+    .tab.active{
+      border-color: rgba(125,211,252,.55);
+      background: linear-gradient(180deg, rgba(125,211,252,.22), rgba(167,139,250,.14));
+      box-shadow: 0 14px 26px rgba(0,0,0,.30);
+    }
+
+    /* Hear & Choose */
+    .quiz{margin-top:16px; display:grid; gap:14px;}
+    .promptRow{
+      display:flex; align-items:center; justify-content:space-between;
+      gap:12px; flex-wrap:wrap;
+      padding:14px 14px;
+      border-radius:16px;
+      border:1px solid rgba(255,255,255,.10);
+      background:rgba(15,19,32,.55);
+    }
+    .promptLeft{display:flex; align-items:center; gap:12px; flex-wrap:wrap; min-width:240px;}
+    .soundBtn{
+      display:inline-flex; align-items:center; gap:10px;
+      padding:12px 14px; border-radius:14px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text); font-weight:900;
+      cursor:pointer; transition:.18s ease;
+      box-shadow: var(--shadow2);
+    }
+    .soundBtn:hover{transform:translateY(-1px); border-color:var(--ring); background:rgba(125,211,252,.10)}
+    .hint{color:var(--muted); font-size:13px; font-weight:750;}
+    .status{color:rgba(238,242,255,.75); font-size:13px; font-weight:850;}
+
+    .tileGrid{display:grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap:12px;}
+    .tile{
+      border-radius:18px;
+      padding:18px 10px;
+      text-align:center;
+      border:1px solid rgba(255,255,255,.12);
+      background:rgba(15,19,32,.78);
+      box-shadow: var(--shadow2);
+      cursor:pointer;
+      user-select:none;
+      transition:.14s ease;
+      font-weight:950;
+      font-size: clamp(22px, 4vw, 34px);
+      letter-spacing:.06em;
+    }
+    .tile:hover{transform:translateY(-2px); border-color:var(--ring)}
+    .tile:active{transform:translateY(0px) scale(.99)}
+    .tile:disabled{opacity:.55; cursor:not-allowed; transform:none}
+    .tile.correct{
+      border-color: rgba(52,211,153,.6);
+      background: rgba(52,211,153,.12);
+      box-shadow: 0 18px 40px rgba(0,0,0,.35);
+    }
+    .tile.wrong{
+      border-color: rgba(251,113,133,.55);
+      background: rgba(251,113,133,.10);
+    }
+
+    .controlsRow{
+      display:flex; justify-content:space-between; gap:10px;
+      flex-wrap:wrap; align-items:center;
+    }
+    .btn{
+      padding:12px 14px; border-radius:999px;
+      border:1px solid rgba(255,255,255,.14);
+      background:rgba(255,255,255,.06);
+      color:var(--text); font-weight:900;
+      cursor:pointer; transition:.18s ease;
+    }
+    .btn:hover{transform:translateY(-1px); border-color:var(--ring); background:rgba(125,211,252,.10)}
+    .btn.primary{
+      border-color: rgba(125,211,252,.55);
+      background: linear-gradient(180deg, rgba(125,211,252,.22), rgba(167,139,250,.14));
+    }
+    .btn:disabled{opacity:.45; cursor:not-allowed; transform:none;}
+
+    .tip{
+      margin:14px 2px 0;
+      color:rgba(238,242,255,.55);
+      font-size:12px;
+      line-height:1.45;
+    }
+    code{
+      padding:2px 6px;
+      border-radius:8px;
+      background:rgba(255,255,255,.06);
+      border:1px solid rgba(255,255,255,.10);
+      color:rgba(238,242,255,.85);
+    }
+
+    @media (max-width:560px){
+      .tileGrid{grid-template-columns: repeat(2, minmax(0, 1fr));}
+      .brand span{display:none}
+      .brand{min-width:unset}
+    }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="topbar">
+    <a href="index.html" class="brand">
+      <img src="assets/primary-steps-logo.png" alt="Primary Steps">
+      <span>Primary Steps</span>
+    </a>
+
+    <nav class="nav">
+      <a class="pill" href="index.html">Home</a>
+      <a class="pill" href="letters.html">Letters</a>
+      <a class="pill" href="numbers.html">Numbers</a>
+      <a class="pill" href="settings.html">Settings</a>
+      <a class="pill" href="progress.html">⭐ <strong id="starsCount">0</strong></a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <h1>Phonics</h1>
+    <p>Hear a sound, then choose the matching letter. No rush — you control when to go next.</p>
+  </section>
+
+  <section class="panel">
+    <div class="tabs" role="tablist" aria-label="Phonics activities">
+      <span class="tab active" aria-current="page">Hear &amp; Choose</span>
+      <a class="tab" href="letters.html">Letters</a>
+      <a class="tab" href="numbers.html">Numbers</a>
+    </div>
+
+    <div class="quiz" aria-live="polite">
+      <div class="promptRow">
+        <div class="promptLeft">
+          <button class="soundBtn" id="playBtn" type="button" aria-label="Play sound">🔊 Play sound</button>
+          <div class="hint" id="hint">Listen and choose the matching letter.</div>
+        </div>
+        <div class="status" id="status">Round 1</div>
+      </div>
+
+      <div class="tileGrid" id="grid" aria-label="Answer choices"></div>
+
+      <div class="controlsRow">
+        <button class="btn" id="replayBtn" type="button">Replay</button>
+        <div style="display:flex; gap:10px; flex-wrap:wrap; align-items:center;">
+          <button class="btn" id="newSetBtn" type="button" title="New letters set">New set</button>
+          <button class="btn primary" id="nextBtn" type="button" disabled>Next ➜</button>
+        </div>
+      </div>
+
+      <div class="tip">
+        Tip: If you add audio files, put them in <code>assets/phonics/</code> named <code>a.mp3</code>, <code>b.mp3</code>… (fallback uses device voice).
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  // Stars (shared)
+  function getStars(){ return Number(localStorage.getItem("ps_stars") || "0"); }
+  function setStars(n){ localStorage.setItem("ps_stars", String(n)); }
+  function renderStars(){
+    var el = document.getElementById("starsCount");
+    if(el) el.textContent = String(getStars());
+  }
+  renderStars();
+
+  // Sound engine (mp3 preferred, speech fallback)
+  function playLetterSound(letter){
+    letter = String(letter || "").toLowerCase();
+    var url = "assets/phonics/" + letter + ".mp3";
+    try{
+      var audio = new Audio(url);
+      audio.volume = 1.0;
+      var played = false;
+
+      audio.addEventListener("canplaythrough", function(){
+        if(played) return;
+        played = true;
+        audio.play().catch(function(){ speechFallback(letter); });
+      });
+
+      audio.addEventListener("error", function(){
+        speechFallback(letter);
+      });
+
+      audio.load();
+    }catch(e){
+      speechFallback(letter);
+    }
+  }
+
+  function speechFallback(letter){
+    if(!("speechSynthesis" in window)) return;
+    try{
+      window.speechSynthesis.cancel();
+      var u = new SpeechSynthesisUtterance(letter);
+      u.rate = 0.85;
+      u.pitch = 1.0;
+      u.volume = 1.0;
+      window.speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  var EASY = ["s","a","t","p","i","n","m","d","g","o","c","k","e","r","h","l"];
+  var CONFUSABLES = [
+    ["b","d","p","q"],
+    ["m","n","h","r"],
+    ["c","k","g","q"],
+    ["s","z","c","x"],
+    ["t","d","p","b"]
+  ];
+
+  var round = 0;
+  var correctLetter = null;
+  var solved = false;
+
+  var grid = document.getElementById("grid");
+  var playBtn = document.getElementById("playBtn");
+  var replayBtn = document.getElementById("replayBtn");
+  var nextBtn = document.getElementById("nextBtn");
+  var newSetBtn = document.getElementById("newSetBtn");
+  var status = document.getElementById("status");
+  var hint = document.getElementById("hint");
+
+  function shuffle(arr){
+    for(var i=arr.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var t=arr[i]; arr[i]=arr[j]; arr[j]=t;
+    }
+    return arr;
+  }
+
+  function pickSet(){
+    if(Math.random() < 0.55){
+      var g = CONFUSABLES[Math.floor(Math.random()*CONFUSABLES.length)];
+      return shuffle(g.slice()).slice(0,4);
+    }
+    var pool = EASY.slice();
+    shuffle(pool);
+    return pool.slice(0,4);
+  }
+
+  function buildTiles(choices){
+    grid.innerHTML = "";
+    choices.forEach(function(ch){
+      var b = document.createElement("button");
+      b.className = "tile";
+      b.type = "button";
+      b.textContent = ch.toUpperCase();
+      b.setAttribute("data-letter", ch);
+      b.addEventListener("click", function(){ onPick(b, ch); });
+      grid.appendChild(b);
+    });
+  }
+
+  function setRoundText(){ status.textContent = "Round " + (round+1); }
+
+  function startRound(newChoices){
+    solved = false;
+    nextBtn.disabled = true;
+    hint.textContent = "Listen and choose the matching letter.";
+
+    var choices = newChoices || pickSet();
+    correctLetter = choices[Math.floor(Math.random()*choices.length)];
+    buildTiles(choices);
+    setRoundText();
+
+    setTimeout(function(){ playLetterSound(correctLetter); }, 250);
+  }
+
+  function lockTiles(){
+    Array.prototype.forEach.call(grid.querySelectorAll(".tile"), function(t){ t.disabled = true; });
+  }
+
+  function onPick(btn, letter){
+    if(solved) return;
+
+    if(letter === correctLetter){
+      solved = true;
+      btn.classList.add("correct");
+      hint.textContent = "Nice! That matches the sound. ⭐";
+      nextBtn.disabled = false;
+
+      setStars(getStars()+1);
+      renderStars();
+      lockTiles();
+    }else{
+      btn.classList.add("wrong");
+      hint.textContent = "Try again — listen once more.";
+      playLetterSound(correctLetter);
+      setTimeout(function(){ btn.classList.remove("wrong"); }, 650);
+    }
+  }
+
+  playBtn.addEventListener("click", function(){ playLetterSound(correctLetter); });
+  replayBtn.addEventListener("click", function(){ playLetterSound(correctLetter); });
+  nextBtn.addEventListener("click", function(){ round++; startRound(); });
+  newSetBtn.addEventListener("click", function(){ round = 0; startRound(pickSet()); });
+
+  startRound();
+})();
+</script>
+
+</body>
+</html>
