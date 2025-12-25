@@ -75,21 +75,22 @@ a{color:inherit}
   border-color: rgba(31,120,255,.35);
   box-shadow: 0 16px 30px rgba(16,60,120,.16);
 }
-.hero{
+.page{
   margin-top:16px;
-  padding:24px;
+  padding:22px;
   border-radius: 24px;
   border:1px solid var(--stroke);
   background: rgba(255,255,255,.78);
   box-shadow: var(--shadow);
 }
-.hero h1{margin:0 0 6px; font-weight:980; letter-spacing:.2px; font-size:1.45rem;}
-.hero p{margin:0; color:var(--muted); font-weight:750; line-height:1.45;}
-.grid{
-  margin-top:16px;
+.breadcrumb{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px;}
+.breadcrumb a{color: var(--blue2); font-weight:900; text-decoration:none;}
+.breadcrumb a:hover{text-decoration: underline; text-underline-offset: 4px;}
+.grid2{
+  margin-top:14px;
   display:grid;
-  grid-template-columns: repeat(4, minmax(0,1fr));
-  gap:14px;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:12px;
 }
 .card{
   display:flex;
@@ -127,25 +128,24 @@ a{color:inherit}
   font-weight:900;
   display:inline-flex; align-items:center; justify-content:center;
 }
-.footer{margin-top:18px; text-align:center; color: rgba(11,27,51,.55); font-weight:750;}
-.page{
-  margin-top:16px;
-  padding:22px;
-  border-radius: 24px;
+.playArea{
+  margin-top:14px;
   border:1px solid var(--stroke);
-  background: rgba(255,255,255,.78);
-  box-shadow: var(--shadow);
+  border-radius: 24px;
+  padding:14px;
+  background: rgba(255,255,255,.70);
+  box-shadow: var(--shadow2);
 }
-.breadcrumb{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-bottom:10px;}
-.breadcrumb a{color: var(--blue2); font-weight:900; text-decoration:none;}
-.breadcrumb a:hover{text-decoration: underline; text-underline-offset: 4px;}
-@media (max-width: 980px){ .grid{grid-template-columns: repeat(2, minmax(0,1fr));} }
+.footer{margin-top:18px; text-align:center; color: rgba(11,27,51,.55); font-weight:750;}
+@media (max-width: 980px){ .grid2{grid-template-columns: 1fr;} }
 @media (max-width: 560px){
   .container{width:min(var(--max), 94vw);}
   .brand img{height:30px;}
-  .grid{grid-template-columns: 1fr;}
   .meta .desc{white-space:normal;}
   .actions{width:100%; justify-content:flex-start;}
+}
+@media (prefers-reduced-motion: reduce){
+  *{scroll-behavior:auto !important}
 }
 </style>
 </head>
@@ -166,56 +166,422 @@ a{color:inherit}
       </div>
     </header>
 
-    
-<section class="page">
-  <div class="breadcrumb"><a href="index.html">← Back to Home</a></div>
-  <h2 style="margin:0 0 6px; font-weight:980; letter-spacing:.2px;">🔢 Numbers</h2>
-  <p style="margin:0; color:var(--muted); font-weight:750; line-height:1.5;">Count items and choose the correct number.</p>
+    <section class="page" id="numbersPage">
+      <div class="breadcrumb"><a href="index.html">← Back to Home</a></div>
 
-  <div style="margin-top:14px; display:grid; gap:12px;">
-    <div style="border:1px solid var(--stroke); border-radius: var(--r); padding:14px; background: rgba(255,255,255,.70); box-shadow: var(--shadow2);">
-      <p style="margin:0 0 8px; font-weight:900;">Quick tips</p>
-      <ul style="margin:0; padding-left:18px; color:var(--muted); font-weight:750; line-height:1.55;"><li>Use small numbers first (1–5).</li><li>Point and count slowly together.</li><li>Repeat the same level for confidence.</li></ul>
-    </div>
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
+        <div style="min-width:260px;flex:1 1 420px">
+          <h2 style="margin:0 0 6px; font-weight:980; letter-spacing:.2px;">🔢 Numbers</h2>
+          <p style="margin:0; color:var(--muted); font-weight:750; line-height:1.5;">
+            Practice counting and number recognition with quick mini-games.
+          </p>
+        </div>
 
-    <div class="card" style="cursor:default;" href="#">
-      <div class="left">
-        <div class="ico" aria-hidden="true">⭐</div>
-        <div class="meta">
-          <p class="name">Earn a star</p>
-          <p class="desc">Tap when you finish a small goal</p>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center">
+          <button class="pill" id="soundToggle" type="button" aria-pressed="false" title="Sound is coming soon">
+            🔇 Sound: Off
+          </button>
+          <button class="pill primary" id="resetBtn" type="button" title="Reset this page (keeps total stars)">
+            Reset activity
+          </button>
         </div>
       </div>
-      <button class="badge" id="starBtn" type="button" style="border:none; cursor:pointer;">Add ⭐</button>
-    </div>
-  </div>
-</section>
 
-<script>
-(function(){
-  var btn = document.getElementById("starBtn");
-  if(!btn) return;
-  btn.addEventListener("click", function(){
-    var n = Number(localStorage.getItem("ps_stars") || "0");
-    n += 1;
-    localStorage.setItem("ps_stars", String(n));
-    var top = document.getElementById("starsCount");
-    if(top) top.textContent = String(n);
-    btn.textContent = "Added! ⭐";
-    setTimeout(function(){ btn.textContent = "Add ⭐"; }, 900);
-  });
-})();
-</script>
+      <!-- Activity Launcher -->
+      <div class="grid2">
+        <button class="card" id="launchCount" type="button" aria-controls="playArea" aria-label="Play Count & Choose">
+          <div class="left">
+            <div class="ico" aria-hidden="true">🟦</div>
+            <div class="meta">
+              <p class="name">Count & Choose</p>
+              <p class="desc">Count the dots and pick the right number</p>
+            </div>
+          </div>
+          <span class="badge">Play</span>
+        </button>
 
+        <button class="card" id="launchFindNum" type="button" aria-controls="playArea" aria-label="Play Find the Number">
+          <div class="left">
+            <div class="ico" aria-hidden="true">🎯</div>
+            <div class="meta">
+              <p class="name">Find the Number</p>
+              <p class="desc">Tap the correct number from a few choices</p>
+            </div>
+          </div>
+          <span class="badge">Play</span>
+        </button>
+      </div>
+
+      <!-- Play Area -->
+      <div class="playArea" id="playArea">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+          <div>
+            <p id="activityTitle" style="margin:0; font-weight:950;">Select an activity</p>
+            <p id="activitySub" style="margin:4px 0 0; color:var(--muted); font-weight:750;">Pick a game above to start.</p>
+          </div>
+
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <div style="display:flex;gap:8px;align-items:center">
+              <span style="font-weight:900;color:var(--muted)">Difficulty</span>
+              <div style="display:flex;gap:8px;flex-wrap:wrap">
+                <button class="pill" id="diffEasy" type="button" aria-pressed="true">Easy (1–5)</button>
+                <button class="pill" id="diffHard" type="button" aria-pressed="false">Hard (1–10)</button>
+              </div>
+            </div>
+            <span class="pill" style="cursor:default">⭐ Session: <span id="sessionStars">0</span></span>
+          </div>
+        </div>
+
+        <div id="activityBody" style="margin-top:12px; display:grid; gap:12px;">
+          <div style="padding:12px;border-radius:18px;border:1px dashed rgba(31,120,255,.28);color:var(--muted);font-weight:750;">
+            Tip: Start on Easy. When it’s comfortable, switch to Hard for 1–10.
+          </div>
+        </div>
+      </div>
+
+      <!-- Earn a star (global) -->
+      <div style="margin-top:14px; display:grid; gap:12px;">
+        <div style="border:1px solid var(--stroke); border-radius: var(--r); padding:14px; background: rgba(255,255,255,.70); box-shadow: var(--shadow2);">
+          <p style="margin:0 0 8px; font-weight:900;">Quick tips</p>
+          <ul style="margin:0; padding-left:18px; color:var(--muted); font-weight:750; line-height:1.55;">
+            <li>Point and count together out loud.</li>
+            <li>If it’s tricky, go back to smaller numbers.</li>
+            <li>Stop while it’s still fun.</li>
+          </ul>
+        </div>
+
+        <div class="card" style="cursor:default;">
+          <div class="left">
+            <div class="ico" aria-hidden="true">⭐</div>
+            <div class="meta">
+              <p class="name">Earn a star</p>
+              <p class="desc">Tap when you finish a small goal</p>
+            </div>
+          </div>
+          <button class="badge" id="starBtn" type="button" style="border:none; cursor:pointer;">Add ⭐</button>
+        </div>
+      </div>
+    </section>
 
     <div class="footer">© 2025 Primary Steps</div>
   </div>
 
 <script>
+/* Primary Steps — Numbers (Step 2: first real activities) */
 (function(){
-  var el = document.getElementById("starsCount");
-  if(!el) return;
-  el.textContent = String(Number(localStorage.getItem("ps_stars") || "0"));
+  // ---------- Total stars (shared across site) ----------
+  function getTotalStars(){ return Number(localStorage.getItem("ps_stars") || "0"); }
+  function setTotalStars(n){ localStorage.setItem("ps_stars", String(n)); }
+  function refreshTopStars(){
+    var top = document.getElementById("starsCount");
+    if(top) top.textContent = String(getTotalStars());
+  }
+  refreshTopStars();
+
+  var starBtn = document.getElementById("starBtn");
+  if(starBtn){
+    starBtn.addEventListener("click", function(){
+      var n = getTotalStars() + 1;
+      setTotalStars(n);
+      refreshTopStars();
+      starBtn.textContent = "Added! ⭐";
+      setTimeout(function(){ starBtn.textContent = "Add ⭐"; }, 900);
+    });
+  }
+
+  // ---------- Session stars ----------
+  var sessionStarsEl = document.getElementById("sessionStars");
+  var sessionStars = 0;
+  function addSessionStar(){
+    sessionStars += 1;
+    if(sessionStarsEl) sessionStarsEl.textContent = String(sessionStars);
+  }
+  function resetSession(){
+    sessionStars = 0;
+    if(sessionStarsEl) sessionStarsEl.textContent = "0";
+  }
+
+  // ---------- Sound toggle placeholder ----------
+  var soundBtn = document.getElementById("soundToggle");
+  if(soundBtn){
+    var pref = localStorage.getItem("ps_sound") || "off";
+    function renderSound(){
+      soundBtn.setAttribute("aria-pressed", String(pref === "on"));
+      soundBtn.textContent = (pref === "on") ? "🔊 Sound: On" : "🔇 Sound: Off";
+      soundBtn.title = "Sound is coming soon — this button saves your preference";
+    }
+    renderSound();
+    soundBtn.addEventListener("click", function(){
+      pref = (pref === "on") ? "off" : "on";
+      localStorage.setItem("ps_sound", pref);
+      renderSound();
+    });
+  }
+
+  // ---------- Difficulty (range) ----------
+  var easyBtn = document.getElementById("diffEasy");
+  var hardBtn = document.getElementById("diffHard");
+  var maxNum = Number(localStorage.getItem("ps_numbers_max") || "5"); // 5 or 10
+
+  function setDifficultyMax(n){
+    maxNum = n;
+    localStorage.setItem("ps_numbers_max", String(n));
+    if(easyBtn) easyBtn.setAttribute("aria-pressed", String(n === 5));
+    if(hardBtn) hardBtn.setAttribute("aria-pressed", String(n === 10));
+    // restart current activity
+    if(currentActivity === "count") startCount();
+    if(currentActivity === "find") startFindNumber();
+  }
+
+  if(easyBtn) easyBtn.addEventListener("click", function(){ setDifficultyMax(5); });
+  if(hardBtn) hardBtn.addEventListener("click", function(){ setDifficultyMax(10); });
+  setDifficultyMax(maxNum);
+
+  // ---------- Helpers ----------
+  var body = document.getElementById("activityBody");
+  var title = document.getElementById("activityTitle");
+  var sub = document.getElementById("activitySub");
+  var resetBtn = document.getElementById("resetBtn");
+
+  function setHeader(t, s){
+    if(title) title.textContent = t;
+    if(sub) sub.textContent = s;
+  }
+  function clearBody(){ if(body) body.innerHTML = ""; }
+
+  function el(tag, attrs, children){
+    var node = document.createElement(tag);
+    if(attrs){
+      Object.keys(attrs).forEach(function(k){
+        if(k === "class") node.className = attrs[k];
+        else if(k === "html") node.innerHTML = attrs[k];
+        else node.setAttribute(k, attrs[k]);
+      });
+    }
+    (children || []).forEach(function(c){
+      if(typeof c === "string") node.appendChild(document.createTextNode(c));
+      else node.appendChild(c);
+    });
+    return node;
+  }
+
+  function randInt(min, max){ return Math.floor(Math.random() * (max - min + 1)) + min; }
+
+  function shimmer(node){
+    node.animate([
+      { transform:"translateY(0)", boxShadow:"0 10px 22px rgba(16,60,120,.07)" },
+      { transform:"translateY(-1px)", boxShadow:"0 16px 30px rgba(16,60,120,.12)" },
+      { transform:"translateY(0)", boxShadow:"0 10px 22px rgba(16,60,120,.07)" }
+    ], { duration: 260, iterations: 1, easing:"ease-out" });
+  }
+  function shake(node){
+    node.animate([
+      { transform:"translateX(0)" },
+      { transform:"translateX(-6px)" },
+      { transform:"translateX(6px)" },
+      { transform:"translateX(-4px)" },
+      { transform:"translateX(4px)" },
+      { transform:"translateX(0)" }
+    ], { duration: 240, iterations: 1, easing:"ease-out" });
+  }
+
+  // ---------- Activities ----------
+  var currentActivity = null;
+
+  // Count & Choose
+  var targetCount = 3;
+  var streak = 0;
+
+  function drawDots(n){
+    // Build a simple responsive "dot board" using divs.
+    var wrap = el("div", {
+      style: "display:grid;grid-template-columns: repeat(5, minmax(0,1fr));gap:10px;align-items:center;justify-items:center;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
+    });
+    for(var i=0;i<n;i++){
+      var dot = el("div", {
+        style: "width:40px;height:40px;border-radius:14px;background: rgba(31,120,255,.14);border:1px solid rgba(31,120,255,.22);box-shadow: 0 10px 22px rgba(16,60,120,.07);"
+      });
+      wrap.appendChild(dot);
+    }
+    return wrap;
+  }
+
+  function newCountRound(){
+    targetCount = randInt(1, maxNum);
+    streakInfo.textContent = "Streak: " + streak + " / 3";
+
+    dotsHolder.innerHTML = "";
+    dotsHolder.appendChild(drawDots(targetCount));
+
+    // Build number choices: correct + 2 random
+    var options = [targetCount];
+    while(options.length < 3){
+      var r = randInt(1, maxNum);
+      if(options.indexOf(r) === -1) options.push(r);
+    }
+    // shuffle
+    for(var i=options.length-1;i>0;i--){
+      var j = Math.floor(Math.random()*(i+1));
+      var tmp = options[i]; options[i]=options[j]; options[j]=tmp;
+    }
+
+    choices.innerHTML = "";
+    options.forEach(function(num){
+      var b = el("button", {
+        type:"button",
+        class:"card",
+        style:"justify-content:center; padding:18px; text-align:center; min-height:72px; font-size:1.6rem; font-weight:980;"
+      }, [String(num)]);
+      b.addEventListener("click", function(){
+        if(num === targetCount){
+          shimmer(b);
+          streak += 1;
+          if(streak >= 3){
+            addSessionStar();
+            streak = 0;
+          }
+          newCountRound();
+        }else{
+          shake(b);
+          streak = 0;
+          streakInfo.textContent = "Streak: " + streak + " / 3";
+        }
+      });
+      choices.appendChild(b);
+    });
+  }
+
+  var dotsHolder, choices, streakInfo;
+
+  function startCount(){
+    currentActivity = "count";
+    resetSession();
+    streak = 0;
+
+    setHeader("Count & Choose", "Count the dots. Pick the right number. Get 3 in a row to earn a session star.");
+    clearBody();
+
+    var top = el("div", {
+      style:"display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
+    }, [
+      el("div", {}, [
+        el("div", {style:"font-weight:980;font-size:1.05rem;"}, ["Count the dots"]),
+        (streakInfo = el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Streak: 0 / 3"]))
+      ]),
+      el("button", {class:"pill primary", type:"button", id:"nextCount"}, ["New set"])
+    ]);
+
+    dotsHolder = el("div", {style:"display:grid;gap:10px;"});
+    choices = el("div", {style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;"});
+
+    body.appendChild(top);
+    body.appendChild(dotsHolder);
+    body.appendChild(choices);
+    body.appendChild(el("div", {style:"color:var(--muted);font-weight:750;font-size:.92rem;"}, [
+      "Tip: Count slowly and point at each dot."
+    ]));
+
+    newCountRound();
+
+    var nextBtn = document.getElementById("nextCount");
+    if(nextBtn){
+      nextBtn.addEventListener("click", function(){
+        streak = 0;
+        newCountRound();
+      });
+    }
+  }
+
+  // Find the Number
+  var targetNumber = 1;
+
+  function startFindNumber(){
+    currentActivity = "find";
+    resetSession();
+    streak = 0;
+
+    setHeader("Find the Number", "Tap the correct number. Get 3 in a row to earn a session star.");
+    clearBody();
+
+    var pool = [];
+    for(var i=1;i<=maxNum;i++) pool.push(i);
+    targetNumber = pool[Math.floor(Math.random()*pool.length)];
+
+    var prompt = el("div", {
+      style:"display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
+    }, [
+      el("div", {}, [
+        el("div", {style:"font-weight:980;font-size:1.15rem;"}, ["Find: ", String(targetNumber)]),
+        (streakInfo = el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Streak: 0 / 3"]))
+      ]),
+      el("button", {class:"pill primary", type:"button", id:"nextFind"}, ["New number"])
+    ]);
+
+    var grid = el("div", {style:"display:grid;grid-template-columns: repeat(5, minmax(0,1fr));gap:10px;"});
+    grid.style.gridTemplateColumns = (maxNum <= 5) ? "repeat(3, minmax(0,1fr))" : "repeat(5, minmax(0,1fr))";
+
+    pool.forEach(function(n){
+      var b = el("button", {
+        type:"button",
+        class:"card",
+        style:"justify-content:center; padding:16px; text-align:center; min-height:68px; font-size:1.35rem; font-weight:980;"
+      }, [String(n)]);
+      b.addEventListener("click", function(){
+        if(n === targetNumber){
+          shimmer(b);
+          streak += 1;
+          if(streak >= 3){
+            addSessionStar();
+            streak = 0;
+          }
+          targetNumber = pool[Math.floor(Math.random()*pool.length)];
+          prompt.querySelector("div div").textContent = "Find: " + targetNumber;
+          prompt.querySelector("div div + div").textContent = "Streak: " + streak + " / 3";
+        }else{
+          shake(b);
+          streak = 0;
+          prompt.querySelector("div div + div").textContent = "Streak: " + streak + " / 3";
+        }
+      });
+      grid.appendChild(b);
+    });
+
+    body.appendChild(prompt);
+    body.appendChild(grid);
+    body.appendChild(el("div", {style:"color:var(--muted);font-weight:750;font-size:.92rem;"}, [
+      "Tip: Start on Easy (1–5). Move to Hard for 1–10."
+    ]));
+
+    var nextBtn = document.getElementById("nextFind");
+    if(nextBtn){
+      nextBtn.addEventListener("click", function(){
+        targetNumber = pool[Math.floor(Math.random()*pool.length)];
+        prompt.querySelector("div div").textContent = "Find: " + targetNumber;
+      });
+    }
+  }
+
+  // Launch buttons
+  var launchCount = document.getElementById("launchCount");
+  var launchFindNum = document.getElementById("launchFindNum");
+  if(launchCount) launchCount.addEventListener("click", startCount);
+  if(launchFindNum) launchFindNum.addEventListener("click", startFindNumber);
+
+  // Reset button
+  if(resetBtn){
+    resetBtn.addEventListener("click", function(){
+      resetSession();
+      if(currentActivity === "count") startCount();
+      else if(currentActivity === "find") startFindNumber();
+      else {
+        clearBody();
+        setHeader("Select an activity", "Pick a game above to start.");
+        body.appendChild(el("div", {style:"padding:12px;border-radius:18px;border:1px dashed rgba(31,120,255,.28);color:var(--muted);font-weight:750;"}, [
+          "Tip: Start on Easy. When it’s comfortable, switch to Hard for 1–10."
+        ]));
+      }
+    });
+  }
 })();
 </script>
 </body>
