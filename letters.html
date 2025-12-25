@@ -213,6 +213,32 @@ a{color:inherit}
     </button>
   </div>
 
+  <!-- Added activity -->
+  <div style="margin-top:12px; display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px;">
+    <button class="card" id="launchSoundMatch" type="button" aria-controls="playArea" aria-label="Play Beginning Sound Match">
+      <div class="left">
+        <div class="ico" aria-hidden="true">🧠</div>
+        <div class="meta">
+          <p class="name">Beginning Sound Match</p>
+          <p class="desc">Pick the picture that starts with the letter</p>
+        </div>
+      </div>
+      <span class="badge">Play</span>
+    </button>
+
+    <div class="card" style="cursor:default; opacity:.92">
+      <div class="left">
+        <div class="ico" aria-hidden="true">✨</div>
+        <div class="meta">
+          <p class="name">Pro tip</p>
+          <p class="desc">Say the word out loud together</p>
+        </div>
+      </div>
+      <span class="badge">Parent</span>
+    </div>
+  </div>
+
+
   <!-- Play Area -->
   <div id="playArea" style="margin-top:14px; border:1px solid var(--stroke); border-radius: 24px; padding:14px; background: rgba(255,255,255,.70); box-shadow: var(--shadow2);">
     <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">
@@ -699,9 +725,143 @@ a{color:inherit}
     newRound();
   }
 
-  function restartActivity(){
+  
+  // Beginning Sound Match (emoji-based for now — swap to images later)
+  // We keep it calm: 3 choices, simple words.
+  var SOUND_BANK = {
+    "A": [{w:"apple", e:"🍎"}, {w:"ant", e:"🐜"}, {w:"astronaut", e:"🧑‍🚀"}],
+    "S": [{w:"sun", e:"☀️"}, {w:"snake", e:"🐍"}, {w:"sock", e:"🧦"}],
+    "T": [{w:"tiger", e:"🐯"}, {w:"train", e:"🚆"}, {w:"tree", e:"🌳"}],
+    "P": [{w:"pizza", e:"🍕"}, {w:"penguin", e:"🐧"}, {w:"pencil", e:"✏️"}],
+    "I": [{w:"ice", e:"🧊"}, {w:"igloo", e:"🏠"}, {w:"insect", e:"🪲"}],
+    "N": [{w:"nest", e:"🪺"}, {w:"nose", e:"👃"}, {w:"nurse", e:"🧑‍⚕️"}],
+    "M": [{w:"moon", e:"🌙"}, {w:"monkey", e:"🐒"}, {w:"milk", e:"🥛"}],
+    "D": [{w:"dog", e:"🐶"}, {w:"drum", e:"🥁"}, {w:"donut", e:"🍩"}],
+    "G": [{w:"goat", e:"🐐"}, {w:"grapes", e:"🍇"}, {w:"guitar", e:"🎸"}],
+    "O": [{w:"octopus", e:"🐙"}, {w:"orange", e:"🍊"}, {w:"owl", e:"🦉"}],
+    "C": [{w:"cat", e:"🐱"}, {w:"car", e:"🚗"}, {w:"cookie", e:"🍪"}],
+    "K": [{w:"kite", e:"🪁"}, {w:"key", e:"🔑"}, {w:"kangaroo", e:"🦘"}],
+    "E": [{w:"egg", e:"🥚"}, {w:"elephant", e:"🐘"}, {w:"envelope", e:"✉️"}],
+    "R": [{w:"rain", e:"🌧️"}, {w:"robot", e:"🤖"}, {w:"rabbit", e:"🐰"}],
+    "H": [{w:"hat", e:"🎩"}, {w:"house", e:"🏠"}, {w:"horse", e:"🐴"}],
+    "L": [{w:"lion", e:"🦁"}, {w:"leaf", e:"🍃"}, {w:"lamp", e:"💡"}],
+    "B": [{w:"ball", e:"⚽️"}, {w:"banana", e:"🍌"}, {w:"bus", e:"🚌"}],
+    "F": [{w:"fish", e:"🐟"}, {w:"frog", e:"🐸"}, {w:"flower", e:"🌸"}]
+  };
+
+  function startSoundMatch(){
+    currentActivity = "sound";
+    resetSession();
+    setStreak(0);
+    setFeedback("", true);
+
+    setHeader("Beginning Sound Match", "Pick the picture that starts with the letter. 3 correct in a row earns a session star.");
+
+    var pool = currentLetters();
+    // Ensure we have sound items for chosen letters; fallback to Set 1 if needed.
+    var usable = pool.filter(function(L){ return !!SOUND_BANK[L]; });
+    if(!usable.length){ usable = ["A","S","T","P","I","N"]; }
+
+    clearBody();
+
+    var promptRow = el("div", {
+      style:"display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
+    }, [
+      el("div", {}, [
+        el("div", {style:"font-weight:980;font-size:1.15rem;"}, ["Letter: ", "A"]),
+        el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Which word starts with this letter?"])
+      ]),
+      el("button", {class:"pill primary", type:"button", id:"newSoundRound"}, ["New round"])
+    ]);
+
+    var grid = el("div", {style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;"});
+
+    function newRound(){
+      var L = usable[Math.floor(Math.random()*usable.length)];
+      var items = SOUND_BANK[L];
+      // Pick correct item from items
+      var correct = items[Math.floor(Math.random()*items.length)];
+
+      // Create distractors from other letters
+      var distractors = [];
+      var otherLetters = Object.keys(SOUND_BANK).filter(function(x){ return x !== L; });
+      while(distractors.length < 2){
+        var dl = otherLetters[Math.floor(Math.random()*otherLetters.length)];
+        var di = SOUND_BANK[dl][Math.floor(Math.random()*SOUND_BANK[dl].length)];
+        if(!distractors.some(d => d.w === di.w) && di.w !== correct.w) distractors.push(di);
+      }
+
+      var options = [correct].concat(distractors);
+      // Shuffle
+      for(var i=options.length-1;i>0;i--){
+        var j = Math.floor(Math.random()*(i+1));
+        var tmp = options[i]; options[i]=options[j]; options[j]=tmp;
+      }
+
+      promptRow.querySelector("div div").textContent = "Letter: " + L;
+      var promptText = "Which word starts with " + L + "?";
+      setPrompt(promptText);
+      speak("Find a word that starts with " + L + ".");
+
+      grid.innerHTML = "";
+      options.forEach(function(opt){
+        var b = el("button", {
+          type:"button",
+          class:"card",
+          style:"justify-content:center; padding:16px; text-align:center; min-height:96px; font-weight:980;"
+        });
+
+        var emoji = el("div", {style:"font-size:2rem; line-height:1; margin-bottom:8px;"}, [opt.e]);
+        var word = el("div", {style:"font-size:1.05rem; text-transform:capitalize;"}, [opt.w]);
+        b.appendChild(emoji);
+        b.appendChild(word);
+
+        b.addEventListener("click", function(){
+          if(opt.w === correct.w){
+            shimmer(b);
+            setFeedback("✅ Well done!", true);
+            speak("Well done.");
+            setStreak(streak + 1);
+            if(streak >= 3){
+              addSessionStar();
+              setStreak(0);
+            }
+            newRound();
+          }else{
+            shake(b);
+            setFeedback("Try again.", false);
+            speak("Try again.");
+            setStreak(0);
+          }
+        });
+
+        grid.appendChild(b);
+      });
+    }
+
+    body.appendChild(promptRow);
+    body.appendChild(grid);
+
+    var nextBtn = document.getElementById("newSoundRound");
+    if(nextBtn){
+      nextBtn.addEventListener("click", function(){
+        setFeedback("", true);
+        setStreak(0);
+        newRound();
+      });
+    }
+
+    newRound();
+
+    body.appendChild(el("div", {style:"color:var(--muted);font-weight:750;font-size:.92rem;"}, [
+      "Tip: Say the word out loud. Listen for the first sound."
+    ]));
+  }
+
+function restartActivity(){
     if(currentActivity === "find") startFind();
     else if(currentActivity === "match") startMatch();
+    else if(currentActivity === "sound") startSoundMatch();
   }
 
   // Launch buttons
@@ -709,6 +869,9 @@ a{color:inherit}
   var launchMatch = document.getElementById("launchMatch");
   if(launchFind) launchFind.addEventListener("click", startFind);
   if(launchMatch) launchMatch.addEventListener("click", startMatch);
+
+  var launchSoundMatch = document.getElementById("launchSoundMatch");
+  if(launchSoundMatch) launchSoundMatch.addEventListener("click", startSoundMatch);
 
   // Reset button: reset session + restart current activity
   if(resetBtn){
