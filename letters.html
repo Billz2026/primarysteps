@@ -650,6 +650,32 @@ body{
   background-attachment: fixed;
 }
 
+
+/* hub click pass-through */
+.hubTile *{ pointer-events:none; }
+.hubTile{ pointer-events:auto; }
+
+
+.gridLockHint{
+  position:absolute;
+  inset: 0;
+  display:grid;
+  place-items:center;
+  pointer-events:none;
+}
+.gridLockHint > div{
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  padding: 10px 12px;
+  border-radius: 999px;
+  border:1px solid rgba(31,120,255,.18);
+  background: rgba(255,255,255,.90);
+  box-shadow: 0 18px 40px rgba(0,0,0,.14);
+  font-weight: 950;
+  color: rgba(18,51,95,.92);
+}
+
 </style>
 </head>
 <body>
@@ -1383,6 +1409,13 @@ function resetSession(){
     // Choices grid
     var grid = el("div", {id:"findGrid", class:"grid3", style:"display:grid;gap:10px;opacity:.55;pointer-events:none;"});
 
+    var gridWrap = el("div", {style:"position:relative"});
+    var gridHint = el("div", {class:"gridLockHint"}, [
+      el("div", {}, ["▶ Press Start to play"])
+    ]);
+    gridWrap.appendChild(grid);
+    gridWrap.appendChild(gridHint);
+
     // Feedback panel
     var feedbackPanel = el("div", {id:"findFeedbackPanel", style:
       "border-radius:18px;padding:12px;border:1px solid rgba(31,120,255,.18);background:rgba(255,255,255,.78);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;"
@@ -1394,8 +1427,8 @@ function resetSession(){
     frame.appendChild(topRow);
     frame.appendChild(dots);
     frame.appendChild(promptCard);
-    frame.appendChild(grid);
-    frame.appendChild(feedbackPanel);
+    frame.appendChild(gridWrap);
+frame.appendChild(feedbackPanel);
 
     body.appendChild(frame);
     body.appendChild(el("div", {style:"color:var(--muted);font-weight:800;font-size:.92rem;"}, [
@@ -1445,6 +1478,9 @@ function resetSession(){
       if(!g) return;
       g.style.opacity = locked ? ".55" : "1";
       g.style.pointerEvents = locked ? "none" : "auto";
+      if(gridHint) gridHint.style.display = locked ? "" : "none";
+      if(gridHint) gridHint.style.display = locked ? "" : "none";
+      if(gridHint) gridHint.style.display = locked ? "" : "none";
     }
 
     function setFB(msg, good){
@@ -1617,6 +1653,13 @@ awardLevelBadges(score, TOTAL_ROUNDS);
 
     var grid = el("div", {id:"matchGrid", class:"grid3", style:"display:grid;gap:10px;opacity:.55;pointer-events:none;"});
 
+    var gridWrap = el("div", {style:"position:relative"});
+    var gridHint = el("div", {class:"gridLockHint"}, [
+      el("div", {}, ["▶ Press Start to play"])
+    ]);
+    gridWrap.appendChild(grid);
+    gridWrap.appendChild(gridHint);
+
     var feedbackPanel = el("div", {style:
       "border-radius:18px;padding:12px;border:1px solid rgba(31,120,255,.18);background:rgba(255,255,255,.78);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;"
     }, [
@@ -1627,8 +1670,8 @@ awardLevelBadges(score, TOTAL_ROUNDS);
     frame.appendChild(topRow);
     frame.appendChild(dots);
     frame.appendChild(promptCard);
-    frame.appendChild(grid);
-    frame.appendChild(feedbackPanel);
+    frame.appendChild(gridWrap);
+frame.appendChild(feedbackPanel);
 
     body.appendChild(frame);
 
@@ -1852,6 +1895,13 @@ awardLevelBadges(score, TOTAL_ROUNDS);
 
     var grid = el("div", {id:"soundGrid", class:"grid3", style:"display:grid;gap:10px;opacity:.55;pointer-events:none;"});
 
+    var gridWrap = el("div", {style:"position:relative"});
+    var gridHint = el("div", {class:"gridLockHint"}, [
+      el("div", {}, ["▶ Press Start to play"])
+    ]);
+    gridWrap.appendChild(grid);
+    gridWrap.appendChild(gridHint);
+
     var feedbackPanel = el("div", {style:
       "border-radius:18px;padding:12px;border:1px solid rgba(31,120,255,.18);background:rgba(255,255,255,.78);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;"
     }, [
@@ -1862,8 +1912,8 @@ awardLevelBadges(score, TOTAL_ROUNDS);
     frame.appendChild(topRow);
     frame.appendChild(dots);
     frame.appendChild(promptCard);
-    frame.appendChild(grid);
-    frame.appendChild(feedbackPanel);
+    frame.appendChild(gridWrap);
+frame.appendChild(feedbackPanel);
 
     body.appendChild(frame);
 
