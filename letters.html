@@ -677,8 +677,10 @@ body{
 }
 
 
-/* hubForceClick */
-#activityHub, .hub, .goalStrip{ pointer-events:auto; }
+/* hard click fix */
+#activityHub, #goalStrip, #playArea{ position: relative; z-index: 5; }
+.hubTile{ cursor:pointer; pointer-events:auto; position:relative; z-index:6; }
+.hubTile *{ pointer-events:none; }
 
 </style>
 </head>
@@ -742,7 +744,7 @@ body{
     </div>
 
     <div class="hubGrid">
-      <button class="hubTile" id="launchFind" type="button" aria-controls="playArea" onclick="window.psStartActivity && window.psStartActivity(\'find\')" >
+      <button class="hubTile" id="launchFind" type="button" aria-controls="playArea"  onclick="window.psStartActivity && window.psStartActivity('find')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🔎</div>
           <span class="chip reco" id="recoFind" style="display:none">Recommended</span>
@@ -757,7 +759,7 @@ body{
         </div>
       </button>
 
-      <button class="hubTile" id="launchMatch" type="button" aria-controls="playArea" onclick="window.psStartActivity && window.psStartActivity(\'match\')" >
+      <button class="hubTile" id="launchMatch" type="button" aria-controls="playArea"  onclick="window.psStartActivity && window.psStartActivity('match')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🔤</div>
           <span class="chip reco" id="recoMatch" style="display:none">Recommended</span>
@@ -772,7 +774,7 @@ body{
         </div>
       </button>
 
-      <button class="hubTile" id="launchSoundMatch" type="button" aria-controls="playArea" onclick="window.psStartActivity && window.psStartActivity(\'sound\')" >
+      <button class="hubTile" id="launchSoundMatch" type="button" aria-controls="playArea"  onclick="window.psStartActivity && window.psStartActivity('sound')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🧠</div>
           <span class="chip reco" id="recoSound" style="display:none">Recommended</span>
@@ -787,7 +789,7 @@ body{
         </div>
       </button>
 
-      <button class="hubTile" id="launchSoundTap" type="button" aria-controls="playArea" onclick="window.psStartActivity && window.psStartActivity(\'tap\')" >
+      <button class="hubTile" id="launchSoundTap" type="button" aria-controls="playArea"  onclick="window.psStartActivity && window.psStartActivity('tap')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🔊</div>
           <span class="chip reco" id="recoTap" style="display:none">Recommended</span>
@@ -2302,16 +2304,6 @@ function restartActivity(){
     var pa = document.getElementById("playArea");
     if(pa) pa.scrollIntoView({behavior:"smooth", block:"start"});
   }
-  // Expose safe starter for inline onclick (works even if listeners fail)
-  window.psStartActivity = function(key){
-    try{ localStorage.setItem("ps_letters_last_activity", key); }catch(e){}
-    if(key === "find") startFind();
-    else if(key === "match") startMatch();
-    else if(key === "sound") startSoundMatch();
-    else if(key === "tap") startSoundTap();
-    var pa = document.getElementById("playArea");
-    if(pa) pa.scrollIntoView({behavior:"smooth", block:"start"});
-  };
   window.psGoActivity = goActivity;
 
 
@@ -2336,9 +2328,10 @@ function restartActivity(){
 
   if(quickStartBtn){
     quickStartBtn.addEventListener("click", function(){
-      var last = "";
+      var last="";
       try{ last = localStorage.getItem("ps_letters_last_activity") || ""; }catch(e){}
-      goActivity(last || recommendedForLevel());
+      var pick = last || (typeof recommendedForLevel === "function" ? recommendedForLevel() : "find");
+      if(window.psStartActivity) window.psStartActivity(pick);
     });
   }
 
