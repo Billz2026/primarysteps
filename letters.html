@@ -191,18 +191,6 @@ a{color:inherit}
 .page{
   position: relative;
 }
-.page::before{
-  content:"";
-  position: fixed;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 10%, rgba(31,120,255,.10), rgba(31,120,255,0) 55%),
-    radial-gradient(circle at 80% 18%, rgba(88,173,255,.12), rgba(88,173,255,0) 58%),
-    radial-gradient(circle at 25% 85%, rgba(31,120,255,.08), rgba(31,120,255,0) 60%),
-    linear-gradient(180deg, rgba(247,250,255,.92), rgba(245,248,255,.74));
-  pointer-events:none;
-  z-index: -5;
-}
 .card{
   transition: transform .14s ease, box-shadow .14s ease, border-color .14s ease;
 }
@@ -245,6 +233,7 @@ a{color:inherit}
 
 /* Finish modal + confetti */
 .psModal{
+  pointer-events:none;
   position: fixed;
   inset: 0;
   display:none;
@@ -254,7 +243,7 @@ a{color:inherit}
   background: rgba(11,27,51,.46);
   z-index: 9999;
 }
-.psModal.show{ display:flex; }
+.psModal.show{ display:flex; pointer-events:auto; }
 .psModalCard{
   width: min(560px, 96vw);
   border-radius: 26px;
@@ -337,7 +326,6 @@ a{color:inherit}
   .hubGrid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 .hubTile{
-  pointer-events: auto;
   cursor: pointer;
   text-align:left;
   min-height: 122px;
@@ -652,13 +640,15 @@ a{color:inherit}
 }
 
 
-/* --- Clickability guard (prevents invisible overlays blocking taps) --- */
-header, .header, .hub, .goalStrip, #playArea, #lettersPage, main, .page{
-  position: relative;
-  z-index: 1;
+/* Background (no overlay layer to avoid click-blocking) */
+body{
+  background:
+    radial-gradient(circle at 20% 10%, rgba(31,120,255,.10), rgba(31,120,255,0) 55%),
+    radial-gradient(circle at 80% 18%, rgba(88,173,255,.12), rgba(88,173,255,0) 58%),
+    radial-gradient(circle at 25% 85%, rgba(31,120,255,.08), rgba(31,120,255,0) 60%),
+    linear-gradient(180deg, rgba(247,250,255,.92), rgba(245,248,255,.74));
+  background-attachment: fixed;
 }
-.psModal{ z-index: 9999; } /* keep modal above when shown */
-.psConfetti{ pointer-events:none; }
 
 </style>
 </head>
