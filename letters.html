@@ -800,41 +800,131 @@ a{color:inherit}
     setStreak(0);
     setFeedback("", true);
 
-    setHeader("Upper & Lower Match", "Tap the matching small letter. 3 correct in a row earns a session star.");
+    setHeader("Upper & Lower Match", "Play 5 quick rounds. Match the BIG letter to the small letter.");
 
     var poolUpper = currentLetters();
     var poolLower = poolUpper.map(function(x){ return x.toLowerCase(); });
 
+    var TOTAL_ROUNDS = 5;
+    var round = 0;
+    var score = 0;
+    var targetUpper = null;
+    var correctLower = null;
+
     clearBody();
 
-    var promptRow = el("div", {
-      style:"display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
-    }, [
+    var frame = el("div", {style:
+      "border:1px solid var(--stroke);background:rgba(255,255,255,.86);border-radius:22px;box-shadow: var(--shadow2);padding:14px;display:grid;gap:12px;"
+    });
+
+    var topRow = el("div", {style:"display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"}, [
       el("div", {}, [
-        el("div", {style:"font-weight:980;font-size:1.15rem;"}, ["Match this: ", "A"]),
-        el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Tap the matching small letter."])
+        el("div", {style:"font-weight:980;font-size:1.05rem;"}, ["Level: 5 rounds"]),
+        el("div", {id:"matchMeta", style:"margin-top:4px;color:var(--muted);font-weight:800;font-size:.92rem;"}, ["Round 0 / 5 • Score 0"])
       ]),
-      el("button", {class:"pill primary", type:"button", id:"newMatch"}, ["New letter"])
+      el("div", {style:"display:flex;gap:8px;flex-wrap:wrap;align-items:center"}, [
+        el("button", {class:"pill", type:"button", id:"repeatMatchMini", title:"Repeat the instruction"}, ["🔁 Say again"]),
+        el("button", {class:"pill primary", type:"button", id:"startMatchGame"}, ["Start"])
+      ])
     ]);
 
-    var grid = el("div", {style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;"});
+    var dots = el("div", {style:"display:flex;gap:8px;align-items:center;justify-content:flex-start"}, []);
+    for(var i=0;i<TOTAL_ROUNDS;i++){
+      dots.appendChild(el("div", {class:"psDotMatch", style:
+        "width:12px;height:12px;border-radius:999px;background:rgba(31,120,255,.10);border:1px solid rgba(31,120,255,.22);"
+      }));
+    }
 
-    function newRound(){
-      matchTarget = pickTarget(poolUpper);
-      promptRow.querySelector("div div").textContent = "Match this: " + matchTarget;
+    var promptCard = el("div", {style:
+      "border:1px solid rgba(31,120,255,.18);background:linear-gradient(180deg, rgba(31,120,255,.10), rgba(255,255,255,.76));border-radius:22px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;"
+    }, [
+      el("div", {}, [
+        el("div", {style:"font-weight:950;color:rgba(11,27,51,.78);"}, ["Match this letter"]),
+        el("div", {id:"matchPrompt", style:"margin-top:6px;font-weight:990;font-size:2.1rem;letter-spacing:.5px;"}, ["Tap Start"])
+      ]),
+      el("div", {style:"display:flex;gap:10px;align-items:center;flex-wrap:wrap"}, [
+        el("span", {class:"pill", style:"cursor:default"}, ["✅ Correct: ", el("span",{id:"matchScore"},["0"])]),
+        el("span", {class:"pill", style:"cursor:default"}, ["⏱️ Rounds: ", el("span",{id:"matchRound"},["0"]), "/", String(TOTAL_ROUNDS)])
+      ])
+    ]);
 
-      // prompt voice
-      var p = "Match " + matchTarget;
-      setPrompt(p);
-      speak(p);
+    var grid = el("div", {id:"matchGrid", style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;opacity:.55;pointer-events:none;"});
 
-      var correct = matchTarget.toLowerCase();
-      var options = [correct];
+    var feedbackPanel = el("div", {style:
+      "border-radius:18px;padding:12px;border:1px solid rgba(31,120,255,.18);background:rgba(255,255,255,.78);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;"
+    }, [
+      el("div", {id:"matchFeedback", style:"font-weight:950;color:rgba(75,100,136,1);"}, ["Press Start to begin."]),
+      el("button", {class:"pill primary", type:"button", id:"matchNext", style:"display:none"}, ["Next"])
+    ]);
+
+    frame.appendChild(topRow);
+    frame.appendChild(dots);
+    frame.appendChild(promptCard);
+    frame.appendChild(grid);
+    frame.appendChild(feedbackPanel);
+
+    body.appendChild(frame);
+
+    var meta = document.getElementById("matchMeta");
+    var prompt = document.getElementById("matchPrompt");
+    var scoreEl = document.getElementById("matchScore");
+    var roundEl = document.getElementById("matchRound");
+    var fb = document.getElementById("matchFeedback");
+    var nextBtn = document.getElementById("matchNext");
+    var startBtn = document.getElementById("startMatchGame");
+    var repeatBtn = document.getElementById("repeatMatchMini");
+
+    function setDots(){
+      var all = frame.querySelectorAll(".psDotMatch");
+      all.forEach(function(d, i){
+        if(i < round){
+          d.style.background = "linear-gradient(180deg, var(--blue), var(--blue2))";
+          d.style.borderColor = "rgba(31,120,255,.35)";
+        }else{
+          d.style.background = "rgba(31,120,255,.10)";
+          d.style.borderColor = "rgba(31,120,255,.22)";
+        }
+      });
+    }
+
+    function updateMeta(){
+      if(meta) meta.textContent = "Round " + round + " / " + TOTAL_ROUNDS + " • Score " + score;
+      if(scoreEl) scoreEl.textContent = String(score);
+      if(roundEl) roundEl.textContent = String(round);
+      setDots();
+    }
+
+    function lockGrid(locked){
+      var g = document.getElementById("matchGrid");
+      if(!g) return;
+      g.style.opacity = locked ? ".55" : "1";
+      g.style.pointerEvents = locked ? "none" : "auto";
+    }
+
+    function setFB(msg, good){
+      fb.textContent = msg;
+      fb.style.color = good ? "rgba(18,51,95,.92)" : "rgba(75,100,136,1)";
+    }
+
+    function showNext(show){
+      nextBtn.style.display = show ? "" : "none";
+    }
+
+    function buildRound(){
+      targetUpper = poolUpper[Math.floor(Math.random()*poolUpper.length)];
+      correctLower = targetUpper.toLowerCase();
+
+      prompt.textContent = targetUpper;
+
+      var promptText = "Match " + targetUpper;
+      setPrompt(promptText);
+      speak("Match " + targetUpper + ".");
+
+      var options = [correctLower];
       while(options.length < 3){
-        var o = pickTarget(poolLower);
+        var o = poolLower[Math.floor(Math.random()*poolLower.length)];
         if(options.indexOf(o) === -1) options.push(o);
       }
-      // shuffle
       for(var i=options.length-1;i>0;i--){
         var j = Math.floor(Math.random()*(i+1));
         var tmp = options[i]; options[i]=options[j]; options[j]=tmp;
@@ -845,46 +935,78 @@ a{color:inherit}
         var b = el("button", {
           type:"button",
           class:"card",
-          style:"justify-content:center; padding:18px; text-align:center; min-height:76px; font-size:1.8rem; font-weight:980;"
+          style:"justify-content:center; padding:18px; text-align:center; min-height:84px; font-size:2rem; font-weight:990;"
         }, [ch]);
+
         b.addEventListener("click", function(){
-          if(ch === matchTarget.toLowerCase()){
+          if(ch === correctLower){
             shimmer(b);
-            setFeedback("✅ Great match!", true);
+            score += 1;
+            setFB("✅ Correct! Great match.", true);
             speak("Well done.");
-            setStreak(streak + 1);
-            if(streak >= 3){
-              addSessionStar();
-              setStreak(0);
-            }
-            newRound();
+            lockGrid(true);
+            showNext(true);
           }else{
             shake(b);
-            setFeedback("Try again.", false);
+            setFB("Try again.", false);
             speak("Try again.");
-            setStreak(0);
           }
         });
+
         grid.appendChild(b);
       });
     }
 
-    body.appendChild(promptRow);
-    body.appendChild(grid);
+    function startGameRound(){
+      round += 1;
+      updateMeta();
+      lockGrid(false);
+      showNext(false);
+      setFB("Tap the matching small letter.", true);
+      buildRound();
+    }
 
-    var newBtn = document.getElementById("newMatch");
-    if(newBtn){
-      newBtn.addEventListener("click", function(){
-        setFeedback("", true);
-        setStreak(0);
-        newRound();
+    function finish(){
+      lockGrid(true);
+      showNext(false);
+      var msg = "Finished! You got " + score + " out of " + TOTAL_ROUNDS + ".";
+      setFB(msg, true);
+      speak("Great work. " + msg);
+      if(score >= 4){
+        addSessionStar();
+        if(score === 5) addSessionStar();
+      }
+      startBtn.textContent = "Play again";
+      startBtn.style.display = "";
+    }
+
+    if(repeatBtn){
+      repeatBtn.addEventListener("click", function(){ if(lastPrompt) speak(lastPrompt); });
+    }
+
+    if(startBtn){
+      startBtn.addEventListener("click", function(){
+        setFB("Get ready…", true);
+        speak("Let's play.");
+        score = 0;
+        round = 0;
+        updateMeta();
+        startBtn.style.display = "none";
+        startGameRound();
       });
     }
 
-    newRound();
+    if(nextBtn){
+      nextBtn.addEventListener("click", function(){
+        if(round >= TOTAL_ROUNDS) finish();
+        else startGameRound();
+      });
+    }
+
+    updateMeta();
+    lockGrid(true);
   }
 
-  
   // Beginning Sound Match (emoji-based for now — swap to images later)
   // We keep it calm: 3 choices, simple words.
   var SOUND_BANK = {
@@ -914,51 +1036,136 @@ a{color:inherit}
     setStreak(0);
     setFeedback("", true);
 
-    setHeader("Beginning Sound Match", "Pick the picture that starts with the letter. 3 correct in a row earns a session star.");
+    setHeader("Beginning Sound Match", "Play 5 quick rounds. Pick the picture that starts with the letter.");
 
     var pool = currentLetters();
-    // Ensure we have sound items for chosen letters; fallback to Set 1 if needed.
+    var TOTAL_ROUNDS = 5;
+    var round = 0;
+    var score = 0;
+
     var usable = pool.filter(function(L){ return !!SOUND_BANK[L]; });
     if(!usable.length){ usable = ["A","S","T","P","I","N"]; }
 
     clearBody();
 
-    var promptRow = el("div", {
-      style:"display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;padding:12px;border-radius:18px;border:1px solid var(--stroke);background:rgba(255,255,255,.78);"
-    }, [
+    var frame = el("div", {style:
+      "border:1px solid var(--stroke);background:rgba(255,255,255,.86);border-radius:22px;box-shadow: var(--shadow2);padding:14px;display:grid;gap:12px;"
+    });
+
+    var topRow = el("div", {style:"display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap"}, [
       el("div", {}, [
-        el("div", {style:"font-weight:980;font-size:1.15rem;"}, ["Letter: ", "A"]),
-        el("div", {style:"margin-top:4px;color:var(--muted);font-weight:750;font-size:.92rem;"}, ["Which word starts with this letter?"])
+        el("div", {style:"font-weight:980;font-size:1.05rem;"}, ["Level: 5 rounds"]),
+        el("div", {id:"soundMeta", style:"margin-top:4px;color:var(--muted);font-weight:800;font-size:.92rem;"}, ["Round 0 / 5 • Score 0"])
       ]),
-      el("button", {class:"pill primary", type:"button", id:"newSoundRound"}, ["New round"])
+      el("div", {style:"display:flex;gap:8px;flex-wrap:wrap;align-items:center"}, [
+        el("button", {class:"pill", type:"button", id:"repeatSoundMini", title:"Repeat the instruction"}, ["🔁 Say again"]),
+        el("button", {class:"pill primary", type:"button", id:"startSoundGame"}, ["Start"])
+      ])
     ]);
 
-    var grid = el("div", {style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;"});
+    var dots = el("div", {style:"display:flex;gap:8px;align-items:center;justify-content:flex-start"}, []);
+    for(var i=0;i<TOTAL_ROUNDS;i++){
+      dots.appendChild(el("div", {class:"psDotSound", style:
+        "width:12px;height:12px;border-radius:999px;background:rgba(31,120,255,.10);border:1px solid rgba(31,120,255,.22);"
+      }));
+    }
 
-    function newRound(){
+    var promptCard = el("div", {style:
+      "border:1px solid rgba(31,120,255,.18);background:linear-gradient(180deg, rgba(31,120,255,.10), rgba(255,255,255,.76));border-radius:22px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;"
+    }, [
+      el("div", {}, [
+        el("div", {style:"font-weight:950;color:rgba(11,27,51,.78);"}, ["Letter"]),
+        el("div", {id:"soundPrompt", style:"margin-top:6px;font-weight:990;font-size:2.1rem;letter-spacing:.5px;"}, ["Tap Start"])
+      ]),
+      el("div", {style:"display:flex;gap:10px;align-items:center;flex-wrap:wrap"}, [
+        el("span", {class:"pill", style:"cursor:default"}, ["✅ Correct: ", el("span",{id:"soundScore"},["0"])]),
+        el("span", {class:"pill", style:"cursor:default"}, ["⏱️ Rounds: ", el("span",{id:"soundRound"},["0"]), "/", String(TOTAL_ROUNDS)])
+      ])
+    ]);
+
+    var grid = el("div", {id:"soundGrid", style:"display:grid;grid-template-columns: repeat(3, minmax(0,1fr));gap:10px;opacity:.55;pointer-events:none;"});
+
+    var feedbackPanel = el("div", {style:
+      "border-radius:18px;padding:12px;border:1px solid rgba(31,120,255,.18);background:rgba(255,255,255,.78);display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;"
+    }, [
+      el("div", {id:"soundFeedback", style:"font-weight:950;color:rgba(75,100,136,1);"}, ["Press Start to begin."]),
+      el("button", {class:"pill primary", type:"button", id:"soundNext", style:"display:none"}, ["Next"])
+    ]);
+
+    frame.appendChild(topRow);
+    frame.appendChild(dots);
+    frame.appendChild(promptCard);
+    frame.appendChild(grid);
+    frame.appendChild(feedbackPanel);
+
+    body.appendChild(frame);
+
+    var meta = document.getElementById("soundMeta");
+    var prompt = document.getElementById("soundPrompt");
+    var scoreEl = document.getElementById("soundScore");
+    var roundEl = document.getElementById("soundRound");
+    var fb = document.getElementById("soundFeedback");
+    var nextBtn = document.getElementById("soundNext");
+    var startBtn = document.getElementById("startSoundGame");
+    var repeatBtn = document.getElementById("repeatSoundMini");
+
+    function setDots(){
+      var all = frame.querySelectorAll(".psDotSound");
+      all.forEach(function(d, i){
+        if(i < round){
+          d.style.background = "linear-gradient(180deg, var(--blue), var(--blue2))";
+          d.style.borderColor = "rgba(31,120,255,.35)";
+        }else{
+          d.style.background = "rgba(31,120,255,.10)";
+          d.style.borderColor = "rgba(31,120,255,.22)";
+        }
+      });
+    }
+
+    function updateMeta(){
+      if(meta) meta.textContent = "Round " + round + " / " + TOTAL_ROUNDS + " • Score " + score;
+      if(scoreEl) scoreEl.textContent = String(score);
+      if(roundEl) roundEl.textContent = String(round);
+      setDots();
+    }
+
+    function lockGrid(locked){
+      var g = document.getElementById("soundGrid");
+      if(!g) return;
+      g.style.opacity = locked ? ".55" : "1";
+      g.style.pointerEvents = locked ? "none" : "auto";
+    }
+
+    function setFB(msg, good){
+      fb.textContent = msg;
+      fb.style.color = good ? "rgba(18,51,95,.92)" : "rgba(75,100,136,1)";
+    }
+
+    function showNext(show){
+      nextBtn.style.display = show ? "" : "none";
+    }
+
+    function buildRound(){
       var L = usable[Math.floor(Math.random()*usable.length)];
       var items = SOUND_BANK[L];
-      // Pick correct item from items
       var correct = items[Math.floor(Math.random()*items.length)];
 
-      // Create distractors from other letters
       var distractors = [];
       var otherLetters = Object.keys(SOUND_BANK).filter(function(x){ return x !== L; });
       while(distractors.length < 2){
         var dl = otherLetters[Math.floor(Math.random()*otherLetters.length)];
         var di = SOUND_BANK[dl][Math.floor(Math.random()*SOUND_BANK[dl].length)];
-        if(!distractors.some(d => d.w === di.w) && di.w !== correct.w) distractors.push(di);
+        if(!distractors.some(function(d){ return d.w === di.w; }) && di.w !== correct.w) distractors.push(di);
       }
 
       var options = [correct].concat(distractors);
-      // Shuffle
       for(var i=options.length-1;i>0;i--){
         var j = Math.floor(Math.random()*(i+1));
         var tmp = options[i]; options[i]=options[j]; options[j]=tmp;
       }
 
-      promptRow.querySelector("div div").textContent = "Letter: " + L;
-      var promptText = "Which word starts with " + L + "?";
+      prompt.textContent = L;
+      var promptText = "Find a word that starts with " + L;
       setPrompt(promptText);
       speak("Find a word that starts with " + L + ".");
 
@@ -967,30 +1174,24 @@ a{color:inherit}
         var b = el("button", {
           type:"button",
           class:"card",
-          style:"justify-content:center; padding:16px; text-align:center; min-height:96px; font-weight:980;"
+          style:"justify-content:center; padding:16px; text-align:center; min-height:110px; font-weight:990;"
         });
 
-        var emoji = el("div", {style:"font-size:2rem; line-height:1; margin-bottom:8px;"}, [opt.e]);
-        var word = el("div", {style:"font-size:1.05rem; text-transform:capitalize;"}, [opt.w]);
-        b.appendChild(emoji);
-        b.appendChild(word);
+        b.appendChild(el("div", {style:"font-size:2.1rem; line-height:1; margin-bottom:10px;"}, [opt.e]));
+        b.appendChild(el("div", {style:"font-size:1.05rem; text-transform:capitalize;"}, [opt.w]));
 
         b.addEventListener("click", function(){
           if(opt.w === correct.w){
             shimmer(b);
-            setFeedback("✅ Well done!", true);
+            score += 1;
+            setFB("✅ Correct! Nice listening.", true);
             speak("Well done.");
-            setStreak(streak + 1);
-            if(streak >= 3){
-              addSessionStar();
-              setStreak(0);
-            }
-            newRound();
+            lockGrid(true);
+            showNext(true);
           }else{
             shake(b);
-            setFeedback("Try again.", false);
+            setFB("Try again.", false);
             speak("Try again.");
-            setStreak(0);
           }
         });
 
@@ -998,23 +1199,54 @@ a{color:inherit}
       });
     }
 
-    body.appendChild(promptRow);
-    body.appendChild(grid);
+    function startGameRound(){
+      round += 1;
+      updateMeta();
+      lockGrid(false);
+      showNext(false);
+      setFB("Say the word out loud. Listen for the first sound.", true);
+      buildRound();
+    }
 
-    var nextBtn = document.getElementById("newSoundRound");
-    if(nextBtn){
-      nextBtn.addEventListener("click", function(){
-        setFeedback("", true);
-        setStreak(0);
-        newRound();
+    function finish(){
+      lockGrid(true);
+      showNext(false);
+      var msg = "Finished! You got " + score + " out of " + TOTAL_ROUNDS + ".";
+      setFB(msg, true);
+      speak("Great work. " + msg);
+      if(score >= 4){
+        addSessionStar();
+        if(score === 5) addSessionStar();
+      }
+      startBtn.textContent = "Play again";
+      startBtn.style.display = "";
+    }
+
+    if(repeatBtn){
+      repeatBtn.addEventListener("click", function(){ if(lastPrompt) speak(lastPrompt); });
+    }
+
+    if(startBtn){
+      startBtn.addEventListener("click", function(){
+        setFB("Get ready…", true);
+        speak("Let's play.");
+        score = 0;
+        round = 0;
+        updateMeta();
+        startBtn.style.display = "none";
+        startGameRound();
       });
     }
 
-    newRound();
+    if(nextBtn){
+      nextBtn.addEventListener("click", function(){
+        if(round >= TOTAL_ROUNDS) finish();
+        else startGameRound();
+      });
+    }
 
-    body.appendChild(el("div", {style:"color:var(--muted);font-weight:750;font-size:.92rem;"}, [
-      "Tip: Say the word out loud. Listen for the first sound."
-    ]));
+    updateMeta();
+    lockGrid(true);
   }
 
 
