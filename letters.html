@@ -1,0 +1,604 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Letters • Primary Steps</title>
+  <meta name="theme-color" content="#1f78ff">
+  <link rel="icon" type="image/png" href="assets/primary-steps-icon-512.png">
+  <style>
+    :root{
+      --bg:#f5fbff;
+      --panel:#ffffff;
+      --ink:#0b1b33;
+      --muted:#4b6488;
+      --blue:#1f78ff;
+      --blue2:#0f5fe6;
+      --stroke: rgba(31,120,255,.18);
+      --shadow: 0 18px 50px rgba(16, 60, 120, .14);
+      --shadow2: 0 10px 24px rgba(16,60,120,.10);
+      --radius: 18px;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      background:
+        radial-gradient(900px 500px at 18% 5%, rgba(31,120,255,.14), transparent 60%),
+        radial-gradient(900px 500px at 90% 0%, rgba(15,95,230,.10), transparent 55%),
+        var(--bg);
+      color:var(--ink);
+    }
+    a{color:inherit}
+    .wrap{max-width:1100px;margin:0 auto;padding:18px 16px 46px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:14px 14px;
+      background:rgba(255,255,255,.72);
+      border:1px solid var(--stroke);
+      border-radius: 22px;
+      box-shadow: var(--shadow2);
+      backdrop-filter: blur(10px);
+      position:sticky;top:10px;z-index:50;
+    }
+    .brand{display:flex;gap:12px;align-items:center}
+    .brand img{width:46px;height:46px;border-radius:14px;box-shadow:0 10px 18px rgba(31,120,255,.18)}
+    .brand .title{line-height:1.05}
+    .brand .title strong{display:block;font-size:15px;letter-spacing:.2px}
+    .brand .title span{display:block;color:var(--muted);font-size:12px}
+    .controls{display:flex;gap:10px;align-items:center}
+    .pill{
+      display:inline-flex;align-items:center;gap:10px;
+      padding:10px 12px;border-radius:999px;
+      border:1px solid var(--stroke);
+      background:rgba(255,255,255,.8);
+      box-shadow: 0 10px 18px rgba(16,60,120,.08);
+      color:var(--muted);
+      font-size:13px;
+    }
+    .pill select{
+      border:none;background:transparent;color:var(--ink);
+      font-weight:700;outline:none;cursor:pointer;
+      appearance:none;
+      padding-right:16px;
+    }
+    .btn{
+      border:none;cursor:pointer;
+      border-radius: 999px;
+      padding:10px 14px;
+      background:linear-gradient(180deg,var(--blue),var(--blue2));
+      color:white;
+      font-weight:800;
+      letter-spacing:.2px;
+      box-shadow: 0 14px 30px rgba(31,120,255,.25);
+      transition: transform .12s ease, filter .12s ease;
+      user-select:none;
+    }
+    .btn:active{transform: translateY(1px); filter: brightness(.98)}
+    .btn.ghost{
+      background: rgba(255,255,255,.85);
+      border:1px solid var(--stroke);
+      color:var(--ink);
+      box-shadow: 0 10px 18px rgba(16,60,120,.08);
+    }
+    .btn.small{padding:9px 12px;font-size:13px}
+    .hero{
+      margin-top:18px;
+      display:flex;
+      gap:16px;
+      align-items:flex-end;
+      justify-content:space-between;
+      flex-wrap:wrap;
+    }
+    .hero h1{margin:0;font-size:28px;letter-spacing:-.3px}
+    .hero p{margin:6px 0 0;color:var(--muted);max-width:58ch}
+    .grid{
+      margin-top:16px;
+      display:grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap:14px;
+    }
+    .card{
+      grid-column: span 6;
+      background:rgba(255,255,255,.92);
+      border:1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow2);
+      padding:14px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      min-height:102px;
+    }
+    .card .icon{
+      width:56px;height:56px;border-radius:16px;
+      display:grid;place-items:center;
+      background: radial-gradient(30px 30px at 30% 25%, rgba(255,255,255,.95), rgba(255,255,255,.6)),
+                  linear-gradient(180deg, rgba(31,120,255,.18), rgba(31,120,255,.06));
+      border:1px solid rgba(31,120,255,.22);
+      box-shadow: 0 16px 26px rgba(31,120,255,.10);
+      font-size:26px;font-weight:900;
+      color: var(--blue2);
+    }
+    .card .meta{flex:1;min-width:0}
+    .card h3{margin:0;font-size:16px;letter-spacing:-.2px}
+    .card p{margin:6px 0 0;color:var(--muted);font-size:13px;line-height:1.35}
+    .card .actions{display:flex;gap:10px;align-items:center}
+    .card .tag{
+      font-size:12px;font-weight:800;
+      color:rgba(15,95,230,.9);
+      background: rgba(31,120,255,.10);
+      border:1px solid rgba(31,120,255,.20);
+      padding:7px 10px;border-radius:999px;
+      white-space:nowrap;
+    }
+
+    /* game panel */
+    .panel{
+      margin-top:16px;
+      background:rgba(255,255,255,.94);
+      border:1px solid var(--stroke);
+      border-radius: 22px;
+      box-shadow: var(--shadow);
+      padding:14px;
+      display:none;
+    }
+    .panel.active{display:block}
+    .panelHeader{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+    .panelHeader .left{display:flex;align-items:center;gap:10px}
+    .panelHeader .badge{
+      font-weight:900;
+      background: rgba(31,120,255,.10);
+      border:1px solid rgba(31,120,255,.22);
+      padding:8px 12px;border-radius:999px;
+      color: var(--blue2);
+      font-size:13px;
+    }
+    .panelHeader h2{margin:0;font-size:18px;letter-spacing:-.2px}
+    .hint{margin:10px 0 0;color:var(--muted);font-size:13px}
+
+    .gameArea{margin-top:14px;padding:14px;border-radius:18px;border:1px dashed rgba(31,120,255,.25);background:rgba(245,251,255,.65)}
+    .prompt{
+      display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+    .prompt .big{
+      font-size:34px;
+      font-weight:1000;
+      letter-spacing:.5px;
+      padding:10px 14px;
+      border-radius:18px;
+      background:rgba(255,255,255,.88);
+      border:1px solid var(--stroke);
+      box-shadow: 0 10px 18px rgba(16,60,120,.08);
+      min-width:90px;
+      text-align:center;
+    }
+    .status{
+      font-weight:900;
+      color: var(--muted);
+      background: rgba(255,255,255,.8);
+      border:1px solid rgba(16,60,120,.10);
+      padding:10px 12px;border-radius:999px;
+      white-space:nowrap;
+      min-height:38px;
+    }
+    .answers{
+      display:grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap:12px;
+    }
+    .ansBtn{
+      cursor:pointer;
+      border:none;
+      border-radius:18px;
+      padding:16px 14px;
+      font-weight:1000;
+      font-size:22px;
+      background: rgba(255,255,255,.90);
+      border:1px solid var(--stroke);
+      box-shadow: 0 10px 18px rgba(16,60,120,.08);
+      transition: transform .12s ease, filter .12s ease, box-shadow .12s ease;
+      user-select:none;
+    }
+    .ansBtn:active{transform: translateY(1px); filter: brightness(.99)}
+    .ansBtn[disabled]{opacity:.55;cursor:not-allowed}
+    .ansBtn.good{outline: 3px solid rgba(22,163,74,.30)}
+    .ansBtn.bad{outline: 3px solid rgba(239,68,68,.28)}
+    .footerRow{
+      margin-top:12px;
+      display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;
+    }
+    .progress{
+      display:flex;gap:8px;align-items:center;color:var(--muted);font-weight:800;font-size:13px
+    }
+    .bar{
+      width:160px;max-width:48vw;height:10px;border-radius:999px;background:rgba(16,60,120,.10);overflow:hidden;border:1px solid rgba(16,60,120,.10)
+    }
+    .bar > i{display:block;height:100%;width:0%;background: linear-gradient(90deg,var(--blue),var(--blue2))}
+    .sr{position:absolute;left:-9999px}
+
+    @media (max-width: 820px){
+      .card{grid-column: span 12}
+      .answers{grid-template-columns: repeat(2, 1fr)}
+      .hero h1{font-size:24px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <div class="topbar">
+      <div class="brand">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo">
+        <div class="title">
+          <strong>Letters</strong>
+          <span>Simple, calm learning activities</span>
+        </div>
+      </div>
+      <div class="controls">
+        <div class="pill" title="Choose letter set">
+          <span style="font-weight:900;color:var(--blue2)">Set</span>
+          <select id="setSelect" aria-label="Letter set">
+            <option value="0">A–I</option>
+            <option value="1">J–R</option>
+            <option value="2">S–Z</option>
+          </select>
+        </div>
+        <button class="btn ghost small" id="soundBtn" aria-pressed="true" title="Toggle sound">Sound: On</button>
+        <a class="btn small ghost" href="index.html">Home</a>
+      </div>
+    </div>
+
+    <div class="hero">
+      <div>
+        <h1>Pick an activity</h1>
+        <p>Everything starts from a clean “Play” button — like the Numbers section. Tap Play, do the round, and it moves on automatically.</p>
+      </div>
+      <button class="btn small ghost" id="resetBtn" type="button">Reset</button>
+    </div>
+
+    <div id="menu" class="grid" aria-label="Letters activities">
+      <div class="card">
+        <div class="icon">🔎</div>
+        <div class="meta">
+          <h3>Find the Letter</h3>
+          <p>Tap the matching letter. Correct answers move to the next round automatically.</p>
+        </div>
+        <div class="actions">
+          <span class="tag">Best starter</span>
+          <button class="btn small" data-play="find">Play</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon">🔊</div>
+        <div class="meta">
+          <h3>Letter Sounds</h3>
+          <p>Hear the letter name. Great for confidence before phonics.</p>
+        </div>
+        <div class="actions">
+          <span class="tag">Quick</span>
+          <button class="btn small" data-play="sounds">Play</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon">🧩</div>
+        <div class="meta">
+          <h3>Upper / Lower Match</h3>
+          <p>Match capital and lowercase pairs (light memory & recognition).</p>
+        </div>
+        <div class="actions">
+          <span class="tag">Coming next</span>
+          <button class="btn small ghost" disabled>Play</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="icon">✍️</div>
+        <div class="meta">
+          <h3>Trace a Letter</h3>
+          <p>Simple tracing practice (we can make this premium next).</p>
+        </div>
+        <div class="actions">
+          <span class="tag">Coming next</span>
+          <button class="btn small ghost" disabled>Play</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- GAME PANEL -->
+    <section id="panel" class="panel" aria-live="polite">
+      <div class="panelHeader">
+        <div class="left">
+          <span class="badge" id="modeBadge">Activity</span>
+          <h2 id="modeTitle">—</h2>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center">
+          <button class="btn small ghost" id="backBtn" type="button">Back</button>
+        </div>
+      </div>
+      <div class="hint" id="modeHint"></div>
+
+      <div class="gameArea" id="gameArea">
+        <!-- Find the Letter -->
+        <div id="findGame" style="display:none">
+          <div class="prompt">
+            <div>
+              <div style="color:var(--muted);font-weight:900;font-size:13px;margin-bottom:6px">Find:</div>
+              <div class="big" id="targetLetter">A</div>
+            </div>
+            <div class="status" id="statusText">Tap the matching letter</div>
+          </div>
+
+          <div class="answers" id="answers"></div>
+
+          <div class="footerRow">
+            <div class="progress">
+              <span id="roundText">Round 1</span>
+              <span class="bar" aria-hidden="true"><i id="barFill"></i></span>
+              <span id="scoreText">Score 0</span>
+            </div>
+            <button class="btn small ghost" id="skipBtn" type="button">Skip</button>
+          </div>
+        </div>
+
+        <!-- Sounds -->
+        <div id="soundGame" style="display:none">
+          <div class="prompt">
+            <div class="big" id="soundLetter">A</div>
+            <div class="status" id="soundStatus">Press Play Sound</div>
+          </div>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <button class="btn" id="playSoundBtn" type="button">Play Sound</button>
+            <button class="btn ghost" id="nextSoundBtn" type="button">Next Letter</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script>
+    // ---------- helpers ----------
+    const $ = (sel) => document.querySelector(sel);
+
+    const LETTER_SETS = [
+      "ABCDEFGHI".split(""),
+      "JKLMNOPQR".split(""),
+      "STUVWXYZ".split("")
+    ];
+
+    let soundOn = true;
+
+    // Simple speech helper (works offline in Chrome; if blocked it just does nothing).
+    function speak(text){
+      if(!soundOn) return;
+      try{
+        window.speechSynthesis.cancel();
+        const u = new SpeechSynthesisUtterance(text);
+        u.rate = 0.92;
+        u.pitch = 1.0;
+        window.speechSynthesis.speak(u);
+      }catch(e){}
+    }
+
+    function shuffle(arr){
+      const a = arr.slice();
+      for(let i=a.length-1;i>0;i--){
+        const j = Math.floor(Math.random()*(i+1));
+        [a[i],a[j]] = [a[j],a[i]];
+      }
+      return a;
+    }
+
+    // ---------- navigation ----------
+    const panel = $("#panel");
+    const menu = $("#menu");
+    const modeBadge = $("#modeBadge");
+    const modeTitle = $("#modeTitle");
+    const modeHint = $("#modeHint");
+
+    function openPanel(mode){
+      menu.style.display = "none";
+      panel.classList.add("active");
+      if(mode === "find"){
+        modeBadge.textContent = "Find";
+        modeTitle.textContent = "Find the Letter";
+        modeHint.textContent = "Tap the correct letter. It will auto-advance when correct.";
+        $("#soundGame").style.display = "none";
+        $("#findGame").style.display = "block";
+        startFindGame();
+      }else if(mode === "sounds"){
+        modeBadge.textContent = "Sounds";
+        modeTitle.textContent = "Letter Sounds";
+        modeHint.textContent = "Press Play Sound, then go to the next letter.";
+        $("#findGame").style.display = "none";
+        $("#soundGame").style.display = "block";
+        startSoundGame();
+      }
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    function closePanel(){
+      panel.classList.remove("active");
+      menu.style.display = "";
+      $("#findGame").style.display = "none";
+      $("#soundGame").style.display = "none";
+      window.scrollTo({top:0, behavior:"smooth"});
+    }
+
+    // ---------- Find game ----------
+    let findState = {
+      setIndex: 0,
+      round: 0,
+      total: 10,
+      score: 0,
+      target: "A",
+      locked: false,
+      timeoutId: null
+    };
+
+    function currentSetLetters(){
+      const idx = parseInt($("#setSelect").value, 10) || 0;
+      return LETTER_SETS[Math.max(0, Math.min(2, idx))];
+    }
+
+    function buildRound(){
+      const set = currentSetLetters();
+      findState.target = set[Math.floor(Math.random()*set.length)];
+      $("#targetLetter").textContent = findState.target;
+
+      // Build options: 1 correct + 5 random (unique)
+      const pool = set.filter(l => l !== findState.target);
+      const options = [findState.target, ...shuffle(pool).slice(0,5)];
+      const final = shuffle(options);
+
+      const wrap = $("#answers");
+      wrap.innerHTML = "";
+      $("#statusText").textContent = "Tap the matching letter";
+
+      final.forEach(letter => {
+        const b = document.createElement("button");
+        b.className = "ansBtn";
+        b.type = "button";
+        b.textContent = letter;
+        b.addEventListener("click", () => onAnswer(letter, b));
+        wrap.appendChild(b);
+      });
+
+      updateFindUI();
+    }
+
+    function lockAnswers(val){
+      findState.locked = val;
+      document.querySelectorAll("#answers .ansBtn").forEach(b => b.disabled = val);
+    }
+
+    function updateFindUI(){
+      $("#roundText").textContent = `Round ${findState.round + 1} / ${findState.total}`;
+      $("#scoreText").textContent = `Score ${findState.score}`;
+      const pct = Math.round(((findState.round) / findState.total) * 100);
+      $("#barFill").style.width = `${pct}%`;
+    }
+
+    function onAnswer(letter, btn){
+      if(findState.locked) return;
+
+      if(letter === findState.target){
+        lockAnswers(true);
+        btn.classList.add("good");
+        $("#statusText").textContent = "✅ Nice! Next…";
+        speak("Well done");
+
+        // Advance
+        clearTimeout(findState.timeoutId);
+        findState.timeoutId = setTimeout(() => {
+          findState.score += 1;
+          findState.round += 1;
+
+          if(findState.round >= findState.total){
+            $("#statusText").textContent = "🎉 Finished! Press Back to choose another activity.";
+            speak("Finished");
+            updateFindUI();
+            // Fill bar to 100
+            $("#barFill").style.width = "100%";
+            return;
+          }
+
+          lockAnswers(false);
+          buildRound();
+        }, 450);
+      }else{
+        btn.classList.add("bad");
+        $("#statusText").textContent = "Try again";
+        speak("Try again");
+        setTimeout(() => btn.classList.remove("bad"), 380);
+      }
+    }
+
+    function startFindGame(){
+      clearTimeout(findState.timeoutId);
+      findState.round = 0;
+      findState.score = 0;
+      lockAnswers(false);
+      buildRound();
+      speak("Find the letter");
+    }
+
+    // ---------- Sounds game ----------
+    let soundIndex = 0;
+
+    function startSoundGame(){
+      soundIndex = 0;
+      renderSoundLetter();
+      speak("Letter sounds");
+    }
+
+    function renderSoundLetter(){
+      const set = currentSetLetters();
+      const letter = set[soundIndex % set.length];
+      $("#soundLetter").textContent = letter;
+      $("#soundStatus").textContent = "Press Play Sound";
+    }
+
+    // ---------- wiring ----------
+    document.querySelectorAll("[data-play]").forEach(btn=>{
+      btn.addEventListener("click", () => openPanel(btn.dataset.play));
+    });
+
+    $("#backBtn").addEventListener("click", closePanel);
+
+    $("#soundBtn").addEventListener("click", () => {
+      soundOn = !soundOn;
+      $("#soundBtn").textContent = soundOn ? "Sound: On" : "Sound: Off";
+      $("#soundBtn").setAttribute("aria-pressed", String(soundOn));
+      if(soundOn) speak("Sound on");
+    });
+
+    $("#setSelect").addEventListener("change", () => {
+      // If in a game, rebuild current mode safely.
+      if(panel.classList.contains("active")){
+        if($("#findGame").style.display !== "none") startFindGame();
+        if($("#soundGame").style.display !== "none") startSoundGame();
+      }
+    });
+
+    $("#skipBtn").addEventListener("click", () => {
+      if(findState.locked) return;
+      findState.round += 1;
+      if(findState.round >= findState.total){
+        $("#statusText").textContent = "🎉 Finished! Press Back to choose another activity.";
+        $("#barFill").style.width = "100%";
+        speak("Finished");
+        updateFindUI();
+        lockAnswers(true);
+        return;
+      }
+      buildRound();
+    });
+
+    $("#resetBtn").addEventListener("click", () => {
+      closePanel();
+      soundIndex = 0;
+      speak("Reset");
+    });
+
+    $("#playSoundBtn").addEventListener("click", () => {
+      const letter = $("#soundLetter").textContent.trim() || "A";
+      speak(letter);
+      $("#soundStatus").textContent = "✅ Played";
+    });
+
+    $("#nextSoundBtn").addEventListener("click", () => {
+      soundIndex += 1;
+      renderSoundLetter();
+    });
+
+    // Safety: remove any accidental click-blocking overlays
+    document.addEventListener("DOMContentLoaded", () => {
+      document.body.style.pointerEvents = "auto";
+    });
+  </script>
+</body>
+</html>
