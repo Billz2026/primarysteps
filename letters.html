@@ -337,6 +337,7 @@ a{color:inherit}
   .hubGrid{ grid-template-columns: repeat(4, minmax(0, 1fr)); }
 }
 .hubTile{
+  cursor: pointer;
   text-align:left;
   min-height: 122px;
   padding: 14px;
@@ -711,7 +712,7 @@ a{color:inherit}
     </div>
 
     <div class="hubGrid">
-      <button class="hubTile" id="launchFind" type="button" aria-controls="playArea">
+      <button class="hubTile" id="launchFind" type="button" aria-controls="playArea" onclick="window.psGoActivity && window.psGoActivity('find')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🔎</div>
           <span class="chip reco" id="recoFind" style="display:none">Recommended</span>
@@ -726,7 +727,7 @@ a{color:inherit}
         </div>
       </button>
 
-      <button class="hubTile" id="launchMatch" type="button" aria-controls="playArea">
+      <button class="hubTile" id="launchMatch" type="button" aria-controls="playArea" onclick="window.psGoActivity && window.psGoActivity('match')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🔤</div>
           <span class="chip reco" id="recoMatch" style="display:none">Recommended</span>
@@ -741,7 +742,7 @@ a{color:inherit}
         </div>
       </button>
 
-      <button class="hubTile" id="launchSoundMatch" type="button" aria-controls="playArea">
+      <button class="hubTile" id="launchSoundMatch" type="button" aria-controls="playArea" onclick="window.psGoActivity && window.psGoActivity('sound')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🧠</div>
           <span class="chip reco" id="recoSound" style="display:none">Recommended</span>
@@ -756,7 +757,7 @@ a{color:inherit}
         </div>
       </button>
 
-      <button class="hubTile" id="launchSoundTap" type="button" aria-controls="playArea">
+      <button class="hubTile" id="launchSoundTap" type="button" aria-controls="playArea" onclick="window.psGoActivity && window.psGoActivity('tap')" >
         <div class="row">
           <div class="hubIcon" aria-hidden="true">🔊</div>
           <span class="chip reco" id="recoTap" style="display:none">Recommended</span>
@@ -2247,6 +2248,8 @@ function restartActivity(){
     var pa = document.getElementById("playArea");
     if(pa) pa.scrollIntoView({behavior:"smooth", block:"start"});
   }
+  window.psGoActivity = goActivity;
+
 
   function refreshHub(){
     var rec = recommendedForLevel();
