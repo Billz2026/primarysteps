@@ -1,33 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <title>Handwriting • Primary Steps</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#0b0d12">
-  <link rel="icon" type="image/png" href="assets/primary-steps-icon-512.png">
+  <title>Handwriting Practice</title>
   <style>
-    :root{
-      --bg:#0b0d12;
-      --panel:#121621;
-      --panel2:#0f1320;
-      --text:#eef2ff;
-      --muted:#a9b2c7;
-      --brand:#7dd3fc;
-      --brand2:#a78bfa;
-      --primary: #7dd3fc;
-      --primary2:#a78bfa;
-      --ok:#34d399;
-      --bad:#fb7185;
-      --ring:rgba(125,211,252,.30);
-      --shadow: 0 12px 40px rgba(0,0,0,.35);
-      --shadow2: 0 8px 18px rgba(0,0,0,.25);
-      --radius:18px;
-      --glass: rgba(18,22,33,.75);
-      --border: rgba(255,255,255,.09);
-    }
-
-    /* General Styling */
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
@@ -44,6 +21,7 @@
       box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
       margin-top: 20px;
       display: inline-block;
+      width: 80%;
     }
     .word-input {
       margin-top: 20px;
@@ -57,7 +35,7 @@
       font-size: 20px;
       color: #2a9d8f;
     }
-    .reset-btn {
+    .reset-btn, .next-btn {
       margin-top: 20px;
       padding: 10px 20px;
       background-color: #2a9d8f;
@@ -65,42 +43,66 @@
       border: none;
       border-radius: 5px;
       cursor: pointer;
+      font-size: 18px;
     }
-    .reset-btn:hover {
+    .reset-btn:hover, .next-btn:hover {
       background-color: #264653;
+    }
+    .next-btn {
+      background-color: #4CAF50;
+    }
+    .next-btn:hover {
+      background-color: #45a049;
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>✍️ Handwriting</h1>
-    <p>Trace letters and simple words — short, calm practice sessions.</p>
-  </header>
 
-  <main class="container">
-    <section class="panel">
-      <h2>Word Tracing with Feedback</h2>
-      <p>Enter a word to practice handwriting:</p>
-      <input type="text" id="word-input" class="word-input" placeholder="Type a word" oninput="checkWord()" />
-      <div id="feedback" class="feedback"></div>
-      <button class="reset-btn" onclick="resetInput()">Try Another Word</button>
-    </section>
-  </main>
+  <h1>Handwriting Practice</h1>
+  <div class="container">
+    <h3>Trace the word below:</h3>
+    <p id="word-to-trace">Loading...</p>
+    <input type="text" id="word-input" class="word-input" placeholder="Type a word" oninput="checkWord()" />
+    <div id="feedback" class="feedback"></div>
+    <button class="reset-btn" onclick="resetInput()">Reset</button>
+    <button class="next-btn" onclick="nextWord()">Next Word</button>
+  </div>
 
   <script>
-    const validWords = ['cat', 'dog', 'sun', 'ball', 'tree'];  // Example of valid words to trace
+    // List of 50 words to practice
+    const wordsList = [
+      "apple", "ball", "cat", "dog", "elephant", "fish", "grape", "hat", "ice", "jug",
+      "kite", "lion", "moon", "nest", "orange", "pen", "queen", "rose", "sun", "tree",
+      "umbrella", "van", "water", "xylophone", "yellow", "zebra", "ant", "bear", "cup", "duck",
+      "egg", "flower", "goat", "house", "island", "jellyfish", "key", "leaf", "mouse", "night",
+      "open", "penguin", "quiet", "river", "star", "tiger", "unicorn", "vulture", "whale", "yarn"
+    ];
+
+    let currentWordIndex = 0;
+
+    function nextWord() {
+      if (currentWordIndex >= wordsList.length) {
+        currentWordIndex = 0; // Restart when all words are done
+      }
+
+      const word = wordsList[currentWordIndex];
+      document.getElementById('word-to-trace').textContent = word;
+      document.getElementById('word-input').value = "";
+      document.getElementById('feedback').textContent = "";
+    }
 
     function checkWord() {
       const input = document.getElementById('word-input').value.trim().toLowerCase();
-      const feedback = document.getElementById('feedback');
-      if (validWords.includes(input)) {
-        feedback.textContent = "Well done! You traced the word correctly!";
-        feedback.style.color = "#2a9d8f";  // Green color for positive feedback
+      const word = wordsList[currentWordIndex];
+
+      if (input === word) {
+        document.getElementById('feedback').textContent = "Great job! You traced the word correctly!";
+        document.getElementById('feedback').style.color = "#2a9d8f"; // Green color for positive feedback
       } else if (input.length > 0) {
-        feedback.textContent = "Oops! That word isn't correct. Try again!";
-        feedback.style.color = "#e76f51";  // Red color for incorrect feedback
+        document.getElementById('feedback').textContent = "Oops! That word isn't correct. Try again!";
+        document.getElementById('feedback').style.color = "#e76f51"; // Red color for incorrect feedback
       } else {
-        feedback.textContent = "";
+        document.getElementById('feedback').textContent = "";
       }
     }
 
@@ -108,8 +110,10 @@
       document.getElementById('word-input').value = "";
       document.getElementById('feedback').textContent = "";
     }
+
+    // Initialize with the first word
+    nextWord();
   </script>
 
-  <footer>© 2025 Primary Steps</footer>
 </body>
 </html>
