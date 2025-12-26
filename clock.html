@@ -1,0 +1,165 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Time: Analog & Digital Clock</title>
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --panel: #121621;
+      --text: #eef2ff;
+      --muted: #a9b2c7;
+      --primary: #7dd3fc;
+      --primary2: #a78bfa;
+      --ok: #34d399;
+      --border: rgba(255, 255, 255, .1);
+      --shadow: 0 12px 40px rgba(0, 0, 0, .35);
+      --radius: 18px;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: var(--text);
+      font-size: 32px;
+    }
+
+    .clock-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 20px 0;
+    }
+
+    /* Analog clock styles */
+    .analog-clock {
+      width: 200px;
+      height: 200px;
+      border: 5px solid var(--border);
+      border-radius: 50%;
+      position: relative;
+      margin-right: 20px;
+      background-color: var(--panel2);
+    }
+
+    .analog-clock .hand {
+      position: absolute;
+      background-color: var(--text);
+      top: 50%;
+      left: 50%;
+      transform-origin: 50% 100%;
+      transition: transform 0.5s ease;
+    }
+
+    .analog-clock .hour-hand {
+      width: 6px;
+      height: 50px;
+    }
+
+    .analog-clock .minute-hand {
+      width: 4px;
+      height: 70px;
+    }
+
+    .analog-clock .second-hand {
+      width: 2px;
+      height: 80px;
+      background-color: var(--ok);  /* Secondary color for second hand */
+    }
+
+    /* Digital clock styles */
+    .digital-clock {
+      font-size: 48px;
+      font-weight: bold;
+      margin-left: 20px;
+      color: var(--text);
+    }
+
+    /* Button styles (pill design, theme consistency) */
+    .button-container {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .button {
+      padding: 12px 25px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: var(--primary2);
+    }
+
+    /* Feedback text */
+    .feedback {
+      margin-top: 20px;
+      font-size: 18px;
+      color: var(--ok);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Learning Time: Analog & Digital Clock</h1>
+
+  <div class="clock-container">
+    <!-- Analog Clock -->
+    <div class="analog-clock">
+      <div class="hand hour-hand" id="hour-hand"></div>
+      <div class="hand minute-hand" id="minute-hand"></div>
+      <div class="hand second-hand" id="second-hand"></div>
+    </div>
+
+    <!-- Digital Clock -->
+    <div class="digital-clock" id="digital-time">12:00</div>
+  </div>
+
+  <div class="button-container">
+    <button class="button" onclick="generateRandomTime()">Generate Random Time</button>
+  </div>
+  
+  <div class="feedback" id="feedback"></div>
+
+  <script>
+    function generateRandomTime() {
+      const hours = Math.floor(Math.random() * 12) + 1;
+      const minutes = Math.floor(Math.random() * 60);
+      const timeString = `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+
+      // Update digital clock display
+      document.getElementById('digital-time').textContent = timeString;
+
+      // Calculate degrees for analog clock hands
+      const hourDeg = (hours % 12) * 30 + (minutes / 60) * 30; // 30 degrees per hour
+      const minuteDeg = minutes * 6; // 6 degrees per minute
+      const secondDeg = 0; // (Optional) Can add a second hand if needed
+
+      // Update the analog clock hands
+      document.getElementById('hour-hand').style.transform = `rotate(${hourDeg}deg)`;
+      document.getElementById('minute-hand').style.transform = `rotate(${minuteDeg}deg)`;
+      document.getElementById('second-hand').style.transform = `rotate(${secondDeg}deg)`;
+
+      // Provide feedback about the generated time
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = `Match the time: ${timeString}`;
+    }
+  </script>
+
+</body>
+</html>
