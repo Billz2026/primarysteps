@@ -3,11 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Learning Clock</title>
+  <title>Learning Time: Analog & Digital Clock</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       background-color: #f4f4f4;
+      color: #333;
       text-align: center;
       padding: 20px;
     }
@@ -92,11 +93,11 @@
     <div class="digital-clock" id="digital-time">12:00</div>
   </div>
 
-  <button class="button" onclick="setRandomTime()">Generate Random Time</button>
+  <button class="button" onclick="generateRandomTime()">Generate Random Time</button>
   <div class="feedback" id="feedback"></div>
 
   <script>
-    function setRandomTime() {
+    function generateRandomTime() {
       const hours = Math.floor(Math.random() * 12) + 1;
       const minutes = Math.floor(Math.random() * 60);
       const timeString = `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
@@ -119,5 +120,6 @@
       feedback.textContent = `Match the time: ${timeString}`;
     }
   </script>
+
 </body>
 </html>
