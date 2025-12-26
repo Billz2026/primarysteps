@@ -7,18 +7,19 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
+      background-color: var(--bg); /* Using website theme background color */
+      color: var(--text); /* Text color from website theme */
       text-align: center;
       padding: 20px;
     }
     h1 {
-      color: #333;
+      color: var(--text);
     }
     .container {
-      background-color: #fff;
+      background-color: var(--panel); /* Background color from website theme */
       padding: 30px;
       border-radius: 10px;
-      box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+      box-shadow: var(--shadow); /* Shadow from website theme */
       margin-top: 20px;
       display: inline-block;
       width: 80%;
@@ -29,16 +30,19 @@
       padding: 10px;
       width: 300px;
       text-align: center;
+      background-color: var(--panel2); /* Matching the website's panel color */
+      border: 1px solid var(--border); /* Border style */
+      color: var(--text);
     }
     .feedback {
       margin-top: 20px;
       font-size: 20px;
-      color: #2a9d8f;
+      color: var(--ok); /* Using the 'ok' feedback color from the website theme */
     }
     .reset-btn, .next-btn {
       margin-top: 20px;
       padding: 10px 20px;
-      background-color: #2a9d8f;
+      background-color: var(--primary); /* Primary color from website */
       color: white;
       border: none;
       border-radius: 5px;
@@ -46,13 +50,13 @@
       font-size: 18px;
     }
     .reset-btn:hover, .next-btn:hover {
-      background-color: #264653;
+      background-color: var(--primary2); /* Hover effect with secondary primary color */
     }
     .next-btn {
-      background-color: #4CAF50;
+      background-color: var(--ok); /* Green color for the Next Word button */
     }
     .next-btn:hover {
-      background-color: #45a049;
+      background-color: var(--ok);
     }
   </style>
 </head>
@@ -89,11 +93,12 @@
       document.getElementById('word-to-trace').textContent = word;
       document.getElementById('word-input').value = "";
       document.getElementById('feedback').textContent = "";
+      currentWordIndex++;
     }
 
     function checkWord() {
       const input = document.getElementById('word-input').value.trim().toLowerCase();
-      const word = wordsList[currentWordIndex];
+      const word = wordsList[currentWordIndex - 1];  // Using the current word in the list
 
       if (input === word) {
         document.getElementById('feedback').textContent = "Great job! You traced the word correctly!";
