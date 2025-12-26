@@ -1,0 +1,224 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Interactive Clock Activity</title>
+  <style>
+    :root {
+      --bg: #0b0d12;
+      --panel: #121621;
+      --text: #eef2ff;
+      --muted: #a9b2c7;
+      --primary: #7dd3fc;
+      --primary2: #a78bfa;
+      --ok: #34d399;
+      --border: rgba(255, 255, 255, .1);
+      --shadow: 0 12px 40px rgba(0, 0, 0, .35);
+      --radius: 18px;
+    }
+
+    body {
+      font-family: Arial, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      color: var(--text);
+      font-size: 32px;
+    }
+
+    .clock-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 20px 0;
+    }
+
+    /* Analog clock styles */
+    .analog-clock {
+      width: 200px;
+      height: 200px;
+      border: 5px solid var(--border);
+      border-radius: 50%;
+      position: relative;
+      margin-right: 20px;
+      background-color: var(--panel2);
+    }
+
+    .analog-clock .hand {
+      position: absolute;
+      background-color: var(--text);
+      top: 50%;
+      left: 50%;
+      transform-origin: 50% 100%;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+
+    .analog-clock .hour-hand {
+      width: 6px;
+      height: 50px;
+    }
+
+    .analog-clock .minute-hand {
+      width: 4px;
+      height: 70px;
+    }
+
+    .analog-clock .second-hand {
+      width: 2px;
+      height: 80px;
+      background-color: var(--ok);
+    }
+
+    /* Digital clock styles */
+    .digital-clock {
+      font-size: 48px;
+      font-weight: bold;
+      margin-left: 20px;
+      color: var(--text);
+    }
+
+    /* Button styles (pill design, theme consistency) */
+    .button-container {
+      margin-top: 30px;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+
+    .button {
+      padding: 12px 25px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: background-color 0.3s;
+    }
+
+    .button:hover {
+      background-color: var(--primary2);
+    }
+
+    /* Feedback text */
+    .feedback {
+      margin-top: 20px;
+      font-size: 18px;
+      color: var(--ok);
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Interactive Clock Activity</h1>
+
+  <div class="clock-container">
+    <!-- Analog Clock -->
+    <div class="analog-clock">
+      <div class="hand hour-hand" id="hour-hand" onmousedown="startDrag(event, 'hour')"></div>
+      <div class="hand minute-hand" id="minute-hand" onmousedown="startDrag(event, 'minute')"></div>
+      <div class="hand second-hand" id="second-hand" onmousedown="startDrag(event, 'second')"></div>
+    </div>
+
+    <!-- Digital Clock -->
+    <div class="digital-clock" id="digital-time">12:00</div>
+  </div>
+
+  <div class="button-container">
+    <button class="button" onclick="generateRandomTime()">Generate Random Time</button>
+    <button class="button" onclick="checkTime()">Check Time</button>
+  </div>
+
+  <div class="feedback" id="feedback"></div>
+
+  <script>
+    let randomHour = 12;
+    let randomMinute = 0;
+    let randomSecond = 0;
+    let dragging = false;
+    let dragType = "";
+    let offsetX, offsetY;
+
+    function generateRandomTime() {
+      randomHour = Math.floor(Math.random() * 12) + 1;
+      randomMinute = Math.floor(Math.random() * 60);
+      randomSecond = Math.floor(Math.random() * 60);
+
+      // Update digital clock display
+      const timeString = `${randomHour}:${randomMinute < 10 ? '0' + randomMinute : randomMinute}`;
+      document.getElementById('digital-time').textContent = timeString;
+
+      // Calculate degrees for analog clock hands
+      const hourDeg = (randomHour % 12) * 30 + (randomMinute / 60) * 30;
+      const minuteDeg = randomMinute * 6;
+      const secondDeg = randomSecond * 6;
+
+      // Update the analog clock hands
+      document.getElementById('hour-hand').style.transform = `rotate(${hourDeg}deg)`;
+      document.getElementById('minute-hand').style.transform = `rotate(${minuteDeg}deg)`;
+      document.getElementById('second-hand').style.transform = `rotate(${secondDeg}deg)`;
+
+      // Provide feedback about the generated time
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = `Match the time: ${timeString}`;
+    }
+
+    function startDrag(event, type) {
+      dragging = true;
+      dragType = type;
+      offsetX = event.offsetX;
+      offsetY = event.offsetY;
+      document.addEventListener('mousemove', dragClockHand);
+      document.addEventListener('mouseup', stopDrag);
+    }
+
+    function dragClockHand(event) {
+      if (!dragging) return;
+
+      const x = event.offsetX - offsetX;
+      const y = event.offsetY - offsetY;
+      let angle = Math.atan2(y, x) * (180 / Math.PI);
+      
+      if (dragType === 'hour') {
+        angle = Math.round(angle / 30) * 30; // Round to nearest hour
+        document.getElementById('hour-hand').style.transform = `rotate(${angle}deg)`;
+      } else if (dragType === 'minute') {
+        angle = Math.round(angle / 6) * 6; // Round to nearest minute
+        document.getElementById('minute-hand').style.transform = `rotate(${angle}deg)`;
+      } else if (dragType === 'second') {
+        angle = Math.round(angle / 6) * 6; // Round to nearest second
+        document.getElementById('second-hand').style.transform = `rotate(${angle}deg)`;
+      }
+    }
+
+    function stopDrag() {
+      dragging = false;
+      document.removeEventListener('mousemove', dragClockHand);
+      document.removeEventListener('mouseup', stopDrag);
+    }
+
+    function checkTime() {
+      const feedback = document.getElementById('feedback');
+      const hourDeg = parseFloat(document.getElementById('hour-hand').style.transform.replace('rotate(', '').replace('deg)', '')) || 0;
+      const minuteDeg = parseFloat(document.getElementById('minute-hand').style.transform.replace('rotate(', '').replace('deg)', '')) || 0;
+
+      const hour = (hourDeg / 30) % 12;
+      const minute = minuteDeg / 6;
+
+      if (Math.abs(hour - randomHour) < 1 && Math.abs(minute - randomMinute) < 1) {
+        feedback.textContent = 'You matched the time correctly!';
+      } else {
+        feedback.textContent = 'Time mismatch, keep trying!';
+      }
+    }
+  </script>
+
+</body>
+</html>
