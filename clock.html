@@ -24,7 +24,7 @@
     .analog-clock {
       width: 200px;
       height: 200px;
-      border: 5px solid var(--border); /* Use theme border color */
+      border: 5px solid var(--border); /* Border from website theme */
       border-radius: 50%;
       position: relative;
       margin-right: 20px;
@@ -96,7 +96,6 @@
 
   <script>
     function generateRandomTime() {
-      // Generate random hours and minutes
       const hours = Math.floor(Math.random() * 12) + 1;
       const minutes = Math.floor(Math.random() * 60);
       const timeString = `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
