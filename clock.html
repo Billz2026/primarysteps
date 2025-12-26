@@ -7,13 +7,13 @@
   <style>
     body {
       font-family: Arial, sans-serif;
-      background-color: #f4f4f4;
-      color: #333;
+      background-color: var(--bg); /* Using website theme background color */
+      color: var(--text); /* Text color from website theme */
       text-align: center;
       padding: 20px;
     }
     h1 {
-      color: #333;
+      color: var(--text);
     }
     .clock-container {
       display: flex;
@@ -24,14 +24,15 @@
     .analog-clock {
       width: 200px;
       height: 200px;
-      border: 5px solid #333;
+      border: 5px solid var(--border); /* Use theme border color */
       border-radius: 50%;
       position: relative;
       margin-right: 20px;
+      background-color: var(--panel2); /* Matching the website's theme */
     }
     .analog-clock .hand {
       position: absolute;
-      background-color: #333;
+      background-color: var(--text); /* Using text color for clock hands */
       top: 50%;
       left: 50%;
       transform-origin: 50% 100%;
@@ -40,27 +41,24 @@
     .analog-clock .hour-hand {
       width: 6px;
       height: 50px;
-      transform: rotate(0deg);
     }
     .analog-clock .minute-hand {
       width: 4px;
       height: 70px;
-      transform: rotate(0deg);
     }
     .analog-clock .second-hand {
       width: 2px;
       height: 80px;
-      transform: rotate(0deg);
     }
     .digital-clock {
       font-size: 48px;
       font-weight: bold;
       margin-left: 20px;
-      color: #333;
+      color: var(--text);
     }
     .button {
       padding: 10px 20px;
-      background-color: #4CAF50;
+      background-color: var(--primary); /* Primary color for the button */
       color: white;
       border: none;
       border-radius: 5px;
@@ -69,12 +67,12 @@
       margin-top: 20px;
     }
     .button:hover {
-      background-color: #45a049;
+      background-color: var(--primary2); /* Hover effect for the button */
     }
     .feedback {
       margin-top: 20px;
       font-size: 18px;
-      color: #2a9d8f;
+      color: var(--ok);
     }
   </style>
 </head>
@@ -98,24 +96,25 @@
 
   <script>
     function generateRandomTime() {
+      // Generate random hours and minutes
       const hours = Math.floor(Math.random() * 12) + 1;
       const minutes = Math.floor(Math.random() * 60);
       const timeString = `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
 
-      // Update digital clock
+      // Update digital clock display
       document.getElementById('digital-time').textContent = timeString;
 
       // Calculate degrees for analog clock hands
-      const hourDeg = (hours % 12) * 30 + (minutes / 60) * 30;
-      const minuteDeg = minutes * 6;
-      const secondDeg = 0; // You can add a second hand if you wish
+      const hourDeg = (hours % 12) * 30 + (minutes / 60) * 30; // 30 degrees per hour
+      const minuteDeg = minutes * 6; // 6 degrees per minute
+      const secondDeg = 0; // (Optional) Can add a second hand if needed
 
-      // Update analog clock hands
+      // Update the analog clock hands
       document.getElementById('hour-hand').style.transform = `rotate(${hourDeg}deg)`;
       document.getElementById('minute-hand').style.transform = `rotate(${minuteDeg}deg)`;
       document.getElementById('second-hand').style.transform = `rotate(${secondDeg}deg)`;
 
-      // Provide feedback
+      // Provide feedback about the generated time
       const feedback = document.getElementById('feedback');
       feedback.textContent = `Match the time: ${timeString}`;
     }
