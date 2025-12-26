@@ -1,186 +1,123 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Clock – Primary Steps</title>
-
-<style>
-:root{
-  --bg:#0b0d12;
-  --panel:#121621;
-  --panel2:#0f1320;
-  --text:#eef2ff;
-  --muted:#a9b2c7;
-  --brand:#7dd3fc;
-  --border:rgba(255,255,255,.1);
-  --radius:18px;
-  --shadow:0 12px 40px rgba(0,0,0,.35);
-}
-
-/* Base */
-*{box-sizing:border-box}
-html,body{margin:0;height:100%}
-body{
-  font-family: system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-  background:
-    radial-gradient(900px 500px at 20% 0%, rgba(125,211,252,.18), transparent 60%),
-    radial-gradient(900px 500px at 85% 20%, rgba(167,139,250,.18), transparent 60%),
-    var(--bg);
-  color:var(--text);
-}
-
-/* Header */
-header{
-  position:sticky;
-  top:0;
-  z-index:10;
-  backdrop-filter: blur(12px);
-  background: rgba(18,22,33,.75);
-  border-bottom:1px solid var(--border);
-}
-.topbar{
-  max-width:1150px;
-  margin:auto;
-  padding:12px 18px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-}
-.brand{
-  display:flex;
-  align-items:center;
-  gap:12px;
-  text-decoration:none;
-  color:var(--text);
-}
-.brand img{
-  height:52px;
-  width:auto;
-  filter:drop-shadow(0 10px 25px rgba(125,211,252,.25));
-}
-.brand span{
-  font-weight:750;
-  font-size:14px;
-  letter-spacing:.04em;
-}
-
-/* Pills */
-.nav{
-  display:flex;
-  gap:10px;
-}
-.pill{
-  text-decoration:none;
-  color:var(--text);
-  padding:9px 14px;
-  border-radius:999px;
-  background:rgba(15,19,32,.7);
-  border:1px solid var(--border);
-  font-size:13px;
-  font-weight:600;
-  transition:.2s ease;
-}
-.pill:hover{
-  transform:translateY(-1px);
-  border-color:rgba(125,211,252,.35);
-}
-
-/* Layout */
-.container{
-  max-width:1150px;
-  margin:auto;
-  padding:28px 18px 60px;
-}
-.hero{
-  margin-bottom:18px;
-}
-.hero h1{
-  margin:0 0 6px;
-  font-size:clamp(22px,3vw,30px);
-}
-.hero p{
-  margin:0;
-  color:var(--muted);
-  font-size:14px;
-}
-
-/* Panel */
-.panel{
-  background:linear-gradient(180deg, rgba(18,22,33,.95), rgba(11,13,18,.85));
-  border:1px solid var(--border);
-  border-radius:var(--radius);
-  box-shadow:var(--shadow);
-  padding:24px;
-}
-
-/* Clock */
-.clock-wrap{
-  display:grid;
-  place-items:center;
-  padding:30px;
-}
-.clock{
-  width:260px;
-  height:260px;
-  border-radius:50%;
-  border:6px solid var(--brand);
-  position:relative;
-}
-.hand{
-  position:absolute;
-  left:50%;
-  bottom:50%;
-  transform-origin:bottom;
-  transform:translateX(-50%);
-  background:var(--text);
-}
-.hour{height:60px;width:6px}
-.minute{height:90px;width:4px}
-.center{
-  width:12px;height:12px;
-  background:var(--brand);
-  border-radius:50%;
-  position:absolute;
-  top:50%;left:50%;
-  transform:translate(-50%,-50%);
-}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Learning Clock</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      text-align: center;
+      padding: 20px;
+    }
+    h1 {
+      color: #333;
+    }
+    .clock-container {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      margin: 20px 0;
+    }
+    .analog-clock {
+      width: 200px;
+      height: 200px;
+      border: 5px solid #333;
+      border-radius: 50%;
+      position: relative;
+      margin-right: 20px;
+    }
+    .analog-clock .hand {
+      position: absolute;
+      background-color: #333;
+      top: 50%;
+      left: 50%;
+      transform-origin: 50% 100%;
+      transition: transform 0.5s ease;
+    }
+    .analog-clock .hour-hand {
+      width: 6px;
+      height: 50px;
+      transform: rotate(0deg);
+    }
+    .analog-clock .minute-hand {
+      width: 4px;
+      height: 70px;
+      transform: rotate(0deg);
+    }
+    .analog-clock .second-hand {
+      width: 2px;
+      height: 80px;
+      transform: rotate(0deg);
+    }
+    .digital-clock {
+      font-size: 48px;
+      font-weight: bold;
+      margin-left: 20px;
+      color: #333;
+    }
+    .button {
+      padding: 10px 20px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 18px;
+      margin-top: 20px;
+    }
+    .button:hover {
+      background-color: #45a049;
+    }
+    .feedback {
+      margin-top: 20px;
+      font-size: 18px;
+      color: #2a9d8f;
+    }
+  </style>
 </head>
-
 <body>
+  <h1>Learning Time: Analog & Digital Clock</h1>
 
-<header>
-  <div class="topbar">
-    <a href="index.html" class="brand">
-      <img src="assets/primary-steps-logo.png" alt="Primary Steps">
-      <span>Primary Steps</span>
-    </a>
-    <nav class="nav">
-      <a class="pill" href="index.html">Home</a>
-      <a class="pill" href="progress.html">Progress</a>
-      <a class="pill" href="settings.html">Settings</a>
-    </nav>
-  </div>
-</header>
-
-<main class="container">
-  <section class="hero">
-    <h1>Learning Clock</h1>
-    <p>Practice reading time using an analogue clock</p>
-  </section>
-
-  <section class="panel">
-    <div class="clock-wrap">
-      <div class="clock">
-        <div class="hand hour"></div>
-        <div class="hand minute"></div>
-        <div class="center"></div>
-      </div>
+  <div class="clock-container">
+    <!-- Analog Clock -->
+    <div class="analog-clock">
+      <div class="hand hour-hand" id="hour-hand"></div>
+      <div class="hand minute-hand" id="minute-hand"></div>
+      <div class="hand second-hand" id="second-hand"></div>
     </div>
-  </section>
-</main>
 
+    <!-- Digital Clock -->
+    <div class="digital-clock" id="digital-time">12:00</div>
+  </div>
+
+  <button class="button" onclick="setRandomTime()">Generate Random Time</button>
+  <div class="feedback" id="feedback"></div>
+
+  <script>
+    function setRandomTime() {
+      const hours = Math.floor(Math.random() * 12) + 1;
+      const minutes = Math.floor(Math.random() * 60);
+      const timeString = `${hours}:${minutes < 10 ? '0' + minutes : minutes}`;
+
+      // Update digital clock
+      document.getElementById('digital-time').textContent = timeString;
+
+      // Calculate degrees for analog clock hands
+      const hourDeg = (hours % 12) * 30 + (minutes / 60) * 30;
+      const minuteDeg = minutes * 6;
+      const secondDeg = 0; // You can add a second hand if you wish
+
+      // Update analog clock hands
+      document.getElementById('hour-hand').style.transform = `rotate(${hourDeg}deg)`;
+      document.getElementById('minute-hand').style.transform = `rotate(${minuteDeg}deg)`;
+      document.getElementById('second-hand').style.transform = `rotate(${secondDeg}deg)`;
+
+      // Provide feedback
+      const feedback = document.getElementById('feedback');
+      feedback.textContent = `Match the time: ${timeString}`;
+    }
+  </script>
 </body>
 </html>
