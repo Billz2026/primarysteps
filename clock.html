@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clock • Primary Steps</title>
+<style>
+  :root{
+    --bg0:#0b0d12; --bg1:#0f1320;
+    --panel:#121621; --panel2:#0d1c36;
+    --text:#eef2ff; --muted:rgba(238,242,255,.72);
+    --line:rgba(255,255,255,.12);
+    --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399; --bad:#fb7185;
+    --ring:rgba(125,211,252,.30);
+    --shadow:0 18px 40px rgba(0,0,0,.35);
+    --r:18px;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--text);
+    background:
+      radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+      radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+      linear-gradient(180deg, var(--bg0), var(--bg1));
+    min-height:100vh;
+  }
+  header{
+    position:sticky; top:0; z-index:10;
+    backdrop-filter: blur(10px);
+    background: rgba(18,22,33,.72);
+    border-bottom:1px solid var(--line);
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+  .top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
+  .brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
+  .brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+  nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+  nav a{
+    color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
+    padding:8px 10px; border-radius:12px;
+    border:1px solid transparent;
+    opacity:.92;
+  }
+  nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+  nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
+  .hero{padding:22px 16px 10px;}
+  .hwrap{max-width:1100px;margin:0 auto;}
+  h1{margin:0 0 6px; font-size:32px; letter-spacing:-.4px;}
+  p.lead{margin:0; color:var(--muted); max-width:80ch; font-size:14px; line-height:1.45;}
+
+  .grid{
+    max-width:1100px; margin:14px auto 28px; padding:0 16px;
+    display:grid; grid-template-columns: 1.15fr .85fr; gap:14px;
+  }
+  @media (max-width: 980px){ .grid{grid-template-columns:1fr; } nav{justify-content:flex-start;} }
+
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .card .head{
+    padding:14px 14px 10px;
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .pill{
+    font-size:12px; font-weight:850;
+    padding:6px 10px; border-radius:999px;
+    background: rgba(125,211,252,.14);
+    border:1px solid rgba(125,211,252,.25);
+    color: var(--text);
+    white-space:nowrap;
+  }
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .btn{
+    appearance:none; border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text); font-weight:850;
+    padding:10px 12px; border-radius:14px;
+    cursor:pointer;
+  }
+  .btn:hover{background: rgba(255,255,255,.08);}
+  .btn.primary{
+    border-color: rgba(125,211,252,.35);
+    background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
+  }
+  .btn.good{
+    border-color: rgba(52,211,153,.35);
+    background: linear-gradient(180deg, rgba(52,211,153,.18), rgba(52,211,153,.06));
+  }
+  .btn.danger{
+    border-color: rgba(251,113,133,.35);
+    background: linear-gradient(180deg, rgba(251,113,133,.18), rgba(251,113,133,.06));
+  }
+  .seg{
+    display:flex; gap:8px; flex-wrap:wrap;
+    padding:6px; border:1px solid var(--line);
+    border-radius:16px; background:rgba(255,255,255,.03);
+  }
+  .seg button{border-radius:12px; padding:9px 12px;}
+  .seg button.on{border-color:rgba(125,211,252,.45); background:rgba(125,211,252,.12);}
+
+  .body{padding:14px;}
+  .two{display:grid; grid-template-columns: 1fr; gap:10px;}
+  .stat{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 12px; border-radius:14px;
+    border:1px dashed rgba(238,242,255,.22);
+    color: var(--muted);
+  }
+  .small{font-size:12px;color:var(--muted);}
+  .hint{color:var(--muted); font-size:13px; margin-top:8px; line-height:1.45;}
+
+  .clockStage{
+    display:grid; grid-template-columns: 1fr; gap:10px;
+    align-items:center; justify-items:center;
+    padding:10px;
+    border-radius:16px;
+    border:1px solid var(--line);
+    background:
+      radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
+      linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+    touch-action:none;
+    user-select:none;
+  }
+  .digital{
+    font-size:38px; font-weight:950; letter-spacing:.04em;
+    padding:6px 12px; border-radius:14px;
+    border:1px solid rgba(255,255,255,.10);
+    background: rgba(0,0,0,.15);
+  }
+  .digital .muted{font-size:13px; font-weight:850; color:var(--muted); display:block; margin-top:2px; letter-spacing:0;}
+  svg{max-width:360px; width:100%; height:auto; display:block;}
+  .hand{cursor:grab; }
+  .hand:active{cursor:grabbing;}
+  .answerGrid{display:grid; grid-template-columns: 1fr 1fr; gap:10px; width:100%;}
+  @media (max-width: 520px){ .answerGrid{grid-template-columns:1fr;} .brand .title{display:none;} }
+
+  label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
+  select{
+    width:100%;
+    appearance:none;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text);
+    padding:10px 12px;
+    border-radius:14px;
+    font-weight:800;
+    cursor:pointer;
+    outline:none;
+  }
+  select:focus{box-shadow: 0 0 0 6px var(--ring);}
+  a:focus-visible, button:focus-visible, select:focus-visible{
+    outline:none; box-shadow: 0 0 0 6px var(--ring); border-radius: 14px;
+  }
+
+  .msg{
+    padding:10px 12px; border-radius:14px;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.04);
+    color: var(--muted);
+    width:100%;
+  }
+  .msg.good{border-color:rgba(52,211,153,.35); background: rgba(52,211,153,.10); color: rgba(238,242,255,.92);}
+  .msg.bad{border-color:rgba(251,113,133,.35); background: rgba(251,113,133,.10); color: rgba(238,242,255,.92);}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" onerror="this.style.display='none'">
+        <div>
+          <div class="title">Primary Steps</div>
+          <span class="sub">Simple, calm learning activities</span>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="letters.html">Letters</a>
+        <a href="numbers.html">Numbers</a>
+        <a href="phonics.html">Phonics</a>
+        <a href="maths.html" class="active">Maths</a>
+        <a href="memory.html">Memory</a>
+        <a href="handwriting.html">Handwriting</a>
+        <a href="progress.html">Progress</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hwrap">
+    <h1>Clock</h1>
+    <p class="lead">
+      Two calm activities: <strong>Set the Clock</strong> (match the target time) and <strong>Read the Clock</strong> (tell the time).
+      Drag the hands with mouse or finger.
+    </p>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="card" aria-label="Clock activity">
+    <div class="head">
+      <div class="pill" id="modePill">Set the Clock</div>
+      <div class="row">
+        <div class="seg" role="tablist" aria-label="Clock modes">
+          <button class="btn on" id="modeSet" type="button" role="tab" aria-selected="true">Set</button>
+          <button class="btn" id="modeRead" type="button" role="tab" aria-selected="false">Read</button>
+        </div>
+        <button class="btn" id="soundBtn" type="button" aria-pressed="false">Sound: Off</button>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="two">
+        <div class="clockStage" id="stage">
+          <div class="digital" id="digitalTop">12:00 <span class="muted" id="digitalSub">Target time</span></div>
+
+          <svg id="clockSvg" viewBox="0 0 320 320" aria-label="Analog clock">
+            <!-- face -->
+            <defs>
+              <radialGradient id="faceGlow" cx="35%" cy="25%" r="80%">
+                <stop offset="0%" stop-color="rgba(125,211,252,.22)"/>
+                <stop offset="60%" stop-color="rgba(255,255,255,.06)"/>
+                <stop offset="100%" stop-color="rgba(0,0,0,.0)"/>
+              </radialGradient>
+            </defs>
+            <circle cx="160" cy="160" r="142" fill="rgba(0,0,0,.18)" stroke="rgba(255,255,255,.14)" stroke-width="2"/>
+            <circle cx="160" cy="160" r="142" fill="url(#faceGlow)" opacity="0.75"/>
+            <circle cx="160" cy="160" r="4.5" fill="rgba(238,242,255,.92)"/>
+
+            <!-- ticks -->
+            <g id="ticks"></g>
+
+            <!-- hands -->
+            <g id="hands" transform="translate(160 160)">
+              <line id="hourHand" class="hand" x1="0" y1="12" x2="0" y2="-62" stroke="rgba(238,242,255,.92)" stroke-width="10" stroke-linecap="round"/>
+              <line id="minHand" class="hand" x1="0" y1="16" x2="0" y2="-98" stroke="rgba(238,242,255,.92)" stroke-width="6" stroke-linecap="round"/>
+              <line id="secHand" x1="0" y1="18" x2="0" y2="-110" stroke="rgba(52,211,153,.85)" stroke-width="2.5" stroke-linecap="round" opacity=".0"/>
+            </g>
+          </svg>
+
+          <div class="small">Tip: drag the minute hand first, then the hour hand.</div>
+        </div>
+
+        <div class="msg" id="message">Press <strong>New</strong> to start.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" aria-label="Controls">
+    <div class="head">
+      <div class="pill">Controls</div>
+      <div class="row">
+        <button class="btn" id="newBtn" type="button">New</button>
+        <button class="btn" id="resetBtn" type="button">Reset Hands</button>
+        <button class="btn danger" id="clearBtn" type="button">Clear Answer</button>
+      </div>
+    </div>
+
+    <div class="body">
+      <div class="row" style="margin-bottom:10px;">
+        <div style="min-width:220px; flex:1">
+          <label for="difficulty">Difficulty</label>
+          <select id="difficulty">
+            <option value="hour">Whole hour (e.g., 3:00)</option>
+            <option value="half">Half past (e.g., 3:30)</option>
+            <option value="quarter">Quarter hours (e.g., 3:15)</option>
+            <option value="five" selected>5-minute steps (e.g., 3:25)</option>
+            <option value="any">Any minute (0–59)</option>
+          </select>
+        </div>
+        <div style="min-width:220px; flex:1">
+          <label for="handSnap">Hand snapping</label>
+          <select id="handSnap">
+            <option value="on" selected>On (easier)</option>
+            <option value="off">Off (free move)</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="readAnswer" style="display:none;">
+        <div class="answerGrid" style="margin-bottom:10px;">
+          <div>
+            <label for="ansHour">Your hour</label>
+            <select id="ansHour"></select>
+          </div>
+          <div>
+            <label for="ansMin">Your minutes</label>
+            <select id="ansMin"></select>
+          </div>
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom:10px;">
+        <button class="btn good" id="checkBtn" type="button">Check</button>
+        <button class="btn primary" id="showBtn" type="button">Show Answer</button>
+      </div>
+
+      <div class="stat">
+        <div>
+          <strong id="goalTitle">Goal</strong>
+          <div class="small" id="goalText">Match the target time.</div>
+        </div>
+        <div class="small" id="score">0 correct</div>
+      </div>
+
+      <div class="hint">
+        <strong>Two activities you can list on your Maths page:</strong><br>
+        • <b>Set the Clock</b> — match the time shown (drag hands).<br>
+        • <b>Read the Clock</b> — look at the hands and choose the correct digital time.
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const $ = (id)=>document.getElementById(id);
+
+  // UI
+  const ui = {
+    modeSet: $('modeSet'), modeRead: $('modeRead'), modePill: $('modePill'),
+    digitalTop: $('digitalTop'), digitalSub: $('digitalSub'),
+    message: $('message'),
+    newBtn: $('newBtn'), resetBtn: $('resetBtn'), clearBtn: $('clearBtn'),
+    difficulty: $('difficulty'), handSnap: $('handSnap'),
+    checkBtn: $('checkBtn'), showBtn: $('showBtn'),
+    soundBtn: $('soundBtn'),
+    goalTitle: $('goalTitle'), goalText: $('goalText'),
+    score: $('score'),
+    readAnswer: $('readAnswer'),
+    ansHour: $('ansHour'), ansMin: $('ansMin'),
+    clockSvg: $('clockSvg'),
+    ticks: $('ticks'),
+    hourHand: $('hourHand'), minHand: $('minHand'),
+    handsGroup: $('hands')
+  };
+
+  // Tick marks
+  function buildTicks(){
+    ui.ticks.innerHTML = '';
+    for(let i=0;i<60;i++){
+      const isHour = i%5===0;
+      const len = isHour ? 16 : 9;
+      const w = isHour ? 3 : 2;
+      const ang = i*6;
+      const x1 = 160 + Math.sin(rad(ang))* (142 - 10);
+      const y1 = 160 - Math.cos(rad(ang))* (142 - 10);
+      const x2 = 160 + Math.sin(rad(ang))* (142 - 10 - len);
+      const y2 = 160 - Math.cos(rad(ang))* (142 - 10 - len);
+      const line = document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',x1); line.setAttribute('y1',y1);
+      line.setAttribute('x2',x2); line.setAttribute('y2',y2);
+      line.setAttribute('stroke','rgba(238,242,255,' + (isHour?'.45':'.22') + ')');
+      line.setAttribute('stroke-width',w);
+      line.setAttribute('stroke-linecap','round');
+      ui.ticks.appendChild(line);
+    }
+  }
+
+  // State
+  let mode = 'set'; // 'set' or 'read'
+  let target = {h:12,m:0};
+  let current = {h:12,m:0};
+  let correctCount = 0;
+
+  // Sound
+  let soundOn = false;
+  let audioCtx = null;
+  function beep(freq=640, ms=70, gain=0.03){
+    if(!soundOn) return;
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.frequency.value = freq;
+    g.gain.value = gain;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    setTimeout(()=>{ o.stop(); }, ms);
+  }
+
+  function rad(d){ return d*Math.PI/180; }
+  function degFromPoint(x,y){
+    // angle where 0deg is 12 o'clock and increases clockwise
+    const dx = x - 160;
+    const dy = y - 160;
+    const a = Math.atan2(dx, -dy) * 180/Math.PI; // swap to make 0 at top
+    return (a + 360) % 360;
+  }
+
+  function formatTime(h,m){
+    const hh = ((h-1+12)%12)+1;
+    const mm = String(m).padStart(2,'0');
+    return `${hh}:${mm}`;
+  }
+
+  function stepForDifficulty(){
+    const d = ui.difficulty.value;
+    if(d === 'hour') return 60;
+    if(d === 'half') return 30;
+    if(d === 'quarter') return 15;
+    if(d === 'five') return 5;
+    return 1;
+  }
+
+  function snapMinute(min){
+    const step = stepForDifficulty();
+    if(step === 1) return ((min%60)+60)%60;
+    const snapped = Math.round(min/step)*step;
+    return ((snapped%60)+60)%60;
+  }
+
+  function setHands(h, m){
+    current.h = ((h-1+12)%12)+1;
+    current.m = ((m%60)+60)%60;
+
+    // minute hand: 6deg per minute
+    const minDeg = current.m * 6;
+    // hour hand: 30deg per hour + 0.5deg per minute
+    const hourDeg = ((current.h % 12) * 30) + (current.m * 0.5);
+
+    ui.minHand.setAttribute('transform', `rotate(${minDeg})`);
+    ui.hourHand.setAttribute('transform', `rotate(${hourDeg})`);
+
+    ui.digitalTop.childNodes[0].nodeValue = formatTime(mode === 'set' ? target.h : current.h, mode === 'set' ? target.m : current.m) + " ";
+  }
+
+  function setMessage(type, html){
+    ui.message.className = 'msg' + (type ? ' ' + type : '');
+    ui.message.innerHTML = html;
+  }
+
+  function newRound(){
+    const step = stepForDifficulty();
+    const h = Math.floor(Math.random()*12)+1;
+    const m = step === 60 ? 0 : (Math.floor(Math.random()*(60/step))*step);
+    target = {h,m};
+    if(mode === 'set'){
+      ui.digitalSub.textContent = 'Target time';
+      ui.digitalTop.childNodes[0].nodeValue = formatTime(target.h, target.m) + " ";
+      // Start hands at 12:00 for clarity
+      setHands(12,0);
+      setMessage('', `Match the time: <strong>${formatTime(target.h,target.m)}</strong>. Drag the hands, then press <strong>Check</strong>.`);
+    } else {
+      // read mode: clock shows time, user answers with dropdowns
+      ui.digitalSub.textContent = 'Look at the clock';
+      setHands(target.h, target.m);
+      ui.digitalTop.childNodes[0].nodeValue = formatTime(target.h, target.m) + " ";
+      // But hide the exact time display feeling: we keep top showing time for accessibility,
+      // and mark it as "Look at the clock" so it doesn't feel like the answer is given.
+      // If you prefer, you can comment the next line to show "??:??" instead:
+      // ui.digitalTop.childNodes[0].nodeValue = "??:?? ";
+      ui.ansHour.value = String(target.h);
+      ui.ansMin.value = String(target.m);
+      setMessage('', `Tell the time. Choose the hour and minutes, then press <strong>Check</strong>.`);
+    }
+    beep(660);
+  }
+
+  function resetHands(){
+    setHands(12,0);
+    setMessage('', `Hands reset. Keep going.`);
+    beep(520);
+  }
+
+  function clearAnswer(){
+    if(mode === 'read'){
+      ui.ansHour.value = "12";
+      ui.ansMin.value = "0";
+    } else {
+      resetHands();
+      return;
+    }
+    setMessage('', `Answer cleared.`);
+    beep(520);
+  }
+
+  function check(){
+    if(mode === 'set'){
+      const ok = (current.h === target.h) && (current.m === target.m);
+      if(ok){
+        correctCount++;
+        ui.score.textContent = `${correctCount} correct`;
+        setMessage('good', `✅ Nice! You matched <strong>${formatTime(target.h,target.m)}</strong>. Press <strong>New</strong> for another.`);
+        beep(820, 90, 0.04);
+      } else {
+        setMessage('bad', `Not yet. Target is <strong>${formatTime(target.h,target.m)}</strong>. You're on <strong>${formatTime(current.h,current.m)}</strong>. Try again.`);
+        beep(220, 120, 0.05);
+      }
+    } else {
+      const ansH = Number(ui.ansHour.value);
+      const ansM = Number(ui.ansMin.value);
+      const ok = (ansH === target.h) && (ansM === target.m);
+      if(ok){
+        correctCount++;
+        ui.score.textContent = `${correctCount} correct`;
+        setMessage('good', `✅ Correct! It was <strong>${formatTime(target.h,target.m)}</strong>. Press <strong>New</strong> for another.`);
+        beep(820, 90, 0.04);
+      } else {
+        setMessage('bad', `Not quite. You chose <strong>${formatTime(ansH,ansM)}</strong>. Try again.`);
+        beep(220, 120, 0.05);
+      }
+    }
+  }
+
+  function showAnswer(){
+    if(mode === 'set'){
+      setHands(target.h, target.m);
+      setMessage('', `Answer shown: <strong>${formatTime(target.h,target.m)}</strong>. Press <strong>New</strong> when ready.`);
+      beep(740);
+    } else {
+      ui.ansHour.value = String(target.h);
+      ui.ansMin.value = String(target.m);
+      setMessage('', `Answer filled in: <strong>${formatTime(target.h,target.m)}</strong>.`);
+      beep(740);
+    }
+  }
+
+  // Mode switching
+  function setMode(next){
+    mode = next;
+    const isSet = mode === 'set';
+    ui.modeSet.classList.toggle('on', isSet);
+    ui.modeRead.classList.toggle('on', !isSet);
+    ui.modeSet.setAttribute('aria-selected', String(isSet));
+    ui.modeRead.setAttribute('aria-selected', String(!isSet));
+    ui.modePill.textContent = isSet ? 'Set the Clock' : 'Read the Clock';
+    ui.goalTitle.textContent = 'Goal';
+    ui.goalText.textContent = isSet ? 'Match the target time.' : 'Read the time from the hands.';
+    ui.readAnswer.style.display = isSet ? 'none' : 'block';
+
+    ui.digitalSub.textContent = isSet ? 'Target time' : 'Look at the clock';
+    // Fresh round on mode change
+    newRound();
+  }
+
+  // Answer dropdown options
+  function buildAnswerSelects(){
+    ui.ansHour.innerHTML = '';
+    for(let h=1; h<=12; h++){
+      const o = document.createElement('option');
+      o.value = String(h); o.textContent = String(h);
+      ui.ansHour.appendChild(o);
+    }
+    ui.ansMin.innerHTML = '';
+    for(let m=0; m<60; m++){
+      const o = document.createElement('option');
+      o.value = String(m);
+      o.textContent = String(m).padStart(2,'0');
+      ui.ansMin.appendChild(o);
+    }
+  }
+
+  // Dragging hands (SVG pointer events)
+  let dragging = null; // 'min' | 'hour'
+  function svgPoint(evt){
+    const pt = ui.clockSvg.createSVGPoint();
+    pt.x = evt.clientX; pt.y = evt.clientY;
+    const screenCTM = ui.clockSvg.getScreenCTM();
+    if(!screenCTM) return {x:160,y:160};
+    const p = pt.matrixTransform(screenCTM.inverse());
+    return {x:p.x, y:p.y};
+  }
+
+  function applyFromAngle(which, angDeg){
+    const snapOn = ui.handSnap.value === 'on';
+    if(which === 'min'){
+      let m = Math.round(angDeg/6); // 0..59
+      if(snapOn) m = snapMinute(m);
+      // When moving minutes, hour should follow naturally
+      setHands(current.h, m);
+    } else if(which === 'hour'){
+      // hour based on angle, keep minutes
+      let h = Math.round(angDeg/30); // 0..12
+      if(h === 0) h = 12;
+      setHands(h, current.m);
+    }
+  }
+
+  function onPointerMove(evt){
+    if(!dragging) return;
+    const p = svgPoint(evt);
+    const ang = degFromPoint(p.x, p.y);
+    applyFromAngle(dragging, ang);
+    evt.preventDefault();
+  }
+
+  function startDrag(which){
+    return (evt)=>{
+      dragging = which;
+      ui.clockSvg.setPointerCapture(evt.pointerId);
+      const p = svgPoint(evt);
+      const ang = degFromPoint(p.x, p.y);
+      applyFromAngle(which, ang);
+      beep(520, 40, 0.02);
+      evt.preventDefault();
+    };
+  }
+
+  function endDrag(evt){
+    if(!dragging) return;
+    dragging = null;
+    beep(660, 40, 0.02);
+    evt.preventDefault();
+  }
+
+  // Tap to set minute hand (nice on tablets)
+  ui.clockSvg.addEventListener('pointerdown', (evt)=>{
+    // Ignore if pressed on a hand (they have their own handlers)
+    const t = evt.target;
+    if(t && (t.id === 'hourHand' || t.id === 'minHand')) return;
+    // Set minute hand to the tapped position
+    const p = svgPoint(evt);
+    const ang = degFromPoint(p.x, p.y);
+    applyFromAngle('min', ang);
+  });
+
+  ui.minHand.addEventListener('pointerdown', startDrag('min'));
+  ui.hourHand.addEventListener('pointerdown', startDrag('hour'));
+  ui.clockSvg.addEventListener('pointermove', onPointerMove);
+  ui.clockSvg.addEventListener('pointerup', endDrag);
+  ui.clockSvg.addEventListener('pointercancel', endDrag);
+  ui.clockSvg.addEventListener('pointerleave', endDrag);
+
+  // Buttons
+  ui.newBtn.addEventListener('click', newRound);
+  ui.resetBtn.addEventListener('click', resetHands);
+  ui.clearBtn.addEventListener('click', clearAnswer);
+  ui.checkBtn.addEventListener('click', check);
+  ui.showBtn.addEventListener('click', showAnswer);
+
+  ui.modeSet.addEventListener('click', ()=>setMode('set'));
+  ui.modeRead.addEventListener('click', ()=>setMode('read'));
+
+  ui.difficulty.addEventListener('change', ()=>{ newRound(); });
+  ui.handSnap.addEventListener('change', ()=>{ beep(600); });
+
+  ui.soundBtn.addEventListener('click', ()=>{
+    soundOn = !soundOn;
+    ui.soundBtn.setAttribute('aria-pressed', String(soundOn));
+    ui.soundBtn.textContent = 'Sound: ' + (soundOn ? 'On' : 'Off');
+    beep(820, 60, 0.03);
+  });
+
+  // Init
+  buildTicks();
+  buildAnswerSelects();
+  ui.score.textContent = '0 correct';
+  setMessage('', `Press <strong>New</strong> to start.`);
+  setHands(12,0);
+})();
+</script>
+</body>
+</html>
