@@ -1,255 +1,426 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Handwriting Practice</title>
-  <style>
-    :root {
-      --bg: #0b0d12;
-      --panel: #121621;
-      --text: #eef2ff;
-      --muted: #a9b2c7;
-      --primary: #7dd3fc;
-      --primary2: #a78bfa;
-      --ok: #34d399;
-      --border: rgba(255, 255, 255, .1);
-      --shadow: 0 12px 40px rgba(0, 0, 0, .35);
-      --radius: 18px;
-    }
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Handwriting Practice • Primary Steps</title>
+<style>
+  :root{
+    --bg0:#0b0d12; --bg1:#0f1320;
+    --panel:#121621; --panel2:#0d1c36;
+    --text:#eef2ff; --muted:rgba(238,242,255,.72);
+    --line:rgba(255,255,255,.12);
+    --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399;
+    --ring:rgba(125,211,252,.30);
+    --shadow:0 18px 40px rgba(0,0,0,.35);
+    --r:18px;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  }
 
-    body {
-      font-family: Arial, sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      text-align: center;
-      padding: 20px;
-      overflow: hidden;
-    }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--text);
+    background:
+      radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+      radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+      linear-gradient(180deg, var(--bg0), var(--bg1));
+    min-height:100vh;
+  }
 
-    h1 {
-      color: var(--text);
-      font-size: 32px;
-    }
+  header{
+    position:sticky; top:0; z-index:10;
+    backdrop-filter: blur(10px);
+    background: rgba(18,22,33,.72);
+    border-bottom:1px solid var(--line);
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+  .top{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
+  .brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
+  .brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+  nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+  nav a{
+    color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
+    padding:8px 10px; border-radius:12px;
+    border:1px solid transparent;
+    opacity:.92;
+  }
+  nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+  nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
 
-    .container {
-      background-color: var(--panel);
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: var(--shadow);
-      margin-top: 20px;
-      display: inline-block;
-      width: 100%;
-      max-width: 600px;
-      margin-left: auto;
-      margin-right: auto;
-    }
+  .hero{padding:22px 16px 10px;}
+  .hwrap{max-width:1100px;margin:0 auto;}
+  h1{margin:0 0 6px; font-size:32px; letter-spacing:-.4px;}
+  p.lead{margin:0; color:var(--muted); max-width:75ch; font-size:14px; line-height:1.45;}
 
-    #canvas {
-      border: 2px solid var(--border);
-      width: 100%;
-      height: 200px;
-      margin-top: 20px;
-      background-color: transparent;
-      display: block;
-      margin-left: auto;
-      margin-right: auto;
-      touch-action: none; /* Prevent touch event scroll on mobile */
-    }
+  .grid{
+    max-width:1100px; margin:14px auto 28px; padding:0 16px;
+    display:grid; grid-template-columns: 1.15fr .85fr; gap:14px;
+  }
+  @media (max-width: 980px){ .grid{grid-template-columns:1fr; } nav{justify-content:flex-start;} }
 
-    .word-display {
-      font-size: 50px;
-      font-weight: bold;
-      color: #000000;
-      margin-top: 20px;
-      letter-spacing: 5px;
-    }
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .card .head{
+    padding:14px 14px 10px;
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .pill{
+    font-size:12px; font-weight:850;
+    padding:6px 10px; border-radius:999px;
+    background: rgba(125,211,252,.14);
+    border:1px solid rgba(125,211,252,.25);
+    color: var(--text);
+    white-space:nowrap;
+  }
+  .card .body{padding:14px;}
 
-    .feedback {
-      margin-top: 20px;
-      font-size: 18px;
-      color: var(--ok);
-    }
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .btn{
+    appearance:none; border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text); font-weight:850;
+    padding:10px 12px; border-radius:14px;
+    cursor:pointer;
+  }
+  .btn:hover{background: rgba(255,255,255,.08);}
+  .btn.primary{
+    border-color: rgba(125,211,252,.35);
+    background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
+  }
+  .btn.good{
+    border-color: rgba(52,211,153,.35);
+    background: linear-gradient(180deg, rgba(52,211,153,.18), rgba(52,211,153,.06));
+  }
 
-    /* Button styling for Primary Steps consistent look */
-    .button-container {
-      margin-top: 30px;
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-    }
+  .stat{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 12px; border-radius:14px;
+    border:1px dashed rgba(238,242,255,.22);
+    color: var(--muted);
+  }
 
-    .reset-btn, .next-btn, .home-btn {
-      padding: 12px 25px;
-      background-color: #1e3a8a;
-      color: white;
-      border: none;
-      border-radius: 999px;
-      cursor: pointer;
-      font-size: 18px;
-      transition: background-color 0.3s;
-    }
+  .canvasWrap{display:grid; grid-template-columns: 1fr; gap:10px;}
+  .guideWord{
+    font-size: clamp(40px, 7vw, 86px);
+    font-weight: 950;
+    letter-spacing: .06em;
+    line-height:1.05;
+    text-shadow: 0 10px 30px rgba(0,0,0,.35);
+    opacity: var(--guideOpacity, .55);
+    user-select:none;
+    pointer-events:none;
+  }
 
-    .reset-btn:hover, .next-btn:hover, .home-btn:hover {
-      background-color: #2563eb;
-    }
+  canvas{
+    width:100%; height:360px;
+    background:
+      radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
+      linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+    border:1px solid var(--line);
+    border-radius:16px;
+    touch-action:none;
+  }
 
-    .next-btn {
-      background-color: #34d399;
-    }
+  .hint{color:var(--muted); font-size:13px; margin-top:8px; line-height:1.45;}
+  .small{font-size:12px;color:var(--muted);}
 
-    .next-btn:hover {
-      background-color: #10b981;
-    }
+  .field{
+    display:flex; flex-direction:column; gap:6px;
+    min-width: 220px;
+  }
+  label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
+  select, input[type="range"]{
+    width:100%;
+  }
+  select{
+    appearance:none;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text);
+    padding:10px 12px;
+    border-radius:14px;
+    font-weight:800;
+    cursor:pointer;
+    outline:none;
+  }
+  select:focus{box-shadow: 0 0 0 6px var(--ring);}
+  input[type="range"]{accent-color: var(--accent);}
 
-    .home-btn {
-      background-color: #4b9cf5;
-    }
+  /* Focus */
+  a:focus-visible, button:focus-visible, select:focus-visible{
+    outline:none;
+    box-shadow: 0 0 0 6px var(--ring);
+    border-radius: 14px;
+  }
 
-    .home-btn:hover {
-      background-color: #3b82f6;
-    }
-
-    /* Primary Steps logo styling */
-    .logo-container {
-      margin-top: 30px;
-      text-align: center;
-    }
-
-    .logo-container img {
-      width: 150px;
-      height: auto;
-    }
-
-    /* Responsive adjustments for smaller screens */
-    @media (max-width: 768px) {
-      h1 {
-        font-size: 28px;
-      }
-
-      #canvas {
-        height: 150px;  /* Adjust canvas height for mobile screens */
-      }
-
-      .word-display {
-        font-size: 40px;
-      }
-
-      .button-container {
-        flex-direction: column;
-        gap: 15px;
-      }
-    }
-  </style>
+  @media (max-width: 520px){
+    .brand .title{display:none;}
+  }
+</style>
 </head>
 <body>
-
-  <h1>Handwriting Practice</h1>
-  <div class="container">
-    <h3>Trace the word below:</h3>
-    <div id="word-display" class="word-display">apple</div>
-    <canvas id="canvas"></canvas>
-    <div id="feedback" class="feedback"></div>
-
-    <div class="button-container">
-      <button class="reset-btn" onclick="resetCanvas()">Reset</button>
-      <button class="next-btn" onclick="nextWord()">Next Word</button>
-      <button class="home-btn" onclick="goHome()">Back to Home</button>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" onerror="this.style.display='none'">
+        <div>
+          <div class="title">Primary Steps</div>
+          <span class="sub">Simple, calm learning activities</span>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="letters.html">Letters</a>
+        <a href="numbers.html">Numbers</a>
+        <a href="phonics.html">Phonics</a>
+        <a href="maths.html">Maths</a>
+        <a href="memory.html">Memory</a>
+        <a href="handwriting.html" class="active">Handwriting</a>
+        <a href="progress.html">Progress</a>
+        <a href="settings.html">Settings</a>
+      </nav>
     </div>
+  </div>
+</header>
 
-    <div class="logo-container">
-      <img src="assets/primary-steps-logo.png" alt="Primary Steps Logo">
+<section class="hero">
+  <div class="hwrap">
+    <h1>Handwriting Practice</h1>
+    <p class="lead">
+      Trace the guide word on the board. Use <strong>Clear</strong> if you need a fresh start, then tap <strong>Next</strong> to move on.
+      This matches the calm “Number Tracing” style (no auto-skip).
+    </p>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="card" aria-label="Tracing board">
+    <div class="head">
+      <div class="pill">Trace on the board</div>
+      <div class="row">
+        <button class="btn" id="clearBtn" type="button">Clear</button>
+        <button class="btn primary" id="prevBtn" type="button">Prev</button>
+        <button class="btn primary" id="nextBtn" type="button">Next</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="canvasWrap">
+        <div class="guideWord" id="guideWord" aria-live="polite">apple</div>
+        <canvas id="pad" width="1200" height="720" aria-label="Drawing pad"></canvas>
+        <div class="small">Tip: use finger on tablet, or mouse on desktop.</div>
+      </div>
     </div>
   </div>
 
-  <script>
-    const wordsList = [
-      "apple", "ball", "cat", "dog", "elephant", "fish", "grape", "hat", "ice", "jug",
-      "kite", "lion", "moon", "nest", "orange", "pen", "queen", "rose", "sun", "tree",
-      "umbrella", "van", "water", "xylophone", "yellow", "zebra", "ant", "bear", "cup", "duck",
-      "egg", "flower", "goat", "house", "island", "jellyfish", "key", "leaf", "mouse", "night",
-      "open", "penguin", "quiet", "river", "star", "tiger", "unicorn", "vulture", "whale", "yarn",
-      "helicopter", "dinosaur", "bicycle", "umbrella", "chocolate", "giraffe", "vacuum", "computer",
-      "kangaroo", "snowman", "pyramid", "mountain", "astronaut", "butterfly", "cucumber", "acorn",
-      "backpack", "accordion", "scissors", "dolphin", "climate", "astronomy", "parachute", "magnet",
-      "vocabulary", "superhero", "invisible", "chandelier", "chameleon", "parallel", "submarine", "puzzle"
-    ];
+  <div class="card" aria-label="Options">
+    <div class="head">
+      <div class="pill">Options</div>
+    </div>
+    <div class="body">
+      <div class="row" style="margin-bottom:10px;">
+        <button class="btn good" id="soundBtn" type="button" aria-pressed="false">Sound: Off</button>
+        <button class="btn" id="thinBtn" type="button">Pen: Thin</button>
+        <button class="btn" id="thickBtn" type="button">Pen: Thick</button>
+        <button class="btn" id="randomBtn" type="button" title="Pick a random word">Random</button>
+      </div>
 
-    let currentWordIndex = 0;
-    let isDrawing = false;
-    const canvas = document.getElementById('canvas');
-    const ctx = canvas.getContext('2d');
-    const wordDisplay = document.getElementById('word-display');
-    const feedback = document.getElementById('feedback');
+      <div class="row" style="margin-bottom:10px;">
+        <div class="field">
+          <label for="difficulty">Word set</label>
+          <select id="difficulty">
+            <option value="easy">Easy (short, simple)</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard (longer words)</option>
+            <option value="mix" selected>Mix (all)</option>
+          </select>
+        </div>
 
-    // Set canvas size dynamically based on screen width
-    canvas.width = window.innerWidth * 0.8;
-    canvas.height = 150;
+        <div class="field" style="min-width:220px">
+          <label for="opacity">Guide opacity</label>
+          <input id="opacity" type="range" min="15" max="85" value="55">
+        </div>
+      </div>
 
-    // Initialize word display
-    wordDisplay.textContent = wordsList[currentWordIndex];
+      <div class="stat" style="margin-bottom:10px;">
+        <div>
+          <strong>Goal</strong>
+          <div class="small">Stay relaxed + follow the word shape.</div>
+        </div>
+        <div class="small" id="counter">1 / 1</div>
+      </div>
 
-    // Adjust drawing properties for smoother tracing
-    ctx.lineWidth = 6;
+      <div class="hint">
+        No scoring—just calm practice. If you want to repeat a word, press <strong>Prev</strong>.
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  // Word sets (kept short + kid-friendly)
+  const WORDS = {
+    easy: [
+      "cat","dog","sun","hat","cup","bed","map","pen","fish","tree",
+      "frog","milk","book","ring","star","ball","duck","ship","sock","rain"
+    ],
+    medium: [
+      "apple","banana","orange","pencil","garden","window","school","planet","rocket","pirate",
+      "rabbit","turtle","butter","flower","bridge","castle","camera","pocket","yellow","winter"
+    ],
+    hard: [
+      "helicopter","dinosaur","chocolate","butterfly","adventure","playground","strawberry","umbrella","computer","electricity",
+      "chameleon","mountain","celebrate","rectangle","photograph","sandcastle","watermelon","friendship","imagination","responsible"
+    ]
+  };
+
+  const ui = {
+    guide: document.getElementById('guideWord'),
+    counter: document.getElementById('counter'),
+    canvas: document.getElementById('pad'),
+    difficulty: document.getElementById('difficulty'),
+    opacity: document.getElementById('opacity'),
+    clearBtn: document.getElementById('clearBtn'),
+    prevBtn: document.getElementById('prevBtn'),
+    nextBtn: document.getElementById('nextBtn'),
+    randomBtn: document.getElementById('randomBtn'),
+    thinBtn: document.getElementById('thinBtn'),
+    thickBtn: document.getElementById('thickBtn'),
+    soundBtn: document.getElementById('soundBtn'),
+  };
+
+  const ctx = ui.canvas.getContext('2d');
+
+  let drawing = false;
+  let last = null;
+  let lineW = 14;
+
+  let soundOn = false;
+  let audioCtx = null;
+
+  function currentList(){
+    const v = ui.difficulty.value;
+    if(v === 'easy') return WORDS.easy;
+    if(v === 'medium') return WORDS.medium;
+    if(v === 'hard') return WORDS.hard;
+    return [...WORDS.easy, ...WORDS.medium, ...WORDS.hard];
+  }
+
+  let list = currentList();
+  let idx = 0;
+
+  function setGuide(){
+    list = currentList();
+    if(idx >= list.length) idx = 0;
+    if(idx < 0) idx = list.length - 1;
+
+    ui.guide.textContent = list[idx];
+    ui.counter.textContent = (list.length ? (idx+1) : 0) + " / " + (list.length || 0);
+  }
+
+  function clear(){
+    ctx.clearRect(0,0,ui.canvas.width,ui.canvas.height);
+  }
+
+  function pos(e){
+    const r = ui.canvas.getBoundingClientRect();
+    const x = (e.clientX - r.left) * (ui.canvas.width / r.width);
+    const y = (e.clientY - r.top) * (ui.canvas.height / r.height);
+    return {x,y};
+  }
+
+  function start(e){
+    drawing = true;
+    last = pos(e);
+  }
+
+  function move(e){
+    if(!drawing) return;
+    const p = pos(e);
     ctx.lineCap = 'round';
     ctx.lineJoin = 'round';
-    ctx.strokeStyle = '#000000'; // Black for handwriting
+    ctx.strokeStyle = 'rgba(238,242,255,.92)';
+    ctx.lineWidth = lineW;
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    last = p;
+  }
 
-    // Event listeners for drawing
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseout', stopDrawing);
-    canvas.addEventListener('touchstart', startDrawing, { passive: true });
-    canvas.addEventListener('touchmove', draw, { passive: true });
-    canvas.addEventListener('touchend', stopDrawing, { passive: true });
+  function end(){
+    drawing = false;
+    last = null;
+  }
 
-    function startDrawing(event) {
-      isDrawing = true;
-      const { offsetX, offsetY } = event.touches ? event.touches[0] : event;
-      ctx.beginPath();
-      ctx.moveTo(offsetX, offsetY);
-    }
+  function clickSound(){
+    if(!soundOn) return;
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.frequency.value = 660;
+    g.gain.value = 0.03;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    setTimeout(()=>{ o.stop(); }, 60);
+  }
 
-    function draw(event) {
-      if (isDrawing) {
-        const { offsetX, offsetY } = event.touches ? event.touches[0] : event;
-        ctx.lineTo(offsetX, offsetY);
-        ctx.stroke();
-      }
-    }
+  // Pointer events (best for mouse + touch)
+  ui.canvas.addEventListener('pointerdown', (e)=>{ ui.canvas.setPointerCapture(e.pointerId); start(e); });
+  ui.canvas.addEventListener('pointermove', move);
+  ui.canvas.addEventListener('pointerup', end);
+  ui.canvas.addEventListener('pointercancel', end);
+  ui.canvas.addEventListener('pointerleave', end);
 
-    function stopDrawing() {
-      isDrawing = false;
-    }
+  // Buttons
+  ui.clearBtn.addEventListener('click', ()=>{ clear(); clickSound(); });
+  ui.prevBtn.addEventListener('click', ()=>{ idx = (idx + list.length - 1) % list.length; setGuide(); clear(); clickSound(); });
+  ui.nextBtn.addEventListener('click', ()=>{ idx = (idx + 1) % list.length; setGuide(); clear(); clickSound(); });
+  ui.randomBtn.addEventListener('click', ()=>{
+    if(!list.length) return;
+    idx = Math.floor(Math.random()*list.length);
+    setGuide(); clear(); clickSound();
+  });
 
-    function resetCanvas() {
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clears the canvas
-      feedback.textContent = ""; // Reset feedback
-    }
+  ui.thinBtn.addEventListener('click', ()=>{ lineW = 10; clickSound(); });
+  ui.thickBtn.addEventListener('click', ()=>{ lineW = 18; clickSound(); });
 
-    function nextWord() {
-      const word = wordsList[currentWordIndex];
-      if (isWordCorrect()) {
-        feedback.textContent = "Great job! You traced the word correctly!";
-      } else {
-        feedback.textContent = "Try again! Keep practicing.";
-      }
+  ui.soundBtn.addEventListener('click', ()=>{
+    soundOn = !soundOn;
+    ui.soundBtn.setAttribute('aria-pressed', String(soundOn));
+    ui.soundBtn.textContent = 'Sound: ' + (soundOn ? 'On' : 'Off');
+    clickSound();
+  });
 
-      currentWordIndex = (currentWordIndex + 1) % wordsList.length;
-      wordDisplay.textContent = wordsList[currentWordIndex];
-      resetCanvas(); // Reset canvas for next word
-    }
+  ui.difficulty.addEventListener('change', ()=>{
+    idx = 0;
+    setGuide();
+    clear();
+    clickSound();
+  });
 
-    function isWordCorrect() {
-      return canvas.width > 0;
-    }
+  ui.opacity.addEventListener('input', ()=>{
+    const v = Number(ui.opacity.value) / 100;
+    ui.guide.style.setProperty('--guideOpacity', v.toFixed(2));
+  });
 
-    function goHome() {
-      window.location.href = "index.html"; // Redirect to home page
-    }
-  </script>
-
+  // init
+  ui.guide.style.setProperty('--guideOpacity', (Number(ui.opacity.value)/100).toFixed(2));
+  setGuide();
+  clear();
+})();
+</script>
 </body>
 </html>
