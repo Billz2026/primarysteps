@@ -1,0 +1,481 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Memory • Primary Steps</title>
+<link rel="icon" href="assets/primary-steps-icon-512.png" />
+<style>
+:root{
+  --bg0:#0b0d12; --bg1:#0f1320;
+  --text:#eef2ff; --muted:rgba(238,242,255,.72);
+  --line:rgba(255,255,255,.12);
+  --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399; --bad:#fb7185;
+  --ring:rgba(125,211,252,.30);
+  --shadow:0 18px 40px rgba(0,0,0,.35);
+  --r:18px;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+    radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  min-height:100vh;
+}
+header{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter: blur(10px);
+  background: rgba(18,22,33,.72);
+  border-bottom:1px solid var(--line);
+}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+.top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+.brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
+.brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
+.brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+nav a{
+  color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
+  padding:8px 10px; border-radius:12px;
+  border:1px solid transparent; opacity:.92;
+}
+nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
+
+.hero{padding:22px 16px 10px;}
+.hwrap{max-width:1100px;margin:0 auto;}
+h1{margin:0 0 6px; font-size:28px; letter-spacing:-.4px;}
+p.lead{margin:0; color:var(--muted); max-width:85ch; font-size:14px; line-height:1.45;}
+
+.grid{
+  max-width:1100px; margin:14px auto 28px; padding:0 16px;
+  display:grid; grid-template-columns: 1fr; gap:14px;
+}
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.card .head{
+  padding:14px 14px 10px;
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  flex-wrap:wrap;
+}
+.pill{
+  font-size:12px; font-weight:850;
+  padding:6px 10px; border-radius:999px;
+  background: rgba(125,211,252,.14);
+  border:1px solid rgba(125,211,252,.25);
+  color: var(--text);
+  white-space:nowrap;
+}
+.body{padding:14px;}
+.row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+.btn{
+  appearance:none; border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text); font-weight:850;
+  padding:10px 12px; border-radius:14px;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.btn:hover{background: rgba(255,255,255,.08);}
+.btn.primary{
+  border-color: rgba(125,211,252,.35);
+  background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
+}
+.field{display:flex; flex-direction:column; gap:6px; min-width:220px;}
+label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
+select{
+  width:100%;
+  appearance:none;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:14px;
+  font-weight:800;
+  cursor:pointer;
+  outline:none;
+}
+select:focus{box-shadow: 0 0 0 6px var(--ring);}
+
+.msg{
+  padding:10px 12px; border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  margin-top:10px;
+}
+.msg.good{border-color:rgba(52,211,153,.35); background: rgba(52,211,153,.10); color: rgba(238,242,255,.92);}
+.msg.bad{border-color:rgba(251,113,133,.35); background: rgba(251,113,133,.10); color: rgba(238,242,255,.92);}
+
+.stage{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:14px;
+  background:
+    radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
+    linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+}
+
+/* Match Pairs */
+.pairsGrid{
+  display:grid;
+  grid-template-columns: repeat(4, minmax(0,1fr));
+  gap:10px;
+}
+@media (max-width:900px){ .pairsGrid{grid-template-columns:repeat(3,minmax(0,1fr));} }
+@media (max-width:560px){ .pairsGrid{grid-template-columns:repeat(2,minmax(0,1fr));} }
+
+.cardBtn{
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  border-radius:16px;
+  height:88px;
+  cursor:pointer;
+  display:grid;
+  place-items:center;
+  font-size:30px;
+  font-weight:950;
+  user-select:none;
+  touch-action: manipulation;
+}
+.cardBtn.revealed{border-color:rgba(125,211,252,.35); background: rgba(125,211,252,.12);}
+.cardBtn.matched{border-color:rgba(52,211,153,.35); background: rgba(52,211,153,.12); cursor:default}
+.small{font-size:13px;color:var(--muted);line-height:1.35}
+
+/* Sequence Recall */
+.seqRow{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+.seqBtn{
+  width:84px;height:84px;border-radius:18px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  cursor:pointer;
+  user-select:none;
+  display:grid;
+  place-items:center;
+  font-weight:950;
+  font-size:24px;
+  touch-action: manipulation;
+}
+.seqBtn.flash{border-color:rgba(253,224l,0,0);} /* placeholder, overridden in JS */
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" onerror="this.style.display='none'">
+        <div>
+          <div class="title">Primary Steps</div>
+          <span class="sub">Simple, calm learning activities</span>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="memory.html" class="active">Back to Memory</a>
+        <a href="games.html">Games</a>
+        <a href="puzzles.html">Puzzles</a>
+        <a href="progress.html">Progress</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hwrap">
+    <h1 id="pageTitle">Memory</h1>
+    <p class="lead" id="pageLead">Press New to start.</p>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="card" aria-label="Memory activity">
+    <div class="head">
+      <div class="pill" id="actPill">Loading…</div>
+      <div class="row">
+        <div class="field">
+          <label for="difficulty">Difficulty</label>
+          <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <button class="btn primary" id="newBtn" type="button">New</button>
+        <button class="btn" id="resetBtn" type="button">Reset</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="stage" id="stage"></div>
+      <div class="msg" id="message">Press <strong>New</strong> to start.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const $ = (id)=>document.getElementById(id);
+  const ui = {
+    stage:$('stage'),
+    msg:$('message'),
+    pill:$('actPill'),
+    difficulty:$('difficulty'),
+    newBtn:$('newBtn'),
+    resetBtn:$('resetBtn'),
+    pageTitle:$('pageTitle'),
+    pageLead:$('pageLead')
+  };
+
+  function setMsg(type, html){
+    ui.msg.className = 'msg' + (type ? ' ' + type : '');
+    ui.msg.innerHTML = html;
+  }
+  function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
+  }
+  const sleep = (ms)=>new Promise(r=>setTimeout(r,ms));
+
+  const ACTIVITIES = [
+    /* MATCH PAIRS */
+    {
+      key:'pairs',
+      name:'Match Pairs',
+      lead:'Flip cards and find the matching pairs.',
+      build: ()=>({ symbols:[], revealed:[], matched:new Set(), moves:0, lock:false }),
+      newRound: (st, diff)=>{
+        const pool = ['🍎','🍌','🍇','🍓','🍉','🍒','🥝','🍍','🐶','🐱','🦁','🐸','🐼','🦊','🐵','🦄'];
+        const pairs = diff==='easy' ? 4 : diff==='hard' ? 8 : 6; // total cards = pairs*2
+        const picks = shuffle(pool.slice()).slice(0, pairs);
+        st.symbols = shuffle([...picks, ...picks]);
+        st.revealed = [];
+        st.matched = new Set();
+        st.moves = 0;
+        st.lock = false;
+
+        ui.stage.innerHTML = `
+          <div class="small">Moves: <strong id="moves">0</strong> • Pairs: <strong id="done">0</strong> / ${pairs}</div>
+          <div style="height:10px"></div>
+          <div class="pairsGrid" id="grid"></div>
+        `;
+
+        const grid = ui.stage.querySelector('#grid');
+        st.symbols.forEach((_,i)=>{
+          const b = document.createElement('button');
+          b.type = 'button';
+          b.className = 'cardBtn';
+          b.textContent = '❓';
+          b.dataset.i = String(i);
+          b.addEventListener('click', ()=> onPick(st, i));
+          grid.appendChild(b);
+        });
+
+        setMsg('', `Find all the pairs.`);
+      },
+      render: (st)=>{
+        // render is handled in-place for performance
+      }
+    },
+
+    /* SEQUENCE RECALL */
+    {
+      key:'sequence',
+      name:'Sequence Recall',
+      lead:'Watch the sequence, then tap the same order.',
+      build: ()=>({ seq:[], input:[], level:1, playing:false }),
+      newRound: async (st, diff)=>{
+        st.level = diff==='easy' ? 1 : diff==='hard' ? 3 : 2;
+        st.seq = [];
+        st.input = [];
+        st.playing = false;
+
+        ui.stage.innerHTML = `
+          <div class="small">Level: <strong id="lvl">${st.level}</strong> • Your turn: <strong id="turn">Watch</strong></div>
+          <div style="height:10px"></div>
+          <div class="seqRow" id="row"></div>
+          <div style="height:10px"></div>
+          <div class="small" style="text-align:center">Tip: press <strong>New</strong> anytime to restart.</div>
+        `;
+
+        const row = ui.stage.querySelector('#row');
+        const labels = ['1','2','3','4'];
+        labels.forEach((lab, idx)=>{
+          const b = document.createElement('button');
+          b.type='button';
+          b.className='seqBtn';
+          b.textContent=lab;
+          b.dataset.idx=String(idx);
+          b.addEventListener('click', ()=> handleSeqClick(st, idx));
+          row.appendChild(b);
+        });
+
+        setMsg('', `Watch the sequence.`);
+        await nextSeqRound(st);
+      },
+      render: ()=>{}
+    }
+  ];
+
+  async function nextSeqRound(st){
+    st.input = [];
+    const row = ui.stage.querySelector('#row');
+    const lvlEl = ui.stage.querySelector('#lvl');
+    const turnEl = ui.stage.querySelector('#turn');
+    if(lvlEl) lvlEl.textContent = String(st.level);
+
+    // add one new step
+    st.seq.push(randInt(0,3));
+    st.playing = true;
+    if(turnEl) turnEl.textContent = 'Watch';
+
+    // flash sequence
+    const btns = row.querySelectorAll('.seqBtn');
+    for(const idx of st.seq){
+      btns[idx].classList.add('flash');
+      btns[idx].style.borderColor = 'rgba(125,211,252,.45)';
+      btns[idx].style.background = 'rgba(125,211,252,.18)';
+      await sleep(350);
+      btns[idx].style.borderColor = '';
+      btns[idx].style.background = '';
+      btns[idx].classList.remove('flash');
+      await sleep(180);
+    }
+    st.playing = false;
+    if(turnEl) turnEl.textContent = 'Tap';
+    setMsg('', `Your turn: repeat the sequence.`);
+  }
+
+  async function handleSeqClick(st, idx){
+    if(st.playing) return;
+    const row = ui.stage.querySelector('#row');
+    const btns = row.querySelectorAll('.seqBtn');
+    // tiny feedback flash
+    btns[idx].style.borderColor = 'rgba(52,211,153,.45)';
+    btns[idx].style.background = 'rgba(52,211,153,.14)';
+    setTimeout(()=>{ btns[idx].style.borderColor=''; btns[idx].style.background=''; }, 120);
+
+    st.input.push(idx);
+    const pos = st.input.length - 1;
+    if(st.input[pos] !== st.seq[pos]){
+      setMsg('bad', `Not quite. Press <strong>New</strong> to try again.`);
+      st.playing = true; // lock
+      return;
+    }
+    if(st.input.length === st.seq.length){
+      setMsg('good', `✅ Great memory! Next level…`);
+      st.level += 1;
+      st.playing = true;
+      await sleep(500);
+      st.playing = false;
+      await nextSeqRound(st);
+    }
+  }
+
+  async function onPick(st, i){
+    if(st.lock) return;
+    if(st.matched.has(i)) return;
+
+    const grid = ui.stage.querySelector('#grid');
+    const btn = grid.querySelector('[data-i="'+i+'"]');
+    if(!btn) return;
+
+    // prevent picking same card twice
+    if(st.revealed.includes(i)) return;
+
+    // reveal
+    btn.textContent = st.symbols[i];
+    btn.classList.add('revealed');
+    st.revealed.push(i);
+
+    if(st.revealed.length === 2){
+      st.lock = true;
+      st.moves += 1;
+      ui.stage.querySelector('#moves').textContent = String(st.moves);
+
+      const [a,b] = st.revealed;
+      const match = st.symbols[a] === st.symbols[b];
+
+      if(match){
+        st.matched.add(a);
+        st.matched.add(b);
+        const done = st.matched.size / 2;
+        ui.stage.querySelector('#done').textContent = String(done);
+        grid.querySelector('[data-i="'+a+'"]').classList.add('matched');
+        grid.querySelector('[data-i="'+b+'"]').classList.add('matched');
+        setMsg('good', `✅ Match! Keep going…`);
+        st.revealed = [];
+        st.lock = false;
+
+        // check win
+        if(st.matched.size === st.symbols.length){
+          setMsg('good', `🎉 Completed! Moves: <strong>${st.moves}</strong>. Press <strong>New</strong> for another.`);
+        }
+      } else {
+        setMsg('bad', `Not a match. Try again…`);
+        await sleep(650);
+        // hide
+        [a,b].forEach(idx=>{
+          const el = grid.querySelector('[data-i="'+idx+'"]');
+          if(!el) return;
+          el.textContent = '❓';
+          el.classList.remove('revealed');
+        });
+        st.revealed = [];
+        st.lock = false;
+      }
+    }
+  }
+
+  const params = new URLSearchParams(location.search);
+  const requested = (params.get('activity') || 'pairs').toLowerCase();
+  let active = ACTIVITIES.find(a=>a.key===requested) || ACTIVITIES[0];
+  let state = active.build();
+
+  function applyMeta(){
+    ui.pill.textContent = active.name;
+    ui.pageTitle.textContent = active.name;
+    ui.pageLead.textContent = active.lead;
+  }
+  async function newRound(){
+    state = active.build();
+    applyMeta();
+    await active.newRound(state, ui.difficulty.value);
+  }
+  function reset(){
+    // reset equals new round
+    newRound();
+    setMsg('', `Reset done. Press <strong>New</strong> or keep going.`);
+  }
+
+  ui.newBtn.addEventListener('click', ()=> newRound());
+  ui.resetBtn.addEventListener('click', reset);
+  ui.difficulty.addEventListener('change', ()=> newRound());
+
+  applyMeta();
+  ui.stage.innerHTML = `<div class="small">Press <strong>New</strong> to start ${active.name}.</div>`;
+})();
+</script>
+</body>
+</html>
