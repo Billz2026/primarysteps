@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Clock • Primary Steps</title>
+<link rel="icon" href="assets/primary-steps-icon-512.png" />
+<style>
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:#0b0d12;
+  color:#eef2ff;
+}
+header{
+  background:#121621;
+  padding:12px 16px;
+  border-bottom:1px solid rgba(255,255,255,.1);
+}
+a{color:#7dd3fc;text-decoration:none;font-weight:800}
+main{max-width:900px;margin:auto;padding:24px}
+.card{
+  background:#121621;
+  border:1px solid rgba(255,255,255,.1);
+  border-radius:18px;
+  padding:20px;
+}
+h1{margin-top:0}
+.msg{
+  margin-top:12px;
+  padding:10px 14px;
+  border-radius:14px;
+  background:rgba(255,255,255,.05);
+}
+.good{border:1px solid rgba(52,211,153,.4)}
+.bad{border:1px solid rgba(251,113,133,.4)}
+.clock{
+  width:240px;height:240px;border-radius:50%;
+  border:6px solid #7dd3fc;
+  margin:20px auto;position:relative;
+}
+.hand{
+  position:absolute;left:50%;top:50%;
+  transform-origin:bottom;
+  background:#eef2ff;
+}
+.hour{width:6px;height:60px}
+.minute{width:4px;height:90px}
+.center{width:12px;height:12px;background:#7dd3fc;border-radius:50%;position:absolute;left:50%;top:50%;transform:translate(-50%,-50%)}
+.controls{display:flex;gap:10px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+input{padding:8px;border-radius:10px;border:1px solid rgba(255,255,255,.2);background:#0b0d12;color:#eef2ff;width:80px;text-align:center}
+button{
+  padding:8px 14px;border-radius:999px;border:1px solid rgba(255,255,255,.2);
+  background:rgba(255,255,255,.06);color:#eef2ff;font-weight:800;cursor:pointer
+}
+</style>
+</head>
+<body>
+<header>
+  <a href="clock.html">← Back to Clock</a>
+</header>
+<main>
+  <div class="card">
+    <h1 id="title">Clock</h1>
+    <div class="clock">
+      <div class="hand hour" id="hour"></div>
+      <div class="hand minute" id="minute"></div>
+      <div class="center"></div>
+    </div>
+    <div class="controls" id="controls"></div>
+    <div class="msg" id="msg">Press New to start.</div>
+  </div>
+</main>
+
+<script>
+const params = new URLSearchParams(location.search);
+const mode = params.get("activity") || "read";
+const title = document.getElementById("title");
+const hourHand = document.getElementById("hour");
+const minHand = document.getElementById("minute");
+const msg = document.getElementById("msg");
+const controls = document.getElementById("controls");
+
+let h=0,m=0;
+
+function draw(){
+  hourHand.style.transform = `translate(-50%,-100%) rotate(${(h%12)*30 + m*0.5}deg)`;
+  minHand.style.transform = `translate(-50%,-100%) rotate(${m*6}deg)`;
+}
+
+function newTime(){
+  h = Math.floor(Math.random()*12);
+  m = [0,15,30,45][Math.floor(Math.random()*4)];
+  draw();
+}
+
+if(mode==="read"){
+  title.textContent="Read the Clock";
+  newTime();
+  controls.innerHTML = `
+    <input id="h" placeholder="Hour">
+    <input id="m" placeholder="Min">
+    <button onclick="check()">Check</button>
+    <button onclick="newTime()">New</button>
+  `;
+  window.check = ()=>{
+    const ih = Number(document.getElementById("h").value);
+    const im = Number(document.getElementById("m").value);
+    if(ih===h && im===m){
+      msg.textContent="Correct!";
+      msg.className="msg good";
+    }else{
+      msg.textContent=`Not quite. It was ${h}:${m.toString().padStart(2,'0')}`;
+      msg.className="msg bad";
+    }
+  };
+}else{
+  title.textContent="Set the Time";
+  newTime();
+  controls.innerHTML = `
+    <button onclick="h=(h+1)%12;draw()">Hour +</button>
+    <button onclick="m=(m+15)%60;draw()">Min +</button>
+    <button onclick="newTime()">New</button>
+  `;
+}
+</script>
+</body>
+</html>
