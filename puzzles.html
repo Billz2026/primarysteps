@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Puzzles – Primary Steps</title>
+<link rel="icon" href="assets/primary-steps-icon-512.png" />
+<style>
+:root{
+  --bg:#0b0d12;
+  --panel:#121621;
+  --text:#eef2ff;
+  --muted:#a9b2c7;
+  --brand:#7dd3fc;
+  --border:rgba(255,255,255,.10);
+  --radius:18px;
+  --shadow:0 12px 40px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+header{
+  background:rgba(18,22,33,.8);
+  border-bottom:1px solid var(--border);
+  padding:14px 18px;
+}
+header a{color:var(--text);text-decoration:none;font-weight:800}
+.container{
+  max-width:1100px;
+  margin:auto;
+  padding:30px 18px;
+}
+h1{margin-top:0}
+.grid{
+  display:grid;
+  gap:14px;
+}
+.card{
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:16px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+.card small{color:var(--muted)}
+.btn{
+  background:rgba(125,211,252,.15);
+  border:1px solid rgba(125,211,252,.35);
+  color:var(--text);
+  padding:10px 14px;
+  border-radius:999px;
+  text-decoration:none;
+  font-weight:800;
+}
+</style>
+</head>
+<body>
+<header>
+  <a href="index.html">← Home</a>
+</header>
+<main class="container">
+  <h1>Puzzles</h1>
+  <p style="color:var(--muted)">Choose a puzzle to play</p>
+
+  <div class="grid">
+    <div class="card">
+      <div>
+        <strong>Jigsaw Match</strong><br>
+        <small>Easy – visual matching</small>
+      </div>
+      <a class="btn" href="./puzzles-play.html?puzzle=jigsaw">Start</a>
+    </div>
+
+    <div class="card">
+      <div>
+        <strong>Shape Pattern</strong><br>
+        <small>Easy → Medium</small>
+      </div>
+      <a class="btn" href="./puzzles-play.html?puzzle=pattern">Start</a>
+    </div>
+
+    <div class="card">
+      <div>
+        <strong>Odd One Out</strong><br>
+        <small>Medium</small>
+      </div>
+      <a class="btn" href="./puzzles-play.html?puzzle=odd">Start</a>
+    </div>
+
+    <div class="card">
+      <div>
+        <strong>Sequence Order</strong><br>
+        <small>Medium → Hard</small>
+      </div>
+      <a class="btn" href="./puzzles-play.html?puzzle=sequence">Start</a>
+    </div>
+
+    <div class="card">
+      <div>
+        <strong>Logic Tiles</strong><br>
+        <small>Hard</small>
+      </div>
+      <a class="btn" href="./puzzles-play.html?puzzle=logic">Start</a>
+    </div>
+  </div>
+</main>
+</body>
+</html>
