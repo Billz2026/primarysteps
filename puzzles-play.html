@@ -1,0 +1,754 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Puzzle • Primary Steps</title>
+<link rel="icon" href="assets/primary-steps-icon-512.png" />
+<style>
+:root{
+  --bg0:#0b0d12; --bg1:#0f1320;
+  --panel:#121621;
+  --text:#eef2ff; --muted:rgba(238,242,255,.72);
+  --line:rgba(255,255,255,.12);
+  --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399; --bad:#fb7185;
+  --ring:rgba(125,211,252,.30);
+  --shadow:0 18px 40px rgba(0,0,0,.35);
+  --r:18px;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+    radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  min-height:100vh;
+}
+header{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter: blur(10px);
+  background: rgba(18,22,33,.72);
+  border-bottom:1px solid var(--line);
+}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+.top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+.brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
+.brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
+.brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+nav a{
+  color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
+  padding:8px 10px; border-radius:12px;
+  border:1px solid transparent; opacity:.92;
+}
+nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
+
+.hero{padding:22px 16px 10px;}
+.hwrap{max-width:1100px;margin:0 auto;}
+h1{margin:0 0 6px; font-size:28px; letter-spacing:-.4px;}
+p.lead{margin:0; color:var(--muted); max-width:85ch; font-size:14px; line-height:1.45;}
+
+.grid{
+  max-width:1100px; margin:14px auto 28px; padding:0 16px;
+  display:grid; grid-template-columns: 1fr; gap:14px;
+}
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.card .head{
+  padding:14px 14px 10px;
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  flex-wrap:wrap;
+}
+.pill{
+  font-size:12px; font-weight:850;
+  padding:6px 10px; border-radius:999px;
+  background: rgba(125,211,252,.14);
+  border:1px solid rgba(125,211,252,.25);
+  color: var(--text);
+  white-space:nowrap;
+}
+.body{padding:14px;}
+.row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+.btn{
+  appearance:none; border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text); font-weight:850;
+  padding:10px 12px; border-radius:14px;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.btn:hover{background: rgba(255,255,255,.08);}
+.btn.primary{
+  border-color: rgba(125,211,252,.35);
+  background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
+}
+.btn.good{
+  border-color: rgba(52,211,153,.35);
+  background: linear-gradient(180deg, rgba(52,211,153,.18), rgba(52,211,153,.06));
+}
+
+.field{display:flex; flex-direction:column; gap:6px; min-width:220px;}
+label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
+select{
+  width:100%;
+  appearance:none;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:14px;
+  font-weight:800;
+  cursor:pointer;
+  outline:none;
+}
+select:focus{box-shadow: 0 0 0 6px var(--ring);}
+
+.msg{
+  padding:10px 12px; border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  margin-top:10px;
+}
+.msg.good{border-color:rgba(52,211,153,.35); background: rgba(52,211,153,.10); color: rgba(238,242,255,.92);}
+.msg.bad{border-color:rgba(251,113,133,.35); background: rgba(251,113,133,.10); color: rgba(238,242,255,.92);}
+
+.stage{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  background:
+    radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
+    linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+}
+
+/* Puzzle UI */
+.grid2{display:grid; gap:12px;}
+@media (min-width:900px){ .grid2{grid-template-columns: 1.2fr .8fr;} }
+
+.board{
+  display:grid;
+  gap:10px;
+  justify-content:center;
+}
+.tileBtn{
+  width:72px; height:72px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  color: var(--text);
+  font-weight:950;
+  font-size:18px;
+  cursor:pointer;
+  user-select:none;
+  touch-action: manipulation;
+}
+.tileBtn:hover{background: rgba(255,255,255,.10);}
+.tileBtn.on{border-color: rgba(253,224,71,.45); background: rgba(253,224,71,.15); color: rgba(238,242,255,.95);}
+
+.choiceGrid{
+  display:grid;
+  grid-template-columns: repeat(2, minmax(0,1fr));
+  gap:10px;
+}
+@media (max-width:560px){ .choiceGrid{grid-template-columns:1fr;} }
+.choice{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  border-radius:16px;
+  padding:12px;
+  cursor:pointer;
+  user-select:none;
+  text-align:left;
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  font-weight:950;
+}
+.choice:hover{background: rgba(255,255,255,.08);}
+.tag{
+  font-size:12px; font-weight:950;
+  padding:6px 10px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  color: var(--muted);
+  background: rgba(0,0,0,.10);
+  white-space:nowrap;
+}
+
+.dragArea{
+  display:grid; gap:10px; justify-content:center;
+}
+.slots{
+  display:grid;
+  grid-template-columns: repeat(2, 110px);
+  gap:10px;
+  justify-content:center;
+}
+.slot{
+  width:110px; height:110px;
+  border-radius:18px;
+  border:1px dashed rgba(238,242,255,.22);
+  background: rgba(0,0,0,.12);
+  display:grid; place-items:center;
+  font-weight:950;
+  color: rgba(238,242,255,.85);
+}
+.pieces{
+  display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+}
+.piece{
+  width:92px; height:92px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  display:grid; place-items:center;
+  font-size:34px;
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+}
+.piece:active{cursor:grabbing;}
+.slot.over{outline:2px solid rgba(125,211,252,.45); outline-offset:2px;}
+
+.orderRow{
+  display:flex; gap:10px; flex-wrap:wrap; justify-content:center;
+}
+.orderSlot{
+  width:74px; height:74px;
+  border-radius:18px;
+  border:1px dashed rgba(238,242,255,.22);
+  background: rgba(0,0,0,.12);
+  display:grid; place-items:center;
+  font-weight:950;
+  font-size:18px;
+}
+.orderTile{
+  width:74px; height:74px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  display:grid; place-items:center;
+  font-weight:950;
+  font-size:18px;
+  cursor:grab;
+  user-select:none;
+  touch-action:none;
+}
+.orderTile:active{cursor:grabbing;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" onerror="this.style.display='none'">
+        <div>
+          <div class="title">Primary Steps</div>
+          <span class="sub">Simple, calm learning activities</span>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="puzzles.html" class="active">Back to Puzzles</a>
+        <a href="games.html">Games</a>
+        <a href="numbers.html">Numbers</a>
+        <a href="letters.html">Letters</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hwrap">
+    <h1 id="pageTitle">Puzzle</h1>
+    <p class="lead" id="pageLead">Choose a difficulty and press New.</p>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="card" aria-label="Puzzle player">
+    <div class="head">
+      <div class="pill" id="puzzlePill">Loading…</div>
+      <div class="row">
+        <div class="field">
+          <label for="difficulty">Difficulty</label>
+          <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <button class="btn primary" id="newBtn" type="button">New</button>
+        <button class="btn" id="resetBtn" type="button">Reset</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="stage" id="stage"></div>
+      <div class="msg" id="message">Press <strong>New</strong> to start.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const $ = (id)=>document.getElementById(id);
+  const ui = {
+    stage:$('stage'),
+    msg:$('message'),
+    pill:$('puzzlePill'),
+    difficulty:$('difficulty'),
+    newBtn:$('newBtn'),
+    resetBtn:$('resetBtn'),
+    pageTitle:$('pageTitle'),
+    pageLead:$('pageLead')
+  };
+
+  function setMsg(type, html){
+    ui.msg.className = 'msg' + (type ? ' ' + type : '');
+    ui.msg.innerHTML = html;
+  }
+  function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  const PUZZLES = [
+    {
+      key:'jigsaw',
+      name:'Jigsaw Match',
+      lead:'Drag each piece into the matching slot. On touch: tap a piece, then tap a slot.',
+      build: ()=>({ picked:null, placed:0, map:{}, pieces:[] }),
+      newRound: (st, diff)=>{
+        const sets = {
+          easy:['🍎','🐶','⭐','🚗'],
+          medium:['🦁','🌙','⚽','🍕'],
+          hard:['🧠','🧩','🚀','🎧']
+        };
+        const p = sets[diff] || sets.medium;
+        st.placed = 0;
+        st.map = {0:p[0],1:p[1],2:p[2],3:p[3]};
+        st.pieces = shuffle(p.map((x,i)=>({id:'p'+i, emoji:x, target:i})));
+        st.picked = null;
+        setMsg('', `Place all <strong>4</strong> pieces.`);
+      },
+      render: (st)=>{
+        ui.stage.innerHTML = `
+          <div class="grid2">
+            <div class="dragArea">
+              <div class="slots" id="slots">
+                ${[0,1,2,3].map(i=>`
+                  <div class="slot" data-slot="${i}">${st.map[i]}</div>
+                `).join('')}
+              </div>
+              <div class="pieces" id="pieces"></div>
+            </div>
+            <div>
+              <div class="pill" style="display:inline-block;margin-bottom:10px;">Progress: <span id="prog">${st.placed}</span> / 4</div>
+              <div style="color:rgba(238,242,255,.72);font-size:13px;line-height:1.45;">
+                Tip: On tablets/phones you can <strong>tap</strong> a piece, then tap the matching slot.
+              </div>
+            </div>
+          </div>
+        `;
+        const piecesEl = ui.stage.querySelector('#pieces');
+        st.pieces.forEach(pc=>{
+          const el = document.createElement('div');
+          el.className='piece';
+          el.textContent = pc.emoji;
+          el.draggable = true;
+          el.dataset.id = pc.id;
+          el.dataset.target = pc.target;
+          el.addEventListener('dragstart', (e)=>{
+            e.dataTransfer.setData('text/plain', pc.id);
+          });
+          el.addEventListener('click', ()=>{
+            st.picked = pc.id;
+            setMsg('', `Picked ${pc.emoji}. Now tap the matching slot.`);
+          });
+          piecesEl.appendChild(el);
+        });
+
+        ui.stage.querySelectorAll('.slot').forEach(slot=>{
+          slot.addEventListener('dragover', (e)=>{ e.preventDefault(); slot.classList.add('over'); });
+          slot.addEventListener('dragleave', ()=> slot.classList.remove('over'));
+          slot.addEventListener('drop', (e)=>{
+            e.preventDefault(); slot.classList.remove('over');
+            const id = e.dataTransfer.getData('text/plain');
+            place(id, Number(slot.dataset.slot));
+          });
+          slot.addEventListener('click', ()=>{
+            if(st.picked) place(st.picked, Number(slot.dataset.slot));
+          });
+        });
+
+        function place(id, slotIndex){
+          const idx = st.pieces.findIndex(x=>x.id===id);
+          if(idx === -1) return;
+          const pc = st.pieces[idx];
+          if(pc.target !== slotIndex){
+            setMsg('bad', `Not quite — try matching the picture.`);
+            return;
+          }
+          st.pieces.splice(idx,1);
+          st.placed++;
+          ui.stage.querySelector('#prog').textContent = String(st.placed);
+          setMsg('good', `✅ Nice!`);
+
+          // remove piece from UI
+          piecesEl.innerHTML='';
+          st.pieces.forEach(pc2=>{
+            const el = document.createElement('div');
+            el.className='piece';
+            el.textContent = pc2.emoji;
+            el.draggable = true;
+            el.dataset.id = pc2.id;
+            el.dataset.target = pc2.target;
+            el.addEventListener('dragstart', (e)=> e.dataTransfer.setData('text/plain', pc2.id));
+            el.addEventListener('click', ()=>{ st.picked = pc2.id; setMsg('', `Picked ${pc2.emoji}. Now tap the matching slot.`); });
+            piecesEl.appendChild(el);
+          });
+
+          if(st.placed === 4){
+            setMsg('good', `🎉 Completed! Press <strong>New</strong> for another.`);
+          }
+        }
+      }
+    },
+
+    {
+      key:'pattern',
+      name:'Pattern Pick',
+      lead:'Choose what comes next in the pattern.',
+      build: ()=>({ seq:[], answer:'', choices:[], selected:'' }),
+      newRound:(st, diff)=>{
+        const patterns = {
+          easy: [
+            {seq:['🔴','🔵','🔴','🔵'], answer:'🔴', choices:['🔴','🔵','🟢','🟡']},
+            {seq:['⭐','⭐','🌙','⭐','⭐'], answer:'🌙', choices:['🌙','⭐','☁️','⚡']}
+          ],
+          medium:[
+            {seq:['🔺','🔻','🔺','🔻','🔺'], answer:'🔻', choices:['🔻','🔺','⬛','⬜']},
+            {seq:['🍎','🍌','🍊','🍎','🍌'], answer:'🍊', choices:['🍊','🍎','🍇','🍓']}
+          ],
+          hard:[
+            {seq:['1','2','4','8'], answer:'16', choices:['16','10','12','14']},
+            {seq:['A','C','E','G'], answer:'I', choices:['I','H','J','K']}
+          ]
+        };
+        const set = patterns[diff] || patterns.medium;
+        const q = set[randInt(0,set.length-1)];
+        st.seq = q.seq.slice();
+        st.answer = q.answer;
+        st.choices = shuffle(q.choices.slice());
+        st.selected = '';
+        setMsg('', `Tap the correct answer.`);
+      },
+      render:(st)=>{
+        ui.stage.innerHTML = `
+          <div class="grid2">
+            <div>
+              <div class="pill" style="display:inline-block;margin-bottom:10px;">What comes next?</div>
+              <div class="board" style="grid-template-columns: repeat(${Math.min(5, st.seq.length)}, 72px);">
+                ${st.seq.map(x=>`<div class="tileBtn on" style="cursor:default">${x}</div>`).join('')}
+                <div class="tileBtn" id="nextBox">?</div>
+              </div>
+            </div>
+            <div>
+              <div class="choiceGrid" id="choices"></div>
+            </div>
+          </div>
+        `;
+        const c = ui.stage.querySelector('#choices');
+        st.choices.forEach(opt=>{
+          const b = document.createElement('div');
+          b.className = 'choice';
+          b.innerHTML = `<span style="font-size:18px">${opt}</span><span class="tag">Choose</span>`;
+          b.addEventListener('click', ()=>{
+            if(st.selected) return;
+            st.selected = opt;
+            ui.stage.querySelector('#nextBox').textContent = opt;
+            if(opt === st.answer){
+              setMsg('good', `✅ Correct! Press <strong>New</strong> for another.`);
+            } else {
+              setMsg('bad', `Not quite. The correct answer was <strong>${st.answer}</strong>. Press <strong>New</strong> to try again.`);
+            }
+          });
+          c.appendChild(b);
+        });
+      }
+    },
+
+    {
+      key:'odd',
+      name:'Odd One Out',
+      lead:'Tap the one that doesn’t match the others.',
+      build: ()=>({ items:[], oddIndex:0, picked:false }),
+      newRound:(st, diff)=>{
+        const sets = {
+          easy: [
+            {base:'🍎', odd:'🍌'},
+            {base:'⭐', odd:'🌙'},
+            {base:'🔵', odd:'🔴'},
+          ],
+          medium:[
+            {base:'🚗', odd:'🚌'},
+            {base:'🐶', odd:'🐱'},
+            {base:'⚽', odd:'🏀'},
+          ],
+          hard:[
+            {base:'2', odd:'3'},
+            {base:'A', odd:'B'},
+            {base:'10', odd:'12'},
+          ]
+        };
+        const pick = (sets[diff]||sets.medium)[randInt(0,(sets[diff]||sets.medium).length-1)];
+        const total = diff==='easy' ? 4 : diff==='medium' ? 6 : 8;
+        st.oddIndex = randInt(0,total-1);
+        st.items = Array.from({length:total}, (_,i)=> i===st.oddIndex ? pick.odd : pick.base);
+        st.picked = false;
+        setMsg('', `Tap the odd one out.`);
+      },
+      render:(st)=>{
+        const cols = st.items.length<=4 ? 4 : 4;
+        ui.stage.innerHTML = `
+          <div class="board" style="grid-template-columns: repeat(${cols}, 72px);">
+            ${st.items.map((x,i)=>`<button class="tileBtn" data-i="${i}" type="button">${x}</button>`).join('')}
+          </div>
+        `;
+        ui.stage.querySelectorAll('[data-i]').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            if(st.picked) return;
+            st.picked = true;
+            const i = Number(btn.dataset.i);
+            if(i===st.oddIndex){
+              btn.classList.add('on');
+              setMsg('good', `✅ Correct! Press <strong>New</strong> for another.`);
+            } else {
+              btn.classList.add('on');
+              const correct = ui.stage.querySelector('[data-i="'+st.oddIndex+'"]');
+              correct.classList.add('on');
+              setMsg('bad', `Not quite. The odd one was highlighted. Press <strong>New</strong> to try again.`);
+            }
+          });
+        });
+      }
+    },
+
+    {
+      key:'sequence',
+      name:'Sequence Order',
+      lead:'Drag the tiles into the correct order. On touch: tap a tile, then tap a slot.',
+      build: ()=>({ tiles:[], order:[], picked:null }),
+      newRound:(st, diff)=>{
+        const len = diff==='easy' ? 4 : diff==='medium' ? 5 : 6;
+        const start = randInt(1, 10);
+        const step = diff==='hard' ? randInt(2,3) : 1;
+        st.order = Array.from({length:len}, (_,i)=> String(start + i*step));
+        st.tiles = shuffle(st.order.map((v,i)=>({id:'t'+i, v})));
+        st.picked = null;
+        setMsg('', `Place the tiles left-to-right in order.`);
+      },
+      render:(st)=>{
+        ui.stage.innerHTML = `
+          <div class="grid2">
+            <div>
+              <div class="pill" style="display:inline-block;margin-bottom:10px;">Order</div>
+              <div class="orderRow" id="slots">
+                ${st.order.map((_,i)=>`<div class="orderSlot" data-slot="${i}">?</div>`).join('')}
+              </div>
+              <div style="height:12px"></div>
+              <div class="orderRow" id="tiles"></div>
+              <div style="margin-top:10px;color:rgba(238,242,255,.72);font-size:13px;line-height:1.45;">
+                Tip: On touch devices you can tap a tile, then tap a slot.
+              </div>
+            </div>
+            <div>
+              <button class="btn good" id="checkBtn" type="button">Check</button>
+              <div class="msg" style="margin-top:10px" id="localMsg">Fill all slots, then press Check.</div>
+            </div>
+          </div>
+        `;
+
+        const tilesEl = ui.stage.querySelector('#tiles');
+        const slotsEl = ui.stage.querySelector('#slots');
+        const localMsg = ui.stage.querySelector('#localMsg');
+
+        const placed = Array(st.order.length).fill(null);
+
+        function rerenderTiles(){
+          tilesEl.innerHTML = '';
+          st.tiles.forEach(t=>{
+            const el = document.createElement('div');
+            el.className='orderTile';
+            el.textContent=t.v;
+            el.draggable=true;
+            el.dataset.id=t.id;
+            el.dataset.v=t.v;
+            el.addEventListener('dragstart',(e)=> e.dataTransfer.setData('text/plain', t.id));
+            el.addEventListener('click',()=>{
+              st.picked=t.id;
+              localMsg.textContent = `Picked ${t.v}. Tap a slot.`;
+            });
+            tilesEl.appendChild(el);
+          });
+        }
+        function rerenderSlots(){
+          slotsEl.querySelectorAll('.orderSlot').forEach((slot,i)=>{
+            slot.textContent = placed[i] ? placed[i] : '?';
+          });
+        }
+
+        rerenderTiles(); rerenderSlots();
+
+        slotsEl.querySelectorAll('.orderSlot').forEach(slot=>{
+          slot.addEventListener('dragover',(e)=>{ e.preventDefault(); slot.classList.add('over'); });
+          slot.addEventListener('dragleave',()=> slot.classList.remove('over'));
+          slot.addEventListener('drop',(e)=>{
+            e.preventDefault(); slot.classList.remove('over');
+            const id = e.dataTransfer.getData('text/plain');
+            place(id, Number(slot.dataset.slot));
+          });
+          slot.addEventListener('click',()=>{
+            if(st.picked) place(st.picked, Number(slot.dataset.slot));
+          });
+        });
+
+        function place(id, slotIdx){
+          const idx = st.tiles.findIndex(x=>x.id===id);
+          if(idx===-1) return;
+          const t = st.tiles[idx];
+
+          // if tile already placed elsewhere, remove it
+          const prev = placed.findIndex(v=>v===t.v);
+          if(prev!==-1) placed[prev] = null;
+
+          placed[slotIdx] = t.v;
+          // remove from available tiles if placed somewhere
+          st.tiles.splice(idx,1);
+
+          rerenderTiles(); rerenderSlots();
+          st.picked = null;
+          localMsg.textContent = 'Keep going…';
+        }
+
+        ui.stage.querySelector('#checkBtn').addEventListener('click',()=>{
+          if(placed.some(v=>v===null)){
+            localMsg.textContent = 'Fill all slots first.';
+            return;
+          }
+          const ok = placed.every((v,i)=> v === st.order[i]);
+          if(ok){
+            setMsg('good', `✅ Correct order! Press <strong>New</strong> for another.`);
+            localMsg.textContent = 'Great job!';
+          } else {
+            setMsg('bad', `Not quite. Try again (press Reset).`);
+            localMsg.textContent = 'Wrong order.';
+          }
+        });
+
+        // expose for reset
+        st._placed = placed;
+        st._rerenderTiles = rerenderTiles;
+        st._rerenderSlots = rerenderSlots;
+      },
+      reset:(st)=>{
+        // full rebuild is easiest via newRound from outside
+      }
+    },
+
+    {
+      key:'logic',
+      name:'Logic Tiles',
+      lead:'Tap tiles to toggle them (and neighbours). Turn all tiles off.',
+      build: ()=>({ size:3, grid:[] }),
+      newRound:(st, diff)=>{
+        st.size = diff==='easy' ? 3 : diff==='medium' ? 4 : 5;
+        const n = st.size;
+        st.grid = Array.from({length:n*n}, ()=> Math.random() < 0.5);
+        // ensure not already solved
+        if(st.grid.every(v=>!v)) st.grid[0]=true;
+        setMsg('', `Turn all tiles off.`);
+      },
+      render:(st)=>{
+        const n = st.size;
+        ui.stage.innerHTML = `
+          <div class="board" style="grid-template-columns: repeat(${n}, 72px);">
+            ${st.grid.map((on,i)=>`<button class="tileBtn ${on?'on':''}" data-i="${i}" type="button">${on?'●':'○'}</button>`).join('')}
+          </div>
+        `;
+        function toggle(idx){
+          const n=st.size;
+          const r = Math.floor(idx/n), c = idx%n;
+          const ids = [idx];
+          if(r>0) ids.push(idx-n);
+          if(r<n-1) ids.push(idx+n);
+          if(c>0) ids.push(idx-1);
+          if(c<n-1) ids.push(idx+1);
+          ids.forEach(i=> st.grid[i] = !st.grid[i]);
+        }
+        ui.stage.querySelectorAll('[data-i]').forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            const i = Number(btn.dataset.i);
+            toggle(i);
+            active.render(state);
+            if(state.grid.every(v=>!v)){
+              setMsg('good', `🎉 Solved! Press <strong>New</strong> for another.`);
+            }
+          });
+        });
+      }
+    }
+  ];
+
+  const params = new URLSearchParams(location.search);
+  const requested = (params.get('puzzle') || 'jigsaw').toLowerCase();
+  let active = PUZZLES.find(p=>p.key===requested) || PUZZLES[0];
+  let state = active.build();
+
+  function applyMeta(){
+    ui.pill.textContent = active.name;
+    ui.pageTitle.textContent = active.name;
+    ui.pageLead.textContent = active.lead;
+  }
+
+  function newRound(){
+    state = active.build();
+    active.newRound(state, ui.difficulty.value);
+    applyMeta();
+    active.render(state);
+  }
+
+  function reset(){
+    // reset means: start new round with same difficulty
+    newRound();
+    setMsg('', `Reset done. Press <strong>New</strong> or keep going.`);
+  }
+
+  ui.newBtn.addEventListener('click', newRound);
+  ui.resetBtn.addEventListener('click', reset);
+  ui.difficulty.addEventListener('change', ()=> newRound());
+
+  // init view (don’t auto-start)
+  applyMeta();
+  active.render(state);
+  setMsg('', `Press <strong>New</strong> to start ${active.name}.`);
+})();
+</script>
+</body>
+</html>
