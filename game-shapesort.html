@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Games • Primary Steps</title>
+<title>Shape Sort • Primary Steps</title>
 <style>
 :root{
     --bg0:#0b0d12; --bg1:#0f1320;
@@ -334,53 +334,191 @@
 
 <section class="hero">
   <div class="hwrap">
-    <h1>Games</h1>
-    <p class="lead">Pick a game below — then it opens the activity (no dropdown).</p>
+    <h1>Shape Sort</h1>
+    <p class="lead">Drag shapes into bins. On touch: tap shape, then tap bin.</p>
   </div>
 </section>
 
 
-<section class="grid">
+<section class="grid two">
   <div class="card">
     <div class="head">
-      <div class="pill">Choose a game</div>
+      <div class="pill">Play</div>
       <div class="row">
-        <a class="btn" href="index.html">Back to Home</a>
+        <button class="btn" id="soundBtn" type="button" aria-pressed="false">Sound: Off</button>
+        <button class="btn primary" id="newBtn" type="button">New</button>
+        <button class="btn" id="resetBtn" type="button">Reset</button>
       </div>
     </div>
     <div class="body">
-      <div class="selectorGrid" style="grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px;">
-        <a class="gameCard" href="game-connect4.html" style="text-decoration:none;">
-          <div>
-            <strong>Connect 4</strong>
-            <div class="desc">Drop discs to make 4 in a row. 2‑player or practice.</div>
-          </div>
-          <span class="tag">Strategy</span>
-        </a>
-
-        <a class="gameCard" href="game-coins.html" style="text-decoration:none;">
-          <div>
-            <strong>Coin Piggy Bank</strong>
-            <div class="desc">Count, sort, and order UK coin values. 3 modes.</div>
-          </div>
-          <span class="tag">Money</span>
-        </a>
-
-        <a class="gameCard" href="game-shapesort.html" style="text-decoration:none;">
-          <div>
-            <strong>Shape Sort</strong>
-            <div class="desc">Drag (or tap) shapes into the matching bins.</div>
-          </div>
-          <span class="tag">Drag &amp; Drop</span>
-        </a>
+      <div class="stage" id="stage"></div>
+      <div class="msg" id="message">Press <strong>New</strong> to start.</div>
+      <div class="row" style="margin-top:10px;">
+        <a class="btn" href="games.html">Back to Games</a>
       </div>
+    </div>
+  </div>
 
-      <div class="msg">Tip: This works like the Numbers menu — click a game card to open the activity.</div>
+  <div class="card">
+    <div class="head">
+      <div class="pill">Difficulty</div>
+    </div>
+    <div class="body">
+      <div class="row">
+        <button class="btn" id="easyBtn" type="button">Easy</button>
+        <button class="btn on" id="medBtn" type="button">Medium</button>
+        <button class="btn" id="hardBtn" type="button">Hard</button>
+      </div>
+      <div class="msg">On touch: tap a shape, then tap the correct bin.</div>
     </div>
   </div>
 </section>
 
 
+
+<script>
+(() => {
+  const $ = (id)=>document.getElementById(id);
+  const ui = { stage:$('stage'), msg:$('message'), newBtn:$('newBtn'), resetBtn:$('resetBtn'),
+              soundBtn:$('soundBtn'), easyBtn:$('easyBtn'), medBtn:$('medBtn'), hardBtn:$('hardBtn') };
+
+  let soundOn=false, audioCtx=null;
+  function beep(freq=700, ms=70, gain=0.03){
+    if(!soundOn) return;
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.frequency.value=freq; g.gain.value=gain;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); setTimeout(()=>o.stop(), ms);
+  }
+  function setMsg(type, html){
+    ui.msg.className = 'msg' + (type ? ' ' + type : '');
+    ui.msg.innerHTML = html;
+  }
+  function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+  function cap(s){ return s[0].toUpperCase()+s.slice(1); }
+
+  function shapeIcon(type){
+    if(type==='circle') return `<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="16" fill="rgba(125,211,252,.65)" stroke="rgba(255,255,255,.35)" stroke-width="2"/></svg>`;
+    if(type==='square') return `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="10" width="28" height="28" rx="6" fill="rgba(167,139,250,.60)" stroke="rgba(255,255,255,.35)" stroke-width="2"/></svg>`;
+    return `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 10 L38 36 H10 Z" fill="rgba(52,211,153,.60)" stroke="rgba(255,255,255,.35)" stroke-width="2" /></svg>`;
+  }
+  function binIcon(type){
+    if(type==='circle') return `<svg viewBox="0 0 48 48" aria-hidden="true" style="opacity:.6"><circle cx="24" cy="24" r="16" fill="none" stroke="rgba(238,242,255,.35)" stroke-width="2"/></svg>`;
+    if(type==='square') return `<svg viewBox="0 0 48 48" aria-hidden="true" style="opacity:.6"><rect x="10" y="10" width="28" height="28" rx="6" fill="none" stroke="rgba(238,242,255,.35)" stroke-width="2"/></svg>`;
+    return `<svg viewBox="0 0 48 48" aria-hidden="true" style="opacity:.6"><path d="M24 10 L38 36 H10 Z" fill="none" stroke="rgba(238,242,255,.35)" stroke-width="2" /></svg>`;
+  }
+
+  let difficulty='medium';
+  let shapes=[], total=0, placed=0, picked=null;
+
+  function buildRound(){
+    const counts = {easy:6, medium:10, hard:14};
+    total = counts[difficulty] || 10;
+    placed = 0;
+    picked = null;
+    const types = ['circle','square','triangle'];
+    shapes = Array.from({length:total}, (_,i)=>({
+      id: 's' + Math.random().toString(16).slice(2) + i,
+      type: types[randInt(0, types.length-1)]
+    }));
+  }
+
+  function render(){
+    ui.stage.innerHTML = `
+      <div class="bins">
+        ${['circle','square','triangle'].map(t=>`
+          <div class="bin" data-bin="${t}">
+            <div class="binTitle">
+              <strong>${cap(t)}</strong>
+              <span class="mini">Drop here</span>
+            </div>
+            <div class="dropArea" aria-label="${t} bin">${binIcon(t)}</div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div class="tray" style="margin-top:12px;">
+        <div class="row" style="justify-content:space-between;">
+          <strong style="font-size:14px;font-weight:950;">Shape Tray</strong>
+          <span class="pill" id="countPill">${placed} / ${total}</span>
+        </div>
+        <div class="shapes" id="shapeTray" style="margin-top:10px;"></div>
+      </div>
+    `;
+
+    const tray = ui.stage.querySelector('#shapeTray');
+    tray.innerHTML = '';
+    shapes.forEach(s=>{
+      const el = document.createElement('div');
+      el.className = 'shape';
+      el.draggable = true;
+      el.dataset.id = s.id;
+      el.dataset.type = s.type;
+      el.innerHTML = shapeIcon(s.type);
+      el.addEventListener('dragstart', (e)=>{ e.dataTransfer.setData('text/plain', s.id); beep(520,40,0.02); });
+      el.addEventListener('click', ()=>{ picked = s.id; setMsg('', `Picked <strong>${cap(s.type)}</strong>. Tap the matching bin.`); beep(640,40,0.02); });
+      tray.appendChild(el);
+    });
+
+    ui.stage.querySelectorAll('.bin').forEach(bin=>{
+      const type = bin.dataset.bin;
+      bin.addEventListener('dragover', (e)=>{ e.preventDefault(); bin.classList.add('over'); });
+      bin.addEventListener('dragleave', ()=> bin.classList.remove('over'));
+      bin.addEventListener('drop', (e)=>{
+        e.preventDefault(); bin.classList.remove('over');
+        const id = e.dataTransfer.getData('text/plain');
+        place(id, type);
+      });
+      bin.addEventListener('click', ()=>{ if(picked){ place(picked, type); picked=null; } });
+    });
+  }
+
+  function place(id, binType){
+    const idx = shapes.findIndex(x=>x.id===id);
+    if(idx === -1) return;
+    const s = shapes[idx];
+    if(s.type !== binType){
+      setMsg('bad', `Not quite — that shape goes in <strong>${cap(s.type)}</strong>.`);
+      beep(220,120,0.05);
+      return;
+    }
+    shapes.splice(idx,1);
+    placed++;
+    setMsg('good', `✅ Nice!`);
+    beep(880,80,0.04);
+    if(shapes.length===0){
+      setMsg('good', `🎉 All sorted! Press <strong>New</strong> for another.`);
+    }
+    render();
+  }
+
+  function setDifficulty(d){
+    difficulty=d;
+    ui.easyBtn.classList.toggle('on', d==='easy');
+    ui.medBtn.classList.toggle('on', d==='medium');
+    ui.hardBtn.classList.toggle('on', d==='hard');
+    buildRound();
+    render();
+    setMsg('', `Difficulty: <strong>${d}</strong>.`);
+    beep(720,60,0.02);
+  }
+
+  ui.newBtn.addEventListener('click', ()=>{ buildRound(); render(); setMsg('', 'Go!'); beep(820,60,0.03); });
+  ui.resetBtn.addEventListener('click', ()=>{ buildRound(); render(); setMsg('', 'Reset done.'); beep(520,60,0.02); });
+  ui.soundBtn.addEventListener('click', ()=>{
+    soundOn=!soundOn;
+    ui.soundBtn.setAttribute('aria-pressed', String(soundOn));
+    ui.soundBtn.textContent = 'Sound: ' + (soundOn ? 'On' : 'Off');
+    beep(880,60,0.03);
+  });
+  ui.easyBtn.addEventListener('click', ()=> setDifficulty('easy'));
+  ui.medBtn.addEventListener('click', ()=> setDifficulty('medium'));
+  ui.hardBtn.addEventListener('click', ()=> setDifficulty('hard'));
+
+  setDifficulty('medium');
+})();
+</script>
 
 </body>
 </html>

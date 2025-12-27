@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Games • Primary Steps</title>
+<title>Connect 4 • Primary Steps</title>
 <style>
 :root{
     --bg0:#0b0d12; --bg1:#0f1320;
@@ -334,53 +334,162 @@
 
 <section class="hero">
   <div class="hwrap">
-    <h1>Games</h1>
-    <p class="lead">Pick a game below — then it opens the activity (no dropdown).</p>
+    <h1>Connect 4</h1>
+    <p class="lead">Tap a column arrow to drop a disc. Make 4 in a row.</p>
   </div>
 </section>
 
 
-<section class="grid">
+<section class="grid two">
   <div class="card">
     <div class="head">
-      <div class="pill">Choose a game</div>
+      <div class="pill">Play</div>
       <div class="row">
-        <a class="btn" href="index.html">Back to Home</a>
+        <button class="btn" id="soundBtn" type="button" aria-pressed="false">Sound: Off</button>
+        <button class="btn primary" id="newBtn" type="button">New</button>
+        <button class="btn" id="resetBtn" type="button">Reset</button>
       </div>
     </div>
     <div class="body">
-      <div class="selectorGrid" style="grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px;">
-        <a class="gameCard" href="game-connect4.html" style="text-decoration:none;">
-          <div>
-            <strong>Connect 4</strong>
-            <div class="desc">Drop discs to make 4 in a row. 2‑player or practice.</div>
-          </div>
-          <span class="tag">Strategy</span>
-        </a>
-
-        <a class="gameCard" href="game-coins.html" style="text-decoration:none;">
-          <div>
-            <strong>Coin Piggy Bank</strong>
-            <div class="desc">Count, sort, and order UK coin values. 3 modes.</div>
-          </div>
-          <span class="tag">Money</span>
-        </a>
-
-        <a class="gameCard" href="game-shapesort.html" style="text-decoration:none;">
-          <div>
-            <strong>Shape Sort</strong>
-            <div class="desc">Drag (or tap) shapes into the matching bins.</div>
-          </div>
-          <span class="tag">Drag &amp; Drop</span>
-        </a>
+      <div class="stage" id="stage"></div>
+      <div class="msg" id="message">Press <strong>New</strong> to start.</div>
+      <div class="row" style="margin-top:10px;">
+        <a class="btn" href="games.html">Back to Games</a>
       </div>
+    </div>
+  </div>
 
-      <div class="msg">Tip: This works like the Numbers menu — click a game card to open the activity.</div>
+  <div class="card">
+    <div class="head">
+      <div class="pill">Mode</div>
+    </div>
+    <div class="body">
+      <div class="seg" role="tablist" aria-label="Connect 4 modes">
+        <button class="btn on" id="modeTwo" type="button">2‑Player</button>
+        <button class="btn" id="modePractice" type="button">Practice</button>
+      </div>
+      <div class="msg">Practice keeps the same colour each move. 2‑Player alternates turns.</div>
     </div>
   </div>
 </section>
 
 
+
+<script>
+(() => {
+  const $ = (id)=>document.getElementById(id);
+  const ui = { stage:$('stage'), msg:$('message'), newBtn:$('newBtn'), resetBtn:$('resetBtn'),
+              soundBtn:$('soundBtn'), modeTwo:$('modeTwo'), modePractice:$('modePractice') };
+
+  let soundOn=false, audioCtx=null;
+  function beep(freq=700, ms=70, gain=0.03){
+    if(!soundOn) return;
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.frequency.value=freq; g.gain.value=gain;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); setTimeout(()=>o.stop(), ms);
+  }
+  function setMsg(type, html){
+    ui.msg.className = 'msg' + (type ? ' ' + type : '');
+    ui.msg.innerHTML = html;
+  }
+
+  let mode='two';
+  let turn='r';
+  let winner='';
+  let grid = Array.from({length:6}, ()=>Array(7).fill(''));
+
+  function isFull(){ return grid.every(r=>r.every(Boolean)); }
+  function checkWinner(){
+    const H=6, W=7;
+    const dirs=[[1,0],[0,1],[1,1],[1,-1]];
+    for(let r=0;r<H;r++){
+      for(let c=0;c<W;c++){
+        const v=grid[r][c]; if(!v) continue;
+        for(const [dr,dc] of dirs){
+          let ok=true;
+          for(let k=1;k<4;k++){
+            const rr=r+dr*k, cc=c+dc*k;
+            if(rr<0||rr>=H||cc<0||cc>=W||grid[rr][cc]!==v){ ok=false; break; }
+          }
+          if(ok) return v;
+        }
+      }
+    }
+    return '';
+  }
+
+  function render(){
+    ui.stage.innerHTML = `
+      <div class="c4Wrap">
+        <div class="row" style="justify-content:center;">
+          <span class="pill">${winner ? (winner==='r'?'Red wins':'Yellow wins') : ('Turn: ' + (turn==='r'?'Red':'Yellow'))}</span>
+        </div>
+        <div class="c4Top" aria-label="Choose a column">
+          ${Array.from({length:7}, (_,c)=>`<button type="button" data-col="${c}">↓</button>`).join('')}
+        </div>
+        <div class="c4Board" aria-label="Connect 4 board">
+          ${grid.flatMap((row,r)=>row.map((cell,c)=>`
+            <div class="c4Cell" data-col="${c}" data-row="${r}">
+              <div class="c4Disc ${cell}"></div>
+            </div>
+          `)).join('')}
+        </div>
+        <div class="small" style="text-align:center;">Make 4 in a row: horizontal, vertical, or diagonal.</div>
+      </div>
+    `;
+    ui.stage.querySelectorAll('.c4Top button').forEach(btn=>{
+      btn.addEventListener('click', ()=> drop(Number(btn.dataset.col)));
+    });
+  }
+
+  function drop(col){
+    if(winner) return;
+    for(let r=5;r>=0;r--){
+      if(!grid[r][col]){
+        grid[r][col]=turn;
+        beep(520,40,0.02);
+        const w=checkWinner();
+        if(w){
+          winner=w;
+          setMsg('good', `✅ ${w==='r'?'Red':'Yellow'} wins! Press <strong>New</strong> to play again.`);
+          beep(880,90,0.04);
+        } else if(isFull()){
+          setMsg('', `It’s a draw. Press <strong>New</strong> to try again.`);
+        } else {
+          if(mode==='two') turn = (turn==='r') ? 'y' : 'r';
+        }
+        render();
+        return;
+      }
+    }
+    beep(220,100,0.05);
+  }
+
+  function newGame(){
+    grid = Array.from({length:6}, ()=>Array(7).fill(''));
+    turn='r'; winner='';
+    setMsg('', `Tap a column arrow to drop a disc.`);
+    render();
+    beep(820,60,0.03);
+  }
+
+  ui.newBtn.addEventListener('click', newGame);
+  ui.resetBtn.addEventListener('click', ()=>{ newGame(); setMsg('', 'Reset done.'); beep(520,60,0.02); });
+  ui.modeTwo.addEventListener('click', ()=>{ mode='two'; ui.modeTwo.classList.add('on'); ui.modePractice.classList.remove('on'); setMsg('', '2‑Player mode.'); });
+  ui.modePractice.addEventListener('click', ()=>{ mode='practice'; ui.modePractice.classList.add('on'); ui.modeTwo.classList.remove('on'); setMsg('', 'Practice mode.'); });
+
+  ui.soundBtn.addEventListener('click', ()=>{
+    soundOn=!soundOn;
+    ui.soundBtn.setAttribute('aria-pressed', String(soundOn));
+    ui.soundBtn.textContent = 'Sound: ' + (soundOn ? 'On' : 'Off');
+    beep(880,60,0.03);
+  });
+
+  render();
+})();
+</script>
 
 </body>
 </html>
