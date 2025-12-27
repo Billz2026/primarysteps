@@ -1,0 +1,880 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Puzzles • Primary Steps</title>
+<style>
+  :root{
+    --bg0:#0b0d12; --bg1:#0f1320;
+    --panel:#121621; --panel2:#0d1c36;
+    --text:#eef2ff; --muted:rgba(238,242,255,.72);
+    --line:rgba(255,255,255,.12);
+    --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399; --bad:#fb7185;
+    --ring:rgba(125,211,252,.30);
+    --shadow:0 18px 40px rgba(0,0,0,.35);
+    --r:18px;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--text);
+    background:
+      radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+      radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+      linear-gradient(180deg, var(--bg0), var(--bg1));
+    min-height:100vh;
+  }
+
+  header{
+    position:sticky; top:0; z-index:10;
+    backdrop-filter: blur(10px);
+    background: rgba(18,22,33,.72);
+    border-bottom:1px solid var(--line);
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+  .top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
+  .brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
+  .brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+  nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+  nav a{
+    color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
+    padding:8px 10px; border-radius:12px;
+    border:1px solid transparent;
+    opacity:.92;
+  }
+  nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+  nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;
+  nav button.navBtn{
+    appearance:none;
+    color:var(--text);
+    background: transparent;
+    font: inherit;
+    font-weight:700;
+    font-size:13px;
+    padding:8px 10px;
+    border-radius:12px;
+    border:1px solid transparent;
+    opacity:.92;
+    cursor:pointer;
+  }
+  nav button.navBtn:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+  nav button.navBtn.primary{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
+
+  /* High contrast + dyslexia-friendly */
+  [data-contrast="high"]{
+    --bg0:#05060a; --bg1:#070b16;
+    --text:#ffffff;
+    --muted:#d7ddf0;
+    --ring:rgba(191,230,255,.38);
+    --line:rgba(255,255,255,.18);
+  }
+  [data-font="dyslexic"]{
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+    letter-spacing: .01em;
+  }
+}
+
+  .hero{padding:22px 16px 10px;}
+  .hwrap{max-width:1100px;margin:0 auto;}
+  h1{margin:0 0 6px; font-size:32px; letter-spacing:-.4px;}
+  p.lead{margin:0; color:var(--muted); max-width:85ch; font-size:14px; line-height:1.45;}
+
+  .grid{
+    max-width:1100px; margin:14px auto 28px; padding:0 16px;
+    display:grid; grid-template-columns: 1.15fr .85fr; gap:14px;
+  }
+  @media (max-width: 980px){ .grid{grid-template-columns:1fr; } nav{justify-content:flex-start;} }
+
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .card .head{
+    padding:14px 14px 10px;
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .pill{
+    font-size:12px; font-weight:850;
+    padding:6px 10px; border-radius:999px;
+    background: rgba(125,211,252,.14);
+    border:1px solid rgba(125,211,252,.25);
+    color: var(--text);
+    white-space:nowrap;
+  }
+  .body{padding:14px;}
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .btn{
+    appearance:none; border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text); font-weight:850;
+    padding:10px 12px; border-radius:14px;
+    cursor:pointer;
+  }
+  .btn:hover{background: rgba(255,255,255,.08);}
+  .btn.primary{
+    border-color: rgba(125,211,252,.35);
+    background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
+  }
+  .btn.good{
+    border-color: rgba(52,211,153,.35);
+    background: linear-gradient(180deg, rgba(52,211,153,.18), rgba(52,211,153,.06));
+  }
+  .btn.danger{
+    border-color: rgba(251,113,133,.35);
+    background: linear-gradient(180deg, rgba(251,113,133,.18), rgba(251,113,133,.06));
+  }
+
+  .field{display:flex; flex-direction:column; gap:6px; min-width:240px;}
+  label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
+  select, input[type="text"]{width:100%;}
+  select, input[type="text"]{
+    appearance:none;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text);
+    padding:10px 12px;
+    border-radius:14px;
+    font-weight:800;
+    outline:none;
+  }
+  input[type="text"]::placeholder{color:rgba(238,242,255,.45)}
+  select:focus, input[type="text"]:focus{box-shadow: 0 0 0 6px var(--ring);}
+
+  .stat{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 12px; border-radius:14px;
+    border:1px dashed rgba(238,242,255,.22);
+    color: var(--muted);
+  }
+  .small{font-size:12px;color:var(--muted);}
+  .hint{color:var(--muted); font-size:13px; margin-top:8px; line-height:1.45;}
+
+  .stage{
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:12px;
+    background:
+      radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
+      linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+  }
+
+  .qTitle{font-size:18px; font-weight:950; margin:0 0 8px; letter-spacing:-.2px;}
+  .qText{margin:0 0 12px; color:var(--muted); line-height:1.45;}
+  .choices{display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:10px;}
+  @media (max-width: 560px){ .choices{grid-template-columns:1fr;} .brand .title{display:none;} }
+
+  .choice{
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    border-radius:16px;
+    padding:12px;
+    cursor:pointer;
+    user-select:none;
+    text-align:left;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    font-weight:900;
+  }
+  .choice:hover{background: rgba(255,255,255,.08);}
+  .choice .tag{
+    font-size:12px; font-weight:950;
+    padding:6px 10px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    color: var(--muted);
+    background: rgba(0,0,0,.10);
+    white-space:nowrap;
+  }
+  .msg{
+    padding:10px 12px; border-radius:14px;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.04);
+    color: var(--muted);
+    margin-top:10px;
+  }
+  .msg.good{border-color:rgba(52,211,153,.35); background: rgba(52,211,153,.10); color: rgba(238,242,255,.92);}
+  .msg.bad{border-color:rgba(251,113,133,.35); background: rgba(251,113,133,.10); color: rgba(238,242,255,.92);}
+
+  /* Mini Sudoku */
+  .sudoku{
+    display:grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap:8px;
+    max-width:360px;
+    margin-top:10px;
+  }
+  .cell{
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.12);
+    border-radius:14px;
+    padding:0;
+    overflow:hidden;
+  }
+  .cell input{
+    width:100%;
+    height:54px;
+    border:0;
+    background: transparent;
+    text-align:center;
+    font-size:20px;
+    font-weight:950;
+    color:var(--text);
+    outline:none;
+  }
+  .cell.given{
+    border-color: rgba(125,211,252,.26);
+    background: rgba(125,211,252,.10);
+  }
+  .cell.given input{color:rgba(238,242,255,.92);}
+  .cell.given input{pointer-events:none;}
+  .kbd{font-variant-numeric: tabular-nums;}
+  a:focus-visible, button:focus-visible, select:focus-visible, input:focus-visible{
+    outline:none; box-shadow: 0 0 0 6px var(--ring); border-radius: 14px;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" onerror="this.style.display='none'">
+        <div>
+          <div class="title">Primary Steps</div>
+          <span class="sub">Simple, calm learning activities</span>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="letters.html">Letters</a>
+        <a href="numbers.html">Numbers</a>
+        <a href="phonics.html">Phonics</a>
+        <a href="maths.html">Maths</a>
+        <a href="memory.html">Memory</a>
+        <a href="games.html">Games</a>
+        <a href="puzzles.html" class="active">Puzzles</a>
+        <a href="progress.html">Progress</a>
+        <a href="settings.html">Settings</a>
+      
+        <button class="navBtn" id="toggleContrast" type="button" title="Toggle high contrast">Contrast</button>
+        <button class="navBtn" id="toggleFont" type="button" aria-pressed="false" title="Toggle dyslexia-friendly spacing">Dyslexia-friendly</button>
+</nav>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hwrap">
+    <h1>Puzzles</h1>
+    <p class="lead">
+      Five quick puzzles with three difficulty levels (Easy / Medium / Hard). Pick a puzzle, solve it, then press <strong>New</strong>.
+      Calm, short, and designed to match the rest of your Primary Steps theme.
+    </p>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="card" aria-label="Puzzle player">
+    <div class="head">
+      <div class="pill" id="puzzlePill">Puzzle</div>
+      <div class="row">
+        <button class="btn" id="soundBtn" type="button" aria-pressed="false">Sound: Off</button>
+        <button class="btn primary" id="newBtn" type="button">New</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="stage" id="stage">
+        <!-- puzzle renders here -->
+      </div>
+      <div class="msg" id="message">Choose a puzzle on the right, then press <strong>New</strong>.</div>
+    </div>
+  </div>
+
+  <div class="card" aria-label="Puzzle controls">
+    <div class="head">
+      <div class="pill">Choose</div>
+    </div>
+    <div class="body">
+      <div class="row" style="margin-bottom:10px;">
+        <div class="field">
+          <label for="difficulty">Difficulty</label>
+          <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="puzzleType">Puzzle</label>
+          <select id="puzzleType"></select>
+        </div>
+      </div>
+
+      <div class="row" style="margin-bottom:10px;">
+        <button class="btn good" id="checkBtn" type="button">Check</button>
+        <button class="btn" id="showBtn" type="button">Show Answer</button>
+        <button class="btn danger" id="resetBtn" type="button">Reset</button>
+      </div>
+
+      <div class="stat">
+        <div>
+          <strong>Progress</strong>
+          <div class="small">Correct answers today</div>
+        </div>
+        <div class="small kbd" id="score">0</div>
+      </div>
+
+      <div class="hint">
+        <strong>Your 5 puzzles:</strong><br>
+        1) Odd One Out (Easy)<br>
+        2) Finish the Pattern (Easy/Medium)<br>
+        3) Word Scramble (Medium)<br>
+        4) Quick Maths Riddle (Medium/Hard)<br>
+        5) Mini Sudoku 4×4 (Hard)
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const $ = (id)=>document.getElementById(id);
+
+  const ui = {
+    stage: $('stage'),
+    msg: $('message'),
+    difficulty: $('difficulty'),
+    puzzleType: $('puzzleType'),
+    puzzlePill: $('puzzlePill'),
+    newBtn: $('newBtn'),
+    checkBtn: $('checkBtn'),
+    showBtn: $('showBtn'),
+    resetBtn: $('resetBtn'),
+    score: $('score'),
+    soundBtn: $('soundBtn'),
+  };
+
+  // Accessibility prefs (shared across site)
+  const root = document.documentElement;
+  const prefs = {
+    contrast: localStorage.getItem('ps_contrast') || 'normal',
+    font: localStorage.getItem('ps_font') || 'system'
+  };
+
+  function applyPrefs(){
+    if(prefs.contrast === 'high'){ root.setAttribute('data-contrast','high'); }
+    else { root.removeAttribute('data-contrast'); }
+    if(prefs.font === 'dyslexic'){ root.setAttribute('data-font','dyslexic'); }
+    else { root.removeAttribute('data-font'); }
+  }
+
+  // Hook buttons (if present)
+  const contrastBtn = document.getElementById('toggleContrast');
+  if(contrastBtn){
+    contrastBtn.classList.add('primary');
+    contrastBtn.addEventListener('click', ()=>{
+      prefs.contrast = (prefs.contrast === 'high') ? 'normal' : 'high';
+      localStorage.setItem('ps_contrast', prefs.contrast);
+      applyPrefs();
+      beep(820, 60, 0.03);
+    });
+  }
+
+  const fontBtn = document.getElementById('toggleFont');
+  if(fontBtn){
+    const pressed = prefs.font === 'dyslexic';
+    fontBtn.setAttribute('aria-pressed', String(pressed));
+    fontBtn.classList.toggle('primary', pressed);
+    fontBtn.addEventListener('click', ()=>{
+      const was = fontBtn.getAttribute('aria-pressed') === 'true';
+      fontBtn.setAttribute('aria-pressed', String(!was));
+      fontBtn.classList.toggle('primary', !was);
+      prefs.font = was ? 'system' : 'dyslexic';
+      localStorage.setItem('ps_font', prefs.font);
+      applyPrefs();
+      beep(760, 60, 0.03);
+    });
+  }
+
+  applyPrefs();
+
+
+  // Sound
+  let soundOn = false, audioCtx = null;
+  function beep(freq=700, ms=70, gain=0.03){
+    if(!soundOn) return;
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.frequency.value = freq;
+    g.gain.value = gain;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    setTimeout(()=>o.stop(), ms);
+  }
+
+  function setMsg(type, html){
+    ui.msg.className = 'msg' + (type ? ' ' + type : '');
+    ui.msg.innerHTML = html;
+  }
+
+  // Puzzles data (5 types, each can have multiple questions + difficulty tags)
+  const PUZZLES = [
+    {
+      key:'odd',
+      name:'Odd One Out',
+      difficulties:['easy'],
+      build: () => {
+        const sets = [
+          {q:"Which one is different?", items:["🍎 Apple","🍌 Banana","🍓 Strawberry","🚗 Car"], a:3},
+          {q:"Which one is different?", items:["🐶 Dog","🐱 Cat","🐭 Mouse","🌳 Tree"], a:3},
+          {q:"Which one is different?", items:["🔺 Triangle","🔵 Circle","⬛ Square","🍞 Bread"], a:3},
+          {q:"Which one is different?", items:["🧦 Sock","👟 Shoe","🧢 Hat","🐟 Fish"], a:3},
+        ];
+        return sets[Math.floor(Math.random()*sets.length)];
+      },
+      render: (state) => {
+        ui.puzzlePill.textContent = "Odd One Out • Easy";
+        ui.stage.innerHTML = `
+          <h2 class="qTitle">Odd One Out</h2>
+          <p class="qText">${state.q}</p>
+          <div class="choices" id="choices"></div>
+        `;
+        const box = ui.stage.querySelector('#choices');
+        state.items.forEach((txt, i)=>{
+          const b = document.createElement('button');
+          b.type='button';
+          b.className='choice';
+          b.innerHTML = `<span>${txt}</span><span class="tag">Pick</span>`;
+          b.addEventListener('click', ()=>{ state.pick=i; markPick(box, state.pick); beep(620,50,0.02); });
+          box.appendChild(b);
+        });
+      },
+      check: (state)=> state.pick === state.a,
+      show: (state)=> { state.pick = state.a; },
+      reset: (state)=> { state.pick = null; }
+    },
+
+    {
+      key:'pattern',
+      name:'Finish the Pattern',
+      difficulties:['easy','medium'],
+      build: (difficulty) => {
+        const easy = [
+          {q:"What comes next?", seq:"⭐ ⭐ 🌙 ⭐ ⭐ 🌙 …", choices:["⭐","🌙","☀️","🌧️"], a:0},
+          {q:"What comes next?", seq:"🔴 🟡 🔴 🟡 🔴 🟡 …", choices:["🔴","🟡","🟢","🔵"], a:0},
+          {q:"What comes next?", seq:"1, 2, 1, 2, 1, 2, …", choices:["1","2","3","4"], a:0},
+        ];
+        const medium = [
+          {q:"What comes next?", seq:"2, 4, 6, 8, …", choices:["9","10","11","12"], a:1},
+          {q:"What comes next?", seq:"A, B, D, E, G, …", choices:["F","G","H","I"], a:2}, // skip every 3rd?
+          {q:"What comes next?", seq:"🍎 🍎 🍌  🍎 🍎 🍌  …", choices:["🍌","🍎","🍇","🍉"], a:0},
+        ];
+        const pool = difficulty === 'easy' ? easy : medium;
+        return pool[Math.floor(Math.random()*pool.length)];
+      },
+      render: (state, difficulty) => {
+        ui.puzzlePill.textContent = `Finish the Pattern • ${difficulty[0].toUpperCase()+difficulty.slice(1)}`;
+        ui.stage.innerHTML = `
+          <h2 class="qTitle">Finish the Pattern</h2>
+          <p class="qText">${state.q}</p>
+          <div class="qTitle" style="margin-top:0; font-size:22px">${state.seq}</div>
+          <div class="choices" id="choices"></div>
+        `;
+        const box = ui.stage.querySelector('#choices');
+        state.choices.forEach((txt, i)=>{
+          const b = document.createElement('button');
+          b.type='button';
+          b.className='choice';
+          b.innerHTML = `<span>${txt}</span><span class="tag">Choose</span>`;
+          b.addEventListener('click', ()=>{ state.pick=i; markPick(box, state.pick); beep(620,50,0.02); });
+          box.appendChild(b);
+        });
+      },
+      check: (state)=> state.pick === state.a,
+      show: (state)=> { state.pick = state.a; },
+      reset: (state)=> { state.pick = null; }
+    },
+
+    {
+      key:'scramble',
+      name:'Word Scramble',
+      difficulties:['medium'],
+      build: () => {
+        const words = [
+          {word:"RAINBOW", hint:"Colours in the sky"},
+          {word:"PENCIL", hint:"You write with it"},
+          {word:"CASTLE", hint:"A big stone building"},
+          {word:"GARDEN", hint:"Plants grow here"},
+          {word:"ROCKET", hint:"Goes to space"},
+        ];
+        const pick = words[Math.floor(Math.random()*words.length)];
+        const letters = pick.word.split('');
+        // shuffle
+        for(let i=letters.length-1;i>0;i--){
+          const j = Math.floor(Math.random()*(i+1));
+          [letters[i], letters[j]] = [letters[j], letters[i]];
+        }
+        return { ...pick, scrambled: letters.join('') };
+      },
+      render: (state) => {
+        ui.puzzlePill.textContent = "Word Scramble • Medium";
+        ui.stage.innerHTML = `
+          <h2 class="qTitle">Word Scramble</h2>
+          <p class="qText">Unscramble the letters to make a word.</p>
+          <div class="qTitle" style="font-size:26px; letter-spacing:.18em">${state.scrambled}</div>
+          <p class="qText"><span class="small">Hint:</span> ${state.hint}</p>
+          <div class="row" style="margin-top:8px;">
+            <div class="field" style="min-width:260px;">
+              <label for="answerText">Your answer</label>
+              <input id="answerText" type="text" placeholder="Type the word…" autocomplete="off" />
+            </div>
+          </div>
+        `;
+        const input = ui.stage.querySelector('#answerText');
+        input.value = state.answer || '';
+        input.addEventListener('input', ()=>{ state.answer = input.value; });
+        setTimeout(()=>input.focus(), 60);
+      },
+      check: (state)=> (state.answer||'').trim().toUpperCase() === state.word,
+      show: (state)=> { state.answer = state.word; },
+      reset: (state)=> { state.answer = ''; }
+    },
+
+    {
+      key:'math',
+      name:'Quick Maths Riddle',
+      difficulties:['medium','hard'],
+      build: (difficulty) => {
+        const medium = [
+          {q:"I have 12 sweets. I share them equally between 3 friends. How many each?", choices:["2","3","4","6"], a:2},
+          {q:"What is 7 + 8?", choices:["14","15","16","17"], a:1},
+          {q:"What is 20 − 9?", choices:["10","11","12","13"], a:1},
+        ];
+        const hard = [
+          {q:"A bus has 18 seats. 6 are empty. How many people are on the bus?", choices:["10","11","12","13"], a:2},
+          {q:"What is 6 × 4?", choices:["18","22","24","28"], a:2},
+          {q:"I think of a number. Double it and add 6. The answer is 20. What was my number?", choices:["5","6","7","8"], a:1},
+        ];
+        const pool = difficulty === 'hard' ? hard : medium;
+        return pool[Math.floor(Math.random()*pool.length)];
+      },
+      render: (state, difficulty) => {
+        ui.puzzlePill.textContent = `Quick Maths • ${difficulty[0].toUpperCase()+difficulty.slice(1)}`;
+        ui.stage.innerHTML = `
+          <h2 class="qTitle">Quick Maths Riddle</h2>
+          <p class="qText">${state.q}</p>
+          <div class="choices" id="choices"></div>
+        `;
+        const box = ui.stage.querySelector('#choices');
+        state.choices.forEach((txt, i)=>{
+          const b = document.createElement('button');
+          b.type='button';
+          b.className='choice';
+          b.innerHTML = `<span>${txt}</span><span class="tag">Answer</span>`;
+          b.addEventListener('click', ()=>{ state.pick=i; markPick(box, state.pick); beep(620,50,0.02); });
+          box.appendChild(b);
+        });
+      },
+      check: (state)=> state.pick === state.a,
+      show: (state)=> { state.pick = state.a; },
+      reset: (state)=> { state.pick = null; }
+    },
+
+    {
+      key:'sudoku',
+      name:'Mini Sudoku 4×4',
+      difficulties:['hard'],
+      build: () => {
+        // 0 = blank. Solutions are valid 1-4 grids.
+        const puzzles = [
+          {
+            givens:[
+              1,0,0,4,
+              0,4,1,0,
+              2,0,4,0,
+              0,1,0,2
+            ],
+            sol:[
+              1,2,3,4,
+              3,4,1,2,
+              2,3,4,1,
+              4,1,2,3
+            ]
+          },
+          {
+            givens:[
+              0,3,0,1,
+              1,0,4,0,
+              0,4,0,2,
+              2,0,1,0
+            ],
+            sol:[
+              4,3,2,1,
+              1,2,4,3,
+              3,4,5,2 // placeholder to avoid accidental use
+            ]
+          }
+        ];
+        // Fix second puzzle to proper 4x4
+        puzzles[1].sol = [
+          4,3,2,1,
+          1,2,4,3,
+          3,4,5,2
+        ];
+        // replace with valid grid
+        puzzles[1].sol = [
+          4,3,2,1,
+          1,2,4,3,
+          3,4,3,2
+        ];
+        // still invalid; set a correct second puzzle
+        puzzles[1].givens = [
+          0,3,0,1,
+          1,0,4,0,
+          0,4,0,2,
+          2,0,1,0
+        ];
+        puzzles[1].sol = [
+          4,3,2,1,
+          1,2,4,3,
+          3,4,0,2,
+          2,0,1,4
+        ];
+        // make it valid with a known solution
+        puzzles[1].sol = [
+          4,3,2,1,
+          1,2,4,3,
+          3,4,1,2,
+          2,1,3,4
+        ];
+        // adjust givens to match this solution
+        puzzles[1].givens = [
+          0,3,0,1,
+          1,0,4,0,
+          0,4,0,2,
+          2,0,3,0
+        ];
+
+        return puzzles[Math.floor(Math.random()*puzzles.length)];
+      },
+      render: (state) => {
+        ui.puzzlePill.textContent = "Mini Sudoku 4×4 • Hard";
+        ui.stage.innerHTML = `
+          <h2 class="qTitle">Mini Sudoku (4×4)</h2>
+          <p class="qText">Fill the grid using <strong>1–4</strong>. No repeats in any row or column.</p>
+          <div class="sudoku" id="sudoku"></div>
+          <div class="small" style="margin-top:8px;">Tip: tap a box and type 1, 2, 3 or 4.</div>
+        `;
+        const grid = ui.stage.querySelector('#sudoku');
+        state.inputs = state.inputs || Array(16).fill('');
+        grid.innerHTML = '';
+
+        for(let i=0;i<16;i++){
+          const given = state.givens[i] !== 0;
+          const cell = document.createElement('div');
+          cell.className = 'cell' + (given ? ' given' : '');
+          const inp = document.createElement('input');
+          inp.setAttribute('inputmode','numeric');
+          inp.setAttribute('maxlength','1');
+          inp.value = given ? String(state.givens[i]) : (state.inputs[i] || '');
+          if(!given){
+            inp.addEventListener('input', ()=>{
+              const v = (inp.value||'').replace(/[^1-4]/g,'').slice(0,1);
+              inp.value = v;
+              state.inputs[i] = v;
+            });
+          }
+          cell.appendChild(inp);
+          grid.appendChild(cell);
+        }
+      },
+      check: (state) => {
+        // Compare filled grid to solution
+        for(let i=0;i<16;i++){
+          const v = state.givens[i] !== 0 ? state.givens[i] : Number(state.inputs[i] || 0);
+          if(v !== state.sol[i]) return false;
+        }
+        return true;
+      },
+      show: (state) => {
+        state.inputs = state.sol.map(String);
+      },
+      reset: (state) => {
+        state.inputs = Array(16).fill('');
+      }
+    }
+  ];
+
+  // Fix any accidental invalid sudoku definitions (defensive)
+  function isValid4x4(sol){
+    if(!sol || sol.length!==16) return false;
+    const rows = [0,1,2,3].map(r=>sol.slice(r*4,r*4+4));
+    for(const r of rows){
+      const s = new Set(r);
+      if(s.size!==4) return false;
+      for(const v of s) if(v<1||v>4) return false;
+    }
+    for(let c=0;c<4;c++){
+      const s=new Set([sol[c],sol[c+4],sol[c+8],sol[c+12]]);
+      if(s.size!==4) return false;
+    }
+    return true;
+  }
+  for(const p of PUZZLES){
+    if(p.key==='sudoku'){
+      // ensure each build returns valid solution; if not, fallback to a known valid one
+      const originalBuild = p.build;
+      p.build = ()=>{
+        const st = originalBuild();
+        if(!isValid4x4(st.sol)){
+          return {
+            givens:[
+              1,0,0,4,
+              0,4,1,0,
+              2,0,4,0,
+              0,1,0,2
+            ],
+            sol:[
+              1,2,3,4,
+              3,4,1,2,
+              2,3,4,1,
+              4,1,2,3
+            ]
+          };
+        }
+        return st;
+      };
+    }
+  }
+
+  // UI helpers
+  function markPick(container, pickIndex){
+    [...container.children].forEach((el,i)=>{
+      el.style.borderColor = (i===pickIndex) ? 'rgba(125,211,252,.50)' : 'rgba(255,255,255,.12)';
+      el.style.background = (i===pickIndex) ? 'rgba(125,211,252,.10)' : 'rgba(255,255,255,.05)';
+    });
+  }
+
+  // State
+  let active = null; // puzzle object
+  let state = null;
+  let correct = 0;
+
+  function availablePuzzleKeys(){
+    const d = ui.difficulty.value;
+    return PUZZLES.filter(p => p.difficulties.includes(d)).map(p=>p.key);
+  }
+
+  function setPuzzleTypeOptions(){
+    const d = ui.difficulty.value;
+    ui.puzzleType.innerHTML = '';
+    const options = PUZZLES.filter(p=>p.difficulties.includes(d));
+    options.forEach(p=>{
+      const o = document.createElement('option');
+      o.value = p.key;
+      o.textContent = p.name;
+      ui.puzzleType.appendChild(o);
+    });
+    // If current selection no longer valid, set to first.
+    if(!options.some(p=>p.key===ui.puzzleType.value)){
+      ui.puzzleType.value = options[0]?.key || '';
+    }
+  }
+
+  function loadActive(){
+    const key = ui.puzzleType.value;
+    active = PUZZLES.find(p=>p.key===key) || PUZZLES[0];
+  }
+
+  function newRound(){
+    loadActive();
+    const d = ui.difficulty.value;
+    state = active.build(d);
+    // Ensure common fields
+    state.pick = state.pick ?? null;
+    state.answer = state.answer ?? '';
+    active.render(state, d);
+    setMsg('', `Solve it, then press <strong>Check</strong>.`);
+    beep(720);
+  }
+
+  function check(){
+    if(!active || !state) return;
+    // For choice puzzles, visually show pick if set
+    const ok = active.check(state);
+    if(ok){
+      correct++;
+      ui.score.textContent = String(correct);
+      setMsg('good', `✅ Nice work! Press <strong>New</strong> for another.`);
+      beep(880, 90, 0.04);
+    } else {
+      setMsg('bad', `Not yet — have another go. (You can press <strong>Show Answer</strong> if you’re stuck.)`);
+      beep(220, 120, 0.05);
+    }
+  }
+
+  function showAnswer(){
+    if(!active || !state) return;
+    active.show(state);
+    const d = ui.difficulty.value;
+    active.render(state, d);
+
+    // If this puzzle uses choices, mark the correct pick
+    const choices = ui.stage.querySelector('#choices');
+    if(choices && typeof state.pick === 'number'){
+      markPick(choices, state.pick);
+    }
+    setMsg('', `Answer shown. Press <strong>New</strong> when ready.`);
+    beep(760);
+  }
+
+  function reset(){
+    if(!active || !state) return;
+    active.reset(state);
+    const d = ui.difficulty.value;
+    active.render(state, d);
+    setMsg('', `Reset done. Try again.`);
+    beep(520);
+  }
+
+  // Sound toggle
+  ui.soundBtn.addEventListener('click', ()=>{
+    soundOn = !soundOn;
+    ui.soundBtn.setAttribute('aria-pressed', String(soundOn));
+    ui.soundBtn.textContent = 'Sound: ' + (soundOn ? 'On' : 'Off');
+    beep(820, 60, 0.03);
+  });
+
+  // Controls
+  ui.newBtn.addEventListener('click', newRound);
+  ui.checkBtn.addEventListener('click', check);
+  ui.showBtn.addEventListener('click', showAnswer);
+  ui.resetBtn.addEventListener('click', reset);
+
+  ui.difficulty.addEventListener('change', ()=>{
+    setPuzzleTypeOptions();
+    newRound();
+  });
+
+  ui.puzzleType.addEventListener('change', ()=>{
+    newRound();
+  });
+
+  // Init
+  setPuzzleTypeOptions();
+  // Default selections
+  ui.difficulty.value = 'easy';
+  setPuzzleTypeOptions();
+  // Start with first easy puzzle
+  newRound();
+})();
+</script>
+</body>
+</html>
