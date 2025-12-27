@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Phonics • Primary Steps</title>
+<link rel="icon" href="assets/primary-steps-icon-512.png" />
+<style>
+:root{
+  --bg0:#0b0d12; --bg1:#0f1320;
+  --text:#eef2ff; --muted:rgba(238,242,255,.72);
+  --line:rgba(255,255,255,.12);
+  --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399; --bad:#fb7185;
+  --ring:rgba(125,211,252,.30);
+  --shadow:0 18px 40px rgba(0,0,0,.35);
+  --r:18px;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+    radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  min-height:100vh;
+}
+header{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter: blur(10px);
+  background: rgba(18,22,33,.72);
+  border-bottom:1px solid var(--line);
+}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+.top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+.brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
+.brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
+.brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+nav a{
+  color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
+  padding:8px 10px; border-radius:12px;
+  border:1px solid transparent; opacity:.92;
+}
+nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
+
+.hero{padding:22px 16px 10px;}
+.hwrap{max-width:1100px;margin:0 auto;}
+h1{margin:0 0 6px; font-size:28px; letter-spacing:-.4px;}
+p.lead{margin:0; color:var(--muted); max-width:85ch; font-size:14px; line-height:1.45;}
+
+.grid{
+  max-width:1100px; margin:14px auto 28px; padding:0 16px;
+  display:grid; grid-template-columns: 1fr; gap:14px;
+}
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.card .head{
+  padding:14px 14px 10px;
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  flex-wrap:wrap;
+}
+.pill{
+  font-size:12px; font-weight:850;
+  padding:6px 10px; border-radius:999px;
+  background: rgba(125,211,252,.14);
+  border:1px solid rgba(125,211,252,.25);
+  color: var(--text);
+  white-space:nowrap;
+}
+.body{padding:14px;}
+.row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+.btn{
+  appearance:none; border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text); font-weight:850;
+  padding:10px 12px; border-radius:14px;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.btn:hover{background: rgba(255,255,255,.08);}
+.btn.primary{
+  border-color: rgba(125,211,252,.35);
+  background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
+}
+.btn.good{
+  border-color: rgba(52,211,153,.35);
+  background: linear-gradient(180deg, rgba(52,211,153,.18), rgba(52,211,153,.06));
+}
+.field{display:flex; flex-direction:column; gap:6px; min-width:220px;}
+label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
+select{
+  width:100%;
+  appearance:none;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:14px;
+  font-weight:800;
+  cursor:pointer;
+  outline:none;
+}
+select:focus{box-shadow: 0 0 0 6px var(--ring);}
+
+.msg{
+  padding:10px 12px; border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  margin-top:10px;
+}
+.msg.good{border-color:rgba(52,211,153,.35); background: rgba(52,211,153,.10); color: rgba(238,242,255,.92);}
+.msg.bad{border-color:rgba(251,113,133,.35); background: rgba(251,113,133,.10); color: rgba(238,242,255,.92);}
+
+.stage{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  background:
+    radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
+    linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+}
+
+/* Sound Match */
+.big{
+  font-size:60px;
+  font-weight:950;
+  text-align:center;
+  padding:10px 0 0;
+  letter-spacing:.04em;
+}
+.choiceGrid{
+  display:grid;
+  grid-template-columns: repeat(3, minmax(0,1fr));
+  gap:10px;
+  margin-top:10px;
+}
+@media (max-width:650px){ .choiceGrid{grid-template-columns:1fr;} }
+.choice{
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  border-radius:16px;
+  padding:14px;
+  cursor:pointer;
+  user-select:none;
+  text-align:left;
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  font-weight:950;
+}
+.choice:hover{background: rgba(255,255,255,.08);}
+.tag{
+  font-size:12px; font-weight:950;
+  padding:6px 10px; border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  color: var(--muted);
+  background: rgba(0,0,0,.10);
+  white-space:nowrap;
+}
+
+/* Blend Builder */
+.blocks{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:center;
+  margin-top:10px;
+}
+.block{
+  width:84px; height:84px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  display:grid; place-items:center;
+  font-weight:950;
+  font-size:28px;
+  cursor:pointer;
+  user-select:none;
+  touch-action: manipulation;
+}
+.block.on{
+  border-color: rgba(125,211,252,.45);
+  background: rgba(125,211,252,.12);
+}
+.word{
+  text-align:center;
+  font-weight:950;
+  font-size:34px;
+  letter-spacing:.08em;
+  padding:8px 0 2px;
+}
+.smallMuted{color:var(--muted); font-size:13px; text-align:center; line-height:1.35;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" onerror="this.style.display='none'">
+        <div>
+          <div class="title">Primary Steps</div>
+          <span class="sub">Simple, calm learning activities</span>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="phonics.html" class="active">Back to Phonics</a>
+        <a href="letters.html">Letters</a>
+        <a href="numbers.html">Numbers</a>
+        <a href="games.html">Games</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hwrap">
+    <h1 id="pageTitle">Phonics</h1>
+    <p class="lead" id="pageLead">Press New to start.</p>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="card" aria-label="Phonics activity">
+    <div class="head">
+      <div class="pill" id="actPill">Loading…</div>
+      <div class="row">
+        <div class="field">
+          <label for="difficulty">Difficulty</label>
+          <select id="difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <button class="btn primary" id="newBtn" type="button">New</button>
+        <button class="btn" id="resetBtn" type="button">Reset</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="stage" id="stage"></div>
+      <div class="msg" id="message">Press <strong>New</strong> to start.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const $ = (id)=>document.getElementById(id);
+  const ui = {
+    stage:$('stage'),
+    msg:$('message'),
+    pill:$('actPill'),
+    difficulty:$('difficulty'),
+    newBtn:$('newBtn'),
+    resetBtn:$('resetBtn'),
+    pageTitle:$('pageTitle'),
+    pageLead:$('pageLead')
+  };
+
+  function setMsg(type, html){
+    ui.msg.className = 'msg' + (type ? ' ' + type : '');
+    ui.msg.innerHTML = html;
+  }
+  function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j=Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]]=[arr[j],arr[i]];
+    }
+    return arr;
+  }
+
+  function speak(text){
+    // optional: browser speech. If blocked, silently ignore.
+    try{
+      const u = new SpeechSynthesisUtterance(text);
+      u.rate = 0.9;
+      u.pitch = 1.0;
+      speechSynthesis.cancel();
+      speechSynthesis.speak(u);
+    }catch(e){}
+  }
+
+  const ACTIVITIES = [
+    {
+      key:'soundmatch',
+      name:'Sound Match',
+      lead:'Tap the letter that matches the sound. (You can press “Hear sound” too.)',
+      build: ()=>({ target:'', options:[], done:false }),
+      newRound:(st, diff)=>{
+        const easy = ['s','a','t','p','i','n'];
+        const med  = ['c','k','e','h','r','m','d','g','o','u'];
+        const hard = ['b','f','l','j','v','w','x','y','z','qu','ch','sh','th','ng'];
+        const bank = diff==='easy' ? easy : diff==='hard' ? hard : med;
+        const t = bank[randInt(0, bank.length-1)];
+        st.target = t;
+        const picks = new Set([t]);
+        while(picks.size < 3){
+          picks.add(bank[randInt(0, bank.length-1)]);
+        }
+        st.options = shuffle([...picks]);
+        st.done = false;
+        setMsg('', `Listen and choose the correct letter sound.`);
+      },
+      render:(st)=>{
+        const show = (st.target.length===1) ? st.target.toUpperCase() : st.target;
+        ui.stage.innerHTML = `
+          <div class="big">${show}</div>
+          <div class="smallMuted">Try: say the sound (<strong>not</strong> the letter name). Example: “ssss” for S.</div>
+          <div class="row" style="justify-content:center;margin-top:10px;">
+            <button class="btn good" id="hearBtn" type="button">Hear sound</button>
+          </div>
+          <div class="choiceGrid" id="choices"></div>
+        `;
+        ui.stage.querySelector('#hearBtn').addEventListener('click', ()=>{
+          // speak a simple hint (kept simple — speech engines vary)
+          speak(st.target);
+        });
+
+        const wrap = ui.stage.querySelector('#choices');
+        st.options.forEach(opt=>{
+          const pretty = (opt.length===1) ? opt.toUpperCase() : opt;
+          const el = document.createElement('div');
+          el.className = 'choice';
+          el.innerHTML = `<span style="font-size:22px">${pretty}</span><span class="tag">Choose</span>`;
+          el.addEventListener('click', ()=>{
+            if(st.done) return;
+            st.done = true;
+            if(opt === st.target){
+              setMsg('good', `✅ Correct! Press <strong>New</strong> for another.`);
+            } else {
+              const answer = (st.target.length===1) ? st.target.toUpperCase() : st.target;
+              setMsg('bad', `Not quite. The correct answer was <strong>${answer}</strong>. Press <strong>New</strong> to try again.`);
+            }
+          });
+          wrap.appendChild(el);
+        });
+      }
+    },
+    {
+      key:'blendbuilder',
+      name:'Blend Builder',
+      lead:'Build the word by picking the start, middle and end sounds (CVC).',
+      build: ()=>({ onset:'', vowel:'', coda:'', target:'', pool:{}, done:false }),
+      newRound:(st, diff)=>{
+        const vowels = ['a','e','i','o','u'];
+        const onsetsEasy = ['c','s','t','p','m','n'];
+        const codasEasy  = ['t','p','n','m','s'];
+        const onsetsMed  = ['b','c','d','f','g','h','j','k','l','m','n','p','r','s','t','w'];
+        const codasMed   = ['b','d','g','k','l','m','n','p','r','s','t'];
+        const onsetsHard = ['bl','cl','fl','gl','pl','sl','br','cr','dr','fr','gr','pr','tr','ch','sh','th'];
+        const codasHard  = ['ck','sh','ch','th','ng','nd','mp','st','ft','ld','nt'];
+        const onsets = diff==='easy'?onsetsEasy:diff==='hard'?onsetsHard:onsetsMed;
+        const codas  = diff==='easy'?codasEasy :diff==='hard'?codasHard :codasMed;
+
+        st.onset = '';
+        st.vowel = '';
+        st.coda = '';
+        st.done = false;
+
+        const onset = onsets[randInt(0,onsets.length-1)];
+        const vowel = vowels[randInt(0,vowels.length-1)];
+        const coda  = codas[randInt(0,codas.length-1)];
+        st.target = onset + vowel + coda;
+
+        // Build pools
+        const onsetPool = new Set([onset]);
+        const vowelPool = new Set([vowel]);
+        const codaPool  = new Set([coda]);
+
+        while(onsetPool.size < 4) onsetPool.add(onsets[randInt(0,onsets.length-1)]);
+        while(vowelPool.size < 3) vowelPool.add(vowels[randInt(0,vowels.length-1)]);
+        while(codaPool.size  < 4) codaPool.add(codas[randInt(0,codas.length-1)]);
+
+        st.pool = {
+          onset: shuffle([...onsetPool]),
+          vowel: shuffle([...vowelPool]),
+          coda:  shuffle([...codaPool]),
+        };
+
+        setMsg('', `Build the word: <strong>${st.target}</strong> (sound it out).`);
+      },
+      render:(st)=>{
+        ui.stage.innerHTML = `
+          <div class="pill" style="display:inline-block;">Build this word</div>
+          <div class="word">${st.target.toUpperCase()}</div>
+          <div class="smallMuted">Tap one from each row (start • middle • end). Then press Check.</div>
+
+          <div style="margin-top:10px">
+            <div class="smallMuted" style="text-align:left;margin:10px 0 6px;">Start sound</div>
+            <div class="blocks" id="onset"></div>
+
+            <div class="smallMuted" style="text-align:left;margin:10px 0 6px;">Middle sound</div>
+            <div class="blocks" id="vowel"></div>
+
+            <div class="smallMuted" style="text-align:left;margin:10px 0 6px;">End sound</div>
+            <div class="blocks" id="coda"></div>
+
+            <div class="row" style="justify-content:center;margin-top:12px;">
+              <button class="btn good" id="checkBtn" type="button">Check</button>
+              <button class="btn" id="clearBtn" type="button">Clear</button>
+              <button class="btn" id="sayBtn" type="button">Say word</button>
+            </div>
+
+            <div class="msg" id="localMsg" style="margin-top:10px">Pick start, middle and end sounds.</div>
+          </div>
+        `;
+
+        function drawRow(id, arr, which){
+          const el = ui.stage.querySelector('#'+id);
+          el.innerHTML = '';
+          arr.forEach(v=>{
+            const b = document.createElement('div');
+            b.className = 'block' + ((st[which]===v) ? ' on' : '');
+            b.textContent = (v.length===1) ? v.toUpperCase() : v;
+            b.addEventListener('click', ()=>{
+              if(st.done) return;
+              st[which] = v;
+              renderActive(false);
+            });
+            el.appendChild(b);
+          });
+        }
+
+        function renderActive(showMsg=true){
+          drawRow('onset', st.pool.onset, 'onset');
+          drawRow('vowel', st.pool.vowel, 'vowel');
+          drawRow('coda',  st.pool.coda,  'coda');
+
+          const picked = (st.onset||'') + (st.vowel||'') + (st.coda||'');
+          const lm = ui.stage.querySelector('#localMsg');
+          lm.className = 'msg';
+          lm.textContent = picked ? ('You built: ' + picked.toUpperCase()) : 'Pick start, middle and end sounds.';
+        }
+
+        renderActive(false);
+
+        ui.stage.querySelector('#clearBtn').addEventListener('click', ()=>{
+          if(st.done) return;
+          st.onset=''; st.vowel=''; st.coda='';
+          renderActive(false);
+          setMsg('', `Cleared. Try again.`);
+        });
+
+        ui.stage.querySelector('#sayBtn').addEventListener('click', ()=>{
+          speak(st.target);
+        });
+
+        ui.stage.querySelector('#checkBtn').addEventListener('click', ()=>{
+          if(st.done) return;
+          if(!st.onset || !st.vowel || !st.coda){
+            setMsg('bad', `Pick one from each row first.`);
+            return;
+          }
+          const built = st.onset + st.vowel + st.coda;
+          st.done = true;
+          if(built === st.target){
+            setMsg('good', `✅ Correct! You built <strong>${built.toUpperCase()}</strong>. Press <strong>New</strong> for another.`);
+          } else {
+            setMsg('bad', `Not quite. You made <strong>${built.toUpperCase()}</strong>. The target was <strong>${st.target.toUpperCase()}</strong>. Press <strong>New</strong> to try again.`);
+          }
+        });
+      }
+    }
+  ];
+
+  const params = new URLSearchParams(location.search);
+  const requested = (params.get('activity') || 'soundmatch').toLowerCase();
+  let active = ACTIVITIES.find(a=>a.key===requested) || ACTIVITIES[0];
+  let state = active.build();
+
+  function applyMeta(){
+    ui.pill.textContent = active.name;
+    ui.pageTitle.textContent = active.name;
+    ui.pageLead.textContent = active.lead;
+  }
+  function newRound(){
+    state = active.build();
+    active.newRound(state, ui.difficulty.value);
+    applyMeta();
+    active.render(state);
+  }
+  function reset(){
+    newRound();
+    setMsg('', `Reset done. Press <strong>New</strong> or keep going.`);
+  }
+
+  ui.newBtn.addEventListener('click', newRound);
+  ui.resetBtn.addEventListener('click', reset);
+  ui.difficulty.addEventListener('change', ()=> newRound());
+
+  applyMeta();
+  active.render(state);
+  setMsg('', `Press <strong>New</strong> to start ${active.name}.`);
+})();
+</script>
+</body>
+</html>
