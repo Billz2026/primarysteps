@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Games • Primary Steps</title>
+<style>
+:root{
+    --bg0:#0b0d12; --bg1:#0f1320;
+    --panel:#121621; --panel2:#0d1c36;
+    --text:#eef2ff; --muted:rgba(238,242,255,.72);
+    --line:rgba(255,255,255,.12);
+    --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399; --bad:#fb7185;
+    --ring:rgba(125,211,252,.30);
+    --shadow:0 18px 40px rgba(0,0,0,.35);
+    --r:18px;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--text);
+    background:
+      radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+      radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+      linear-gradient(180deg, var(--bg0), var(--bg1));
+    min-height:100vh;
+  }
+
+  header{
+    position:sticky; top:0; z-index:10;
+    backdrop-filter: blur(10px);
+    background: rgba(18,22,33,.72);
+    border-bottom:1px solid var(--line);
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+  .top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
+  .brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
+  .brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+  nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+  nav a{
+    color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
+    padding:8px 10px; border-radius:12px;
+    border:1px solid transparent;
+    opacity:.92;
+  }
+  nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+  nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
+
+  .hero{padding:22px 16px 10px;}
+  .hwrap{max-width:1100px;margin:0 auto;}
+  h1{margin:0 0 6px; font-size:32px; letter-spacing:-.4px;}
+  p.lead{margin:0; color:var(--muted); max-width:85ch; font-size:14px; line-height:1.45;}
+
+  .grid{
+    max-width:1100px; margin:14px auto 28px; padding:0 16px;
+    display:grid; grid-template-columns: 1.15fr .85fr; gap:14px;
+  }
+  @media (max-width: 980px){ .grid{grid-template-columns:1fr; } nav{justify-content:flex-start;} }
+
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .card .head{
+    padding:14px 14px 10px;
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .pill{
+    font-size:12px; font-weight:850;
+    padding:6px 10px; border-radius:999px;
+    background: rgba(125,211,252,.14);
+    border:1px solid rgba(125,211,252,.25);
+    color: var(--text);
+    white-space:nowrap;
+  }
+  .body{padding:14px;}
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .btn{
+    appearance:none; border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text); font-weight:850;
+    padding:10px 12px; border-radius:14px;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn:hover{background: rgba(255,255,255,.08);}
+  .btn.primary{
+    border-color: rgba(125,211,252,.35);
+    background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
+  }
+  .btn.good{
+    border-color: rgba(52,211,153,.35);
+    background: linear-gradient(180deg, rgba(52,211,153,.18), rgba(52,211,153,.06));
+  }
+  .btn.danger{
+    border-color: rgba(251,113,133,.35);
+    background: linear-gradient(180deg, rgba(251,113,133,.18), rgba(251,113,133,.06));
+  }
+
+  .field{display:flex; flex-direction:column; gap:6px; min-width:240px;}
+  label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
+  select{
+    width:100%;
+    appearance:none;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text);
+    padding:10px 12px;
+    border-radius:14px;
+    font-weight:800;
+    cursor:pointer;
+    outline:none;
+  }
+  select:focus{box-shadow: 0 0 0 6px var(--ring);}
+
+  .stat{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 12px; border-radius:14px;
+    border:1px dashed rgba(238,242,255,.22);
+    color: var(--muted);
+  }
+  .small{font-size:12px;color:var(--muted);}
+  .msg{
+    padding:10px 12px; border-radius:14px;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.04);
+    color: var(--muted);
+    margin-top:10px;
+  }
+  .msg.good{border-color:rgba(52,211,153,.35); background: rgba(52,211,153,.10); color: rgba(238,242,255,.92);}
+  .msg.bad{border-color:rgba(251,113,133,.35); background: rgba(251,113,133,.10); color: rgba(238,242,255,.92);}
+
+  /* Game stage */
+  .stage{
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:12px;
+    background:
+      radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
+      linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+  }
+
+  /* Game cards selector */
+  .selectorGrid{
+    display:grid; grid-template-columns:1fr; gap:10px;
+  }
+  .gameCard{
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.04);
+    border-radius:16px;
+    padding:12px;
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+  }
+  .gameCard strong{display:block; font-size:14px; font-weight:950;}
+  .gameCard .desc{font-size:12px; color:var(--muted); line-height:1.35; margin-top:4px;}
+  .gameCard .tag{
+    font-size:12px; font-weight:950;
+    padding:6px 10px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    color: var(--muted);
+    background: rgba(0,0,0,.10);
+    white-space:nowrap;
+  }
+  .gameCard.active{
+    border-color: rgba(125,211,252,.40);
+    background: rgba(125,211,252,.08);
+  }
+
+  /* Connect 4 */
+  .c4Wrap{display:grid; gap:12px; justify-items:center;}
+  .c4Board{
+    width:min(420px, 100%);
+    aspect-ratio: 7 / 6;
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap:10px;
+    padding:12px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.16);
+  }
+  .c4Cell{
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    position:relative;
+  }
+  .c4Disc{
+    width:100%; height:100%;
+    border-radius:999px;
+    transform: scale(.82);
+    background: rgba(255,255,255,.06);
+    box-shadow: inset 0 10px 20px rgba(0,0,0,.28);
+  }
+  .c4Disc.r{ background: rgba(251,113,133,.70); }
+  .c4Disc.y{ background: rgba(253,224,71,.65); }
+  .c4Top{
+    width:min(420px, 100%);
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap:10px;
+  }
+  .c4Top button{
+    height:42px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.04);
+    color:var(--text);
+    font-weight:950;
+    cursor:pointer;
+  }
+  .c4Top button:hover{background: rgba(255,255,255,.07);}
+  .seg{
+    display:flex; gap:8px; flex-wrap:wrap;
+    padding:6px; border:1px solid var(--line);
+    border-radius:16px; background:rgba(255,255,255,.03);
+  }
+  .seg button{border-radius:12px; padding:9px 12px;}
+  .seg button.on{border-color:rgba(125,211,252,.45); background:rgba(125,211,252,.12);}
+
+  /* Shape Sort */
+  .shapeWrap{display:grid; gap:12px;}
+  .bins{
+    display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px;
+  }
+  @media (max-width: 560px){ .bins{grid-template-columns:1fr;} .brand .title{display:none;} }
+
+  .bin{
+    border:1px dashed rgba(238,242,255,.22);
+    border-radius:16px;
+    padding:12px;
+    min-height:120px;
+    display:flex; flex-direction:column; gap:10px;
+    background: rgba(0,0,0,.10);
+  }
+  .binTitle{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .binTitle strong{font-size:13px; font-weight:950;}
+  .binTitle .mini{font-size:12px; color:var(--muted); font-weight:900;}
+  .dropArea{
+    flex:1;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    background: rgba(255,255,255,.04);
+  }
+  .tray{
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:16px;
+    padding:12px;
+    background: rgba(0,0,0,.10);
+  }
+  .shapes{
+    display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .shape{
+    width:56px; height:56px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    display:flex; align-items:center; justify-content:center;
+    cursor:grab;
+    user-select:none;
+    touch-action:none;
+  }
+  .shape:active{cursor:grabbing;}
+  .shape svg{width:34px; height:34px; display:block;}
+  .bin.over{outline: 2px solid rgba(125,211,252,.45); outline-offset: 2px;}
+
+  /* Coin game answer buttons (shared) */
+  .choices{display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:10px;}
+  @media (max-width: 560px){ .choices{grid-template-columns:1fr;} }
+  .choice{
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    border-radius:16px;
+    padding:12px;
+    cursor:pointer;
+    user-select:none;
+    text-align:left;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    font-weight:950;
+    color:var(--text);
+  }
+  .choice:hover{background: rgba(255,255,255,.08);}
+  .choice .tag{
+    font-size:12px; font-weight:950;
+    padding:6px 10px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    color: var(--muted);
+    background: rgba(0,0,0,.10);
+    white-space:nowrap;
+  }
+/* Uniform selector rows (match Phonics activity picker) */
+.selectorGrid{gap:12px}
+.gameCard{align-items:center;padding:14px}
+.gameCard .left{display:flex;align-items:center;gap:14px;min-width:0}
+.gameCard .icon{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.04);box-shadow:0 10px 20px rgba(0,0,0,.22);flex:0 0 auto}
+.gameCard .text{min-width:0}
+.gameCard strong{font-size:18px;letter-spacing:-.2px}
+.gameCard .desc{font-size:13px;font-weight:850}
+.gameCard .meta{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+.badge{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);color:rgba(238,242,255,.86);font-size:12px;font-weight:900}
+.gameCard .startBtn{flex:0 0 auto;align-self:center;padding:10px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.04);font-weight:950}
+.gameCard .startBtn.primary{border-color:rgba(125,211,252,.45);background:rgba(125,211,252,.12)}
+@media (max-width:560px){
+  .gameCard{flex-direction:column;align-items:stretch}<section class="grid">
+  <div class="card">
+    <div class="head">
+      <div class="pill">Choose a game</div>
+      <div class="row">
+        <a class="btn" href="index.html">Back to Home</a>
+      </div>
+    </div>
+    <div class="body">
+      <div class="selectorGrid" style="grid-template-columns: repeat(3, minmax(0,1fr)); gap:12px;">
+        <a class="gameCard" href="game-connect4.html" style="text-decoration:none;">
+          <div>
+            <strong>Connect 4</strong>
+            <div class="desc">Drop discs to make 4 in a row. 2‑player or practice.</div>
+          </div>
+          <span class="tag">Strategy</span>
+        </a>
+
+        <a class="gameCard" href="game-coins.html" style="text-decoration:none;">
+          <div>
+            <strong>Coin Piggy Bank</strong>
+            <div class="desc">Count, sort, and order UK coin values. 3 modes.</div>
+          </div>
+          <span class="tag">Money</span>
+        </a>
+
+        <a class="gameCard" href="game-shapesort.html" style="text-decoration:none;">
+          <div>
+            <strong>Shape Sort</strong>
+            <div class="desc">Drag (or tap) shapes into the matching bins.</div>
+          </div>
+          <span class="tag">Drag &amp; Drop</span>
+        </a>
+      </div>
+
+      <div class="msg">Tip: This works like the Numbers menu — click a game card to open the activity.</div>
+    </div>
+  </div>
+</section>
+
+
+
+</body>
+</html>
