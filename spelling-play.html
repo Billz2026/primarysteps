@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spelling Practice</title>
+<link rel="icon" href="assets/primary-steps-icon-512.png">
+<style>
+body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;background:#0b0d12;color:#eef2ff}
+header{background:#121621;padding:14px;border-bottom:1px solid rgba(255,255,255,.1)}
+main{max-width:900px;margin:auto;padding:24px}
+.card{background:#121621;border:1px solid rgba(255,255,255,.1);border-radius:18px;padding:20px}
+.word{font-size:42px;font-weight:900;text-align:center;margin:20px 0}
+input{width:100%;padding:12px;border-radius:14px;border:1px solid rgba(255,255,255,.2);background:#0b0d12;color:#eef2ff;font-size:18px;text-align:center}
+button{margin-top:12px;padding:10px 16px;border-radius:999px;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.06);color:#eef2ff;font-weight:800;cursor:pointer}
+.msg{margin-top:12px;padding:10px;border-radius:12px;background:rgba(255,255,255,.05)}
+.good{border:1px solid rgba(52,211,153,.4)}
+.bad{border:1px solid rgba(251,113,133,.4)}
+</style>
+</head>
+<body>
+<header><a href="spelling.html" style="color:#7dd3fc;text-decoration:none;font-weight:800">← Back to Spelling</a></header>
+<main>
+  <div class="card">
+    <h1 id="title">Spelling</h1>
+    <div class="word" id="word"></div>
+    <input id="input" placeholder="Type the spelling">
+    <button onclick="check()">Check</button>
+    <button onclick="next()">Next</button>
+    <div class="msg" id="msg">Press Check</div>
+  </div>
+</main>
+
+<script>
+const WORDS = {
+easy:["cat","dog","sun","hat","pen","cup","bus","run","fox","pig","map","red","box","top","jam","milk","fish","tree","moon","star","book","rain","snow","ball","hand","foot","sock","bike","cake","duck"],
+medium:["apple","banana","orange","school","teacher","window","garden","family","happy","friend","pencil","picture","playing","reading","writing","number","letters","phonics","outside","inside","morning","evening","birthday","holiday","animals","cooking","shopping","helpful","different","important"],
+hard:["beautiful","adventure","information","communication","confidence","imagination","experience","responsible","comfortable","interesting","mathematics","concentration","determination","extraordinary","environment","independent","improvement","celebration","development","opportunity","temperature","electricity","government","photograph","knowledge","understanding","relationship","experiment","competition","organisation"]
+};
+
+const params=new URLSearchParams(location.search);
+const mode=params.get("mode")||"lcwc";
+const levelCycle=["easy","medium","hard"];
+let levelIndex=0;
+let current="";
+
+function next(){
+  const level=levelCycle[levelIndex%3];
+  const list=WORDS[level];
+  current=list[Math.floor(Math.random()*list.length)];
+  document.getElementById("input").value="";
+  document.getElementById("msg").textContent="Type the spelling";
+  document.getElementById("msg").className="msg";
+  document.getElementById("word").textContent=(mode==="lcwc")?current:"_ ".repeat(current.length);
+  levelIndex++;
+}
+function check(){
+  const val=document.getElementById("input").value.trim().toLowerCase();
+  const msg=document.getElementById("msg");
+  if(val===current){
+    msg.textContent="Correct!";
+    msg.className="msg good";
+  }else{
+    msg.textContent="Try again";
+    msg.className="msg bad";
+  }
+}
+next();
+</script>
+</body>
+</html>
