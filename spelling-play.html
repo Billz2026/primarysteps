@@ -33,38 +33,109 @@ button{margin-top:12px;padding:10px 16px;border-radius:999px;border:1px solid rg
 
 <script>
 const WORDS = {
-easy:["cat","dog","sun","hat","pen","cup","bus","run","fox","pig","map","red","box","top","jam","milk","fish","tree","moon","star","book","rain","snow","ball","hand","foot","sock","bike","cake","duck"],
-medium:["apple","banana","orange","school","teacher","window","garden","family","happy","friend","pencil","picture","playing","reading","writing","number","letters","phonics","outside","inside","morning","evening","birthday","holiday","animals","cooking","shopping","helpful","different","important"],
-hard:["beautiful","adventure","information","communication","confidence","imagination","experience","responsible","comfortable","interesting","mathematics","concentration","determination","extraordinary","environment","independent","improvement","celebration","development","opportunity","temperature","electricity","government","photograph","knowledge","understanding","relationship","experiment","competition","organisation"]
+  easy:["cat","dog","sun","hat","pen","cup","bus","run","fox","pig","map","red","box","top","jam","milk","fish","tree","moon","star","book","rain","snow","ball","hand","foot","sock","bike","cake","duck","frog","ship","ring","sand","lamp","nest"],
+  medium:["apple","banana","orange","school","teacher","window","garden","family","happy","friend","pencil","picture","playing","reading","writing","number","letters","phonics","outside","inside","morning","evening","birthday","holiday","animals","cooking","shopping","helpful","different","important","because","between","together","suddenly","another"],
+  hard:["beautiful","adventure","information","communication","confidence","imagination","experience","responsible","comfortable","interesting","mathematics","concentration","determination","extraordinary","environment","independent","improvement","celebration","development","opportunity","temperature","electricity","government","photograph","knowledge","understanding","relationship","experiment","competition","organisation","character","especially","dictionary","calendar","necessary","immediately"]
 };
 
-const params=new URLSearchParams(location.search);
-const mode=params.get("mode")||"lcwc";
-const levelCycle=["easy","medium","hard"];
-let levelIndex=0;
-let current="";
+const params = new URLSearchParams(location.search);
+const mode = (params.get("mode")||"lcwc").toLowerCase();
 
-function next(){
-  const level=levelCycle[levelIndex%3];
-  const list=WORDS[level];
-  current=list[Math.floor(Math.random()*list.length)];
-  document.getElementById("input").value="";
-  document.getElementById("msg").textContent="Type the spelling";
-  document.getElementById("msg").className="msg";
-  document.getElementById("word").textContent=(mode==="lcwc")?current:"_ ".repeat(current.length);
-  levelIndex++;
+const titleEl = document.getElementById("title");
+const wordEl  = document.getElementById("word");
+const inputEl = document.getElementById("input");
+const msgEl   = document.getElementById("msg");
+
+const levelCycle = ["easy","medium","hard"];
+let levelIndex = 0;
+let level = "easy";
+let current = "";
+let masked = "";
+
+// Helpers
+function pick(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+function padWordDisplay(str){
+  // add spaces between characters for readability
+  return str.split("").join(" ");
 }
-function check(){
-  const val=document.getElementById("input").value.trim().toLowerCase();
-  const msg=document.getElementById("msg");
-  if(val===current){
-    msg.textContent="Correct!";
-    msg.className="msg good";
+function makeMask(word, blanks){
+  // Ensure unique blank indexes, avoid first letter blank for confidence on easy.
+  const idxs = new Set();
+  const len = word.length;
+  const avoid = new Set([0]); // keep first letter as hint
+  while(idxs.size < blanks){
+    const i = Math.floor(Math.random()*len);
+    if(avoid.has(i)) continue;
+    idxs.add(i);
+    // for very short words, allow first letter if needed
+    if(len <= 3 && idxs.size < blanks) avoid.delete(0);
+  }
+  const chars = word.split("");
+  idxs.forEach(i => chars[i] = "_");
+  return chars.join("");
+}
+
+function setModeUI(){
+  if(mode === "missing"){
+    titleEl.textContent = "Missing Letters";
+    inputEl.placeholder = "Type the full word";
+    msgEl.textContent = "Look at the hints, then type the full word.";
   }else{
-    msg.textContent="Try again";
-    msg.className="msg bad";
+    titleEl.textContent = "Look, Cover, Write";
+    inputEl.placeholder = "Type the spelling";
+    msgEl.textContent = "Read the word, then type it.";
   }
 }
+
+function next(){
+  level = levelCycle[levelIndex % 3];
+  levelIndex++;
+
+  const list = WORDS[level];
+  current = pick(list).toLowerCase();
+
+  inputEl.value = "";
+  msgEl.className = "msg";
+
+  if(mode === "missing"){
+    // blanks by difficulty (cap so it stays possible)
+    const blanks = (level==="easy") ? 1 : (level==="medium" ? 2 : 3);
+    const b = Math.min(blanks, Math.max(1, current.length - 2));
+    masked = makeMask(current, b);
+    wordEl.textContent = padWordDisplay(masked.toUpperCase());
+    msgEl.textContent = `Level: ${level.toUpperCase()} • Fill the missing letters and type the whole word.`;
+  }else{
+    wordEl.textContent = current.toUpperCase();
+    msgEl.textContent = `Level: ${level.toUpperCase()} • Read the word, then type it.`;
+  }
+}
+
+function check(){
+  const val = inputEl.value.trim().toLowerCase();
+  if(!val){
+    msgEl.textContent = "Type your answer first.";
+    msgEl.className = "msg";
+    return;
+  }
+  if(val === current){
+    msgEl.textContent = "✅ Correct!";
+    msgEl.className = "msg good";
+  }else{
+    msgEl.textContent = `Not quite. Try again.`;
+    msgEl.className = "msg bad";
+  }
+}
+
+// Expose for inline onclick (keeps your current buttons working)
+window.next = next;
+window.check = check;
+
+// Enter key to check
+inputEl.addEventListener("keydown", (e)=>{
+  if(e.key === "Enter") check();
+});
+
+setModeUI();
 next();
 </script>
 </body>
