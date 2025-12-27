@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Spelling • Primary Steps</title>
+<style>
+
+  :root{
+    --bg0:#0b0d12; --bg1:#0f1320;
+    --panel:#121621; --panel2:#0d1c36;
+    --text:#eef2ff; --muted:rgba(238,242,255,.72);
+    --line:rgba(255,255,255,.12);
+    --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399;
+    --ring:rgba(125,211,252,.30);
+    --shadow:0 18px 40px rgba(0,0,0,.35);
+    --r:18px;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  }
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--text);
+    background:
+      radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+      radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+      linear-gradient(180deg, var(--bg0), var(--bg1));
+    min-height:100vh;
+  }
+
+  header{
+    position:sticky; top:0; z-index:10;
+    backdrop-filter: blur(10px);
+    background: rgba(18,22,33,.72);
+    border-bottom:1px solid var(--line);
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+  .top{
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
+  .brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
+  .brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+  nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+  nav a{
+    color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
+    padding:8px 10px; border-radius:12px;
+    border:1px solid transparent;
+    opacity:.92;
+  }
+  nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+  nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
+
+  .hero{padding:22px 16px 10px;}
+  .hwrap{max-width:1100px;margin:0 auto;}
+  h1{margin:0 0 6px; font-size:32px; letter-spacing:-.4px;}
+  p.lead{margin:0; color:var(--muted); max-width:75ch; font-size:14px; line-height:1.45;}
+
+  .grid{
+    max-width:1100px; margin:14px auto 28px; padding:0 16px;
+    display:grid; grid-template-columns: 1.15fr .85fr; gap:14px;
+  }
+  @media (max-width: 980px){ .grid{grid-template-columns:1fr; } nav{justify-content:flex-start;} }
+
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .card .head{
+    padding:14px 14px 10px;
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .pill{
+    font-size:12px; font-weight:850;
+    padding:6px 10px; border-radius:999px;
+    background: rgba(125,211,252,.14);
+    border:1px solid rgba(125,211,252,.25);
+    color: var(--text);
+    white-space:nowrap;
+  }
+  .card .body{padding:14px;}
+
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .btn{
+    appearance:none; border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text); font-weight:850;
+    padding:10px 12px; border-radius:14px;
+    cursor:pointer;
+  }
+  .btn:hover{background: rgba(255,255,255,.08);}
+  .btn.primary{
+    border-color: rgba(125,211,252,.35);
+    background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
+  }
+  .btn.good{
+    border-color: rgba(52,211,153,.35);
+    background: linear-gradient(180deg, rgba(52,211,153,.18), rgba(52,211,153,.06));
+  }
+
+  .stat{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 12px; border-radius:14px;
+    border:1px dashed rgba(238,242,255,.22);
+    color: var(--muted);
+  }
+
+  .canvasWrap{display:grid; grid-template-columns: 1fr; gap:10px;}
+  .guideWord{
+    font-size: clamp(40px, 7vw, 86px);
+    font-weight: 950;
+    letter-spacing: .06em;
+    line-height:1.05;
+    text-shadow: 0 10px 30px rgba(0,0,0,.35);
+    opacity: var(--guideOpacity, .55);
+    user-select:none;
+    pointer-events:none;
+  }
+
+  canvas{
+    width:100%; height:360px;
+    background:
+      radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
+      linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+    border:1px solid var(--line);
+    border-radius:16px;
+    touch-action:none;
+  }
+
+  .hint{color:var(--muted); font-size:13px; margin-top:8px; line-height:1.45;}
+  .small{font-size:12px;color:var(--muted);}
+
+  .field{
+    display:flex; flex-direction:column; gap:6px;
+    min-width: 220px;
+  }
+  label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
+  select, input[type="range"]{
+    width:100%;
+  }
+  select{
+    appearance:none;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text);
+    padding:10px 12px;
+    border-radius:14px;
+    font-weight:800;
+    cursor:pointer;
+    outline:none;
+  }
+  select:focus{box-shadow: 0 0 0 6px var(--ring);}
+  input[type="range"]{accent-color: var(--accent);}
+
+  /* Focus */
+  a:focus-visible, button:focus-visible, select:focus-visible{
+    outline:none;
+    box-shadow: 0 0 0 6px var(--ring);
+    border-radius: 14px;
+  }
+
+  @media (max-width: 520px){
+    .brand .title{display:none;}
+  }
+
+
+/* Spelling extras */
+.blank {{
+  display:inline-block;
+  min-width:92px;
+  padding:2px 10px 6px;
+  border-bottom:2px dashed rgba(238,242,255,.35);
+  color: rgba(238,242,255,.92);
+  font-weight:950;
+  letter-spacing:.2px;
+}}
+.sentence {{
+  font-size:16px;
+  line-height:1.55;
+  color: rgba(238,242,255,.92);
+}}
+.answerRow {{
+  display:grid;
+  grid-template-columns: 1fr auto auto;
+  gap:10px;
+  align-items:center;
+  margin-top:12px;
+}}
+@media (max-width: 720px){{
+  .answerRow{{ grid-template-columns: 1fr; }}
+}}
+input[type="text"]{{
+  width:100%;
+  padding:12px 12px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--text);
+  font-weight:850;
+  outline:none;
+}}
+input[type="text"]::placeholder{{ color: rgba(238,242,255,.45); font-weight:800; }}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" onerror="this.style.display='none'">
+        <div>
+          <div class="title">Primary Steps</div>
+          <span class="sub">Simple, calm learning activities</span>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="letters.html">Letters</a>
+        <a href="numbers.html">Numbers</a>
+        <a href="phonics.html">Phonics</a>
+        <a href="maths.html">Maths</a>
+        <a href="memory.html">Memory</a>
+        <a href="handwriting.html" class="active">Handwriting</a>
+        <a href="progress.html">Progress</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hwrap">
+    <h1>Spelling</h1>
+    <p class="lead">Write the missing word on the canvas, then type it to check. Same calm layout and colours as Handwriting.</p>
+  </div>
+</section>
+
+<section class="grid two">
+  <div class="card">
+    <div class="head">
+      <div class="pill" id="pill">Missing word</div>
+      <div class="row">
+        <button class="btn" id="soundBtn" type="button" aria-pressed="false">Sound: Off</button>
+        <button class="btn primary" id="newBtn" type="button">New</button>
+        <button class="btn" id="resetBtn" type="button">Reset</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="stage">
+        <div class="row" style="justify-content:space-between;">
+          <div>
+            <div class="small" style="opacity:.95;">Sentence</div>
+            <div class="sentence" id="sentence"></div>
+          </div>
+          <div class="pill" id="counter">1 / 1</div>
+        </div>
+
+        <div style="margin-top:12px;">
+          <div class="small" style="opacity:.95;">Word to write</div>
+          <div class="row" style="justify-content:flex-start; margin-top:6px;">
+            <span class="pill" id="targetWord">word</span>
+            <span class="small" style="opacity:.85;">Write it below, then type it to check.</span>
+          </div>
+        </div>
+
+        <div class="canvasWrap" style="margin-top:12px;">
+          <div class="guide" id="guide" aria-hidden="true">
+            <div class="line"></div><div class="line mid"></div><div class="line"></div>
+          </div>
+          <canvas id="canvas" width="900" height="240" aria-label="Write the missing word"></canvas>
+        </div>
+
+        <div class="row" style="justify-content:space-between; margin-top:10px;">
+          <div class="row">
+            <button class="btn" id="clearBtn" type="button">Clear</button>
+            <button class="btn" id="showBtn" type="button">Show Answer</button>
+          </div>
+          <div class="row">
+            <label style="display:flex; gap:10px; align-items:center;">
+              <span class="small">Guide</span>
+              <input id="opacity" type="range" min="0" max="100" value="55" />
+            </label>
+          </div>
+        </div>
+
+        <div class="answerRow">
+          <input id="answer" type="text" autocomplete="off" spellcheck="false" placeholder="Type the missing word…" />
+          <button class="btn good" id="checkBtn" type="button">Check</button>
+          <button class="btn" id="nextBtn" type="button">Next</button>
+        </div>
+
+        <div class="msg" id="message">Press <strong>New</strong> to begin.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="head">
+      <div class="pill">Settings</div>
+    </div>
+    <div class="body">
+      <div class="small" style="opacity:.9; margin-bottom:8px;">Difficulty</div>
+      <div class="row">
+        <button class="btn" id="easyBtn" type="button">Easy</button>
+        <button class="btn on" id="medBtn" type="button">Medium</button>
+        <button class="btn" id="hardBtn" type="button">Hard</button>
+      </div>
+
+      <div class="msg" style="margin-top:12px;">
+        <div style="font-weight:950; margin-bottom:4px;">How it works</div>
+        <div class="small">1) Read the sentence. 2) Write the missing word on the canvas. 3) Type it and press <strong>Check</strong>.</div>
+      </div>
+
+      <div class="msg" style="margin-top:12px;">
+        <div class="small"><strong>Tip:</strong> Sound is optional — it only gives gentle clicks/chimes.</div>
+      </div>
+
+      <div class="row" style="margin-top:12px;">
+        <a class="btn" href="index.html">Back to Home</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {{
+  const $ = (id)=>document.getElementById(id);
+  const ui = {{
+    pill:$('pill'),
+    sentence:$('sentence'),
+    targetWord:$('targetWord'),
+    counter:$('counter'),
+    msg:$('message'),
+    canvas:$('canvas'),
+    guide:$('guide'),
+    opacity:$('opacity'),
+    answer:$('answer'),
+    checkBtn:$('checkBtn'),
+    nextBtn:$('nextBtn'),
+    showBtn:$('showBtn'),
+    clearBtn:$('clearBtn'),
+    newBtn:$('newBtn'),
+    resetBtn:$('resetBtn'),
+    soundBtn:$('soundBtn'),
+    easyBtn:$('easyBtn'),
+    medBtn:$('medBtn'),
+    hardBtn:$('hardBtn'),
+  }};
+
+  // Sound
+  let soundOn=false, audioCtx=null;
+  function beep(freq=700, ms=60, gain=0.03){{
+    if(!soundOn) return;
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
+    o.frequency.value=freq; g.gain.value=gain;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start(); setTimeout(()=>o.stop(), ms);
+  }}
+  function clickSound(){{ beep(640,45,0.02); }}
+
+  function setMsg(type, html){{
+    ui.msg.className = 'msg' + (type ? ' ' + type : '');
+    ui.msg.innerHTML = html;
+  }}
+
+  const ITEMS = {{
+    easy: [
+      {{ s:"I see a ___ .", a:"cat" }},
+      {{ s:"The ___ is hot.", a:"sun" }},
+      {{ s:"I have a ___ .", a:"hat" }},
+      {{ s:"The dog can ___ .", a:"run" }},
+      {{ s:"Sip from a ___ .", a:"cup" }},
+      {{ s:"I go to ___ .", a:"bed" }},
+      {{ s:"The ___ is big.", a:"tree" }},
+      {{ s:"A fish can ___ .", a:"swim" }},
+      {{ s:"Kick the ___ .", a:"ball" }},
+      {{ s:"It will ___ today.", a:"rain" }},
+    ],
+    medium: [
+      {{ s:"Please close the ___ .", a:"window" }},
+      {{ s:"I wrote with a ___ .", a:"pencil" }},
+      {{ s:"We walk to ___ .", a:"school" }},
+      {{ s:"The rabbit hid in a ___ .", a:"garden" }},
+      {{ s:"The rocket went to a ___ .", a:"planet" }},
+      {{ s:"Put it in your ___ .", a:"pocket" }},
+      {{ s:"The castle has a ___ .", a:"bridge" }},
+      {{ s:"The flower is ___ .", a:"yellow" }},
+      {{ s:"In winter, it can be ___ .", a:"frozen" }},
+      {{ s:"Take a photo with a ___ .", a:"camera" }},
+    ],
+    hard: [
+      {{ s:"The ___ landed safely after the storm.", a:"helicopter" }},
+      {{ s:"My favourite ___ is chocolate cake.", a:"dessert" }},
+      {{ s:"A ___ changes colour to hide.", a:"chameleon" }},
+      {{ s:"We planned an ___ for the weekend.", a:"adventure" }},
+      {{ s:"Please be ___ when you cross the road.", a:"careful" }},
+      {{ s:"The scientist tested the new ___ .", a:"electricity" }},
+      {{ s:"I used my ___ to find the answer.", a:"imagination" }},
+      {{ s:"The ___ stretched across the valley.", a:"mountain" }},
+      {{ s:"The ___ was printed in the newspaper.", a:"photograph" }},
+      {{ s:"Being ___ means doing the right thing.", a:"responsible" }},
+    ]
+  }};
+
+  let difficulty = 'medium';
+  let list = [];
+  let idx = 0;
+
+  function shuffle(arr){{
+    for(let i=arr.length-1;i>0;i--){{ const j=Math.floor(Math.random()*(i+1)); [arr[i],arr[j]]=[arr[j],arr[i]]; }}
+    return arr;
+  }}
+  function norm(s){{ return (s||"").toLowerCase().trim().replace(/\s+/g,''); }}
+
+  function setDifficulty(d){{
+    difficulty=d;
+    ui.easyBtn.classList.toggle('on', d==='easy');
+    ui.medBtn.classList.toggle('on', d==='medium');
+    ui.hardBtn.classList.toggle('on', d==='hard');
+    buildList();
+    clickSound();
+  }}
+
+  function buildList(){{
+    list = shuffle(ITEMS[difficulty].slice());
+    idx = 0;
+    showItem();
+    setMsg('', `Write the word, then type it and press <strong>Check</strong>.`);
+  }}
+
+  function showItem(){{
+    const item = list[idx];
+    if(!item) return;
+    ui.sentence.innerHTML = item.s.replace("___", '<span class="blank">_____</span>');
+    ui.targetWord.textContent = item.a;
+    ui.counter.textContent = (idx+1) + " / " + list.length;
+    ui.answer.value = "";
+    ui.answer.focus();
+    clear();
+  }}
+
+  // Canvas
+  const ctx = ui.canvas.getContext('2d');
+  let drawing=false;
+  let last=null;
+  let dpr = Math.max(1, window.devicePixelRatio || 1);
+
+  function resizeCanvas(){{
+    const rect = ui.canvas.getBoundingClientRect();
+    ui.canvas.width = Math.floor(rect.width * dpr);
+    ui.canvas.height = Math.floor(rect.height * dpr);
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.lineCap='round';
+    ctx.lineJoin='round';
+    ctx.strokeStyle='rgba(238,242,255,.92)';
+    ctx.lineWidth=6;
+  }}
+  function pos(e){{
+    const r = ui.canvas.getBoundingClientRect();
+    return {{ x:(e.clientX - r.left), y:(e.clientY - r.top) }};
+  }}
+  function start(e){{
+    drawing=true;
+    last = pos(e);
+    ui.canvas.setPointerCapture?.(e.pointerId);
+  }}
+  function move(e){{
+    if(!drawing) return;
+    const p = pos(e);
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    last = p;
+  }}
+  function end(){{ drawing=false; last=null; }}
+
+  function clear(){{
+    const r = ui.canvas.getBoundingClientRect();
+    ctx.clearRect(0,0,r.width,r.height);
+  }}
+
+  ui.canvas.addEventListener('pointerdown', (e)=>{{ e.preventDefault(); start(e); }});
+  ui.canvas.addEventListener('pointermove', (e)=>{{ e.preventDefault(); move(e); }});
+  window.addEventListener('pointerup', end);
+  window.addEventListener('pointercancel', end);
+
+  ui.clearBtn.addEventListener('click', ()=>{{ clear(); setMsg('', 'Cleared.'); clickSound(); }});
+  ui.opacity.addEventListener('input', ()=>{{
+    const v = Number(ui.opacity.value)/100;
+    ui.guide.style.setProperty('--guideOpacity', v.toFixed(2));
+  }});
+
+  // Controls
+  function check(){{
+    const item = list[idx];
+    if(!item) return;
+    const ok = norm(ui.answer.value) === norm(item.a);
+    if(ok){{
+      setMsg('good', `✅ Correct! The missing word is <strong>${{item.a}}</strong>. Press <strong>Next</strong>.`);
+      beep(880,90,0.04);
+    }} else {{
+      setMsg('bad', `Not quite. Try again — write it, then type it carefully.`);
+      beep(220,120,0.05);
+    }}
+  }}
+
+  ui.checkBtn.addEventListener('click', check);
+  ui.answer.addEventListener('keydown', (e)=>{{ if(e.key==='Enter') check(); }});
+
+  ui.showBtn.addEventListener('click', ()=>{{
+    const item = list[idx];
+    ui.answer.value = item.a;
+    setMsg('', `Answer shown: <strong>${{item.a}}</strong>. Now write it once on the canvas.`);
+    beep(740,60,0.03);
+  }});
+
+  ui.nextBtn.addEventListener('click', ()=>{{
+    idx = (idx + 1) % list.length;
+    showItem();
+    setMsg('', 'Next one!');
+    clickSound();
+  }});
+
+  ui.newBtn.addEventListener('click', ()=>{{ buildList(); beep(820,60,0.03); }});
+  ui.resetBtn.addEventListener('click', ()=>{{ buildList(); setMsg('', 'Reset done.'); clickSound(); }});
+
+  ui.soundBtn.addEventListener('click', ()=>{{
+    soundOn = !soundOn;
+    ui.soundBtn.setAttribute('aria-pressed', String(soundOn));
+    ui.soundBtn.textContent = 'Sound: ' + (soundOn ? 'On' : 'Off');
+    beep(880,60,0.03);
+  }});
+
+  ui.easyBtn.addEventListener('click', ()=> setDifficulty('easy'));
+  ui.medBtn.addEventListener('click', ()=> setDifficulty('medium'));
+  ui.hardBtn.addEventListener('click', ()=> setDifficulty('hard'));
+
+  // init
+  ui.guide.style.setProperty('--guideOpacity', (Number(ui.opacity.value)/100).toFixed(2));
+  resizeCanvas();
+  window.addEventListener('resize', ()=>{{ resizeCanvas(); clear(); }});
+  buildList();
+  setMsg('', `Press <strong>New</strong> any time for a fresh set.`);
+}})();
+</script>
+</body>
+</html>
