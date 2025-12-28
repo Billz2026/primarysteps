@@ -1,0 +1,505 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Find the Letter • Primary Steps</title>
+<style>
+:root{
+  --bg0:#0b0d12;
+  --bg1:#0f1320;
+  --text:#eef2ff;
+  --muted:rgba(238,242,255,.72);
+  --line:rgba(255,255,255,.12);
+  --good:#34d399;
+  --bad:#fb7185;
+  --shadow:0 18px 40px rgba(0,0,0,.35);
+  --r:18px;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+    radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  min-height:100vh;
+}
+a{color:inherit;text-decoration:none}
+
+header{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter: blur(10px);
+  background: rgba(18,22,33,.72);
+  border-bottom:1px solid var(--line);
+}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+.top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+.brand{display:flex; align-items:center; gap:10px; min-width:0;}
+.brand img{
+  height:54px; width:auto; display:block;
+  filter: drop-shadow(0 16px 30px rgba(0,0,0,.35));
+}
+.brand .text{display:none;} /* logo only */
+
+nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+nav a{
+  color:var(--text); font-weight:900; font-size:13px;
+  padding:8px 10px; border-radius:12px;
+  border:1px solid transparent;
+  opacity:.92;
+}
+nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+nav a.active{border-color:rgba(80,200,255,.35); background:rgba(80,200,255,.10); opacity:1;}
+
+.hero{max-width:1100px;margin:0 auto;padding:18px 16px 6px;}
+h1{margin:0 0 6px; font-size:30px; letter-spacing:-.4px;}
+.lead{margin:0;color:var(--muted);font-size:14px;line-height:1.45;max-width:80ch}
+
+.grid{
+  max-width:1100px;margin:12px auto 28px;padding:0 16px;
+  display:grid; grid-template-columns: 1fr; gap:14px;
+}
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.head{
+  padding:14px 14px 10px;
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  flex-wrap:wrap;
+}
+.pill{
+  font-size:12px; font-weight:950;
+  padding:6px 10px; border-radius:999px;
+  background: rgba(80,200,255,.14);
+  border:1px solid rgba(80,200,255,.25);
+  white-space:nowrap;
+}
+.row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+.btn{
+  appearance:none; border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text); font-weight:950;
+  padding:10px 12px; border-radius:14px;
+  cursor:pointer;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.btn:hover{background: rgba(255,255,255,.08);}
+.btn.primary{
+  border-color: rgba(80,200,255,.35);
+  background: linear-gradient(180deg, rgba(80,200,255,.18), rgba(80,200,255,.07));
+}
+
+.body{padding:14px;}
+.stat{
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:10px 12px; border-radius:14px;
+  border:1px dashed rgba(238,242,255,.22);
+  color: var(--muted);
+  flex-wrap:wrap;
+}
+
+.panel{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+  padding:12px;
+  background:
+    radial-gradient(900px 500px at 10% 0%, rgba(80,200,255,.10), transparent 60%),
+    linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+}
+
+.layout{
+  display:grid;
+  grid-template-columns: 280px 1fr;
+  gap:12px;
+  align-items:start;
+}
+@media (max-width: 920px){
+  .layout{grid-template-columns:1fr;}
+}
+
+.targetBox{
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:16px;
+  background: rgba(0,0,0,.14);
+  padding:12px;
+}
+.targetCanvas{
+  width:100%;
+  height:210px;
+  display:block;
+  border-radius:14px;
+  background: rgba(0,0,0,.20);
+  border:1px solid rgba(255,255,255,.10);
+}
+
+.tiles{
+  display:grid;
+  grid-template-columns: repeat(6, minmax(0,1fr));
+  gap:10px;
+}
+@media (max-width: 720px){ .tiles{grid-template-columns: repeat(4, minmax(0,1fr));} }
+@media (max-width: 440px){ .tiles{grid-template-columns: repeat(3, minmax(0,1fr));} }
+
+.tile{
+  border-radius:16px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.04);
+  box-shadow: inset 0 10px 18px rgba(0,0,0,.20);
+  padding:10px;
+  cursor:pointer;
+  transition: transform .08s ease, background .08s ease, border-color .08s ease;
+  display:flex; align-items:center; justify-content:center;
+  min-height:84px;
+  position:relative;
+  overflow:hidden;
+}
+.tile:hover{transform: translateY(-1px); background: rgba(255,255,255,.06);}
+.tile:active{transform: translateY(0px) scale(.99);}
+.tile.correct{border-color: rgba(52,211,153,.55); background: rgba(52,211,153,.12);}
+.tile.wrong{border-color: rgba(251,113,133,.55); background: rgba(251,113,133,.12);}
+
+.tile canvas{
+  width:100%;
+  height:72px;
+  display:block;
+  border-radius:12px;
+  background: transparent;
+}
+
+.msg{
+  margin-top:10px;
+  padding:10px 12px;
+  border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  display:none;
+}
+.msg.good{display:block;border-color:rgba(52,211,153,.35);background:rgba(52,211,153,.10);color:rgba(238,242,255,.92);}
+.msg.bad{display:block;border-color:rgba(251,113,133,.35);background:rgba(251,113,133,.10);color:rgba(238,242,255,.92);}
+
+select{
+  appearance:none;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:14px;
+  font-weight:900;
+  cursor:pointer;
+  outline:none;
+  min-width: 180px;
+}
+select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps" onerror="this.style.display='none'">
+        <span class="text">Primary Steps</span>
+      </a>
+      <nav>
+        <a href="letters.html" class="active">Letters</a>
+        <a href="index.html">Home</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <h1>Find the Letter</h1>
+  <p class="lead">Tap the letter that matches the target. Same premium “PRIMARY” 3D style as letter tracing.</p>
+</section>
+
+<div class="grid">
+  <div class="card">
+    <div class="head">
+      <div class="pill" id="pill">Find the Letter</div>
+      <div class="row">
+        <label style="font-size:12px;color:var(--muted);font-weight:900;">Difficulty</label>
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <button class="btn primary" id="newBtn" type="button">New</button>
+        <button class="btn" id="soundBtn" type="button" aria-pressed="true">Sound: On</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="panel">
+        <div class="layout">
+          <div class="targetBox">
+            <div class="stat" style="margin-bottom:10px;">
+              <span><strong>Find:</strong> <span id="targetLabel">A</span></span>
+              <span id="scoreLabel">Score: 0</span>
+            </div>
+            <canvas id="targetCanvas" class="targetCanvas" aria-label="Target letter"></canvas>
+            <div class="msg" id="msg"></div>
+          </div>
+
+          <div>
+            <div class="stat" style="margin-bottom:10px;">
+              <span id="prompt">Tap the matching letter.</span>
+              <span id="round">Round 1</span>
+            </div>
+            <div class="tiles" id="tiles"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  // ---------- Sound ----------
+  let soundOn = true;
+  const audioCtx = () => new (window.AudioContext || window.webkitAudioContext)();
+  let ctx = null;
+
+  function beep(freq=600, dur=80, gain=0.05, type='sine'){
+    if(!soundOn) return;
+    try{
+      if(!ctx) ctx = audioCtx();
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = type;
+      o.frequency.value = freq;
+      g.gain.value = gain;
+      o.connect(g); g.connect(ctx.destination);
+      o.start();
+      o.stop(ctx.currentTime + dur/1000);
+    }catch(e){}
+  }
+  function goodSound(){ beep(880, 90, 0.06, 'sine'); }
+  function badSound(){ beep(240, 120, 0.06, 'sawtooth'); }
+
+  // ---------- PRIMARY-style 3D letter renderer ----------
+  const FONT_STACK = `"Arial Black","Impact","Segoe UI Black","Franklin Gothic Heavy",system-ui,-apple-system,"Segoe UI",Roboto,Arial`;
+
+  function drawGloss(ctx2, letter, x, y, size, w, h){
+    ctx2.save();
+    ctx2.globalAlpha = 0.35;
+    const g = ctx2.createLinearGradient(x, y - size*0.55, x, y + size*0.10);
+    g.addColorStop(0.00, "rgba(255,255,255,0.95)");
+    g.addColorStop(0.35, "rgba(255,255,255,0.35)");
+    g.addColorStop(1.00, "rgba(255,255,255,0.00)");
+    ctx2.fillStyle = g;
+
+    // clip to letter and paint a rect of gradient
+    ctx2.globalCompositeOperation = "source-in";
+    ctx2.fillRect(0, 0, w, h);
+    ctx2.restore();
+    ctx2.globalCompositeOperation = "source-over";
+  }
+
+  function drawPrimary3D(canvas, letter, intensity=1){
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const rect = canvas.getBoundingClientRect();
+    const W = Math.max(1, Math.round(rect.width * dpr));
+    const H = Math.max(1, Math.round(rect.height * dpr));
+    if(canvas.width !== W || canvas.height !== H){
+      canvas.width = W; canvas.height = H;
+    }
+    const ctx2 = canvas.getContext('2d');
+    ctx2.setTransform(dpr,0,0,dpr,0,0);
+
+    const w = rect.width, h = rect.height;
+    ctx2.clearRect(0,0,w,h);
+
+    const size = Math.min(w,h) * 0.78;
+    const x = w/2, y = h/2 + size*0.06;
+
+    ctx2.save();
+    ctx2.textAlign = 'center';
+    ctx2.textBaseline = 'middle';
+    ctx2.font = `900 ${size}px ${FONT_STACK}`;
+    ctx2.lineJoin = 'round';
+    ctx2.miterLimit = 2;
+
+    // Shadow
+    ctx2.shadowColor = 'rgba(0,0,0,.72)';
+    ctx2.shadowBlur = Math.max(18, size*0.10) * intensity;
+    ctx2.shadowOffsetX = Math.max(10, size*0.09) * intensity;
+    ctx2.shadowOffsetY = Math.max(14, size*0.13) * intensity;
+    ctx2.globalAlpha = 0.20;
+    ctx2.fillStyle = 'rgba(0,0,0,.9)';
+    ctx2.fillText(letter, x, y);
+
+    // crisp layers
+    ctx2.shadowColor = 'transparent';
+    ctx2.shadowBlur = 0;
+    ctx2.shadowOffsetX = 0;
+    ctx2.shadowOffsetY = 0;
+
+    // Extrusion
+    const depth = Math.round(Math.max(18, size*0.12) * intensity);
+    for(let i=depth;i>=1;i--){
+      const t = i/depth;
+      const dx = i*0.70;
+      const dy = i*1.02;
+      ctx2.globalAlpha = 0.20 + (1-t)*0.20;
+      ctx2.fillStyle = `rgba(2,28,75,${0.55 + t*0.25})`;
+      ctx2.fillText(letter, x+dx, y+dy);
+    }
+
+    // Face gradient
+    const face = ctx2.createLinearGradient(x, y - size*0.95, x, y + size*0.95);
+    face.addColorStop(0.00, "rgba(180,245,255,1.00)");
+    face.addColorStop(0.22, "rgba(80,200,255,1.00)");
+    face.addColorStop(0.52, "rgba(35,140,255,1.00)");
+    face.addColorStop(0.82, "rgba(12,85,210,1.00)");
+    face.addColorStop(1.00, "rgba(6,52,155,1.00)");
+    ctx2.globalAlpha = 0.95;
+    ctx2.fillStyle = face;
+    ctx2.fillText(letter, x, y);
+
+    // Outer outline
+    ctx2.globalAlpha = 1;
+    ctx2.lineWidth = Math.max(7, size*0.08);
+    ctx2.strokeStyle = "rgba(3,55,160,1)";
+    ctx2.strokeText(letter, x, y);
+
+    // Inner bright outline
+    ctx2.lineWidth = Math.max(3.5, size*0.04);
+    ctx2.strokeStyle = "rgba(235,252,255,0.95)";
+    ctx2.strokeText(letter, x - size*0.006, y - size*0.008);
+
+    // Clip to letter then gloss
+    ctx2.save();
+    ctx2.globalAlpha = 1;
+    ctx2.fillStyle = "rgba(255,255,255,1)";
+    ctx2.fillText(letter, x, y);
+    drawGloss(ctx2, letter, x, y, size, w, h);
+    ctx2.restore();
+
+    // Bevel shadow edge
+    ctx2.globalAlpha = 0.18;
+    ctx2.lineWidth = Math.max(5, size*0.05);
+    ctx2.strokeStyle = "rgba(0,0,0,0.35)";
+    ctx2.strokeText(letter, x + size*0.01, y + size*0.012);
+
+    // Soft glow ring
+    ctx2.globalAlpha = 0.10;
+    ctx2.lineWidth = Math.max(10, size*0.10);
+    ctx2.strokeStyle = "rgba(80,200,255,.65)";
+    ctx2.strokeText(letter, x, y);
+
+    ctx2.restore();
+  }
+
+  // ---------- Game ----------
+  const ALPHA = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  const tilesEl = document.getElementById('tiles');
+  const targetLabel = document.getElementById('targetLabel');
+  const targetCanvas = document.getElementById('targetCanvas');
+  const difficultyEl = document.getElementById('difficulty');
+  const newBtn = document.getElementById('newBtn');
+  const msg = document.getElementById('msg');
+  const prompt = document.getElementById('prompt');
+  const roundEl = document.getElementById('round');
+  const scoreLabel = document.getElementById('scoreLabel');
+  const soundBtn = document.getElementById('soundBtn');
+
+  let round = 1;
+  let score = 0;
+  let target = 'A';
+  let locked = false;
+
+  function setMsg(kind, html){
+    msg.className = 'msg ' + (kind || '');
+    msg.innerHTML = html || '';
+    msg.style.display = html ? 'block' : 'none';
+  }
+
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]] = [a[j],a[i]];
+    }
+    return a;
+  }
+  function pickTarget(){
+    return ALPHA[Math.floor(Math.random()*ALPHA.length)];
+  }
+
+  function buildRound(){
+    locked = false;
+    setMsg('', '');
+    prompt.textContent = "Tap the matching letter.";
+    roundEl.textContent = `Round ${round}`;
+    scoreLabel.textContent = `Score: ${score}`;
+
+    target = pickTarget();
+    targetLabel.textContent = target;
+    drawPrimary3D(targetCanvas, target, 1.0);
+
+    const diff = difficultyEl.value;
+    let count = diff === 'easy' ? 8 : diff === 'medium' ? 12 : 18;
+
+    const distractors = shuffle(ALPHA.filter(l => l !== target)).slice(0, count - 1);
+    const set = shuffle([target, ...distractors]);
+
+    tilesEl.innerHTML = '';
+    set.forEach(letter => {
+      const tile = document.createElement('button');
+      tile.type = 'button';
+      tile.className = 'tile';
+      tile.setAttribute('aria-label', `Letter ${letter}`);
+
+      const c = document.createElement('canvas');
+      tile.appendChild(c);
+      tilesEl.appendChild(tile);
+
+      requestAnimationFrame(() => drawPrimary3D(c, letter, 0.85));
+
+      tile.addEventListener('click', () => {
+        if(locked) return;
+        if(letter === target){
+          locked = true;
+          tile.classList.add('correct');
+          score += 1;
+          scoreLabel.textContent = `Score: ${score}`;
+          setMsg('good', `Correct! 🎉 You found <strong>${target}</strong>.`);
+          goodSound();
+          prompt.textContent = "Great job! Press New for the next round.";
+        } else {
+          tile.classList.add('wrong');
+          badSound();
+          setMsg('bad', `Try again 🙂 Find <strong>${target}</strong>.`);
+        }
+      });
+    });
+  }
+
+  newBtn.addEventListener('click', () => { round += 1; buildRound(); });
+  difficultyEl.addEventListener('change', () => { round = 1; score = 0; buildRound(); });
+
+  soundBtn.addEventListener('click', () => {
+    soundOn = !soundOn;
+    soundBtn.setAttribute('aria-pressed', String(soundOn));
+    soundBtn.textContent = `Sound: ${soundOn ? 'On' : 'Off'}`;
+    beep(760, 70, 0.03);
+  });
+
+  buildRound();
+  window.addEventListener('resize', () => drawPrimary3D(targetCanvas, target, 1.0));
+})();
+</script>
+</body>
+</html>
