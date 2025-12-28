@@ -1,0 +1,727 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Connect 4 • Primary Steps</title>
+<style>
+:root{
+  --bg0:#0b0d12; --bg1:#0f1320;
+  --panel:#121621; --panel2:#0d1c36;
+  --text:#eef2ff; --muted:rgba(238,242,255,.72);
+  --line:rgba(255,255,255,.12);
+  --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399; --bad:#fb7185;
+  --ring:rgba(125,211,252,.30);
+  --shadow:0 18px 40px rgba(0,0,0,.35);
+  --r:18px;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+    radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  min-height:100vh;
+}
+
+/* Header */
+header{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter: blur(10px);
+  background: rgba(18,22,33,.72);
+  border-bottom:1px solid var(--line);
+}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+.top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+.brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
+.brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
+.brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+nav a{
+  color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
+  padding:8px 10px; border-radius:12px;
+  border:1px solid transparent;
+  opacity:.92;
+}
+nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
+
+.hero{padding:22px 16px 10px;}
+.hwrap{max-width:1100px;margin:0 auto;}
+h1{margin:0 0 6px; font-size:32px; letter-spacing:-.4px;}
+p.lead{margin:0; color:var(--muted); max-width:85ch; font-size:14px; line-height:1.45;}
+
+.grid{
+  max-width:1100px; margin:14px auto 28px; padding:0 16px;
+  display:grid; grid-template-columns: 1.15fr .85fr; gap:14px;
+}
+@media (max-width: 980px){ .grid{grid-template-columns:1fr; } nav{justify-content:flex-start;} }
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.card .head{
+  padding:14px 14px 10px;
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.pill{
+  font-size:12px; font-weight:850;
+  padding:6px 10px; border-radius:999px;
+  background: rgba(125,211,252,.14);
+  border:1px solid rgba(125,211,252,.25);
+  color: var(--text);
+  white-space:nowrap;
+}
+.body{padding:14px;}
+.row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+.btn{
+  appearance:none; border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text); font-weight:850;
+  padding:10px 12px; border-radius:14px;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.btn:hover{background: rgba(255,255,255,.08);}
+.btn.primary{
+  border-color: rgba(125,211,252,.35);
+  background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
+}
+
+.field{display:flex; flex-direction:column; gap:6px; min-width:240px;}
+label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
+select{
+  width:100%;
+  appearance:none;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:14px;
+  font-weight:800;
+  cursor:pointer;
+  outline:none;
+}
+select:focus{box-shadow: 0 0 0 6px var(--ring);}
+
+.msg{
+  padding:10px 12px; border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  margin-top:10px;
+}
+.msg.good{border-color:rgba(52,211,153,.35); background: rgba(52,211,153,.10); color: rgba(238,242,255,.92);}
+.msg.bad{border-color:rgba(251,113,133,.35); background: rgba(251,113,133,.10); color: rgba(238,242,255,.92);}
+.small{font-size:12px;color:var(--muted);}
+
+.stage{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  background:
+    radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
+    linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+}
+
+/* Segmented toggle */
+.seg{
+  display:flex; gap:8px; flex-wrap:wrap;
+  padding:6px; border:1px solid var(--line);
+  border-radius:16px; background:rgba(255,255,255,.03);
+}
+.seg button{border-radius:12px; padding:9px 12px;}
+.seg button.on{border-color:rgba(125,211,252,.45); background:rgba(125,211,252,.12);}
+
+/* Connect 4 */
+.c4Wrap{display:grid; gap:12px; justify-items:center;}
+.c4Board{
+  width:min(440px, 100%);
+  aspect-ratio: 7 / 6;
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap:10px;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  position:relative;
+  touch-action: manipulation;
+}
+.c4Cell{
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  position:relative;
+}
+.c4Cell:hover{border-color: rgba(125,211,252,.35); background: rgba(125,211,252,.08);}
+.c4Board[data-winner="1"] .c4Cell{cursor:default; opacity:.95}
+.c4Disc{
+  width:100%; height:100%;
+  border-radius:999px;
+  transform: scale(.82);
+  background: rgba(255,255,255,.06);
+  box-shadow: inset 0 10px 20px rgba(0,0,0,.28);
+  position:relative;
+}
+.c4Disc.r{ background: rgba(251,113,133,.72); }
+.c4Disc.y{ background: rgba(253,224,71,.68); }
+.c4Disc.drop{ animation: c4drop .18s cubic-bezier(.18,.9,.2,1.12) both; }
+@keyframes c4drop{
+  from{ transform: translateY(var(--from, -120%)) scale(.82); filter:brightness(1.06); }
+  to{ transform: translateY(0) scale(.82); filter:brightness(1); }
+}
+
+.c4Hint{
+  width:min(440px, 100%);
+  display:flex; justify-content:space-between; gap:10px;
+}
+.c4Hint .chip{
+  flex:1;
+  text-align:center;
+  border-radius:14px;
+  border:1px dashed rgba(238,242,255,.22);
+  padding:8px 0;
+  font-size:12px; font-weight:900;
+  color:rgba(238,242,255,.65);
+}
+.c4Hint .chip.on{
+  border-color: rgba(125,211,252,.45);
+  background: rgba(125,211,252,.10);
+  color: rgba(238,242,255,.92);
+}
+
+@media (max-width: 560px){ .brand .title{display:none;} }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" onerror="this.style.display='none'">
+        <div>
+          <div class="title">Primary Steps</div>
+          <span class="sub">Simple, calm learning activities</span>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="letters.html">Letters</a>
+        <a href="numbers.html">Numbers</a>
+        <a href="phonics.html">Phonics</a>
+        <a href="maths.html">Maths</a>
+        <a href="memory.html">Memory</a>
+        <a href="games.html" class="active">Games</a>
+        <a href="puzzles.html">Puzzles</a>
+        <a href="handwriting.html">Handwriting</a>
+        <a href="clock.html">Clock</a>
+        <a href="progress.html">Progress</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hwrap">
+    <h1>Connect 4</h1>
+    <p class="lead">Tap any circle in a column to drop a disc. Make 4 in a row.</p>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="card" aria-label="Connect 4 game">
+    <div class="head">
+      <div class="pill">Play</div>
+      <div class="row">
+        <button class="btn" id="soundBtn" type="button" aria-pressed="false">Sound: Off</button>
+        <button class="btn primary" id="newBtn" type="button">New</button>
+        <button class="btn" id="resetBtn" type="button">Reset</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="stage" id="stage"></div>
+      <div class="msg" id="message">Press <strong>New</strong> to start.</div>
+      <div class="row" style="margin-top:10px;">
+        <a class="btn" href="games.html">Back to Games</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="card" aria-label="Connect 4 options">
+    <div class="head">
+      <div class="pill">Options</div>
+    </div>
+    <div class="body">
+      <div class="seg" role="tablist" aria-label="Connect 4 mode">
+        <button class="btn on" id="modeTwo" type="button">2‑Player</button>
+        <button class="btn" id="modeCpu" type="button">Vs CPU</button>
+      </div>
+
+      <div class="field" style="margin-top:10px;">
+        <label for="cpuDifficulty">CPU difficulty</label>
+        <select id="cpuDifficulty" disabled>
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <div class="field" style="margin-top:10px;">
+        <label for="firstTurn">First turn</label>
+        <select id="firstTurn">
+          <option value="you" selected>You (Red)</option>
+          <option value="cpu">CPU (Yellow)</option>
+        </select>
+      </div>
+
+      <div class="msg">
+        <b>How to play:</b> click any circle in the column you want. In CPU mode, you are <b>Red</b> and the CPU is <b>Yellow</b>.
+      </div>
+      <div class="small" style="margin-top:10px;">Tip: on tablets, use finger — everything supports touch.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const $ = (id)=>document.getElementById(id);
+  const ui = {
+    stage:$('stage'),
+    msg:$('message'),
+    newBtn:$('newBtn'),
+    resetBtn:$('resetBtn'),
+    soundBtn:$('soundBtn'),
+    modeTwo:$('modeTwo'),
+    modeCpu:$('modeCpu'),
+    cpuDifficulty:$('cpuDifficulty'),
+    firstTurn:$('firstTurn'),
+  };
+
+  // --- Sound (simple “clink” + win/lose tones) ---
+  let soundOn=false, audioCtx=null;
+  function getCtx(){
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    return audioCtx;
+  }
+  function tone(freq=700, ms=70, gain=0.03, type='sine'){
+    if(!soundOn) return;
+    const ctx = getCtx();
+    const o = ctx.createOscillator();
+    const g = ctx.createGain();
+    o.type = type;
+    o.frequency.value = freq;
+    o.connect(g); g.connect(ctx.destination);
+
+    const now = ctx.currentTime;
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(gain, now + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + ms/1000);
+
+    o.start(now);
+    o.stop(now + ms/1000 + 0.02);
+  }
+  function clink(){
+    if(!soundOn) return;
+    const ctx = getCtx();
+    const now = ctx.currentTime;
+
+    // short noise burst
+    const bufferSize = Math.max(1, Math.floor(ctx.sampleRate * 0.06));
+    const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+    const data = buffer.getChannelData(0);
+    for(let i=0;i<bufferSize;i++){
+      const t = i/bufferSize;
+      data[i] = (Math.random()*2-1) * Math.pow(1 - t, 2);
+    }
+    const noise = ctx.createBufferSource();
+    noise.buffer = buffer;
+
+    const hp = ctx.createBiquadFilter();
+    hp.type = 'highpass'; hp.frequency.value = 800;
+
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.0001, now);
+    g.gain.exponentialRampToValueAtTime(0.05, now + 0.01);
+    g.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+
+    noise.connect(hp); hp.connect(g); g.connect(ctx.destination);
+    noise.start(now); noise.stop(now + 0.09);
+
+    // tiny bell hit
+    tone(720, 70, 0.02, 'triangle');
+    setTimeout(()=>tone(980, 60, 0.015, 'triangle'), 30);
+  }
+
+  function setMsg(type, html){
+    ui.msg.className = 'msg' + (type ? ' ' + type : '');
+    ui.msg.innerHTML = html;
+  }
+
+  // --- Game state ---
+  let mode = 'two'; // 'two' | 'cpu'
+  let cpuDifficulty = 'medium';
+  let firstTurn = 'you'; // 'you' | 'cpu'
+
+  let turn = 'r';
+  let winner = '';
+  let lastMove = null; // {r,c,v}
+
+  let grid = Array.from({length:6}, ()=>Array(7).fill(''));
+
+  function cloneGrid(g){ return g.map(row=>row.slice()); }
+  function isFull(g=grid){ return g.every(r=>r.every(Boolean)); }
+  function validMoves(g=grid){
+    const moves=[];
+    for(let c=0;c<7;c++) if(!g[0][c]) moves.push(c);
+    return moves;
+  }
+  function dropOn(g, col, v){
+    for(let r=5;r>=0;r--){
+      if(!g[r][col]){ g[r][col]=v; return r; }
+    }
+    return -1;
+  }
+  function checkWinner(g=grid){
+    const H=6, W=7;
+    const dirs=[[1,0],[0,1],[1,1],[1,-1]];
+    for(let r=0;r<H;r++){
+      for(let c=0;c<W;c++){
+        const v=g[r][c]; if(!v) continue;
+        for(const [dr,dc] of dirs){
+          let ok=true;
+          for(let k=1;k<4;k++){
+            const rr=r+dr*k, cc=c+dc*k;
+            if(rr<0||rr>=H||cc<0||cc>=W||g[rr][cc]!==v){ ok=false; break; }
+          }
+          if(ok) return v;
+        }
+      }
+    }
+    return '';
+  }
+
+  function render(){
+    const title = winner
+      ? (winner==='r' ? 'Red wins' : 'Yellow wins')
+      : (mode==='cpu' && turn==='y' ? 'CPU thinking…' : ('Turn: ' + (turn==='r'?'Red':'Yellow')));
+
+    ui.stage.innerHTML = `
+      <div class="c4Wrap">
+        <div class="row" style="justify-content:center;">
+          <span class="pill">${title}</span>
+        </div>
+
+        <div class="c4Hint" aria-hidden="true">
+          ${Array.from({length:7}, (_,c)=>`<div class="chip" data-hcol="${c}">${c+1}</div>`).join('')}
+        </div>
+
+        <div class="c4Board" id="c4Board" aria-label="Connect 4 board" data-winner="${winner?1:0}">
+          ${grid.flatMap((row,r)=>row.map((cell,c)=>{
+            const isDrop = lastMove && lastMove.r===r && lastMove.c===c;
+            const from = `-${(r+1)*110}%`;
+            return `
+              <div class="c4Cell" role="button" tabindex="0" aria-label="Column ${c+1}, row ${r+1}" data-col="${c}" data-row="${r}">
+                <div class="c4Disc ${cell} ${isDrop ? 'drop' : ''}" style="--from:${from}"></div>
+              </div>
+            `;
+          })).join('')}
+        </div>
+
+        <div class="small" style="text-align:center;">Make 4 in a row: horizontal, vertical, or diagonal.</div>
+      </div>
+    `;
+
+    const board = $('c4Board');
+    const chips = [...ui.stage.querySelectorAll('[data-hcol]')];
+
+    function setHover(col, on){
+      const el = chips[col];
+      if(!el) return;
+      el.classList.toggle('on', on);
+    }
+
+    function handleCol(col){
+      if(winner) return;
+      if(mode==='cpu' && turn==='y') return;
+      playerMove(col);
+    }
+
+    board.addEventListener('pointermove', (e)=>{
+      const cell = e.target.closest('.c4Cell');
+      chips.forEach(ch=>ch.classList.remove('on'));
+      if(cell) setHover(Number(cell.dataset.col), true);
+    });
+    board.addEventListener('pointerleave', ()=>chips.forEach(ch=>ch.classList.remove('on')));
+
+    board.addEventListener('click', (e)=>{
+      const cell = e.target.closest('.c4Cell');
+      if(!cell) return;
+      handleCol(Number(cell.dataset.col));
+    });
+
+    board.querySelectorAll('.c4Cell').forEach(cell=>{
+      cell.addEventListener('keydown', (e)=>{
+        if(e.key==='Enter' || e.key===' '){
+          e.preventDefault();
+          handleCol(Number(cell.dataset.col));
+        }
+      });
+    });
+  }
+
+  function endIfNeeded(){
+    const w = checkWinner(grid);
+    if(w){
+      winner = w;
+      if(mode==='cpu'){
+        setMsg('good', w==='r'
+          ? `✅ You win! Press <strong>New</strong> to play again.`
+          : `✅ CPU wins! Press <strong>New</strong> to try again.`
+        );
+      } else {
+        setMsg('good', `✅ ${w==='r'?'Red':'Yellow'} wins! Press <strong>New</strong> to play again.`);
+      }
+      tone(880, 90, 0.04, 'triangle');
+      setTimeout(()=>tone(1180, 110, 0.03, 'triangle'), 90);
+      return true;
+    }
+    if(isFull(grid)){
+      setMsg('', `It’s a draw. Press <strong>New</strong> to try again.`);
+      tone(240, 120, 0.03, 'sine');
+      return true;
+    }
+    return false;
+  }
+
+  function playerMove(col){
+    const r = dropOn(grid, col, turn);
+    if(r<0){ tone(200, 110, 0.03, 'sine'); return; }
+
+    lastMove = {r, c:col, v:turn};
+    clink();
+
+    if(endIfNeeded()){
+      render();
+      return;
+    }
+
+    if(mode==='two'){
+      turn = (turn==='r') ? 'y' : 'r';
+      render();
+      return;
+    }
+
+    turn = 'y';
+    render();
+    setTimeout(cpuMove, 250);
+  }
+
+  // --- CPU ---
+  function scoreWindow(win, me){
+    const opp = (me==='r')?'y':'r';
+    let m=0,o=0,e=0;
+    for(const v of win){
+      if(v===me) m++;
+      else if(v===opp) o++;
+      else e++;
+    }
+    if(m===4) return 100000;
+    if(m===3 && e===1) return 80;
+    if(m===2 && e===2) return 10;
+    if(o===3 && e===1) return -90;
+    if(o===4) return -100000;
+    return 0;
+  }
+
+  function evaluateBoard(g, me){
+    let score = 0;
+    const center = g.map(r=>r[3]);
+    score += center.filter(v=>v===me).length * 6;
+
+    for(let r=0;r<6;r++){
+      for(let c=0;c<4;c++) score += scoreWindow([g[r][c],g[r][c+1],g[r][c+2],g[r][c+3]], me);
+    }
+    for(let c=0;c<7;c++){
+      for(let r=0;r<3;r++) score += scoreWindow([g[r][c],g[r+1][c],g[r+2][c],g[r+3][c]], me);
+    }
+    for(let r=0;r<3;r++){
+      for(let c=0;c<4;c++) score += scoreWindow([g[r][c],g[r+1][c+1],g[r+2][c+2],g[r+3][c+3]], me);
+    }
+    for(let r=3;r<6;r++){
+      for(let c=0;c<4;c++) score += scoreWindow([g[r][c],g[r-1][c+1],g[r-2][c+2],g[r-3][c+3]], me);
+    }
+    return score;
+  }
+
+  function pickCpuMoveEasy(){
+    const moves = validMoves(grid);
+    const weighted = moves.slice().sort((a,b)=> Math.abs(a-3)-Math.abs(b-3));
+    const top = weighted.slice(0, Math.min(4, weighted.length));
+    return top[Math.floor(Math.random()*top.length)];
+  }
+
+  function findImmediateWin(g, who){
+    for(const c of validMoves(g)){
+      const gg = cloneGrid(g);
+      dropOn(gg, c, who);
+      if(checkWinner(gg)===who) return c;
+    }
+    return null;
+  }
+
+  function pickCpuMoveMedium(){
+    const win = findImmediateWin(grid, 'y');
+    if(win!==null) return win;
+    const block = findImmediateWin(grid, 'r');
+    if(block!==null) return block;
+    return pickCpuMoveEasy();
+  }
+
+  function minimax(g, depth, alpha, beta, maximizing){
+    const w = checkWinner(g);
+    if(w==='y') return {score: 1000000 + depth};
+    if(w==='r') return {score: -1000000 - depth};
+    if(depth===0 || isFull(g)) return {score: evaluateBoard(g, 'y')};
+
+    const moves = validMoves(g).sort((a,b)=> Math.abs(a-3)-Math.abs(b-3));
+    let bestCol = moves[0];
+
+    if(maximizing){
+      let value = -Infinity;
+      for(const c of moves){
+        const gg = cloneGrid(g);
+        dropOn(gg, c, 'y');
+        const res = minimax(gg, depth-1, alpha, beta, false);
+        if(res.score > value){ value = res.score; bestCol = c; }
+        alpha = Math.max(alpha, value);
+        if(alpha >= beta) break;
+      }
+      return {score:value, col:bestCol};
+    } else {
+      let value = Infinity;
+      for(const c of moves){
+        const gg = cloneGrid(g);
+        dropOn(gg, c, 'r');
+        const res = minimax(gg, depth-1, alpha, beta, true);
+        if(res.score < value){ value = res.score; bestCol = c; }
+        beta = Math.min(beta, value);
+        if(alpha >= beta) break;
+      }
+      return {score:value, col:bestCol};
+    }
+  }
+
+  function pickCpuMoveHard(){
+    const res = minimax(grid, 4, -Infinity, Infinity, true);
+    return (typeof res.col === 'number') ? res.col : pickCpuMoveMedium();
+  }
+
+  function cpuMove(){
+    if(winner) return;
+    if(mode!=='cpu' || turn!=='y') return;
+
+    let col;
+    if(cpuDifficulty==='easy') col = pickCpuMoveEasy();
+    else if(cpuDifficulty==='medium') col = pickCpuMoveMedium();
+    else col = pickCpuMoveHard();
+
+    const r = dropOn(grid, col, 'y');
+    if(r<0){ col = pickCpuMoveEasy(); dropOn(grid, col, 'y'); }
+
+    lastMove = {r, c:col, v:'y'};
+    clink();
+
+    if(endIfNeeded()){
+      render();
+      return;
+    }
+    turn = 'r';
+    render();
+  }
+
+  function newGame(){
+    grid = Array.from({length:6}, ()=>Array(7).fill(''));
+    winner = '';
+    lastMove = null;
+
+    if(mode==='cpu'){
+      turn = (firstTurn==='cpu') ? 'y' : 'r';
+      setMsg('', `Click a circle to drop your disc. You are <strong>Red</strong>.`);
+      render();
+      tone(820, 70, 0.03, 'triangle');
+      if(turn==='y') setTimeout(cpuMove, 250);
+      return;
+    }
+
+    turn = 'r';
+    setMsg('', `Click a circle to drop a disc.`);
+    render();
+    tone(820, 70, 0.03, 'triangle');
+  }
+
+  function syncModeUI(){
+    const cpuOn = (mode==='cpu');
+    ui.modeTwo.classList.toggle('on', !cpuOn);
+    ui.modeCpu.classList.toggle('on', cpuOn);
+    ui.cpuDifficulty.disabled = !cpuOn;
+  }
+
+  // UI events
+  ui.newBtn.addEventListener('click', newGame);
+  ui.resetBtn.addEventListener('click', ()=>{ newGame(); setMsg('', 'Reset done.'); tone(520, 60, 0.02, 'triangle'); });
+
+  ui.modeTwo.addEventListener('click', ()=>{
+    mode='two';
+    syncModeUI();
+    setMsg('', '2‑Player mode. Click a circle to drop a disc.');
+    tone(880, 60, 0.02, 'triangle');
+    newGame();
+  });
+
+  ui.modeCpu.addEventListener('click', ()=>{
+    mode='cpu';
+    syncModeUI();
+    setMsg('', 'Vs CPU mode. Pick a difficulty, then press New.');
+    tone(880, 60, 0.02, 'triangle');
+    newGame();
+  });
+
+  ui.cpuDifficulty.addEventListener('change', ()=>{
+    cpuDifficulty = ui.cpuDifficulty.value;
+    tone(740, 50, 0.02, 'triangle');
+  });
+
+  ui.firstTurn.addEventListener('change', ()=>{
+    firstTurn = ui.firstTurn.value;
+    tone(740, 50, 0.02, 'triangle');
+    if(mode==='cpu') newGame();
+  });
+
+  ui.soundBtn.addEventListener('click', ()=>{
+    soundOn = !soundOn;
+    ui.soundBtn.setAttribute('aria-pressed', String(soundOn));
+    ui.soundBtn.textContent = 'Sound: ' + (soundOn ? 'On' : 'Off');
+    tone(980, 70, 0.03, 'triangle');
+  });
+
+  syncModeUI();
+  render();
+})();
+</script>
+</body>
+</html>
