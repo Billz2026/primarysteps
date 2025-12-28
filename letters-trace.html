@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Letter Tracing • Primary Steps</title>
+
+<style>
+:root{
+  --bg:#0b1020;
+  --line:rgba(255,255,255,.10);
+  --text:#e9eefc;
+  --muted:#b7c2e6;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(1200px 800px at 20% -10%, rgba(110,231,255,.18), transparent 60%),
+    radial-gradient(900px 700px at 110% 10%, rgba(167,139,250,.16), transparent 55%),
+    var(--bg);
+  color:var(--text)
+}
+a{color:inherit;text-decoration:none}
+
+header{
+  position:sticky;top:0;z-index:10;
+  background:rgba(11,16,32,.72);
+  backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line)
+}
+.nav{
+  max-width:1100px;margin:0 auto;padding:12px 16px;
+  display:flex;align-items:center;gap:14px
+}
+.brand{display:flex;align-items:center;gap:10px;min-width:64px}
+.brand img{height:54px;width:auto;display:block;filter:drop-shadow(0 14px 26px rgba(0,0,0,.35));}
+.brand .title{display:none;} /* logo only */
+.links{display:flex;flex-wrap:wrap;gap:10px;margin-left:auto}
+.links a{
+  padding:8px 10px;border:1px solid transparent;border-radius:12px;
+  color:var(--muted);font-weight:800;font-size:13px
+}
+.links a:hover{border-color:var(--line);background:rgba(255,255,255,.04);color:var(--text)}
+
+main{max-width:1100px;margin:0 auto;padding:22px 16px 56px}
+.card{
+  background:linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--line);border-radius:18px;
+  box-shadow:0 18px 50px rgba(0,0,0,.35);overflow:hidden
+}
+.cardHead{padding:16px 16px 0}
+h1{margin:0 0 6px;font-size:28px}
+p{margin:0 0 14px;color:var(--muted)}
+.row{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;padding:16px}
+@media (max-width:900px){.row{grid-template-columns:1fr}}
+.canvasWrap{
+  background:linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.01));
+  border:1px solid var(--line);border-radius:16px;padding:12px
+}
+canvas{
+  width:100%;
+  height:420px;
+  display:block;
+  border-radius:12px;
+  background:rgba(0,0,0,.25);
+  touch-action:none;
+}
+.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.btn{
+  cursor:pointer;border:1px solid var(--line);
+  background:rgba(255,255,255,.04);color:var(--text);
+  padding:10px 12px;border-radius:14px;font-weight:900
+}
+.btn:hover{background:rgba(255,255,255,.07)}
+.pill{
+  padding:10px 12px;border:1px dashed rgba(255,255,255,.18);
+  border-radius:14px;color:var(--muted);font-weight:950
+}
+.small{font-size:13px;color:var(--muted);line-height:1.4}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="nav">
+    <a class="brand" href="index.html" aria-label="Primary Steps home">
+      <img src="assets/primary-steps-logo.png" alt="Primary Steps" onerror="this.style.display='none'">
+      <div class="title">Primary Steps</div>
+    </a>
+    <nav class="links">
+      <a href="letters.html">Letters</a>
+      <a href="index.html">Home</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="card">
+    <div class="cardHead">
+      <h1>Letter Tracing</h1>
+      <p>Trace the letter slowly. Press <b>Next</b> when you’re ready.</p>
+    </div>
+
+    <div class="row">
+      <div class="canvasWrap">
+        <canvas id="c" aria-label="Tracing canvas"></canvas>
+      </div>
+
+      <div>
+        <div class="controls" style="margin-bottom:10px">
+          <div class="pill">Letter: <span id="letter">A</span></div>
+          <button class="btn" id="prev" type="button">◀ Prev</button>
+          <button class="btn" id="next" type="button">Next ▶</button>
+          <button class="btn" id="clear" type="button">Clear</button>
+        </div>
+        <div class="small">
+          Tip: Follow the bright dashed outline. Works on tablets and phones too.
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  let idx = 0;
+
+  const canvas = document.getElementById("c");
+  const ctx = canvas.getContext("2d");
+  const label = document.getElementById("letter");
+
+  // Heavier display look to better match "PRIMARY" logo vibe.
+  const FONT_STACK = `"Arial Black","Impact","Segoe UI Black","Franklin Gothic Heavy",system-ui,-apple-system,"Segoe UI",Roboto,Arial`;
+
+  function resizeCanvas(){
+    const dpr = Math.max(1, window.devicePixelRatio || 1);
+    const rect = canvas.getBoundingClientRect();
+    const w = Math.round(rect.width * dpr);
+    const h = Math.round(rect.height * dpr);
+    if(canvas.width !== w || canvas.height !== h){
+      canvas.width = w;
+      canvas.height = h;
+    }
+    // draw in CSS pixels
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function drawGlossHighlight(x,y,size,letter){
+    // a glossy top band similar to the logo sheen
+    ctx.save();
+    ctx.globalAlpha = 0.35;
+    const g = ctx.createLinearGradient(x, y - size*0.55, x, y + size*0.10);
+    g.addColorStop(0.00, "rgba(255,255,255,0.95)");
+    g.addColorStop(0.35, "rgba(255,255,255,0.35)");
+    g.addColorStop(1.00, "rgba(255,255,255,0.00)");
+    ctx.fillStyle = g;
+
+    // clip to letter
+    ctx.beginPath();
+    ctx.fillText(letter, x, y);
+    ctx.globalCompositeOperation = "source-in";
+    ctx.fillRect(0, 0, canvas.getBoundingClientRect().width, canvas.getBoundingClientRect().height);
+    ctx.restore();
+    ctx.globalCompositeOperation = "source-over";
+  }
+
+  // Strong obvious 3D extruded "PRIMARY-style" letter + clear dashed tracing overlay
+  function drawGuide(){
+    const rect = canvas.getBoundingClientRect();
+    const w = rect.width, h = rect.height;
+    ctx.clearRect(0, 0, w, h);
+
+    const L = letters[idx];
+    const size = Math.min(w, h) * 0.66;
+    const x = w / 2;
+    const y = h / 2 + size * 0.06;
+
+    ctx.save();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = `900 ${size}px ${FONT_STACK}`;
+    ctx.lineJoin = "round";
+    ctx.miterLimit = 2;
+
+    // --- Deep drop shadow (logo-like)
+    ctx.shadowColor = "rgba(0,0,0,.72)";
+    ctx.shadowBlur  = Math.max(26, size * 0.085);
+    ctx.shadowOffsetX = Math.max(14, size * 0.080);
+    ctx.shadowOffsetY = Math.max(18, size * 0.115);
+
+    ctx.globalAlpha = 0.20;
+    ctx.fillStyle = "rgba(0,0,0,.9)";
+    ctx.fillText(L, x, y);
+
+    // remove shadow for crisp layers
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+
+    // --- Extrusion layers (down-right)
+    const depth = Math.round(Math.max(24, size * 0.12));
+    for(let i = depth; i >= 1; i--){
+      const t = i / depth;
+      const dx = i * 0.75;
+      const dy = i * 1.05;
+      // darker deeper layers
+      ctx.globalAlpha = 0.18 + (1 - t) * 0.22;
+      ctx.fillStyle = `rgba(2,28,75,${0.55 + t * 0.25})`; // deep navy-blue extrusion
+      ctx.fillText(L, x + dx, y + dy);
+    }
+
+    // --- Face gradient (PRIMARY blue)
+    const face = ctx.createLinearGradient(x, y - size*0.95, x, y + size*0.95);
+    face.addColorStop(0.00, "rgba(180,245,255,1.00)"); // bright top
+    face.addColorStop(0.22, "rgba(80,200,255,1.00)");  // cyan
+    face.addColorStop(0.52, "rgba(35,140,255,1.00)");  // mid blue
+    face.addColorStop(0.82, "rgba(12,85,210,1.00)");   // deep blue
+    face.addColorStop(1.00, "rgba(6,52,155,1.00)");    // bottom
+    ctx.globalAlpha = 0.95;
+    ctx.fillStyle = face;
+    ctx.fillText(L, x, y);
+
+    // --- Dark outer outline (thick, like logo)
+    ctx.globalAlpha = 1.0;
+    ctx.lineWidth = Math.max(10, size * 0.045);
+    ctx.strokeStyle = "rgba(3,55,160,1)";
+    ctx.strokeText(L, x, y);
+
+    // --- Inner bright outline (gives that crisp premium edge)
+    ctx.lineWidth = Math.max(5, size * 0.022);
+    ctx.strokeStyle = "rgba(235,252,255,0.95)";
+    ctx.strokeText(L, x - size*0.006, y - size*0.008);
+
+    // --- Gloss highlight band
+    drawGlossHighlight(x, y, size, L);
+
+    // --- Subtle bevel shadow edge (adds 3D face depth)
+    ctx.globalAlpha = 0.22;
+    ctx.lineWidth = Math.max(8, size * 0.032);
+    ctx.strokeStyle = "rgba(0,0,0,0.35)";
+    ctx.strokeText(L, x + size*0.008, y + size*0.010);
+
+    // --- Tracing dashed outline on TOP (always visible)
+    ctx.globalAlpha = 0.92;
+    ctx.setLineDash([Math.max(14, size*0.042), Math.max(10, size*0.034)]);
+    ctx.lineWidth = Math.max(7, size * 0.024);
+    ctx.strokeStyle = "rgba(255,255,255,.98)";
+    ctx.strokeText(L, x, y);
+    ctx.setLineDash([]);
+
+    // --- Soft cyan glow ring (very light)
+    ctx.globalAlpha = 0.12;
+    ctx.lineWidth = Math.max(16, size * 0.055);
+    ctx.strokeStyle = "rgba(80,200,255,.65)";
+    ctx.strokeText(L, x, y);
+
+    ctx.restore();
+  }
+
+  // Drawing
+  let drawing = false;
+  let last = null;
+
+  function posFromEvent(e){
+    const r = canvas.getBoundingClientRect();
+    const p = (e.touches && e.touches[0]) ? e.touches[0] : e;
+    return { x: p.clientX - r.left, y: p.clientY - r.top };
+  }
+
+  function startDraw(e){
+    drawing = true;
+    last = posFromEvent(e);
+  }
+
+  function moveDraw(e){
+    if(!drawing) return;
+    e.preventDefault();
+    const p = posFromEvent(e);
+
+    ctx.save();
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.strokeStyle = "rgba(110,231,255,.95)";
+    ctx.lineWidth = 10;
+    ctx.beginPath();
+    ctx.moveTo(last.x, last.y);
+    ctx.lineTo(p.x, p.y);
+    ctx.stroke();
+    ctx.restore();
+
+    last = p;
+  }
+
+  function endDraw(){ drawing = false; last = null; }
+
+  canvas.addEventListener("pointerdown", startDraw);
+  canvas.addEventListener("pointermove", moveDraw);
+  window.addEventListener("pointerup", endDraw);
+  canvas.addEventListener("touchstart", startDraw, {passive:false});
+  canvas.addEventListener("touchmove", moveDraw, {passive:false});
+  canvas.addEventListener("touchend", endDraw);
+
+  function setLetter(n){
+    idx = (n + letters.length) % letters.length;
+    label.textContent = letters[idx];
+    resizeCanvas();
+    drawGuide();
+  }
+
+  document.getElementById("clear").addEventListener("click", () => setLetter(idx));
+  document.getElementById("next").addEventListener("click", () => setLetter(idx + 1));
+  document.getElementById("prev").addEventListener("click", () => setLetter(idx - 1));
+  window.addEventListener("resize", () => setLetter(idx));
+
+  setLetter(0);
+})();
+</script>
+</body>
+</html>
