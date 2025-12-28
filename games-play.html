@@ -1,0 +1,2116 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Games • Primary Steps</title>
+<style>
+  :root{
+    --bg0:#0b0d12; --bg1:#0f1320;
+    --panel:#121621; --panel2:#0d1c36;
+    --text:#eef2ff; --muted:rgba(238,242,255,.72);
+    --line:rgba(255,255,255,.12);
+    --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399; --bad:#fb7185;
+    --ring:rgba(125,211,252,.30);
+    --shadow:0 18px 40px rgba(0,0,0,.35);
+    --r:18px;
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+  }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; color:var(--text);
+    background:
+      radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+      radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+      linear-gradient(180deg, var(--bg0), var(--bg1));
+    min-height:100vh;
+  }
+
+  header{
+    position:sticky; top:0; z-index:10;
+    backdrop-filter: blur(10px);
+    background: rgba(18,22,33,.72);
+    border-bottom:1px solid var(--line);
+  }
+  .wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+  .top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+  .brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
+  .brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
+  .brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+  .brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+  nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+  nav a{
+    color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
+    padding:8px 10px; border-radius:12px;
+    border:1px solid transparent;
+    opacity:.92;
+  }
+  nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+  nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
+
+  .hero{padding:22px 16px 10px;}
+  .hwrap{max-width:1100px;margin:0 auto;}
+  h1{margin:0 0 6px; font-size:32px; letter-spacing:-.4px;}
+  p.lead{margin:0; color:var(--muted); max-width:85ch; font-size:14px; line-height:1.45;}
+
+  .grid{
+    max-width:1100px; margin:14px auto 28px; padding:0 16px;
+    display:grid; grid-template-columns: 1.15fr .85fr; gap:14px;
+  }
+  @media (max-width: 980px){ .grid{grid-template-columns:1fr; } nav{justify-content:flex-start;} }
+
+  .card{
+    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+    border:1px solid var(--line);
+    border-radius:var(--r);
+    box-shadow: var(--shadow);
+    overflow:hidden;
+  }
+  .card .head{
+    padding:14px 14px 10px;
+    border-bottom:1px solid var(--line);
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+  }
+  .pill{
+    font-size:12px; font-weight:850;
+    padding:6px 10px; border-radius:999px;
+    background: rgba(125,211,252,.14);
+    border:1px solid rgba(125,211,252,.25);
+    color: var(--text);
+    white-space:nowrap;
+  }
+  .body{padding:14px;}
+  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+  .btn{
+    appearance:none; border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text); font-weight:850;
+    padding:10px 12px; border-radius:14px;
+    cursor:pointer;
+    text-decoration:none;
+    display:inline-flex; align-items:center; gap:8px;
+  }
+  .btn:hover{background: rgba(255,255,255,.08);}
+  .btn.primary{
+    border-color: rgba(125,211,252,.35);
+    background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
+  }
+  .btn.good{
+    border-color: rgba(52,211,153,.35);
+    background: linear-gradient(180deg, rgba(52,211,153,.18), rgba(52,211,153,.06));
+  }
+  .btn.danger{
+    border-color: rgba(251,113,133,.35);
+    background: linear-gradient(180deg, rgba(251,113,133,.18), rgba(251,113,133,.06));
+  }
+
+  .field{display:flex; flex-direction:column; gap:6px; min-width:240px;}
+  label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
+  select{
+    width:100%;
+    appearance:none;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    color:var(--text);
+    padding:10px 12px;
+    border-radius:14px;
+    font-weight:800;
+    cursor:pointer;
+    outline:none;
+  }
+  select:focus{box-shadow: 0 0 0 6px var(--ring);}
+
+  .stat{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 12px; border-radius:14px;
+    border:1px dashed rgba(238,242,255,.22);
+    color: var(--muted);
+  }
+  .small{font-size:12px;color:var(--muted);}
+  .msg{
+    padding:10px 12px; border-radius:14px;
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.04);
+    color: var(--muted);
+    margin-top:10px;
+  }
+  .msg.good{border-color:rgba(52,211,153,.35); background: rgba(52,211,153,.10); color: rgba(238,242,255,.92);}
+  .msg.bad{border-color:rgba(251,113,133,.35); background: rgba(251,113,133,.10); color: rgba(238,242,255,.92);}
+
+  /* Game stage */
+  .stage{
+    border:1px solid var(--line);
+    border-radius:16px;
+    padding:12px;
+    background:
+      radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
+      linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+  }
+
+  /* Game cards selector */
+  .selectorGrid{
+    display:grid; grid-template-columns:1fr; gap:10px;
+  }
+  .gameCard{
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.04);
+    border-radius:16px;
+    padding:12px;
+    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
+  }
+  .gameCard strong{display:block; font-size:14px; font-weight:950;}
+  .gameCard .desc{font-size:12px; color:var(--muted); line-height:1.35; margin-top:4px;}
+  .gameCard .tag{
+    font-size:12px; font-weight:950;
+    padding:6px 10px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    color: var(--muted);
+    background: rgba(0,0,0,.10);
+    white-space:nowrap;
+  }
+  .gameCard.active{
+    border-color: rgba(125,211,252,.40);
+    background: rgba(125,211,252,.08);
+  }
+
+  /* Connect 4 */
+  .c4Wrap{display:grid; gap:12px; justify-items:center;}
+  .c4Board{
+    width:min(420px, 100%);
+    aspect-ratio: 7 / 6;
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-template-rows: repeat(6, 1fr);
+    gap:10px;
+    padding:12px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.16);
+  }
+  .c4Cell{
+    border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    display:flex; align-items:center; justify-content:center;
+    cursor:pointer;
+    position:relative;
+  }
+  .c4Disc{
+    width:100%; height:100%;
+    border-radius:999px;
+    transform: scale(.82);
+    background: rgba(255,255,255,.06);
+    box-shadow: inset 0 10px 20px rgba(0,0,0,.28);
+  }
+  .c4Disc.r{ background: rgba(251,113,133,.70); }
+  .c4Disc.y{ background: rgba(253,224,71,.65); }
+  .c4Top{
+    width:min(420px, 100%);
+    display:grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap:10px;
+  }
+  .c4Top button{
+    height:42px;
+    border-radius:14px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.04);
+    color:var(--text);
+    font-weight:950;
+    cursor:pointer;
+  }
+  .c4Top button:hover{background: rgba(255,255,255,.07);}
+  .seg{
+    display:flex; gap:8px; flex-wrap:wrap;
+    padding:6px; border:1px solid var(--line);
+    border-radius:16px; background:rgba(255,255,255,.03);
+  }
+  .seg button{border-radius:12px; padding:9px 12px;}
+  .seg button.on{border-color:rgba(125,211,252,.45); background:rgba(125,211,252,.12);}
+
+  /* Shape Sort */
+  .shapeWrap{display:grid; gap:12px;}
+  .bins{
+    display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px;
+  }
+  @media (max-width: 560px){ .bins{grid-template-columns:1fr;} .brand .title{display:none;} }
+
+  .bin{
+    border:1px dashed rgba(238,242,255,.22);
+    border-radius:16px;
+    padding:12px;
+    min-height:120px;
+    display:flex; flex-direction:column; gap:10px;
+    background: rgba(0,0,0,.10);
+  }
+  .binTitle{display:flex; align-items:center; justify-content:space-between; gap:10px;}
+  .binTitle strong{font-size:13px; font-weight:950;}
+  .binTitle .mini{font-size:12px; color:var(--muted); font-weight:900;}
+  .dropArea{
+    flex:1;
+    border:1px solid rgba(255,255,255,.10);
+    border-radius:14px;
+    display:flex; align-items:center; justify-content:center;
+    background: rgba(255,255,255,.04);
+  }
+  .tray{
+    border:1px solid rgba(255,255,255,.12);
+    border-radius:16px;
+    padding:12px;
+    background: rgba(0,0,0,.10);
+  }
+  .shapes{
+    display:flex; gap:10px; flex-wrap:wrap;
+  }
+  .shape{
+    width:56px; height:56px;
+    border-radius:16px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    display:flex; align-items:center; justify-content:center;
+    cursor:grab;
+    user-select:none;
+    touch-action:none;
+  }
+
+.meter{
+  width:100%;
+  height:12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.18);
+  overflow:hidden;
+}
+.meter > span{
+  display:block;
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, rgba(52,211,153,.55), rgba(125,211,252,.55), rgba(167,139,250,.55));
+}
+.celebrate{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:20;
+  overflow:hidden;
+}
+.conf{
+  position:absolute;
+  width:10px; height:10px;
+  border-radius:3px;
+  opacity:.9;
+  animation: confettiFall 900ms ease-out forwards;
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,.25));
+}
+@keyframes confettiFall{
+  from{ transform: translateY(-20px) rotate(0deg); opacity:0; }
+  15%{ opacity:1; }
+  to{ transform: translateY(240px) rotate(260deg); opacity:0; }
+}
+
+  .shape:active{cursor:grabbing;}
+  .shape svg{width:34px; height:34px; display:block;}
+  .bin.over{outline: 2px solid rgba(125,211,252,.45); outline-offset: 2px;}
+
+  /* Coin game answer buttons (shared) */
+  .choices{display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:10px;}
+  @media (max-width: 560px){ .choices{grid-template-columns:1fr;} }
+  .choice{
+    border:1px solid var(--line);
+    background: rgba(255,255,255,.05);
+    border-radius:16px;
+    padding:12px;
+    cursor:pointer;
+    user-select:none;
+    text-align:left;
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    font-weight:950;
+    color:var(--text);
+  }
+  .choice:hover{background: rgba(255,255,255,.08);}
+  .choice .tag{
+    font-size:12px; font-weight:950;
+    padding:6px 10px; border-radius:999px;
+    border:1px solid rgba(255,255,255,.14);
+    color: var(--muted);
+    background: rgba(0,0,0,.10);
+    white-space:nowrap;
+  }
+
+
+  /* Coin Piggy polish */
+  .pigWrap{ position:relative; width:100%; }
+  
+  .bellyLayer{
+    position:absolute;
+    left:20%;
+    top:42%;
+    width:58%;
+    height:44%;
+    pointer-events:none;
+    z-index:4;
+    filter: drop-shadow(0 14px 22px rgba(0,0,0,.22));
+  }
+  .bellyItem{
+    position:absolute;
+    width:38px; height:38px;
+    border-radius:999px;
+    overflow:hidden;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(0,0,0,.18);
+  }
+  .bellyItem.note{
+    width:64px; height:38px;
+    border-radius:12px;
+  }
+  .bellyItem img{
+    width:100%; height:100%;
+    object-fit:cover;
+    transform: scale(1.02);
+  }
+  .moneyImg{
+    width:56px; height:56px; border-radius:999px; object-fit:cover;
+    border:1px solid rgba(255,255,255,.14);
+    box-shadow: 0 10px 22px rgba(0,0,0,.28);
+  }
+  .moneyImg.note{
+    width:92px; height:56px; border-radius:14px;
+  }
+.pigDrop{
+    position:absolute;
+    left:44%;
+    top:17%;
+    width:24%;
+    height:12%;
+    border-radius:16px;
+    border:1px dashed rgba(238,242,255,.22);
+    background: rgba(255,255,255,.03);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color: var(--muted);
+    font-weight:950;
+    font-size:12px;
+    user-select:none;
+    touch-action:none;
+  }
+
+.meter{
+  width:100%;
+  height:12px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.18);
+  overflow:hidden;
+}
+.meter > span{
+  display:block;
+  height:100%;
+  width:0%;
+  background: linear-gradient(90deg, rgba(52,211,153,.55), rgba(125,211,252,.55), rgba(167,139,250,.55));
+}
+.celebrate{
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  z-index:20;
+  overflow:hidden;
+}
+.conf{
+  position:absolute;
+  width:10px; height:10px;
+  border-radius:3px;
+  opacity:.9;
+  animation: confettiFall 900ms ease-out forwards;
+  filter: drop-shadow(0 10px 14px rgba(0,0,0,.25));
+}
+@keyframes confettiFall{
+  from{ transform: translateY(-20px) rotate(0deg); opacity:0; }
+  15%{ opacity:1; }
+  to{ transform: translateY(240px) rotate(260deg); opacity:0; }
+}
+
+  .pigDrop::after{
+    content:"Drop money here";
+    opacity:.85;
+  }
+  .pigDrop.over{
+    outline:2px solid rgba(125,211,252,.55);
+    outline-offset:2px;
+    background: rgba(125,211,252,.10);
+    color: rgba(238,242,255,.92);
+  }
+  .coinTray{
+    display:flex; gap:10px; flex-wrap:wrap;
+    padding-top:10px;
+  }
+  .coinToken{
+    width:72px; height:72px;
+    border-radius:18px;
+    border:1px solid rgba(255,255,255,.14);
+    background: rgba(255,255,255,.06);
+    box-shadow: inset 0 12px 22px rgba(0,0,0,.30);
+    display:flex; align-items:center; justify-content:center;
+    cursor:grab;
+    user-select:none;
+    touch-action:none;
+    transition: transform .12s ease, background .12s ease;
+  }
+  .coinToken:hover{ transform: translateY(-1px); background: rgba(255,255,255,.08); }
+  .coinToken:active{ cursor:grabbing; transform: translateY(0px) scale(.98); }
+  .coinToken.selected{ outline:2px solid rgba(125,211,252,.55); outline-offset:2px; }
+  .flyCoin{
+    position:absolute;
+    width:58px; height:58px;
+    pointer-events:none;
+    z-index:5;
+    will-change: transform, opacity;
+    animation: coinDrop .38s ease-in forwards;
+  }
+  @keyframes coinDrop{
+    0%{ transform: translate3d(var(--x0), var(--y0), 0) scale(1); opacity:1; }
+    80%{ transform: translate3d(var(--x1), var(--y1), 0) scale(.98); opacity:1; }
+    100%{ transform: translate3d(var(--x1), calc(var(--y1) + 10px), 0) scale(.96); opacity:0; }
+  }
+
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" onerror="this.style.display='none'">
+        <div>
+          <div class="title">Primary Steps</div>
+          <span class="sub">Simple, calm learning activities</span>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="letters.html">Letters</a>
+        <a href="numbers.html">Numbers</a>
+        <a href="phonics.html">Phonics</a>
+        <a href="maths.html">Maths</a>
+        <a href="memory.html">Memory</a>
+        <a href="games.html" class="active">Games</a>
+        <a href="puzzles.html">Puzzles</a>
+        <a href="handwriting.html">Handwriting</a>
+        <a href="clock.html">Clock</a>
+        <a href="progress.html">Progress</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="hwrap">
+    <h1>Games</h1>
+    <p class="lead">
+      Pick a game first, then start playing — no rushing, no ads, and no pressure.
+    </p>
+  </div>
+</section>
+
+<section class="grid">
+  <div class="card" aria-label="Game player">
+    <div class="head">
+      <div class="pill" id="gamePill">Choose a game</div>
+      <div class="row">
+        <button class="btn" id="soundBtn" type="button" aria-pressed="false">Sound: Off</button>
+        <button class="btn primary" id="newBtn" type="button">New</button>
+        <button class="btn" id="resetBtn" type="button">Reset</button>
+      </div>
+    </div>
+    <div class="body">
+      <div class="stage" id="stage"></div>
+      <div class="msg" id="message">Pick a game on the right, then press <strong>New</strong>.</div>
+    </div>
+  </div>
+
+  <div class="card" aria-label="Game chooser">
+    <div class="head">
+      <div class="pill">Choose</div>
+    </div>
+    <div class="body">
+      <div class="field" style="margin-bottom:10px;">
+        <label for="gameSelect">Game</label>
+        <select id="gameSelect"></select>
+      </div>
+
+      <div class="field" style="margin-bottom:10px;">
+        <label for="difficulty">Difficulty</label>
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium" selected>Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+      </div>
+
+      <div class="selectorGrid" id="cards"></div>
+
+      <div class="stat" style="margin-top:10px;">
+        <div>
+          <strong>Progress</strong>
+          <div class="small" id="goalText">Choose a game to begin.</div>
+        </div>
+        <div class="small" id="score">0</div>
+      </div>
+
+      <div class="small" style="margin-top:10px;">Tip: on tablets, use finger — everything supports touch.</div>
+    </div>
+  </div>
+</section>
+
+<script>
+(() => {
+  const $ = (id)=>document.getElementById(id);
+  const ui = {
+    stage:$('stage'),
+    msg:$('message'),
+    pill:$('gamePill'),
+    gameSelect:$('gameSelect'),
+    difficulty:$('difficulty'),
+    cards:$('cards'),
+    newBtn:$('newBtn'),
+    resetBtn:$('resetBtn'),
+    soundBtn:$('soundBtn'),
+    goalText:$('goalText'),
+    score:$('score'),
+  };
+
+  // Sound
+  let soundOn = false, audioCtx = null;
+  function beep(freq=700, ms=70, gain=0.03){
+    if(!soundOn) return;
+    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const o = audioCtx.createOscillator();
+    const g = audioCtx.createGain();
+    o.frequency.value = freq;
+    g.gain.value = gain;
+    o.connect(g); g.connect(audioCtx.destination);
+    o.start();
+    setTimeout(()=>o.stop(), ms);
+  }
+
+  function clink(){
+    if(!soundOn) return;
+    try{
+      if(!audioCtx) audioCtx = new (window.AudioContext||window.webkitAudioContext)();
+      const t0 = audioCtx.currentTime;
+      // short metallic "clink": tone + filtered noise
+      const out = audioCtx.createGain();
+      out.gain.setValueAtTime(0.0001, t0);
+      out.gain.exponentialRampToValueAtTime(0.14, t0 + 0.008);
+      out.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.22);
+      out.connect(audioCtx.destination);
+
+      const o1 = audioCtx.createOscillator();
+      o1.type = 'triangle';
+      o1.frequency.setValueAtTime(1800, t0);
+      o1.frequency.exponentialRampToValueAtTime(650, t0 + 0.18);
+      const g1 = audioCtx.createGain();
+      g1.gain.setValueAtTime(0.45, t0);
+      o1.connect(g1); g1.connect(out);
+      o1.start(t0); o1.stop(t0 + 0.22);
+
+      const o2 = audioCtx.createOscillator();
+      o2.type = 'sine';
+      o2.frequency.setValueAtTime(980, t0);
+      const g2 = audioCtx.createGain();
+      g2.gain.setValueAtTime(0.20, t0);
+      g2.gain.exponentialRampToValueAtTime(0.0001, t0 + 0.12);
+      o2.connect(g2); g2.connect(out);
+      o2.start(t0); o2.stop(t0 + 0.12);
+
+      // noise burst
+      const dur = 0.10;
+      const buffer = audioCtx.createBuffer(1, Math.max(1, Math.floor(audioCtx.sampleRate*dur)), audioCtx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for(let i=0;i<data.length;i++){
+        // quick decaying noise
+        const k = 1 - (i/data.length);
+        data[i] = (Math.random()*2-1) * (k*k) * 0.7;
+      }
+      const noise = audioCtx.createBufferSource();
+      noise.buffer = buffer;
+      const hp = audioCtx.createBiquadFilter();
+      hp.type = 'highpass';
+      hp.frequency.setValueAtTime(1200, t0);
+      const ng = audioCtx.createGain();
+      ng.gain.setValueAtTime(0.10, t0);
+      ng.gain.exponentialRampToValueAtTime(0.0001, t0 + dur);
+      noise.connect(hp); hp.connect(ng); ng.connect(out);
+      noise.start(t0); noise.stop(t0 + dur);
+    }catch(_e){}
+  }
+
+  function setMsg(type, html){
+    ui.msg.className = 'msg' + (type ? ' ' + type : '');
+    ui.msg.innerHTML = html;
+  }
+
+  let score = 0;
+  function bumpScore(){
+    score++;
+    ui.score.textContent = String(score);
+  }
+
+  
+
+  function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
+  function shuffle(arr){
+    for(let i=arr.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [arr[i],arr[j]] = [arr[j],arr[i]];
+    }
+    return arr;
+  }
+  function formatMoney(pence){
+    if(pence >= 100){
+      const pounds = Math.floor(pence/100);
+      const p = pence % 100;
+      return "£" + pounds + (p ? ("." + String(p).padStart(2,'0')) : "");
+    }
+    return pence + "p";
+  }
+  
+
+function currentPromptText(st){
+  // simple child-friendly prompt
+  if(st.mode !== 'count') return 'Let\'s play with money!';
+  const next = st.countTray && st.countTray[0];
+  if(next) return `Can you put the ${next.label.replace('£','')}${next.label.startsWith('£')?' pound':''} into the piggy bank?`;
+  return 'Great saving! Now count the money in the piggy bank.';
+}
+
+function speakPrompt(text){
+  try{
+    if(!('speechSynthesis' in window)) return;
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = 'en-GB';
+    u.rate = 0.95;
+    u.pitch = 1.05;
+    // pick an en-GB voice if available
+    const voices = speechSynthesis.getVoices ? speechSynthesis.getVoices() : [];
+    const v = voices.find(v=>/en-GB/i.test(v.lang)) || voices.find(v=>/en/i.test(v.lang));
+    if(v) u.voice = v;
+    speechSynthesis.cancel();
+    speechSynthesis.speak(u);
+  }catch(_e){}
+}
+
+  function markPick(container, pickIndex){
+    [...container.children].forEach((el,i)=>{
+      el.style.borderColor = (i===pickIndex) ? 'rgba(125,211,252,.50)' : 'rgba(255,255,255,.12)';
+      el.style.background = (i===pickIndex) ? 'rgba(125,211,252,.10)' : 'rgba(255,255,255,.05)';
+    });
+  }
+
+  
+  function polyPts(n, r, rotDeg=-90){
+    const pts = [];
+    const rot = rotDeg * Math.PI/180;
+    for(let i=0;i<n;i++){
+      const a = rot + (i*(Math.PI*2/n));
+      pts.push(`${(Math.cos(a)*r).toFixed(2)},${(Math.sin(a)*r).toFixed(2)}`);
+    }
+    return pts.join(' ');
+  }
+
+  function coinMarkup(c, size=24, includeValueText=true){
+    const label = c.label;
+    const r = size;
+    const strokeOuter = 'rgba(255,255,255,.22)';
+    const strokeInner = 'rgba(0,0,0,.20)';
+    const shine = 'rgba(255,255,255,.14)';
+    const shadow = 'rgba(0,0,0,.18)';
+
+    // "Real UK coins" look: metallic, rim, subtle embossing (no Royal Mint designs)
+    const isHept = (label==='20p' || label==='50p');
+    const isPound = (label==='£1');
+    const isTwoPound = (label==='£2');
+
+    const gold1 = 'rgba(253,224,71,.75)';
+    const gold2 = 'rgba(245,158,11,.40)';
+    const silver1 = 'rgba(226,232,240,.55)';
+    const silver2 = 'rgba(148,163,184,.22)';
+    const copper1 = 'rgba(251,113,133,.62)';
+    const copper2 = 'rgba(244,63,94,.28)';
+
+    const baseA = c.col==='copper' ? copper1 : c.col==='gold' ? gold1 : silver1;
+    const baseB = c.col==='copper' ? copper2 : c.col==='gold' ? gold2 : silver2;
+
+    const face = isHept
+      ? `<polygon points="${polyPts(7, r)}" fill="url(#coinGrad_${c.col})" stroke="${strokeOuter}" stroke-width="2"/>`
+      : `<circle cx="0" cy="0" r="${r}" fill="url(#coinGrad_${c.col})" stroke="${strokeOuter}" stroke-width="2"/>`;
+
+    const rim = isHept
+      ? `<polygon points="${polyPts(7, r-4)}" fill="rgba(0,0,0,.06)" stroke="rgba(255,255,255,.14)" stroke-width="1.6"/>`
+      : `<circle cx="0" cy="0" r="${r-4}" fill="rgba(0,0,0,.06)" stroke="rgba(255,255,255,.14)" stroke-width="1.6"/>`;
+
+    const ring = isTwoPound ? `
+      <circle cx="0" cy="0" r="${r-2}" fill="rgba(245,158,11,.22)"/>
+      <circle cx="0" cy="0" r="${r-8}" fill="rgba(226,232,240,.22)"/>
+      <circle cx="0" cy="0" r="${r-8}" fill="none" stroke="rgba(255,255,255,.18)" stroke-width="1.2"/>
+    ` : '';
+
+    const poundShape = isPound ? `
+      <polygon points="${polyPts(12, r)}" fill="url(#coinGrad_gold)" stroke="${strokeOuter}" stroke-width="2"/>
+      <polygon points="${polyPts(12, r-4)}" fill="rgba(0,0,0,.06)" stroke="rgba(255,255,255,.14)" stroke-width="1.6"/>
+    ` : '';
+
+    const valueText = includeValueText ? `
+      <text x="0" y="6" text-anchor="middle"
+        font-size="${Math.max(11, Math.round(r*0.52))}"
+        font-weight="950"
+        fill="rgba(15,23,42,.88)"
+        style="paint-order:stroke;stroke:rgba(255,255,255,.35);stroke-width:2;letter-spacing:.01em">
+        ${label}
+      </text>
+    ` : '';
+
+    const highlight = isHept
+      ? `<path d="M ${(-r*0.30).toFixed(2)} ${(-r*0.55).toFixed(2)} Q 0 ${(-r*0.82).toFixed(2)} ${(r*0.46).toFixed(2)} ${(-r*0.24).toFixed(2)}"
+              fill="none" stroke="${shine}" stroke-width="${Math.max(2, r*0.12).toFixed(1)}" stroke-linecap="round" opacity=".9"/>`
+      : `<path d="M ${(-r*0.45).toFixed(2)} ${(-r*0.55).toFixed(2)} Q 0 ${(-r*0.88).toFixed(2)} ${(r*0.55).toFixed(2)} ${(-r*0.18).toFixed(2)}"
+              fill="none" stroke="${shine}" stroke-width="${Math.max(2, r*0.12).toFixed(1)}" stroke-linecap="round" opacity=".9"/>`;
+
+    // shadow crescent
+    const crescent = isHept
+      ? `<path d="M ${(-r*0.65).toFixed(2)} ${(r*0.10).toFixed(2)} Q ${(-r*0.15).toFixed(2)} ${(r*0.74).toFixed(2)} ${(r*0.62).toFixed(2)} ${(r*0.20).toFixed(2)}"
+              fill="none" stroke="${shadow}" stroke-width="${Math.max(2, r*0.16).toFixed(1)}" stroke-linecap="round" opacity=".75"/>`
+      : `<path d="M ${(-r*0.75).toFixed(2)} ${(r*0.10).toFixed(2)} Q ${(-r*0.18).toFixed(2)} ${(r*0.82).toFixed(2)} ${(r*0.70).toFixed(2)} ${(r*0.22).toFixed(2)}"
+              fill="none" stroke="${shadow}" stroke-width="${Math.max(2, r*0.16).toFixed(1)}" stroke-linecap="round" opacity=".75"/>`;
+
+    // For £1 we draw a 12-sided face to hint the real coin outline (no emblems)
+    const outer = isPound ? poundShape : face;
+
+    return `
+      <defs>
+        <linearGradient id="coinGrad_copper" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${copper1}"/>
+          <stop offset="55%" stop-color="rgba(244,63,94,.20)"/>
+          <stop offset="100%" stop-color="${copper2}"/>
+        </linearGradient>
+        <linearGradient id="coinGrad_silver" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${silver1}"/>
+          <stop offset="55%" stop-color="rgba(148,163,184,.16)"/>
+          <stop offset="100%" stop-color="${silver2}"/>
+        </linearGradient>
+        <linearGradient id="coinGrad_gold" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="${gold1}"/>
+          <stop offset="55%" stop-color="rgba(245,158,11,.18)"/>
+          <stop offset="100%" stop-color="${gold2}"/>
+        </linearGradient>
+      </defs>
+      ${outer}
+      ${rim}
+      ${ring}
+      ${crescent}
+      ${highlight}
+      ${valueText}
+    `;
+  }
+
+  function coinSvg(c){
+    // used inside the pig SVG via <g>
+    return coinMarkup(c, 22, true);
+  }
+
+
+  // Original piggy-bank style SVG (inspired by classroom money activities; not a copied asset)
+  function pigSvg(){
+    return `
+    <svg viewBox="0 0 520 320" width="100%" height="100%" aria-hidden="true" style="display:block">
+      <defs>
+        <!-- soft shadow -->
+        <filter id="psShadow" x="-30%" y="-30%" width="160%" height="160%">
+          <feDropShadow dx="0" dy="18" stdDeviation="14" flood-color="rgba(0,0,0,.55)"/>
+        </filter>
+
+        <!-- subtle skin texture -->
+        <filter id="psSkinTex" x="-20%" y="-20%" width="140%" height="140%">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="7" result="noise"/>
+          <feColorMatrix in="noise" type="matrix"
+            values="
+              1 0 0 0 0
+              0 1 0 0 0
+              0 0 1 0 0
+              0 0 0 .06 0" result="n2"/>
+          <feBlend mode="multiply" in="SourceGraphic" in2="n2"/>
+        </filter>
+
+        <!-- body gradient -->
+        <radialGradient id="psPigSkin" cx="38%" cy="35%" r="75%">
+          <stop offset="0%"  stop-color="rgba(255,255,255,.38)"/>
+          <stop offset="22%" stop-color="rgba(251,113,133,.55)"/>
+          <stop offset="60%" stop-color="rgba(251,113,133,.40)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,.20)"/>
+        </radialGradient>
+
+        <linearGradient id="psPigRim" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="rgba(238,242,255,.28)"/>
+          <stop offset="45%" stop-color="rgba(238,242,255,.10)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,.28)"/>
+        </linearGradient>
+
+        <radialGradient id="psSnout" cx="35%" cy="35%" r="80%">
+          <stop offset="0%" stop-color="rgba(255,255,255,.30)"/>
+          <stop offset="40%" stop-color="rgba(251,113,133,.55)"/>
+          <stop offset="100%" stop-color="rgba(0,0,0,.25)"/>
+        </radialGradient>
+
+        <linearGradient id="psGloss" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="rgba(255,255,255,.65)"/>
+          <stop offset="55%" stop-color="rgba(255,255,255,.10)"/>
+          <stop offset="100%" stop-color="rgba(255,255,255,0)"/>
+        </linearGradient>
+      </defs>
+
+      <!-- ground shadow -->
+      <ellipse cx="270" cy="284" rx="185" ry="22" fill="rgba(0,0,0,.22)"/>
+
+      <g filter="url(#psShadow)">
+        <!-- tail -->
+        <path d="M95 172
+                 C72 160 70 135 88 122
+                 C105 109 128 116 125 135
+                 C122 150 105 146 104 154
+                 C103 162 116 166 122 166"
+              fill="none" stroke="rgba(238,242,255,.40)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+
+        <!-- body silhouette (more rounded / realistic) -->
+        <path id="psBody"
+              d="M130 214
+                 C95 194 82 156 104 125
+                 C135 82 210 58 292 66
+                 C360 73 418 111 438 160
+                 C458 210 431 256 372 270
+                 C306 286 205 268 130 214Z"
+              fill="url(#psPigSkin)" stroke="url(#psPigRim)" stroke-width="3"
+              filter="url(#psSkinTex)"/>
+
+        <!-- ear (rear) -->
+        <path d="M372 86
+                 C396 62 435 62 447 94
+                 C454 112 440 124 418 120
+                 C398 116 384 104 372 86Z"
+              fill="rgba(251,113,133,.42)" stroke="rgba(238,242,255,.16)" stroke-width="2"/>
+
+        <!-- ear (front) -->
+        <path d="M350 90
+                 C372 66 408 68 418 96
+                 C424 112 412 124 392 120
+                 C374 116 362 106 350 90Z"
+              fill="rgba(251,113,133,.52)" stroke="rgba(238,242,255,.18)" stroke-width="2"/>
+
+        <!-- glossy highlight -->
+        <path d="M155 142
+                 C190 108 250 94 305 98
+                 C338 100 360 112 372 126
+                 C330 116 282 118 236 134
+                 C206 144 178 160 160 178
+                 C148 166 146 154 155 142Z"
+              fill="url(#psGloss)" opacity="0.55"/>
+
+        <!-- snout -->
+        <g>
+          <ellipse cx="430" cy="182" rx="56" ry="44" fill="url(#psSnout)"
+                   stroke="rgba(238,242,255,.16)" stroke-width="2"/>
+          <ellipse cx="417" cy="185" rx="10" ry="14" fill="rgba(0,0,0,.28)"/>
+          <ellipse cx="446" cy="185" rx="10" ry="14" fill="rgba(0,0,0,.28)"/>
+          <ellipse cx="418" cy="175" rx="18" ry="12" fill="rgba(255,255,255,.22)"/>
+        </g>
+
+        <!-- eye -->
+        <circle cx="410" cy="155" r="7" fill="rgba(238,242,255,.90)"/>
+        <circle cx="410" cy="155" r="3.5" fill="rgba(0,0,0,.55)"/>
+
+        <!-- cheek blush -->
+        <ellipse cx="392" cy="190" rx="24" ry="18" fill="rgba(255,255,255,.12)"/>
+
+        <!-- coin slot (kept) -->
+        <g>
+          <rect x="250" y="72" width="78" height="14" rx="7" fill="rgba(0,0,0,.40)" opacity="0.65"/>
+          <rect x="252" y="74" width="74" height="10" rx="5" fill="rgba(238,242,255,.12)" opacity="0.35"/>
+        </g>
+
+        <!-- legs (with shadow) -->
+        <g opacity="0.95">
+          <path d="M192 244 C182 276 200 294 228 290 C238 270 228 246 214 238Z"
+                fill="rgba(251,113,133,.58)" stroke="rgba(238,242,255,.14)" stroke-width="2"/>
+          <path d="M296 256 C286 288 306 306 336 302 C348 282 336 256 322 248Z"
+                fill="rgba(251,113,133,.58)" stroke="rgba(238,242,255,.14)" stroke-width="2"/>
+        </g>
+
+        <!-- subtle rim shine -->
+        <path d="M130 214
+                 C95 194 82 156 104 125
+                 C135 82 210 58 292 66
+                 C360 73 418 111 438 160"
+              fill="none" stroke="rgba(255,255,255,.18)" stroke-width="5" stroke-linecap="round" opacity="0.55"/>
+      </g>
+    </svg>
+    `;
+  }
+
+
+  
+  
+  // --- UK money assets (user-provided images) ---
+// Keep these image files in the SAME folder as this HTML:
+// 1p coin.jpeg, 2p coin.jpeg, 5p coin.jpeg, 10p coin.jpeg, 20p coin.webp, ironside-new-pence-50p-r.jpg,
+// 1 pound coin.webp, 2 pound coin.jpg, 5 pound note.jpg, 10 pound note.jpg, 20 pound note.jpg, 50 pound note.jpg
+const MONEY_ASSETS = [
+  {type:'coin', v:1,   label:'1p',  img:'assets/money/coin-1p.png',       shape:'round'},
+  {type:'coin', v:2,   label:'2p',  img:'assets/money/coin-2p.png',       shape:'round'},
+  {type:'coin', v:5,   label:'5p',  img:'assets/money/coin-5p.png',       shape:'round'},
+  {type:'coin', v:10,  label:'10p', img:'assets/money/coin-10p.png',      shape:'round'},
+  {type:'coin', v:20,  label:'20p', img:'assets/money/coin-20p.png',      shape:'round'},
+  {type:'coin', v:50,  label:'50p', img:'assets/money/coin-50p.png',      shape:'hept'},
+  {type:'coin', v:100, label:'£1',  img:'assets/money/coin-1-pound.png',  shape:'round'},
+  {type:'coin', v:200, label:'£2',  img:'assets/money/coin-2-pound.png',  shape:'round'},
+  {type:'note', v:500,  label:'£5',  img:'5 pound note.jpg',  shape:'note'},
+  {type:'note', v:1000, label:'£10', img:'10 pound note.jpg', shape:'note'},
+  {type:'note', v:2000, label:'£20', img:'20 pound note.jpg', shape:'note'},
+  {type:'note', v:5000, label:'£50', img:'50 pound note.jpg', shape:'note'}
+];
+
+  function moneyPool(difficulty, filter='mixed'){
+  const coins = MONEY_ASSETS.filter(x=>x.type==='coin');
+  const notes = MONEY_ASSETS.filter(x=>x.type==='note');
+
+  const coinsEasy = coins.filter(x=>[1,2,5,10,20,50].includes(x.v));
+  const coinsMed  = coins.filter(x=>[1,2,5,10,20,50,100,200].includes(x.v));
+  const notesEasy = notes.filter(x=>[500].includes(x.v));
+  const notesMed  = notes.filter(x=>[500,1000].includes(x.v));
+  const notesHard = notes.filter(x=>[500,1000,2000,5000].includes(x.v));
+
+  let base;
+  if(difficulty === 'easy') base = coinsEasy;
+  else if(difficulty === 'medium') base = coinsMed;
+  else base = coinsMed.concat(notesHard);
+
+  if(filter === 'coins') return (difficulty==='easy') ? coinsEasy : (difficulty==='medium') ? coinsMed : coinsMed;
+  if(filter === 'notes') return (difficulty==='easy') ? notesEasy : (difficulty==='medium') ? notesMed : notesHard;
+  return base; // mixed
+}
+
+  function potLabels(difficulty){
+    return moneyPool(difficulty).map(c=>({label:c.label, v:c.v, type:c.type}));
+  }
+  function potIcon(){ return `<div style="width:44px;height:34px;border-radius:10px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.05)"></div>`; }
+
+  function moneyTile(item, big=false){
+    const cls = item.type === 'note' ? 'moneyImg note' : 'moneyImg';
+    const alt = `${item.label}`;
+    // We intentionally "clip" coins into a circle for a clean premium look.
+    return `<img class="${cls}" src="${item.img}" alt="${alt}" draggable="false" loading="eager" onerror="this.style.display='none'">`;
+  }
+
+// ---- Game definitions ----
+  const GAMES = [
+    {
+      key:'connect4',
+      name:'Connect 4',
+      tag:'Strategy',
+      desc:'Drop discs to make 4 in a row. Play against a friend (2‑player) or practise solo.',
+      difficulties:['easy','medium','hard'],
+      buildState: ()=>({
+        mode:'two', // 'two' or 'practice'
+        turn:'r',
+        grid:Array.from({length:6}, ()=>Array(7).fill('')),
+        winner:'',
+      }),
+      render: (st)=> {
+        ui.pill.textContent = 'Connect 4';
+        ui.goalText.textContent = 'Goal: make 4 in a row.';
+        ui.stage.innerHTML = `
+          <div class="c4Wrap">
+            <div class="row" style="justify-content:center;">
+              <div class="seg" role="tablist" aria-label="Connect 4 modes">
+                <button class="btn ${st.mode==='two'?'on':''}" id="c4Two" type="button">2‑Player</button>
+                <button class="btn ${st.mode==='practice'?'on':''}" id="c4Practice" type="button">Practice</button>
+              </div>
+              <span class="pill" id="c4Turn">Turn: ${st.turn === 'r' ? 'Red' : 'Yellow'}</span>
+            </div>
+
+            <div class="c4Top" aria-label="Choose a column">
+              ${Array.from({length:7}, (_,c)=>`<button type="button" data-col="${c}">↓</button>`).join('')}
+            </div>
+
+            <div class="c4Board" id="c4Board" aria-label="Connect 4 board">
+              ${st.grid.flatMap((row,r)=>row.map((cell,c)=>`
+                <div class="c4Cell" data-col="${c}" data-row="${r}">
+                  <div class="c4Disc ${cell}"></div>
+                </div>
+              `)).join('')}
+            </div>
+
+            <div class="small" id="c4Note">Drop a disc by tapping a column arrow.</div>
+          </div>
+        `;
+
+        // mode buttons
+        ui.stage.querySelector('#c4Two').addEventListener('click', ()=>{ st.mode='two'; st.winner=''; st.turn='r'; beep(640,50,0.02); rerender(); });
+        ui.stage.querySelector('#c4Practice').addEventListener('click', ()=>{ st.mode='practice'; st.winner=''; st.turn='r'; beep(640,50,0.02); rerender(); });
+
+        // column buttons
+        ui.stage.querySelectorAll('.c4Top button').forEach(btn=>{
+          btn.addEventListener('click', ()=> dropInCol(Number(btn.dataset.col)));
+        });
+
+        function dropInCol(col){
+          if(st.winner) return;
+          // find lowest empty
+          for(let r=5;r>=0;r--){
+            if(!st.grid[r][col]){
+              st.grid[r][col] = st.turn;
+              beep(520,40,0.02);
+              const w = checkWinner(st.grid);
+              if(w){
+                st.winner = w;
+                setMsg('good', `✅ ${w === 'r' ? 'Red' : 'Yellow'} wins! Press <strong>New</strong> to play again.`);
+                bumpScore();
+                beep(880,90,0.04);
+              } else if(isFull(st.grid)){
+                setMsg('', `It’s a draw. Press <strong>New</strong> to try again.`);
+              } else {
+                if(st.mode === 'two'){
+                  st.turn = (st.turn === 'r') ? 'y' : 'r';
+                }
+                // practice: keep same turn (kid can place same colour)
+              }
+              rerender(false);
+              return;
+            }
+          }
+          beep(220,100,0.05);
+        }
+
+        function rerender(resetMsg=true){
+          const keep = resetMsg ? '' : ui.msg.className.includes('good') ? ui.msg.innerHTML : ui.msg.innerHTML;
+          // re-render stage
+          GAMES[0].render(st);
+          // restore message if we didn't want to change it
+          if(!resetMsg) ui.msg.innerHTML = keep;
+        }
+
+        function isFull(g){
+          return g.every(row=>row.every(Boolean));
+        }
+        function checkWinner(g){
+          const H=6, W=7;
+          const dirs = [[1,0],[0,1],[1,1],[1,-1]];
+          for(let r=0;r<H;r++){
+            for(let c=0;c<W;c++){
+              const v=g[r][c]; if(!v) continue;
+              for(const [dr,dc] of dirs){
+                let ok=true;
+                for(let k=1;k<4;k++){
+                  const rr=r+dr*k, cc=c+dc*k;
+                  if(rr<0||rr>=H||cc<0||cc>=W||g[rr][cc]!==v){ ok=false; break; }
+                }
+                if(ok) return v;
+              }
+            }
+          }
+          return '';
+        }
+      },
+      newRound: (st)=> {
+        st.grid = Array.from({length:6}, ()=>Array(7).fill(''));
+        st.turn='r';
+        st.winner='';
+        setMsg('', `Connect 4: tap a column arrow to drop a disc.`);
+      },
+      reset: (st)=> {
+        st.grid = Array.from({length:6}, ()=>Array(7).fill(''));
+        st.turn='r';
+        st.winner='';
+        setMsg('', `Board reset.`);
+      }
+    },
+
+    {
+      key:'shapesort',
+      name:'Shape Sort',
+      tag:'Drag & Drop',
+      desc:'Drag shapes into the matching bins. Great for tablets and early learners.',
+      difficulties:['easy','medium','hard'],
+      buildState: ()=>({
+        placed:0,
+        total:0,
+        shapes:[], // {id, type}
+      }),
+      render: (st, difficulty)=> {
+        ui.pill.textContent = 'Shape Sort';
+        ui.goalText.textContent = 'Goal: sort each shape into the correct bin.';
+        ui.stage.innerHTML = `
+          <div class="shapeWrap">
+            <div class="bins">
+              ${['circle','square','triangle'].map(t=>`
+                <div class="bin" data-bin="${t}">
+                  <div class="binTitle">
+                    <strong>${cap(t)}</strong>
+                    <span class="mini">Drop here</span>
+                  </div>
+                  <div class="dropArea" aria-label="${t} bin">
+                    ${binIcon(t)}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <div class="tray">
+              <div class="row" style="justify-content:space-between;">
+                <strong style="font-size:14px;font-weight:950;">Shape Tray</strong>
+                <span class="pill" id="ssCount">${st.placed} / ${st.total}</span>
+              </div>
+              <div class="shapes" id="ssShapes"></div>
+              <div class="small" style="margin-top:8px;">Drag shapes into the matching bin.</div>
+            </div>
+          </div>
+        `;
+
+        const shapesEl = ui.stage.querySelector('#ssShapes');
+        st.shapes.forEach(s=>{
+          const el = document.createElement('div');
+          el.className='shape';
+          el.draggable = true;
+          el.dataset.id = s.id;
+          el.dataset.type = s.type;
+          el.innerHTML = shapeIcon(s.type);
+          el.addEventListener('dragstart', (e)=>{
+            e.dataTransfer.setData('text/plain', s.id);
+            beep(520,40,0.02);
+          });
+          // touch drag with pointer events (simple “lift + drop”)
+          el.addEventListener('pointerdown', (e)=>{
+            // on touch, we simulate: tap shape, then tap bin
+            if(e.pointerType === 'touch'){
+              st._picked = s.id;
+              setMsg('', `Now tap the correct bin for the picked shape.`);
+              beep(640,40,0.02);
+            }
+          });
+          shapesEl.appendChild(el);
+        });
+
+        // bins drop logic
+        ui.stage.querySelectorAll('.bin').forEach(bin=>{
+          const type = bin.dataset.bin;
+
+          bin.addEventListener('dragover', (e)=>{ e.preventDefault(); bin.classList.add('over'); });
+          bin.addEventListener('dragleave', ()=> bin.classList.remove('over'));
+          bin.addEventListener('drop', (e)=>{
+            e.preventDefault();
+            bin.classList.remove('over');
+            const id = e.dataTransfer.getData('text/plain');
+            place(id, type);
+          });
+
+          // touch "tap to drop"
+          bin.addEventListener('click', ()=>{
+            if(st._picked){
+              place(st._picked, type);
+              st._picked = null;
+            }
+          });
+        });
+
+        function place(id, binType){
+          const idx = st.shapes.findIndex(x=>x.id===id);
+          if(idx === -1) return;
+          const s = st.shapes[idx];
+          if(s.type !== binType){
+            setMsg('bad', `Not quite — that shape goes in <strong>${cap(s.type)}</strong>.`);
+            beep(220,120,0.05);
+            return;
+          }
+          // correct
+          st.shapes.splice(idx,1);
+          st.placed++;
+          ui.stage.querySelector('#ssCount').textContent = `${st.placed} / ${st.total}`;
+          setMsg('good', `✅ Nice! Keep going.`);
+          beep(880,80,0.04);
+          bumpScore();
+
+          // re-render shapes tray only
+          const tray = ui.stage.querySelector('#ssShapes');
+          tray.innerHTML = '';
+          st.shapes.forEach(s2=>{
+            const el = document.createElement('div');
+            el.className='shape';
+            el.draggable = true;
+            el.dataset.id = s2.id;
+            el.dataset.type = s2.type;
+            el.innerHTML = shapeIcon(s2.type);
+            el.addEventListener('dragstart', (e)=>{
+              e.dataTransfer.setData('text/plain', s2.id);
+              beep(520,40,0.02);
+            });
+            el.addEventListener('pointerdown', (e)=>{
+              if(e.pointerType === 'touch'){
+                st._picked = s2.id;
+                setMsg('', `Now tap the correct bin for the picked shape.`);
+                beep(640,40,0.02);
+              }
+            });
+            tray.appendChild(el);
+          });
+
+          if(st.shapes.length === 0){
+            setMsg('good', `🎉 All sorted! Press <strong>New</strong> for another round.`);
+          }
+        }
+
+        function cap(s){ return s[0].toUpperCase()+s.slice(1); }
+      },
+      newRound: (st, difficulty)=> {
+        const counts = {easy:6, medium:10, hard:14};
+        const total = counts[difficulty] || 10;
+        const types = ['circle','square','triangle'];
+        st.total = total;
+        st.placed = 0;
+        st.shapes = Array.from({length:total}, (_,i)=>({
+          id: 's' + Math.random().toString(16).slice(2) + i,
+          type: types[Math.floor(Math.random()*types.length)]
+        }));
+        setMsg('', `Shape Sort: drag each shape into the matching bin.`);
+      },
+      reset: (st, difficulty)=> {
+        // reset = new round
+        GAMES.find(g=>g.key==='shapesort').newRound(st, difficulty);
+        setMsg('', `Reset done. Start again.`);
+      }
+    }
+
+    ,
+
+    
+    {
+      key:'coins',
+      name:'Coin Piggy Bank',
+      tag:'Money',
+      desc:'Count, sort, and order real UK coin values. Three modes (Count / Sort / Order) inspired by classic classroom coin games.',
+      difficulties:['easy','medium','hard'],
+      buildState: ()=>({
+        mode:'count', // 'count' | 'sort' | 'order'
+
+        // count mode (drag coins into pig)
+        countTray:[],   // coins still outside the pig
+        pigCoins:[],    // coins already inside
+        total:0,
+        options:[],
+        pick:null,
+        done:false,
+        picked:null,    // for tap-to-drop on touch
+
+        // sort mode
+        sortCoins:[],   // remaining coins to sort
+        placed:0,
+
+        // order mode
+        orderIds:[],     // array of coin ids in current order
+        selectedIdx:null, // for tap-to-swap
+        moneyFilter:'mixed', // mixed | coins | notes
+        voiceOn:true,
+        goalTargets:[100,500,1000,2000,5000],
+        nextGoal:100
+}),
+      render: (st, difficulty)=> {
+        ui.pill.textContent = 'Coin Piggy Bank';
+        ui.goalText.textContent = 'Goal: practise money skills with UK coins.';
+        ui.stage.innerHTML = `
+          <div style="display:grid; gap:12px; justify-items:center;">
+            <div class="row" style="justify-content:center;">
+              <div class="seg" role="tablist" aria-label="Coin game modes">
+                <button class="btn ${st.mode==='count'?'on':''}" id="cgCount" type="button">Count</button>
+                <button class="btn ${st.mode==='sort'?'on':''}" id="cgSort" type="button">Sort</button>
+                <button class="btn ${st.mode==='order'?'on':''}" id="cgOrder" type="button">Order</button>
+              </div>
+              <span class="pill">UK coins • ${difficulty[0].toUpperCase()+difficulty.slice(1)}</span>
+            </div>
+            <div class="row" style="justify-content:center;">
+              <div class="seg" role="tablist" aria-label="Money set">
+                <button class="btn ${st.moneyFilter==='mixed'?'on':''}" id="mfMixed" type="button">Mixed</button>
+                <button class="btn ${st.moneyFilter==='coins'?'on':''}" id="mfCoins" type="button">Coins</button>
+                <button class="btn ${st.moneyFilter==='notes'?'on':''}" id="mfNotes" type="button">Notes</button>
+              </div>
+              <button class="btn ${st.voiceOn?'primary':''}" id="cgVoice" type="button">Voice: ${st.voiceOn?'On':'Off'}</button>
+              <button class="btn" id="cgSpeak" type="button">🔊 Say it</button>
+            </div>
+
+            <div class="card" style="width:min(520px,100%); background:rgba(255,255,255,.03); border:1px solid var(--line);">
+              <div class="body" style="padding:12px;">
+                <div class="row" style="justify-content:space-between;">
+                  <div><strong style="font-size:14px;font-weight:950;">Total saved</strong><div class="small" id="cgTotalLabel">£0</div></div>
+                  <div style="text-align:right;"><strong style="font-size:14px;font-weight:950;">Next goal</strong><div class="small" id="cgGoalLabel">£1</div></div>
+                </div>
+                <div class="meter" aria-label="Goal progress"><span id="cgMeter"></span></div>
+                <div class="small" style="margin-top:6px; opacity:.9;" id="cgGoalHint">Reach the next goal to earn a celebration!</div>
+              </div>
+            </div>
+
+            <div class="pigWrap" style="width:min(520px,100%);" id="cgPigWrap">
+              ${pigSvg()}
+              <div class="bellyLayer" id="cgBelly" aria-hidden="true"></div>
+              <div class="pigDrop" id="cgPigDrop" aria-label="Drop coins into the piggy bank" title="Drop coins into the piggy bank"></div>
+              <div style="margin-top:-18px; padding:0 10px;">
+                <div class="small" style="text-align:center;" id="cgHint"></div>
+              </div>
+            </div>
+
+            <div style="width:min(520px,100%);" id="cgPanel"></div>
+          </div>
+        `;
+
+        // Mode buttons
+        ui.stage.querySelector('#cgCount').addEventListener('click', ()=>{ st.mode='count'; beep(640,50,0.02); renderCoinsGame(); });
+        ui.stage.querySelector('#cgSort').addEventListener('click', ()=>{ st.mode='sort'; beep(640,50,0.02); renderCoinsGame(); });
+        ui.stage.querySelector('#cgOrder').addEventListener('click', ()=>{ st.mode='order'; beep(640,50,0.02); renderCoinsGame(); });
+
+        // Money set buttons
+        ui.stage.querySelector('#mfMixed').addEventListener('click', ()=>{ st.moneyFilter='mixed'; beep(640,50,0.02); GAMES.find(g=>g.key==='coins').newRound(st, ui.difficulty.value); });
+        ui.stage.querySelector('#mfCoins').addEventListener('click', ()=>{ st.moneyFilter='coins'; beep(640,50,0.02); GAMES.find(g=>g.key==='coins').newRound(st, ui.difficulty.value); });
+        ui.stage.querySelector('#mfNotes').addEventListener('click', ()=>{ st.moneyFilter='notes'; st.mode='count'; beep(640,50,0.02); GAMES.find(g=>g.key==='coins').newRound(st, ui.difficulty.value); });
+
+        // Voice
+        ui.stage.querySelector('#cgVoice').addEventListener('click', ()=>{ st.voiceOn = !st.voiceOn; beep(640,50,0.02); renderCoinsGame(); });
+        ui.stage.querySelector('#cgSpeak').addEventListener('click', ()=>{ speakPrompt(currentPromptText(st)); });
+
+
+        function renderCoinsGame(){
+                    // render money inside the pig (overlay layer)
+          const belly = ui.stage.querySelector('#cgBelly');
+          const bellyItems = (st.mode==='count') ? st.pigCoins : (st.mode==='sort') ? st.sortCoins : (st._allCoins || []);
+          if(belly){
+            belly.innerHTML = '';
+            const maxShow = 18;
+            bellyItems.slice(0, maxShow).forEach((item,i)=>{
+              const el = document.createElement('div');
+              el.className = 'bellyItem' + (item.type==='note' ? ' note' : '');
+              // random-ish placement, kept within the belly layer
+              const left = item.type==='note'
+                ? 6 + (i%2)*46 + (Math.random()*8-4)
+                : 6 + (i%4)*22 + (Math.random()*8-4);
+              const top = item.type==='note'
+                ? 10 + Math.floor(i/2)*20 + (Math.random()*8-4)
+                : 8 + Math.floor(i/4)*18 + (Math.random()*8-4);
+              el.style.left = Math.max(2, Math.min(86, left)) + '%';
+              el.style.top = Math.max(2, Math.min(86, top)) + '%';
+              el.style.transform = `rotate(${(Math.random()*14-7).toFixed(1)}deg)`;
+              el.innerHTML = `<img src="${item.img}" alt="" draggable="false">`;
+              belly.appendChild(el);
+            });
+
+            if(bellyItems.length > maxShow){
+              const more = document.createElement('div');
+              more.className = 'small';
+              more.style.position = 'absolute';
+              more.style.right = '8px';
+              more.style.bottom = '6px';
+              more.style.opacity = '.85';
+              more.textContent = `+${bellyItems.length - maxShow} more`;
+              belly.appendChild(more);
+            }
+          }
+
+const panel = ui.stage.querySelector('#cgPanel');
+          const hint = ui.stage.querySelector('#cgHint');
+          const totalLabel = ui.stage.querySelector('#cgTotalLabel');
+          const goalLabel = ui.stage.querySelector('#cgGoalLabel');
+          const meter = ui.stage.querySelector('#cgMeter');
+
+          const savedTotal = (st.pigCoins||[]).reduce((s,x)=>s+x.v,0);
+          const goals = st.goalTargets || [100,500,1000,2000,5000];
+          const nextGoal = goals.find(g=>g>savedTotal) || goals[goals.length-1];
+          st.nextGoal = nextGoal;
+          if(totalLabel) totalLabel.textContent = formatMoney(savedTotal);
+          if(goalLabel) goalLabel.textContent = formatMoney(nextGoal);
+          if(meter){
+            const prevGoal = goals.slice().reverse().find(g=>g<=(savedTotal)) || 0;
+            const span = Math.max(1, nextGoal - prevGoal);
+            const pct = Math.min(100, Math.max(0, ((savedTotal - prevGoal)/span)*100));
+            meter.style.width = pct.toFixed(1) + '%';
+          }
+
+          if(st.voiceOn){
+            // gentle voice prompt only when in count mode
+            if(st.mode==='count' && !st._voicedThisRender){
+              st._voicedThisRender = true;
+              // speak only after a user gesture later; button always works
+            }
+          }
+
+
+
+          // pig dropzone (count mode)
+          const pigDrop = ui.stage.querySelector('#cgPigDrop');
+          const pigWrap = ui.stage.querySelector('#cgPigWrap');
+          if(pigDrop){
+            pigDrop.style.display = (st.mode === 'count') ? 'flex' : 'none';
+            pigDrop.classList.remove('over');
+
+            // drag & drop
+            pigDrop.ondragover = (e)=>{ if(st.mode!=='count') return; e.preventDefault(); pigDrop.classList.add('over'); };
+            pigDrop.ondragleave = ()=>{ pigDrop.classList.remove('over'); };
+            pigDrop.ondrop = (e)=>{
+              if(st.mode!=='count') return;
+              e.preventDefault();
+              pigDrop.classList.remove('over');
+              const id = e.dataTransfer.getData('text/plain');
+              if(id) dropCoinIntoPig(id);
+            };
+
+            // tap-to-drop for touch
+            pigDrop.onclick = ()=>{
+              if(st.mode!=='count') return;
+              if(st.picked){ dropCoinIntoPig(st.picked); st.picked = null; }
+            };
+          }
+
+          function celebrate(){
+            try{
+              const wrap = ui.stage.querySelector('#cgPigWrap');
+              if(!wrap) return;
+              let layer = wrap.querySelector('.celebrate');
+              if(!layer){
+                layer = document.createElement('div');
+                layer.className='celebrate';
+                wrap.appendChild(layer);
+              }
+              layer.innerHTML='';
+              const n = 18;
+              for(let i=0;i<n;i++){
+                const d = document.createElement('div');
+                d.className='conf';
+                d.style.left = (Math.random()*100) + '%';
+                d.style.top = (-10 - Math.random()*30) + 'px';
+                d.style.background = `hsl(${Math.floor(Math.random()*360)}, 85%, 70%)`;
+                d.style.animationDelay = (Math.random()*120) + 'ms';
+                layer.appendChild(d);
+              }
+              setTimeout(()=>{ if(layer) layer.innerHTML=''; }, 950);
+            }catch(_e){}
+          }
+
+          function dropCoinIntoPig(id){
+            const idx = st.countTray.findIndex(x=>x.id===id);
+            if(idx === -1) return;
+            const coin = st.countTray[idx];
+
+            const before = (st.pigCoins||[]).reduce((s,x)=>s+x.v,0);
+            // remove from tray, add to pig
+            st.countTray.splice(idx, 1);
+            st.pigCoins.push(coin);
+            const after = (st.pigCoins||[]).reduce((s,x)=>s+x.v,0);
+            const goals = st.goalTargets || [100,500,1000,2000,5000];
+            const hit = goals.find(g=>g>before && g<=after);
+
+            // little falling animation (DOM overlay)
+            try{
+              if(pigWrap){
+                const fromEl = ui.stage.querySelector(`[data-id="${id}"]`);
+                const a = fromEl ? fromEl.getBoundingClientRect() : null;
+                const b = pigWrap.getBoundingClientRect();
+                const fly = document.createElement('div');
+                fly.className = 'flyCoin';
+                fly.innerHTML = moneyTile(coin, false);
+                // start from coin position (or center top if missing)
+                const x0 = a ? (a.left - b.left + a.width/2 - 29) : (b.width*0.50 - 29);
+                const y0 = a ? (a.top - b.top + a.height/2 - 29) : (b.height*0.18);
+                // end inside belly
+                const x1 = b.width*0.48 - 29 + (Math.random()*24-12);
+                const y1 = b.height*0.58 - 29 + (Math.random()*18-9);
+                fly.style.setProperty('--x0', `${x0}px`);
+                fly.style.setProperty('--y0', `${y0}px`);
+                fly.style.setProperty('--x1', `${x1}px`);
+                fly.style.setProperty('--y1', `${y1}px`);
+                pigWrap.appendChild(fly);
+                fly.addEventListener('animationend', ()=> fly.remove());
+              }
+            }catch(_e){}
+
+            // sound + rerender
+            clink();
+            if(hit){
+              celebrate();
+              setMsg('good', `🎉 Goal reached! You saved <strong>${formatMoney(hit)}</strong>!`);
+              beep(880,120,0.04);
+            }
+            renderCoinsGame();
+
+            if(st.countTray.length === 0){
+              setMsg('good', `✅ Nice saving! Now count the coins and choose the total.`);
+              beep(880,80,0.04);
+            } else {
+              setMsg('', `Saved <strong>${coin.label}</strong>. ${st.countTray.length} left.`);
+              beep(640,40,0.02);
+            }
+          }
+
+          if(st.mode === 'count'){
+            const allIn = (st.countTray.length === 0);
+            hint.innerHTML = allIn
+              ? `Now count the coins in the pig, then tap the total.`
+              : `Drag each coin into the pig. You can also tap a coin, then tap the pig.`;
+
+            panel.innerHTML = `
+              <div class="tray">
+                <div class="row" style="justify-content:space-between;">
+                  <strong style="font-size:14px;font-weight:950;">Coins to save</strong>
+                  <span class="small">${allIn ? 'All coins saved ✅' : 'Drag into the slot'}</span>
+                </div>
+                <div class="coinTray" id="cgTray"></div>
+              </div>
+
+              <div style="height:8px"></div>
+
+              <div class="row" style="justify-content:space-between; margin-bottom:8px;">
+                <strong style="font-size:14px;font-weight:950;">Choose the total</strong>
+                <span class="small">${allIn ? 'Tap an answer' : 'Save all coins first'}</span>
+              </div>
+
+              <div class="choices" id="coinChoices" style="${allIn ? '' : 'opacity:.55; pointer-events:none;'}"></div>
+
+              <div class="row" style="justify-content:flex-start; margin-top:10px;">
+                <button class="btn" id="cgShow" type="button">Show Answer</button>
+                ${!allIn ? `<span class="small" style="margin-left:10px;">Tip: drop coins into the pig to unlock answers.</span>` : ``}
+              </div>
+            `;
+
+            // tray coins (draggable)
+            const tray = panel.querySelector('#cgTray');
+            tray.innerHTML = '';
+            st.countTray.forEach(c=>{
+              const el = document.createElement('div');
+              el.className = 'coinToken';
+              el.draggable = true;
+              el.dataset.id = c.id;
+              el.innerHTML = moneyTile(c, false);
+
+              el.addEventListener('dragstart', (e)=>{
+                e.dataTransfer.setData('text/plain', c.id);
+                beep(520,40,0.02);
+              });
+
+              el.addEventListener('click', ()=>{
+                // touch-friendly: tap a coin, then tap the pig
+                st.picked = c.id;
+                [...tray.children].forEach(x=>x.classList.remove('selected'));
+                el.classList.add('selected');
+                setMsg('', `Picked <strong>${c.label}</strong>. Now tap the pig slot to drop it in.`);
+                beep(640,40,0.02);
+                if(st.voiceOn) speakPrompt(`Put the ${c.label.replace('£','')}${c.label.startsWith('£')?' pound':''} into the piggy bank.`);
+              });
+
+              tray.appendChild(el);
+            });
+
+            // answer choices
+            const box = panel.querySelector('#coinChoices');
+            box.innerHTML = '';
+            st.options.forEach((opt, i)=>{
+              const b = document.createElement('button');
+              b.type='button';
+              b.className='choice';
+              b.innerHTML = `<span>${formatMoney(opt)}</span><span class="tag">Answer</span>`;
+              b.addEventListener('click', ()=>{
+                if(!allIn) return;
+                if(st.done) return;
+                st.pick = opt;
+                markPick(box, i);
+                beep(620,50,0.02);
+                const ok = (opt === st.total);
+                st.done = true;
+                if(ok){
+                  setMsg('good', `✅ Correct! It’s <strong>${formatMoney(st.total)}</strong>. Press <strong>New</strong> for another.`);
+                  bumpScore(); beep(880,90,0.04);
+                } else {
+                  setMsg('bad', `Not quite. You chose <strong>${formatMoney(opt)}</strong>. Press <strong>Show Answer</strong> or <strong>New</strong>.`);
+                  beep(220,120,0.05);
+                }
+              });
+              box.appendChild(b);
+            });
+
+            panel.querySelector('#cgShow').addEventListener('click', ()=>{
+              setMsg('', `Answer: <strong>${formatMoney(st.total)}</strong>.`);
+              beep(740,60,0.03);
+            });
+          }
+
+          if(st.mode === 'sort'){
+            hint.innerHTML = `Sort the coins: drag (or tap) a coin into the matching pot.`;
+            const pots = potLabels(difficulty);
+            panel.innerHTML = `
+              <div class="row" style="justify-content:space-between; margin-bottom:10px;">
+                <strong style="font-size:14px;font-weight:950;">Coin pots</strong>
+                <span class="pill" id="cgPlaced">${st.placed} / ${st.sortCoins.length}</span>
+              </div>
+
+              <div class="bins" id="cgPots" style="grid-template-columns: repeat(4, minmax(0,1fr));"></div>
+
+              <div class="tray" style="margin-top:10px;">
+                <div class="row" style="justify-content:space-between;">
+                  <strong style="font-size:14px;font-weight:950;">Coins</strong>
+                  <span class="small">Drag or tap a coin, then tap a pot</span>
+                </div>
+                <div class="shapes" id="cgCoins" style="margin-top:10px;"></div>
+              </div>
+
+              <div class="row" style="justify-content:flex-start; margin-top:10px;">
+                <button class="btn good" id="cgCheck" type="button">Check</button>
+                <button class="btn" id="cgShow" type="button">Show Answer</button>
+              </div>
+            `;
+
+            const potsEl = panel.querySelector('#cgPots');
+            pots.forEach(p=>{
+              const el = document.createElement('div');
+              el.className = 'bin';
+              el.dataset.pot = p.label;
+              el.innerHTML = `
+                <div class="binTitle">
+                  <strong>${p.label}</strong><span class="mini">Drop here</span>
+                </div>
+                <div class="dropArea">${potIcon()}</div>
+              `;
+              // drag events
+              el.addEventListener('dragover', (e)=>{ e.preventDefault(); el.classList.add('over'); });
+              el.addEventListener('dragleave', ()=> el.classList.remove('over'));
+              el.addEventListener('drop', (e)=>{
+                e.preventDefault(); el.classList.remove('over');
+                const id = e.dataTransfer.getData('text/plain');
+                placeCoin(id, p.label);
+              });
+              // tap to drop (touch)
+              el.addEventListener('click', ()=>{
+                if(st.picked){
+                  placeCoin(st.picked, p.label);
+                  st.picked = null;
+                }
+              });
+              potsEl.appendChild(el);
+            });
+
+            const coinsEl = panel.querySelector('#cgCoins');
+            coinsEl.innerHTML = '';
+            st.sortCoins.forEach(c=>{
+              const el = document.createElement('div');
+              el.className = 'shape';
+              el.style.width='62px';
+              el.style.height='62px';
+              el.draggable = true;
+              el.dataset.id = c.id;
+              el.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">${moneyTile(c)}</div>`;
+              el.addEventListener('dragstart', (e)=>{ e.dataTransfer.setData('text/plain', c.id); beep(520,40,0.02); });
+              el.addEventListener('click', ()=>{
+                st.picked = c.id;
+                setMsg('', `Picked <strong>${c.label}</strong>. Now tap the matching pot.`);
+                beep(640,40,0.02);
+              });
+              coinsEl.appendChild(el);
+            });
+
+            function placeCoin(id, potLabel){
+              const idx = st.sortCoins.findIndex(x=>x.id===id);
+              if(idx === -1) return;
+              const c = st.sortCoins[idx];
+              const ok = (c.label === potLabel);
+              if(!ok){
+                setMsg('bad', `Not quite — that coin is <strong>${c.label}</strong>.`);
+                beep(220,120,0.05);
+                return;
+              }
+              // remove coin
+              st.sortCoins.splice(idx,1);
+              st.placed++;
+              panel.querySelector('#cgPlaced').textContent = `${st.placed} / ${st.placed + st.sortCoins.length}`;
+              bumpScore();
+              setMsg('good', `✅ Nice!`);
+              beep(880,80,0.04);
+              // rerender coins list quickly
+              renderCoinsGame();
+              if(st.sortCoins.length === 0){
+                setMsg('good', `🎉 All sorted! Press <strong>New</strong> for another.`);
+              }
+            }
+
+            panel.querySelector('#cgCheck').addEventListener('click', ()=>{
+              if(st.sortCoins.length === 0){
+                setMsg('good', `✅ All done! Press <strong>New</strong> for another.`);
+                beep(880,80,0.04);
+              } else {
+                setMsg('', `Keep going — ${st.sortCoins.length} coin(s) left.`);
+                beep(520,50,0.02);
+              }
+            });
+            panel.querySelector('#cgShow').addEventListener('click', ()=>{
+              setMsg('', `Sort tip: match the coin label to the pot label (e.g., <strong>20p</strong> → <strong>20p</strong>).`);
+              beep(740,60,0.03);
+            });
+          }
+
+          if(st.mode === 'order'){
+            hint.innerHTML = `Put the coins in order from smallest to biggest.`;
+            panel.innerHTML = `
+              <div class="row" style="justify-content:space-between; margin-bottom:10px;">
+                <strong style="font-size:14px;font-weight:950;">Order the coins</strong>
+                <span class="small">Drag to reorder, or tap two coins to swap</span>
+              </div>
+
+              <div class="tray">
+                <div class="row" style="justify-content:space-between;">
+                  <span class="small">Smallest → Biggest</span>
+                  <span class="pill" id="cgSel">Tap to select</span>
+                </div>
+                <div class="shapes" id="cgOrder" style="margin-top:10px;"></div>
+              </div>
+
+              <div class="row" style="justify-content:flex-start; margin-top:10px;">
+                <button class="btn good" id="cgCheck" type="button">Check</button>
+                <button class="btn" id="cgShow" type="button">Show Answer</button>
+              </div>
+            `;
+
+            const orderEl = panel.querySelector('#cgOrder');
+            orderEl.innerHTML = '';
+
+            st.orderIds.forEach((id, idx)=>{
+              const c = st.coins.find(x=>x.id===id) || st._allCoins.find(x=>x.id===id);
+              const el = document.createElement('div');
+              el.className = 'shape';
+              el.style.width='70px';
+              el.style.height='70px';
+              el.draggable = true;
+              el.dataset.idx = String(idx);
+              el.innerHTML = `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;">${moneyTile(c, true)}</div>`;
+
+              el.addEventListener('dragstart', (e)=>{ e.dataTransfer.setData('text/plain', String(idx)); beep(520,40,0.02); });
+              el.addEventListener('dragover', (e)=>{ e.preventDefault(); });
+              el.addEventListener('drop', (e)=>{
+                e.preventDefault();
+                const from = Number(e.dataTransfer.getData('text/plain'));
+                const to = idx;
+                if(Number.isFinite(from) && Number.isFinite(to) && from !== to){
+                  const moved = st.orderIds.splice(from,1)[0];
+                  st.orderIds.splice(to,0,moved);
+                  beep(640,40,0.02);
+                  renderCoinsGame();
+                }
+              });
+
+              el.addEventListener('click', ()=>{
+                // tap-to-swap
+                if(st.selectedIdx === null){
+                  st.selectedIdx = idx;
+                  panel.querySelector('#cgSel').textContent = 'Selected 1 coin';
+                  highlightSelection(orderEl, idx);
+                  beep(640,40,0.02);
+                } else if(st.selectedIdx === idx){
+                  st.selectedIdx = null;
+                  panel.querySelector('#cgSel').textContent = 'Tap to select';
+                  highlightSelection(orderEl, null);
+                  beep(520,40,0.02);
+                } else {
+                  const a = st.selectedIdx;
+                  const b = idx;
+                  [st.orderIds[a], st.orderIds[b]] = [st.orderIds[b], st.orderIds[a]];
+                  st.selectedIdx = null;
+                  panel.querySelector('#cgSel').textContent = 'Tap to select';
+                  beep(700,50,0.02);
+                  renderCoinsGame();
+                }
+              });
+
+              orderEl.appendChild(el);
+            });
+
+            panel.querySelector('#cgCheck').addEventListener('click', ()=>{
+              const ok = isCorrectOrder(st);
+              if(ok){
+                setMsg('good', `✅ Correct order! Press <strong>New</strong> for another.`);
+                bumpScore();
+                beep(880,90,0.04);
+              } else {
+                setMsg('bad', `Not yet — try again. (Tip: 1p is smallest, then 2p, 5p…)`);
+                beep(220,120,0.05);
+              }
+            });
+            panel.querySelector('#cgShow').addEventListener('click', ()=>{
+              // set correct order
+              const sorted = [...st._allCoins].sort((a,b)=>a.v-b.v).map(c=>c.id);
+              st.orderIds = sorted;
+              st.selectedIdx = null;
+              setMsg('', `Answer shown. Now you can see smallest → biggest.`);
+              beep(740,60,0.03);
+              renderCoinsGame();
+            });
+
+            function highlightSelection(container, idx){
+              [...container.children].forEach((el,i)=>{
+                el.style.outline = (idx===i) ? '2px solid rgba(125,211,252,.55)' : 'none';
+                el.style.outlineOffset = (idx===i) ? '2px' : '0';
+              });
+            }
+            function isCorrectOrder(st){
+              const values = st.orderIds.map(id => (st._allCoins.find(c=>c.id===id) || {}).v);
+              for(let i=1;i<values.length;i++){
+                if(!(values[i-1] <= values[i])) return false;
+              }
+              // ensure it's exactly the sorted order (no duplicates issues)
+              const sorted = [...values].slice().sort((a,b)=>a-b);
+              for(let i=0;i<sorted.length;i++) if(sorted[i]!==values[i]) return false;
+              return true;
+            }
+          }
+        }
+
+        // first render
+        renderCoinsGame();
+      },
+      newRound: (st, difficulty)=> {
+        const pool = moneyPool(difficulty, st.moneyFilter);
+
+        // Build a coin set for Count + Sort
+        const nMin = difficulty==='easy' ? 4 : difficulty==='medium' ? 5 : 6;
+        const nMax = difficulty==='easy' ? 7 : difficulty==='medium' ? 9 : 11;
+        const n = randInt(nMin, nMax);
+
+        const roundCoins = Array.from({length:n}, (_,i)=>{
+          const c = pool[randInt(0,pool.length-1)];
+          return {...c, id:'c' + Math.random().toString(16).slice(2) + i};
+        });
+
+        // Count mode starts with coins outside the pig
+        st.countTray = roundCoins.slice();
+        st.pigCoins = [];
+        st.pick = null; st.done = false; st.picked = null;
+
+        // Sort mode coins
+        st.sortCoins = roundCoins.slice();
+        st.placed = 0;
+
+        // Total + options for count mode (based on all coins in this round)
+        st.total = roundCoins.reduce((s,c)=>s+c.v,0);
+        const opts = new Set([st.total]);
+        const wiggles = Array.from(new Set(pool.map(x=>x.v))).sort((a,b)=>a-b);
+        while(opts.size < 4){
+          const w = wiggles[randInt(0, wiggles.length-1)] * (Math.random() < .5 ? -1 : 1);
+          let cand = st.total + w;
+          if(cand < 0) cand = st.total + Math.abs(w);
+          opts.add(Math.max(0, cand));
+        }
+        st.options = shuffle([...opts]);
+
+        // Order mode: use a clean unique set (no duplicates) so ordering feels clear
+        const uniq = [];
+        const seen = new Set();
+        for(const c of pool){
+          if(!seen.has(c.v)){ uniq.push(c); seen.add(c.v); }
+        }
+        const orderCount = difficulty==='easy' ? 5 : difficulty==='medium' ? 6 : 8;
+        const orderSet = shuffle(uniq.slice()).slice(0, orderCount).map((c,i)=>({...c, id:'o'+Math.random().toString(16).slice(2)+i}));
+        st._allCoins = orderSet.slice();
+        st.orderIds = shuffle(orderSet.map(c=>c.id));
+        st.selectedIdx = null;
+
+        st.nextGoal = (st.goalTargets || [100,500,1000,2000,5000]).find(g=>g>0) || 100;
+        setMsg('', `Coin Piggy Bank: choose Count / Sort / Order, then play.`);
+
+      },
+      reset: (st, difficulty)=> {
+        GAMES.find(g=>g.key==='coins').newRound(st, difficulty);
+        setMsg('', `Reset done. Start again.`);
+      }
+    }
+
+          });
+          box.appendChild(b);
+        });
+      },
+      newRound: (st, difficulty)=> {
+        const coinsByLevel = {
+          easy: [
+            {v:1, label:'1p', col:'copper'},
+            {v:2, label:'2p', col:'copper'},
+            {v:5, label:'5p', col:'silver'},
+            {v:10, label:'10p', col:'silver'}
+          ],
+          medium: [
+            {v:1, label:'1p', col:'copper'},
+            {v:2, label:'2p', col:'copper'},
+            {v:5, label:'5p', col:'silver'},
+            {v:10, label:'10p', col:'silver'},
+            {v:20, label:'20p', col:'silver'},
+            {v:50, label:'50p', col:'silver'}
+          ],
+          hard: [
+            {v:1, label:'1p', col:'copper'},
+            {v:2, label:'2p', col:'copper'},
+            {v:5, label:'5p', col:'silver'},
+            {v:10, label:'10p', col:'silver'},
+            {v:20, label:'20p', col:'silver'},
+            {v:50, label:'50p', col:'silver'},
+            {v:100, label:'£1', col:'gold'},
+            {v:200, label:'£2', col:'gold'}
+          ]
+        };
+        const pool = coinsByLevel[difficulty] || coinsByLevel.medium;
+
+        const nMin = difficulty==='easy' ? 3 : difficulty==='medium' ? 4 : 5;
+        const nMax = difficulty==='easy' ? 6 : difficulty==='medium' ? 8 : 10;
+        const n = randInt(nMin, nMax);
+
+        st.coins = Array.from({length:n}, ()=> pool[randInt(0,pool.length-1)]);
+        st.total = st.coins.reduce((s,c)=>s+c.v,0);
+
+        // Build 3 wrong options near the total
+        const opts = new Set([st.total]);
+        const wiggles = difficulty==='easy' ? [1,2,5,10] : difficulty==='medium' ? [1,2,5,10,20,50] : [1,2,5,10,20,50,100,200];
+        while(opts.size < 4){
+          const w = wiggles[randInt(0, wiggles.length-1)] * (Math.random() < .5 ? -1 : 1);
+          let cand = st.total + w;
+          // keep in reasonable bounds
+          if(cand < 0) cand = st.total + Math.abs(w);
+          // snap to 1p increments
+          cand = Math.max(0, cand);
+          opts.add(cand);
+        }
+        st.options = shuffle([...opts]);
+        st.pick = null;
+        st.done = false;
+
+        setMsg('', `Count the coins and tap the correct total.`);
+      },
+      reset: (st, difficulty)=> {
+        // reset = new round
+        GAMES.find(g=>g.key==='coins').newRound(st, difficulty);
+      },
+      check: (st)=> st.pick === st.total,
+      show: (st)=> { st.pick = st.total; st.done = true; }
+    }
+
+  ];
+
+  function shapeIcon(type){
+    if(type==='circle') return `<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="16" fill="rgba(125,211,252,.65)" stroke="rgba(255,255,255,.35)" stroke-width="2"/></svg>`;
+    if(type==='square') return `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="10" width="28" height="28" rx="6" fill="rgba(167,139,250,.60)" stroke="rgba(255,255,255,.35)" stroke-width="2"/></svg>`;
+    return `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 10 L38 36 H10 Z" fill="rgba(52,211,153,.60)" stroke="rgba(255,255,255,.35)" stroke-width="2" /></svg>`;
+  }
+  function binIcon(type){
+    // faint outline icon
+    if(type==='circle') return `<svg viewBox="0 0 48 48" aria-hidden="true" style="opacity:.6"><circle cx="24" cy="24" r="16" fill="none" stroke="rgba(238,242,255,.35)" stroke-width="2"/></svg>`;
+    if(type==='square') return `<svg viewBox="0 0 48 48" aria-hidden="true" style="opacity:.6"><rect x="10" y="10" width="28" height="28" rx="6" fill="none" stroke="rgba(238,242,255,.35)" stroke-width="2"/></svg>`;
+    return `<svg viewBox="0 0 48 48" aria-hidden="true" style="opacity:.6"><path d="M24 10 L38 36 H10 Z" fill="none" stroke="rgba(238,242,255,.35)" stroke-width="2" /></svg>`;
+  }
+
+  // ---- chooser UI ----
+  function rebuildChooser(){
+    // options
+    ui.gameSelect.innerHTML = '';
+    GAMES.forEach(g=>{
+      const o = document.createElement('option');
+      o.value = g.key;
+      o.textContent = g.name;
+      ui.gameSelect.appendChild(o);
+    });
+
+    ui.cards.innerHTML = '';
+    GAMES.forEach(g=>{
+      const div = document.createElement('div');
+      div.className = 'gameCard';
+      div.dataset.key = g.key;
+      div.innerHTML = `
+        <div>
+          <strong>${g.name}</strong>
+          <div class="desc">${g.desc}</div>
+        </div>
+        <span class="tag">${g.tag}</span>
+      `;
+      div.addEventListener('click', ()=>{
+        ui.gameSelect.value = g.key;
+        setActiveFromSelect(true);
+      });
+      ui.cards.appendChild(div);
+    });
+  }
+
+  let active = null;
+  let state = null;
+
+  function markActiveCard(){
+    [...ui.cards.querySelectorAll('.gameCard')].forEach(c=>{
+      c.classList.toggle('active', c.dataset.key === active?.key);
+    });
+  }
+
+  function setActiveFromSelect(runNew=false){
+    const key = ui.gameSelect.value;
+    active = GAMES.find(g=>g.key===key) || GAMES[0];
+    state = active.buildState();
+    markActiveCard();
+    renderActive();
+    if(runNew) newRound();
+    else setMsg('', `Press <strong>New</strong> to start ${active.name}.`);
+    beep(720,60,0.02);
+  }
+
+  function renderActive(){
+    // render stage with current state
+    active.render(state, ui.difficulty.value);
+  }
+
+  function newRound(){
+    active.newRound?.(state, ui.difficulty.value);
+    renderActive();
+    beep(820,60,0.03);
+  }
+  function reset(){
+    active.reset?.(state, ui.difficulty.value);
+    renderActive();
+    beep(520,60,0.02);
+  }
+
+  ui.newBtn.addEventListener('click', newRound);
+  ui.resetBtn.addEventListener('click', reset);
+
+  ui.gameSelect.addEventListener('change', ()=> setActiveFromSelect(true));
+  ui.difficulty.addEventListener('change', ()=>{
+    // keep same game, but restart round with difficulty
+    if(!active) return;
+    newRound();
+  });
+
+  ui.soundBtn.addEventListener('click', ()=>{
+    soundOn = !soundOn;
+    ui.soundBtn.setAttribute('aria-pressed', String(soundOn));
+    ui.soundBtn.textContent = 'Sound: ' + (soundOn ? 'On' : 'Off');
+    beep(880,60,0.03);
+  });
+
+  // init
+  rebuildChooser();
+  // Safety: if chooser has no options, show a clear message
+  if (ui.gameSelect && ui.gameSelect.options && ui.gameSelect.options.length === 0) {
+    ui.prompt.textContent = "No games loaded — please refresh or re-upload games-play.html.";
+  }
+  ui.difficulty.value = 'medium';
+    // Preselect from URL e.g. games-play.html?game=connect4 or ?game=coin
+  const qs = new URLSearchParams(location.search);
+  const pre = (qs.get('game') || '').toLowerCase();
+  const exists = GAMES.some(g => g.key === pre);
+  ui.gameSelect.value = exists ? pre : 'connect4';
+  setActiveFromSelect(false);
+  // Auto-start the selected game
+  try { newRound(); } catch(e) { console.warn(e); }
+})();
+</script>
+</body>
+</html>
