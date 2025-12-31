@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Games – Primary Steps</title>
+<link rel="icon" href="assets/primary-steps-icon-512.png" />
+<style>
+:root{
+  --bg:#0b0d12;
+  --panel:#121621;
+  --text:#eef2ff;
+  --muted:#a9b2c7;
+  --brand:#7dd3fc;
+  --border:rgba(255,255,255,.10);
+  --radius:18px;
+  --shadow:0 12px 40px rgba(0,0,0,.35);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(900px 500px at 20% 0%, rgba(125,211,252,.18), transparent 60%),
+    radial-gradient(900px 500px at 85% 20%, rgba(167,139,250,.18), transparent 60%),
+    var(--bg);
+  color:var(--text);
+}
+
+/* HEADER */
+header{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter:blur(12px);
+  background:rgba(18,22,33,.75);
+  border-bottom:1px solid var(--border);
+}
+.topbar{
+  max-width:1150px; margin:auto;
+  padding:12px 18px;
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+}
+.brand{
+  display:flex; align-items:center; gap:12px;
+  text-decoration:none; color:var(--text);
+  min-width:200px;
+}
+.brand img{height:52px;width:auto;filter:drop-shadow(0 10px 25px rgba(125,211,252,.25));}
+.brand span{font-weight:750;font-size:14px;letter-spacing:.04em}
+.nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
+.pill{
+  text-decoration:none;
+  color:var(--text);
+  padding:9px 14px;
+  border-radius:999px;
+  background:rgba(15,19,32,.7);
+  border:1px solid var(--border);
+  font-size:13px;
+  font-weight:600;
+}
+.pill.active{
+  border-color:rgba(125,211,252,.35);
+  background:rgba(125,211,252,.12);
+}
+
+/* LAYOUT */
+.container{max-width:1150px;margin:auto;padding:28px 18px 60px}
+.hero{margin-bottom:18px}
+.hero h1{margin:0 0 6px;font-size:clamp(22px,3vw,30px)}
+.hero p{margin:0;color:var(--muted);font-size:14px}
+
+.panel{
+  background:linear-gradient(180deg, rgba(18,22,33,.95), rgba(11,13,18,.85));
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:22px;
+}
+.grid{display:grid;gap:14px}
+
+.card{
+  display:flex; align-items:center; justify-content:space-between;
+  gap:12px;
+  padding:16px;
+  border-radius:16px;
+  background:rgba(15,19,32,.75);
+  border:1px solid rgba(255,255,255,.10);
+}
+.left{display:flex;align-items:center;gap:12px;min-width:0}
+.ico{
+  width:44px;height:44px;border-radius:14px;
+  display:grid;place-items:center;
+  background:rgba(125,211,252,.14);
+  border:1px solid rgba(125,211,252,.25);
+  font-size:18px;
+  flex:0 0 auto;
+}
+.name{margin:0 0 4px;font-weight:850}
+.desc{margin:0;color:var(--muted);font-size:13px}
+.btn{
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  padding:10px 14px;
+  border-radius:999px;
+  font-weight:750;
+  font-size:13px;
+  cursor:pointer;
+  text-decoration:none;
+  white-space:nowrap;
+}
+.btn:hover{background:rgba(255,255,255,.09)}
+@media (max-width:520px){ .brand span{display:none} .brand{min-width:auto} }
+</style>
+</head>
+
+<body>
+<header>
+  <div class="topbar">
+    <a href="index.html" class="brand" aria-label="Primary Steps home">
+      <img src="assets/primary-steps-logo.png" alt="Primary Steps" onerror="this.style.display='none'">
+      <span>Primary Steps</span>
+    </a>
+    <nav class="nav" aria-label="Top navigation">
+      <a class="pill" href="index.html">Home</a>
+      <a class="pill" href="letters.html">Letters</a>
+      <a class="pill" href="numbers.html">Numbers</a>
+      <a class="pill" href="phonics.html">Phonics</a>
+      <a class="pill" href="spelling.html">Spelling</a>
+      <a class="pill" href="maths.html">Maths</a>
+      <a class="pill" href="memory.html">Memory</a>
+      <a class="pill active" href="games.html">Games</a>
+      <a class="pill" href="puzzles.html">Puzzles</a>
+      <a class="pill" href="handwriting.html">Handwriting</a>
+      <a class="pill" href="clock.html">Clock</a>
+      <a class="pill" href="progress.html">Progress</a>
+      <a class="pill" href="settings.html">Settings</a>
+    </nav>
+  </div>
+</header>
+
+
+<main class="container">
+  <section class="hero">
+    <h1>Games</h1>
+    <p>Pick a game first, then you’ll go straight into it.</p>
+  </section>
+
+  <section class="panel" aria-label="Games menu">
+    <div class="grid">
+
+      <div class="card">
+        <div class="left">
+          <div class="ico">🟡</div>
+          <div>
+            <p class="name">Connect 4</p>
+            <p class="desc">Easy → Medium – take turns and line up four to win.</p>
+          </div>
+        </div>
+        <a class="btn" href="game-connect4.html">Start</a>
+      </div>
+
+      
+
+      <div class="card">
+        <div class="left">
+          <div class="ico">🧩</div>
+          <div class="meta">
+            <p class="name">Sudoku</p>
+            <p class="desc">Easy → Hard – fill the grid using logic.</p>
+          </div>
+        </div>
+        <a class="btn" href="game-sudoku.html">Start</a>
+      </div>
+<div class="card">
+        <div class="left">
+          <div class="ico">🐷</div>
+          <div>
+            <p class="name">Coin Piggy Bank</p>
+            <p class="desc">Easy → Hard – count, make amounts, sort, and order UK coins.</p>
+          </div>
+        </div>
+        <a class="btn" href="game-coins.html">Start</a>
+      </div>
+
+      <div class="card">
+        <div class="left">
+          <div class="ico">🟦</div>
+          <div>
+            <p class="name">Shape Sort</p>
+            <p class="desc">Easy → Medium – drag shapes into the matching outlines.</p>
+          </div>
+        </div>
+        <a class="btn" href="game-shapesort.html">Start</a>
+      </div>
+
+    </div>
+  </section>
+</main>
+
+</body>
+</html>

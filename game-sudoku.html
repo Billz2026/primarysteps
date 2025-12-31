@@ -1,0 +1,827 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Sudoku – Primary Steps</title>
+<link rel="icon" href="assets/primary-steps-icon-512.png" />
+<style>
+
+:root{
+  --bg0:#0b0d12; --bg1:#0f1320;
+  --panel:#121621; --panel2:#0d1c36;
+  --text:#eef2ff; --muted:rgba(238,242,255,.72);
+  --line:rgba(255,255,255,.12);
+  --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399; --bad:#fb7185;
+  --ring:rgba(125,211,252,.30);
+  --shadow:0 18px 40px rgba(0,0,0,.35);
+  --r:18px;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0; color:var(--text);
+  background:
+    radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
+    radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
+    linear-gradient(180deg, var(--bg0), var(--bg1));
+  min-height:100vh;
+}
+
+/* Header */
+header{
+  position:sticky; top:0; z-index:10;
+  backdrop-filter: blur(10px);
+  background: rgba(18,22,33,.72);
+  border-bottom:1px solid var(--line);
+}
+.wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
+.top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
+.brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
+.brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
+.brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
+.brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
+nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
+nav a{
+  color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
+  padding:8px 10px; border-radius:12px;
+  border:1px solid transparent;
+  opacity:.92;
+}
+nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
+nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
+
+.hero{padding:22px 16px 10px;}
+.hwrap{max-width:1100px;margin:0 auto;}
+h1{margin:0 0 6px; font-size:32px; letter-spacing:-.4px;}
+p.lead{margin:0; color:var(--muted); max-width:85ch; font-size:14px; line-height:1.45;}
+
+.grid{
+  max-width:1100px; margin:14px auto 28px; padding:0 16px;
+  display:grid; grid-template-columns: 1.15fr .85fr; gap:14px;
+}
+@media (max-width: 980px){ .grid{grid-template-columns:1fr; } nav{justify-content:flex-start;} }
+
+.card{
+  background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
+  border:1px solid var(--line);
+  border-radius:var(--r);
+  box-shadow: var(--shadow);
+  overflow:hidden;
+}
+.card .head{
+  padding:14px 14px 10px;
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+}
+.pill{
+  font-size:12px; font-weight:850;
+  padding:6px 10px; border-radius:999px;
+  background: rgba(125,211,252,.14);
+  border:1px solid rgba(125,211,252,.25);
+  color: var(--text);
+  white-space:nowrap;
+}
+.body{padding:14px;}
+.row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
+.btn{
+  appearance:none; border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text); font-weight:850;
+  padding:10px 12px; border-radius:14px;
+  cursor:pointer;
+  text-decoration:none;
+  display:inline-flex; align-items:center; gap:8px;
+}
+.btn:hover{background: rgba(255,255,255,.08);}
+.btn.primary{
+  border-color: rgba(125,211,252,.35);
+  background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
+}
+
+.field{display:flex; flex-direction:column; gap:6px; min-width:240px;}
+label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
+select{
+  width:100%;
+  appearance:none;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.05);
+  color:var(--text);
+  padding:10px 12px;
+  border-radius:14px;
+  font-weight:800;
+  cursor:pointer;
+  outline:none;
+}
+select:focus{box-shadow: 0 0 0 6px var(--ring);}
+
+.msg{
+  padding:10px 12px; border-radius:14px;
+  border:1px solid var(--line);
+  background: rgba(255,255,255,.04);
+  color: var(--muted);
+  margin-top:10px;
+}
+.msg.good{border-color:rgba(52,211,153,.35); background: rgba(52,211,153,.10); color: rgba(238,242,255,.92);}
+.msg.bad{border-color:rgba(251,113,133,.35); background: rgba(251,113,133,.10); color: rgba(238,242,255,.92);}
+.small{font-size:12px;color:var(--muted);}
+
+.stage{
+  border:1px solid var(--line);
+  border-radius:16px;
+  padding:12px;
+  background:
+    radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
+    linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
+}
+
+/* Segmented toggle */
+.seg{
+  display:flex; gap:8px; flex-wrap:wrap;
+  padding:6px; border:1px solid var(--line);
+  border-radius:16px; background:rgba(255,255,255,.03);
+}
+.seg button{border-radius:12px; padding:9px 12px;}
+.seg button.on{border-color:rgba(125,211,252,.45); background:rgba(125,211,252,.12);}
+
+/* Connect 4 */
+.c4Wrap{display:grid; gap:12px; justify-items:center;}
+.c4Board{
+  width:min(440px, 100%);
+  aspect-ratio: 7 / 6;
+  display:grid;
+  grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
+  gap:10px;
+  padding:12px;
+  border-radius:18px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(0,0,0,.16);
+  position:relative;
+  touch-action: manipulation;
+}
+.c4Cell{
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer;
+  position:relative;
+}
+.c4Cell:hover{border-color: rgba(125,211,252,.35); background: rgba(125,211,252,.08);}
+.c4Board[data-winner="1"] .c4Cell{cursor:default; opacity:.95}
+.c4Disc{
+  width:100%; height:100%;
+  border-radius:999px;
+  transform: scale(.82);
+  background: rgba(255,255,255,.06);
+  box-shadow: inset 0 10px 20px rgba(0,0,0,.28);
+  position:relative;
+}
+.c4Disc.r{ background: rgba(251,113,133,.72); }
+.c4Disc.y{ background: rgba(253,224,71,.68); }
+.c4Disc.drop{ animation: c4drop .18s cubic-bezier(.18,.9,.2,1.12) both; }
+@keyframes c4drop{
+  from{ transform: translateY(var(--from, -120%)) scale(.82); filter:brightness(1.06); }
+  to{ transform: translateY(0) scale(.82); filter:brightness(1); }
+}
+
+.c4Hint{
+  width:min(440px, 100%);
+  display:flex; justify-content:space-between; gap:10px;
+}
+.c4Hint .chip{
+  flex:1;
+  text-align:center;
+  border-radius:14px;
+  border:1px dashed rgba(238,242,255,.22);
+  padding:8px 0;
+  font-size:12px; font-weight:900;
+  color:rgba(238,242,255,.65);
+}
+.c4Hint .chip.on{
+  border-color: rgba(125,211,252,.45);
+  background: rgba(125,211,252,.10);
+  color: rgba(238,242,255,.92);
+}
+
+@media (max-width: 560px){ .brand .title{display:none;} }
+
+
+/* Sudoku extras (kept in the same style language as Connect 4) */
+.boardWrap{
+  display:grid;
+  place-items:center;
+  padding:12px 0 4px;
+}
+.sudoku{
+  --n: 9;
+  --gap: 8px;
+  width:min(520px, 92vw);
+  aspect-ratio:1/1;
+  display:grid;
+  grid-template-columns:repeat(var(--n), 1fr);
+  gap: var(--gap);
+  padding:12px;
+  background:rgba(15,19,32,.55);
+  border:1px solid rgba(255,255,255,.10);
+  border-radius:18px;
+  box-shadow:0 18px 45px rgba(0,0,0,.35);
+}
+.cell{
+  border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.06);
+  border-radius:14px;
+  display:grid;
+  place-items:center;
+  font-weight:950;
+  font-size:clamp(16px, 2.6vw, 20px);
+  cursor:pointer;
+  position:relative;
+  user-select:none;
+  transition:transform .06s ease, background .15s ease, border-color .15s ease;
+}
+.cell:hover{ background:rgba(255,255,255,.09); }
+.cell:active{ transform:translateY(1px); }
+.cell.given{
+  background:linear-gradient(180deg, rgba(125,211,252,.13), rgba(255,255,255,.04));
+  border-color:rgba(125,211,252,.28);
+  cursor:default;
+}
+.cell.selected{
+  border-color:rgba(125,211,252,.55);
+  box-shadow:0 0 0 4px rgba(125,211,252,.12);
+}
+.cell.peer{
+  background:rgba(167,139,250,.10);
+  border-color:rgba(167,139,250,.22);
+}
+.cell.same{
+  background:rgba(125,211,252,.10);
+  border-color:rgba(125,211,252,.22);
+}
+.cell.bad{
+  background:rgba(255, 120, 120, .10);
+  border-color:rgba(255, 120, 120, .26);
+}
+/* Subgrid separators */
+.cell.sepR::after{
+  content:"";
+  position:absolute;
+  right:-5px; top:10%;
+  width:2px; height:80%;
+  background:rgba(255,255,255,.18);
+  border-radius:2px;
+}
+.cell.sepB::before{
+  content:"";
+  position:absolute;
+  bottom:-5px; left:10%;
+  height:2px; width:80%;
+  background:rgba(255,255,255,.18);
+  border-radius:2px;
+}
+
+.pad{
+  display:grid;
+  grid-template-columns:repeat(5, minmax(0,1fr));
+  gap:10px;
+}
+.pad button{
+  padding:14px 0;
+  border-radius:16px;
+  font-weight:950;
+  font-size:16px;
+}
+.pad .wide{ grid-column: span 2; }
+@media (max-width:520px){
+  .pad{ grid-template-columns:repeat(4, minmax(0,1fr)); }
+  .pad .wide{ grid-column: span 2; }
+}
+
+.toggleRow{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
+.switch{
+  display:flex; align-items:center; gap:10px;
+  padding:10px 12px; border-radius:16px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.04);
+}
+.switch input{ width:18px; height:18px; }
+.smallNote{ color:var(--muted); font-weight:650; font-size:13px; line-height:1.35; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wrap">
+    <div class="top">
+      <a class="brand" href="index.html" aria-label="Primary Steps home">
+        <img src="assets/primary-steps-logo.png" alt="Primary Steps logo" onerror="this.style.display='none'">
+        <div>
+          <div class="title">Primary Steps</div>
+          <span class="sub">Simple, calm learning activities</span>
+        </div>
+      </a>
+      <nav aria-label="Primary">
+        <a href="index.html">Home</a>
+        <a href="letters.html">Letters</a>
+        <a href="numbers.html">Numbers</a>
+        <a href="phonics.html">Phonics</a>
+        <a href="maths.html">Maths</a>
+        <a href="memory.html">Memory</a>
+        <a href="games.html" class="active">Games</a>
+        <a href="puzzles.html">Puzzles</a>
+        <a href="handwriting.html">Handwriting</a>
+        <a href="clock.html">Clock</a>
+        <a href="progress.html">Progress</a>
+        <a href="settings.html">Settings</a>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <h1>Sudoku</h1>
+    <p>Tap a square, then choose a number. <strong>Easy</strong> uses a smaller grid so it stays child‑friendly and calm.</p>
+  </section>
+
+  <section class="grid">
+    <!-- LEFT -->
+    <div class="card">
+      <div class="head">
+        <div class="pill">Play</div>
+        <div class="controls">
+          <button class="btn" id="newBtn">New</button>
+          <button class="btn" id="resetBtn">Reset</button>
+          <button class="btn primary" id="hintBtn">Hint</button>
+        </div>
+      </div>
+
+      <div class="body">
+        <div class="boardWrap">
+          <div class="sudoku" id="board" aria-label="Sudoku board"></div>
+        </div>
+        <div class="msg" id="msg">Choose a difficulty to begin.</div>
+      </div>
+    </div>
+
+    <!-- RIGHT -->
+    <div class="card">
+      <div class="head">
+        <div class="pill">Options</div>
+      </div>
+      <div class="body">
+        <div class="row">
+          <button class="btn primary" data-diff="easy" id="diffEasy">Easy</button>
+          <button class="btn" data-diff="medium" id="diffMed">Medium</button>
+          <button class="btn" data-diff="hard" id="diffHard">Hard</button>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="toggleRow">
+          <label class="switch">
+            <input type="checkbox" id="autoCheck" checked />
+            <span>Auto‑check</span>
+          </label>
+
+          <label class="switch">
+            <input type="checkbox" id="highlight" checked />
+            <span>Highlight row/col</span>
+          </label>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="panel">
+          <div class="stat">
+            <span>Mistakes</span>
+            <strong id="mistakes">0</strong>
+          </div>
+          <div class="stat">
+            <span>Filled</span>
+            <strong id="filled">0</strong>
+          </div>
+          <div class="stat">
+            <span>Goal</span>
+            <strong id="goal">0</strong>
+          </div>
+        </div>
+
+        <div class="spacer"></div>
+
+        <div class="pad" id="pad" aria-label="Number pad"></div>
+
+        <div class="spacer"></div>
+        <div class="smallNote">
+          Tip: Look for a row, column, or box with only one missing number.
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(() => {
+  const boardEl = document.getElementById('board');
+  const padEl = document.getElementById('pad');
+  const msgEl = document.getElementById('msg');
+  const mistakesEl = document.getElementById('mistakes');
+  const filledEl = document.getElementById('filled');
+  const goalEl = document.getElementById('goal');
+
+  const btnEasy = document.getElementById('diffEasy');
+  const btnMed  = document.getElementById('diffMed');
+  const btnHard = document.getElementById('diffHard');
+
+  const autoCheckEl = document.getElementById('autoCheck');
+  const highlightEl = document.getElementById('highlight');
+
+  const newBtn = document.getElementById('newBtn');
+  const resetBtn = document.getElementById('resetBtn');
+  const hintBtn = document.getElementById('hintBtn');
+
+  const randInt = (a,b)=> Math.floor(Math.random()*(b-a+1))+a;
+
+  // Puzzles: 0 = blank. We use fixed puzzles (fast + reliable).
+  const PUZZLES = {
+    easy: [
+      {
+        n:4, boxW:2, boxH:2,
+        grid:[
+          1,0,0,4,
+          0,4,1,0,
+          2,0,4,0,
+          0,1,0,2
+        ],
+        sol:[
+          1,2,3,4,
+          3,4,1,2,
+          2,3,4,1,
+          4,1,2,3
+        ]
+      },
+      {
+        n:4, boxW:2, boxH:2,
+        grid:[
+          0,3,0,1,
+          1,0,3,0,
+          0,1,0,4,
+          4,0,1,0
+        ],
+        sol:[
+          2,3,4,1,
+          1,4,3,2,
+          3,1,2,4,
+          4,2,1,3
+        ]
+      },
+      {
+        n:4, boxW:2, boxH:2,
+        grid:[
+          0,0,2,1,
+          1,2,0,0,
+          0,0,4,2,
+          2,4,0,0
+        ],
+        sol:[
+          4,3,2,1,
+          1,2,3,4,
+          3,1,4,2,
+          2,4,1,3
+        ]
+      }
+    ],
+    medium: [
+      {
+        n:6, boxW:3, boxH:2,
+        sol:[
+          1,2,3,4,5,6,
+          4,5,6,1,2,3,
+          2,3,4,5,6,1,
+          5,6,1,2,3,4,
+          3,4,5,6,1,2,
+          6,1,2,3,4,5
+        ],
+        grid:[
+          1,0,3, 0,5,0,
+          0,5,0, 1,0,3,
+          2,0,4, 0,6,0,
+          0,6,0, 2,0,4,
+          3,0,5, 0,1,0,
+          0,1,0, 3,0,5
+        ]
+      },
+      {
+        n:6, boxW:3, boxH:2,
+        sol:[
+          1,2,3,4,5,6,
+          4,5,6,1,2,3,
+          2,3,4,5,6,1,
+          5,6,1,2,3,4,
+          3,4,5,6,1,2,
+          6,1,2,3,4,5
+        ],
+        grid:[
+          0,2,0, 4,0,6,
+          4,0,6, 0,2,0,
+          0,3,0, 5,0,1,
+          5,0,1, 0,3,0,
+          0,4,0, 6,0,2,
+          6,0,2, 0,4,0
+        ]
+      }
+    ],
+    hard: [
+      {
+        n:9, boxW:3, boxH:3,
+        sol:[
+          5,3,4,6,7,8,9,1,2,
+          6,7,2,1,9,5,3,4,8,
+          1,9,8,3,4,2,5,6,7,
+          8,5,9,7,6,1,4,2,3,
+          4,2,6,8,5,3,7,9,1,
+          7,1,3,9,2,4,8,5,6,
+          9,6,1,5,3,7,2,8,4,
+          2,8,7,4,1,9,6,3,5,
+          3,4,5,2,8,6,1,7,9
+        ],
+        grid:[
+          5,3,0,0,7,0,0,1,2,
+          6,0,2,1,0,5,3,0,0,
+          0,9,8,0,4,2,0,6,0,
+          8,0,9,7,0,1,4,0,3,
+          0,2,0,8,5,0,7,9,0,
+          7,0,3,0,2,4,0,5,6,
+          9,0,1,5,0,7,2,8,0,
+          2,8,0,4,1,0,6,0,5,
+          3,4,5,0,8,6,0,7,9
+        ]
+      },
+      {
+        n:9, boxW:3, boxH:3,
+        sol:[
+          5,3,4,6,7,8,9,1,2,
+          6,7,2,1,9,5,3,4,8,
+          1,9,8,3,4,2,5,6,7,
+          8,5,9,7,6,1,4,2,3,
+          4,2,6,8,5,3,7,9,1,
+          7,1,3,9,2,4,8,5,6,
+          9,6,1,5,3,7,2,8,4,
+          2,8,7,4,1,9,6,3,5,
+          3,4,5,2,8,6,1,7,9
+        ],
+        grid:[
+          0,3,4,0,7,0,9,0,2,
+          6,0,0,1,0,5,0,4,0,
+          1,9,0,3,0,2,5,0,7,
+          0,5,9,0,6,1,0,2,0,
+          4,0,6,8,0,3,7,0,1,
+          0,1,0,9,2,0,8,5,0,
+          9,0,1,5,0,7,0,8,4,
+          0,8,0,4,1,9,6,0,5,
+          3,0,5,0,8,0,1,7,0
+        ]
+      }
+    ]
+  };
+
+  const state = {
+    diff:'easy',
+    n:4,
+    boxW:2,
+    boxH:2,
+    puzzle:null,
+    given:[],
+    vals:[],
+    mistakes:0,
+    selected:-1
+  };
+
+  function setMsg(kind, html){
+    msgEl.className = 'msg' + (kind ? ' ' + kind : '');
+    msgEl.innerHTML = html || '';
+  }
+
+  function setActiveDiff(){
+    [btnEasy, btnMed, btnHard].forEach(b=>{
+      b.classList.toggle('primary', b.getAttribute('data-diff') === state.diff);
+    });
+  }
+
+  function idxToRC(i){ return { r: Math.floor(i / state.n), c: i % state.n }; }
+  function rcToIdx(r,c){ return r * state.n + c; }
+
+  function inSameBox(a, b){
+    const A = idxToRC(a), B = idxToRC(b);
+    const brA = Math.floor(A.r / state.boxH), bcA = Math.floor(A.c / state.boxW);
+    const brB = Math.floor(B.r / state.boxH), bcB = Math.floor(B.c / state.boxW);
+    return brA === brB && bcA === bcB;
+  }
+
+  function renderPad(){
+    padEl.innerHTML = '';
+    const n = state.n;
+    for(let v=1; v<=n; v++){
+      const b = document.createElement('button');
+      b.className = 'btn good';
+      b.textContent = String(v);
+      b.addEventListener('click', ()=>setCell(v));
+      padEl.appendChild(b);
+    }
+    const clr = document.createElement('button');
+    clr.className = 'btn wide';
+    clr.textContent = 'Clear';
+    clr.addEventListener('click', ()=>setCell(0));
+    padEl.appendChild(clr);
+
+    const chk = document.createElement('button');
+    chk.className = 'btn primary wide';
+    chk.textContent = 'Check';
+    chk.addEventListener('click', checkWin);
+    padEl.appendChild(chk);
+  }
+
+  function updateStats(){
+    mistakesEl.textContent = String(state.mistakes);
+    const filled = state.vals.filter(v=>v !== 0).length;
+    filledEl.textContent = String(filled);
+    goalEl.textContent = String(state.n * state.n);
+  }
+
+  function subgridSeparators(i){
+    const {r,c} = idxToRC(i);
+    const sepR = (c+1) % state.boxW === 0 && (c+1) !== state.n;
+    const sepB = (r+1) % state.boxH === 0 && (r+1) !== state.n;
+    return { sepR, sepB };
+  }
+
+  function renderBoard(){
+    boardEl.style.setProperty('--n', state.n);
+    boardEl.innerHTML = '';
+    const n2 = state.n * state.n;
+
+    for(let i=0;i<n2;i++){
+      const div = document.createElement('div');
+      div.className = 'cell';
+      const v = state.vals[i];
+      if(state.given[i]) div.classList.add('given');
+      if(v) div.textContent = String(v);
+
+      const sep = subgridSeparators(i);
+      if(sep.sepR) div.classList.add('sepR');
+      if(sep.sepB) div.classList.add('sepB');
+
+      div.addEventListener('click', ()=>{
+        if(state.given[i]) return;
+        state.selected = i;
+        applyHighlights();
+      });
+
+      boardEl.appendChild(div);
+    }
+
+    applyHighlights();
+    updateStats();
+  }
+
+  function applyHighlights(){
+    const cells = [...boardEl.querySelectorAll('.cell')];
+    cells.forEach(c=>c.classList.remove('selected','peer','same','bad'));
+
+    const sel = state.selected;
+    if(sel < 0) return;
+
+    cells[sel].classList.add('selected');
+    const sv = state.vals[sel];
+
+    const {r:sr,c:sc} = idxToRC(sel);
+
+    const doHL = highlightEl.checked;
+
+    for(let i=0;i<cells.length;i++){
+      if(i === sel) continue;
+      if(doHL){
+        const {r,c} = idxToRC(i);
+        if(r===sr || c===sc || inSameBox(i, sel)) cells[i].classList.add('peer');
+      }
+      if(sv && state.vals[i] === sv) cells[i].classList.add('same');
+    }
+
+    // auto-check: mark the selected as bad if wrong
+    if(autoCheckEl.checked && sv && state.puzzle && state.puzzle.sol[sel] !== sv){
+      cells[sel].classList.add('bad');
+    }
+  }
+
+  function setCell(v){
+    const i = state.selected;
+    if(i < 0) { setMsg('', 'Tap a square first.'); return; }
+    if(state.given[i]) return;
+
+    state.vals[i] = v;
+    // update only the cell
+    const cell = boardEl.children[i];
+    cell.textContent = v ? String(v) : '';
+
+    if(autoCheckEl.checked && v){
+      const ok = (state.puzzle.sol[i] === v);
+      if(!ok){
+        state.mistakes++;
+        cell.classList.add('bad');
+        setMsg('bad', 'Not quite — try a different number.');
+      } else {
+        cell.classList.remove('bad');
+        setMsg('good', '✅ Nice!');
+      }
+    } else {
+      cell.classList.remove('bad');
+      setMsg('', '');
+    }
+
+    updateStats();
+    applyHighlights();
+    checkWin(false);
+  }
+
+  function loadPuzzle(){
+    const list = PUZZLES[state.diff];
+    state.puzzle = list[randInt(0, list.length-1)];
+    state.n = state.puzzle.n;
+    state.boxW = state.puzzle.boxW;
+    state.boxH = state.puzzle.boxH;
+    state.mistakes = 0;
+    state.selected = -1;
+
+    state.given = state.puzzle.grid.map(v=>v!==0);
+    state.vals  = state.puzzle.grid.slice();
+
+    renderPad();
+    renderBoard();
+    setActiveDiff();
+    setMsg('', 'Good luck!');
+  }
+
+  function reset(){
+    if(!state.puzzle) return;
+    state.vals = state.puzzle.grid.slice();
+    state.mistakes = 0;
+    state.selected = -1;
+    renderBoard();
+    setMsg('', 'Reset done.');
+  }
+
+  function hint(){
+    if(!state.puzzle) return;
+    // find an empty non-given cell
+    const empties = [];
+    for(let i=0;i<state.vals.length;i++){
+      if(!state.given[i] && state.vals[i] === 0) empties.push(i);
+    }
+    if(!empties.length){
+      setMsg('good', 'All filled — press Check!');
+      return;
+    }
+    const pick = empties[randInt(0, empties.length-1)];
+    state.selected = pick;
+    setCell(state.puzzle.sol[pick]);
+    setMsg('good', 'Hint used ✅');
+  }
+
+  function checkWin(showMessage=true){
+    if(!state.puzzle) return false;
+    // all filled and correct
+    for(let i=0;i<state.vals.length;i++){
+      if(state.vals[i] === 0) return false;
+      if(state.vals[i] !== state.puzzle.sol[i]) return false;
+    }
+    if(showMessage){
+      setMsg('good', '🎉 Perfect! You solved it. Tap <strong>New</strong> to play again.');
+    }
+    return true;
+  }
+
+  // Difficulty buttons
+  document.querySelectorAll('[data-diff]').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      state.diff = btn.getAttribute('data-diff');
+      loadPuzzle();
+    });
+  });
+
+  highlightEl.addEventListener('change', applyHighlights);
+  autoCheckEl.addEventListener('change', applyHighlights);
+
+  newBtn.addEventListener('click', loadPuzzle);
+  resetBtn.addEventListener('click', reset);
+  hintBtn.addEventListener('click', hint);
+
+  // Start on Easy
+  loadPuzzle();
+})();
+</script>
+
+</body>
+</html>
