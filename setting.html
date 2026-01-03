@@ -1,0 +1,534 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Settings – Primary Steps</title>
+
+<!-- Global settings (theme/audio) -->
+<script src="assets/js/ps-settings.js"></script>
+
+<style>
+:root{
+  --bg:#0b0d12;
+  --panel:#121621;
+  --panel2:#0f1320;
+  --text:#eef2ff;
+  --muted:#a9b2c7;
+  --brand:#7dd3fc;
+  --border:rgba(255,255,255,.1);
+  --radius:18px;
+  --shadow:0 12px 40px rgba(0,0,0,.35);
+}
+
+:root[data-theme="light"]{
+  --bg:#f7f9ff;
+  --panel:rgba(255,255,255,.78);
+  --panel2:rgba(255,255,255,.65);
+  --text:#0f172a;
+  --muted:rgba(15,23,42,.65);
+  --brand:#2563eb;
+  --border:rgba(15,23,42,.12);
+  --shadow:0 12px 40px rgba(15,23,42,.10);
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+
+body{
+  font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(900px 500px at 20% 0%, rgba(125,211,252,.18), transparent 60%),
+    radial-gradient(900px 500px at 85% 20%, rgba(167,139,250,.18), transparent 60%),
+    var(--bg);
+  color:var(--text);
+}
+
+/* Reduce motion */
+:root[data-reduce-motion] *{
+  animation:none !important;
+  transition:none !important;
+  scroll-behavior:auto !important;
+}
+
+/* Large UI */
+:root[data-large-ui]{
+  font-size:18px;
+}
+:root[data-large-ui] .pill{ padding:10px 16px; }
+:root[data-large-ui] .setting{ padding:18px; }
+:root[data-large-ui] .btn{ padding:14px 18px; }
+
+/* HEADER */
+header{
+  position:sticky;
+  top:0;
+  z-index:10;
+  backdrop-filter:blur(12px);
+  background:rgba(18,22,33,.75);
+  border-bottom:1px solid var(--border);
+}
+:root[data-theme="light"] header{
+  background:rgba(255,255,255,.75);
+}
+.topbar{
+  max-width:1150px;
+  margin:auto;
+  padding:12px 18px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+}
+.brand{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  text-decoration:none;
+  color:var(--text);
+}
+.brand img{
+  height:52px;          /* 🔒 LOCKED SIZE */
+  width:auto;
+  filter:drop-shadow(0 10px 25px rgba(125,211,252,.25));
+}
+:root[data-theme="light"] .brand img{
+  filter:drop-shadow(0 10px 25px rgba(37,99,235,.20));
+}
+.brand span{
+  font-weight:750;
+  font-size:14px;
+  letter-spacing:.04em;
+}
+
+.nav{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.pill{
+  text-decoration:none;
+  color:var(--text);
+  padding:9px 14px;
+  border-radius:999px;
+  background:rgba(15,19,32,.7);
+  border:1px solid var(--border);
+  font-size:13px;
+  font-weight:650;
+  transition:.2s ease;
+}
+:root[data-theme="light"] .pill{
+  background:rgba(15,23,42,.04);
+}
+.pill:hover{
+  transform:translateY(-1px);
+  border-color:rgba(125,211,252,.35);
+}
+
+/* LAYOUT */
+.container{
+  max-width:1150px;
+  margin:auto;
+  padding:28px 18px 60px;
+}
+.hero{
+  margin-bottom:18px;
+}
+.hero h1{
+  margin:0 0 6px;
+  font-size:clamp(22px,3vw,30px);
+}
+.hero p{
+  margin:0;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.panel{
+  background:linear-gradient(180deg, rgba(18,22,33,.95), rgba(11,13,18,.85));
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  padding:22px;
+}
+:root[data-theme="light"] .panel{
+  background:linear-gradient(180deg, rgba(255,255,255,.88), rgba(255,255,255,.70));
+}
+
+/* Setting row */
+.setting{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:16px;
+  border-radius:16px;
+  background:rgba(15,19,32,.7);
+  border:1px solid rgba(255,255,255,.1);
+  margin-bottom:12px;
+}
+:root[data-theme="light"] .setting{
+  background:rgba(15,23,42,.04);
+  border-color:rgba(15,23,42,.10);
+}
+.setting:last-child{margin-bottom:0}
+
+.setting h3{
+  margin:0 0 4px;
+  font-size:15px;
+}
+.setting p{
+  margin:0;
+  color:var(--muted);
+  font-size:13px;
+}
+
+.right{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+  justify-content:flex-end;
+}
+
+/* Toggle */
+.toggle{
+  appearance:none;
+  width:48px;
+  height:26px;
+  border-radius:999px;
+  background:#2a2f45;
+  position:relative;
+  cursor:pointer;
+  outline:none;
+  transition:.2s ease;
+}
+:root[data-theme="light"] .toggle{
+  background:rgba(15,23,42,.18);
+}
+.toggle:checked{
+  background:var(--brand);
+}
+.toggle::after{
+  content:"";
+  position:absolute;
+  top:3px;
+  left:3px;
+  width:20px;
+  height:20px;
+  background:#fff;
+  border-radius:50%;
+  transition:.2s ease;
+}
+.toggle:checked::after{
+  transform:translateX(22px);
+}
+
+/* Segmented theme buttons */
+.segment{
+  display:inline-flex;
+  border:1px solid var(--border);
+  border-radius:999px;
+  overflow:hidden;
+  background:rgba(255,255,255,.04);
+}
+:root[data-theme="light"] .segment{
+  background:rgba(15,23,42,.03);
+}
+.segbtn{
+  border:0;
+  background:transparent;
+  color:var(--text);
+  padding:9px 12px;
+  font-weight:750;
+  cursor:pointer;
+  font-size:13px;
+}
+.segbtn.active{
+  background:linear-gradient(180deg, rgba(125,211,252,.20), rgba(255,255,255,.06));
+}
+:root[data-theme="light"] .segbtn.active{
+  background:linear-gradient(180deg, rgba(37,99,235,.16), rgba(255,255,255,.40));
+}
+
+/* Range */
+.range{
+  width:180px;
+  accent-color: var(--brand);
+}
+.voltag{
+  font-weight:850;
+  font-size:12px;
+  padding:7px 10px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.05);
+}
+
+/* Button */
+.btn{
+  padding:12px 16px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.15);
+  background:rgba(255,255,255,.06);
+  color:var(--text);
+  font-weight:800;
+  cursor:pointer;
+  transition:.2s ease;
+}
+:root[data-theme="light"] .btn{
+  background:rgba(15,23,42,.04);
+  border-color:rgba(15,23,42,.12);
+}
+.btn:hover{
+  background:rgba(125,211,252,.12);
+  border-color:rgba(125,211,252,.35);
+}
+.btn.danger:hover{
+  background:rgba(239,68,68,.12);
+  border-color:rgba(239,68,68,.35);
+}
+
+.note{
+  margin-top:14px;
+  padding:14px 16px;
+  border-radius:16px;
+  border:1px solid var(--border);
+  background:rgba(255,255,255,.04);
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.5;
+}
+
+@media (max-width:520px){
+  .brand span{display:none}
+  .range{width:160px}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="topbar">
+    <a href="index.html" class="brand">
+      <img src="assets/primary-steps-logo.png" alt="Primary Steps">
+      <span>Primary Steps</span>
+    </a>
+    <nav class="nav">
+      <a class="pill" href="index.html">Home</a>
+      <a class="pill" href="progress.html">Progress</a>
+      <a class="pill" href="spelling.html">Spelling</a>
+      <a class="pill" href="settings.html">Settings</a>
+    </nav>
+  </div>
+</header>
+
+<main class="container">
+  <section class="hero">
+    <h1>Settings</h1>
+    <p>Simple controls for sound, comfort, and appearance.</p>
+  </section>
+
+  <section class="panel">
+
+    <div class="setting">
+      <div>
+        <h3>Theme</h3>
+        <p>Choose dark, light, or follow your device.</p>
+      </div>
+      <div class="right">
+        <div class="segment" role="group" aria-label="Theme">
+          <button class="segbtn" id="themeSystem" type="button">System</button>
+          <button class="segbtn" id="themeDark" type="button">Dark</button>
+          <button class="segbtn" id="themeLight" type="button">Light</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="setting">
+      <div>
+        <h3>Sound effects</h3>
+        <p>Turn activity sounds on or off.</p>
+      </div>
+      <div class="right">
+        <input class="toggle" id="soundEnabled" type="checkbox" checked>
+      </div>
+    </div>
+
+    <div class="setting">
+      <div>
+        <h3>Volume</h3>
+        <p>Sets volume for sounds and voice.</p>
+      </div>
+      <div class="right">
+        <span class="voltag" id="volTag">90%</span>
+        <input class="range" id="volume" type="range" min="0" max="100" value="90">
+      </div>
+    </div>
+
+    <div class="setting">
+      <div>
+        <h3>Voice prompts</h3>
+        <p>Enable spoken guidance and welcomes.</p>
+      </div>
+      <div class="right">
+        <input class="toggle" id="voiceEnabled" type="checkbox" checked>
+      </div>
+    </div>
+
+    <div class="setting">
+      <div>
+        <h3>Auto‑play welcomes</h3>
+        <p>Plays welcome voice the first time you open a page.</p>
+      </div>
+      <div class="right">
+        <input class="toggle" id="autoplayWelcome" type="checkbox" checked>
+      </div>
+    </div>
+
+    <div class="setting">
+      <div>
+        <h3>Reduce motion</h3>
+        <p>Turns off animations (helpful for sensitive children).</p>
+      </div>
+      <div class="right">
+        <input class="toggle" id="reduceMotion" type="checkbox">
+      </div>
+    </div>
+
+    <div class="setting">
+      <div>
+        <h3>Large buttons & text</h3>
+        <p>Makes the UI easier on tablets and smaller hands.</p>
+      </div>
+      <div class="right">
+        <input class="toggle" id="largeUI" type="checkbox">
+      </div>
+    </div>
+
+    <div class="setting">
+      <div>
+        <h3>Reset stars</h3>
+        <p>Clear progress stored on this device.</p>
+      </div>
+      <div class="right">
+        <button class="btn danger" id="resetStars" type="button">Reset ⭐</button>
+      </div>
+    </div>
+
+    <div class="setting">
+      <div>
+        <h3>Replay welcome messages</h3>
+        <p>Allows welcome voice to play again on Home, Letters, and Numbers.</p>
+      </div>
+      <div class="right">
+        <button class="btn" id="replayWelcomes" type="button">Replay 🔊</button>
+      </div>
+    </div>
+
+    <div class="setting" style="margin-bottom:0;">
+      <div>
+        <h3>Reset all settings</h3>
+        <p>Back to default: theme, sound, voice, comfort options.</p>
+      </div>
+      <div class="right">
+        <button class="btn danger" id="resetAll" type="button">Reset</button>
+      </div>
+    </div>
+
+    <div class="note">
+      <strong>Tip:</strong> To make every page follow these settings, add this line inside the <code>&lt;head&gt;</code> of each page:
+      <br><code>&lt;script src="assets/js/ps-settings.js"&gt;&lt;/script&gt;</code>
+    </div>
+
+  </section>
+</main>
+
+<script>
+(function () {
+  if (!window.PSSettings) {
+    console.warn("PSSettings not found. Make sure assets/js/ps-settings.js exists.");
+    return;
+  }
+
+  const $ = (id) => document.getElementById(id);
+
+  const el = {
+    themeSystem: $("themeSystem"),
+    themeDark: $("themeDark"),
+    themeLight: $("themeLight"),
+    soundEnabled: $("soundEnabled"),
+    volume: $("volume"),
+    volTag: $("volTag"),
+    voiceEnabled: $("voiceEnabled"),
+    autoplayWelcome: $("autoplayWelcome"),
+    reduceMotion: $("reduceMotion"),
+    largeUI: $("largeUI"),
+    resetStars: $("resetStars"),
+    replayWelcomes: $("replayWelcomes"),
+    resetAll: $("resetAll"),
+  };
+
+  function setThemeButtons(theme) {
+    [el.themeSystem, el.themeDark, el.themeLight].forEach(b => b.classList.remove("active"));
+    if (theme === "dark") el.themeDark.classList.add("active");
+    else if (theme === "light") el.themeLight.classList.add("active");
+    else el.themeSystem.classList.add("active");
+  }
+
+  function render() {
+    const cur = window.PSSettings.load();
+
+    setThemeButtons(cur.theme);
+
+    el.soundEnabled.checked = !!cur.soundEnabled;
+    const pct = Math.round((Number(cur.volume ?? 1)) * 100);
+    el.volume.value = String(pct);
+    el.volTag.textContent = pct + "%";
+
+    el.voiceEnabled.checked = !!cur.voiceEnabled;
+    el.autoplayWelcome.checked = !!cur.autoplayWelcome;
+
+    el.reduceMotion.checked = !!cur.reduceMotion;
+    el.largeUI.checked = !!cur.largeUI;
+  }
+
+  render();
+
+  el.themeSystem.addEventListener("click", () => { window.PSSettings.set({ theme: "system" }); render(); });
+  el.themeDark.addEventListener("click", () => { window.PSSettings.set({ theme: "dark" }); render(); });
+  el.themeLight.addEventListener("click", () => { window.PSSettings.set({ theme: "light" }); render(); });
+
+  el.soundEnabled.addEventListener("change", () => { window.PSSettings.set({ soundEnabled: el.soundEnabled.checked }); render(); });
+  el.voiceEnabled.addEventListener("change", () => { window.PSSettings.set({ voiceEnabled: el.voiceEnabled.checked }); render(); });
+  el.autoplayWelcome.addEventListener("change", () => { window.PSSettings.set({ autoplayWelcome: el.autoplayWelcome.checked }); render(); });
+  el.reduceMotion.addEventListener("change", () => { window.PSSettings.set({ reduceMotion: el.reduceMotion.checked }); render(); });
+  el.largeUI.addEventListener("change", () => { window.PSSettings.set({ largeUI: el.largeUI.checked }); render(); });
+
+  el.volume.addEventListener("input", () => {
+    const v = Number(el.volume.value) / 100;
+    window.PSSettings.set({ volume: v });
+    el.volTag.textContent = Math.round(v * 100) + "%";
+  });
+
+  el.resetStars.addEventListener("click", () => {
+    localStorage.removeItem("ps_stars");
+    alert("Stars reset ✅");
+  });
+
+  el.replayWelcomes.addEventListener("click", () => {
+    window.PSSettings.clearWelcomeFlags();
+    alert("Welcome messages will play again ✅");
+  });
+
+  el.resetAll.addEventListener("click", () => {
+    window.PSSettings.reset();
+    alert("Settings reset ✅");
+    render();
+  });
+})();
+</script>
+
+</body>
+</html>
