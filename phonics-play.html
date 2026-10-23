@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="ps-unified ps-game" data-game="phonics">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -209,6 +209,8 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
 <script src="assets/js/primary-steps.js" defer></script>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
+<link rel="stylesheet" href="assets/css/learning-game.css?v=1">
+<script src="assets/js/learning-game.js?v=1" defer></script>
 </head>
 <body>
 
@@ -235,7 +237,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
 <section class="hero">
   <div class="hwrap">
     <h1 id="pageTitle">Phonics</h1>
-    <p class="lead" id="pageLead">Press New to start.</p>
+    <p class="lead" id="pageLead">Listen and choose.</p>
   </div>
 </section>
 
@@ -243,22 +245,23 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
   <div class="card" aria-label="Phonics activity">
     <div class="head">
       <div class="pill" id="actPill">Loading…</div>
-      <div class="row">
-        <div class="field">
-          <label for="difficulty">Difficulty</label>
-          <select id="difficulty">
-            <option value="easy">Easy</option>
-            <option value="medium" selected>Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </div>
-        <button class="btn primary" id="newBtn" type="button">New</button>
-        <button class="btn" id="resetBtn" type="button">Reset</button>
+      <div class="ps-game-tools">
+        <button class="btn primary" id="newBtn" type="button">Next →</button>
+        <button class="btn" id="resetBtn" type="button">↻ Try again</button>
       </div>
+      <details class="ps-game-advanced">
+        <summary>Grown-ups: difficulty</summary>
+        <div class="field"><label for="difficulty">Level</label>
+        <select id="difficulty">
+          <option value="easy" selected>Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select></div>
+      </details>
     </div>
     <div class="body">
       <div class="stage" id="stage"></div>
-      <div class="msg" id="message">Press <strong>New</strong> to start.</div>
+      <div class="msg" id="message" role="status" aria-live="polite">Choose a picture to play.</div>
     </div>
   </div>
 </section>
@@ -293,9 +296,10 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
   function speak(text){
     // optional: browser speech. If blocked, silently ignore.
     try{
+      const prefs=window.PSSettings?.load?.()||{soundEnabled:true,voiceEnabled:true,volume:.9};
+      if(!prefs.soundEnabled||!prefs.voiceEnabled)return;
       const u = new SpeechSynthesisUtterance(text);
-      u.rate = 0.9;
-      u.pitch = 1.0;
+      u.lang="en-GB";u.rate=.84;u.pitch=1;u.volume=prefs.volume??.9;
       speechSynthesis.cancel();
       speechSynthesis.speak(u);
     }catch(e){}
@@ -305,7 +309,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
     {
       key:'soundmatch',
       name:'Sound Match',
-      lead:'Tap the letter that matches the sound. (You can press “Hear sound” too.)',
+      lead:'Tap Listen, then choose a letter.',
       build: ()=>({ target:'', options:[], done:false }),
       newRound:(st, diff)=>{
         const easy = ['s','a','t','p','i','n'];
@@ -323,12 +327,11 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
         setMsg('', `Listen and choose the correct letter sound.`);
       },
       render:(st)=>{
-        const show = (st.target.length===1) ? st.target.toUpperCase() : st.target;
         ui.stage.innerHTML = `
-          <div class="big">${show}</div>
-          <div class="smallMuted">Try: say the sound (<strong>not</strong> the letter name). Example: “ssss” for S.</div>
+          <div class="big" aria-hidden="true">🔊</div>
+          <div class="smallMuted">Listen. Tap the matching letter.</div>
           <div class="row" style="justify-content:center;margin-top:10px;">
-            <button class="btn good" id="hearBtn" type="button">Hear sound</button>
+            <button class="btn good" id="hearBtn" type="button">🔊 Hear letter</button>
           </div>
           <div class="choiceGrid" id="choices"></div>
         `;
@@ -340,17 +343,18 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
         const wrap = ui.stage.querySelector('#choices');
         st.options.forEach(opt=>{
           const pretty = (opt.length===1) ? opt.toUpperCase() : opt;
-          const el = document.createElement('div');
+          const el = document.createElement('button');
+          el.type = 'button';
           el.className = 'choice';
           el.innerHTML = `<span style="font-size:22px">${pretty}</span><span class="tag">Choose</span>`;
           el.addEventListener('click', ()=>{
             if(st.done) return;
-            st.done = true;
+            st.done = (opt === st.target);
             if(opt === st.target){
-              setMsg('good', `✅ Correct! Press <strong>New</strong> for another.`);
+              setMsg('good', `✅ Well done! Tap <strong>Next</strong> when ready.`);
             } else {
               const answer = (st.target.length===1) ? st.target.toUpperCase() : st.target;
-              setMsg('bad', `Not quite. The correct answer was <strong>${answer}</strong>. Press <strong>New</strong> to try again.`);
+              setMsg('bad', `Try another letter. Tap Listen again if you need to.`);
             }
           });
           wrap.appendChild(el);
@@ -430,8 +434,10 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
           const el = ui.stage.querySelector('#'+id);
           el.innerHTML = '';
           arr.forEach(v=>{
-            const b = document.createElement('div');
+            const b = document.createElement('button');
+            b.type = 'button';
             b.className = 'block' + ((st[which]===v) ? ' on' : '');
+            b.setAttribute('aria-pressed',String(st[which]===v));
             b.textContent = (v.length===1) ? v.toUpperCase() : v;
             b.addEventListener('click', ()=>{
               if(st.done) return;
@@ -473,11 +479,11 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
             return;
           }
           const built = st.onset + st.vowel + st.coda;
-          st.done = true;
+          st.done = (built === st.target);
           if(built === st.target){
-            setMsg('good', `✅ Correct! You built <strong>${built.toUpperCase()}</strong>. Press <strong>New</strong> for another.`);
+            setMsg('good', `✅ Well done! You made <strong>${built.toUpperCase()}</strong>. Tap <strong>Next</strong> when ready.`);
           } else {
-            setMsg('bad', `Not quite. You made <strong>${built.toUpperCase()}</strong>. The target was <strong>${st.target.toUpperCase()}</strong>. Press <strong>New</strong> to try again.`);
+            setMsg('bad', `Try again. Change one sound and check.`);
           }
         });
       }
@@ -502,7 +508,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
   }
   function reset(){
     newRound();
-    setMsg('', `Reset done. Press <strong>New</strong> or keep going.`);
+    setMsg('', `Try again at your own pace.`);
   }
 
   ui.newBtn.addEventListener('click', newRound);
