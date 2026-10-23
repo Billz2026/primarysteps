@@ -595,3 +595,71 @@ html.ps-unified .ps-shell__inner{min-height:106px}
  html.ps-unified .ps-brand__name{font-size:20px}
  html.ps-unified .ps-brand__tagline{display:none}
 }
+
+/* Independent learning support — parent-controlled Simple Play + tap-to-hear help. */
+html.ps-unified .ps-sr-only{
+ position:absolute!important;width:1px!important;height:1px!important;
+ overflow:hidden!important;clip:rect(0,0,0,0)!important;
+ white-space:nowrap!important;border:0!important;padding:0!important;margin:-1px!important;
+}
+html.ps-unified .ps-spoken-help__wrap{
+ display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-top:14px;
+}
+html.ps-unified .ps-spoken-help{
+ appearance:none;display:inline-flex;align-items:center;justify-content:center;
+ min-height:52px;min-width:116px;padding:11px 21px;border-radius:16px;
+ background:#FFFFFF;border:2px solid #B7DCD8;color:#226A73;
+ font:850 16px/1.2 ui-rounded,"Trebuchet MS",system-ui,sans-serif;
+ box-shadow:0 5px 13px rgba(40,86,92,.07);cursor:pointer;touch-action:manipulation;
+}
+html.ps-unified .ps-spoken-help:is(:hover,:focus-visible){
+ border-color:#227780;outline-offset:3px;
+}
+html.ps-unified .ps-spoken-help__note{
+ color:var(--ps-muted);font-size:13px;font-weight:700;
+}
+html.ps-unified[data-simple-play="on"].ps-game :is(.choice,.block,.btn,.ps-game-listen),
+html.ps-unified[data-simple-play="on"].ps-v4 :is(.choice,.tile,.tileBtn,.cardBtn,.btn){
+ min-height:59px;
+}
+html.ps-unified[data-simple-play="on"].ps-game .choice{
+ font-size:clamp(32px,5vw,48px)!important;min-height:96px!important;
+}
+html.ps-unified[data-simple-play="on"].ps-v4[data-page="letters-sounds.html"] .choice{
+ min-height:104px!important;font-size:45px!important;box-sizing:border-box;
+}
+html.ps-unified[data-simple-play="on"].ps-v4[data-page="letters-find.html"] .tiles{
+ gap:15px;
+}
+html.ps-unified[data-simple-play="on"].ps-v4[data-page="letters-find.html"] .tile{
+ min-height:92px;min-width:65px;touch-action:manipulation;
+}
+html.ps-unified[data-simple-play="on"].ps-v4[data-section="memory"] .cardBtn{
+ min-height:76px;min-width:65px;touch-action:manipulation;
+}
+html.ps-unified[data-simple-play="on"].ps-game[data-game="count"] #choices{
+ grid-template-columns:repeat(3,minmax(0,1fr));
+}
+html.ps-unified[data-simple-play="on"].ps-game[data-game="count"] #choices .choice{
+ font-size:clamp(30px,4vw,46px)!important;
+}
+html.ps-unified[data-simple-play="on"].ps-v4[data-page="settings.html"] #simplePlaySetting{
+ border:2px solid #B1D9D0!important;background:#EFF9F6!important;
+}
+html.ps-unified[data-simple-play="on"] .ps-spoken-help{
+ font-size:17px;min-height:57px;
+}
+@media(max-width:650px){
+ html.ps-unified .ps-spoken-help__wrap{margin-top:11px}
+ html.ps-unified .ps-spoken-help{min-height:49px;font-size:15px;padding:9px 16px}
+ html.ps-unified[data-simple-play="on"].ps-game[data-game="count"] #choices{gap:8px}
+ html.ps-unified[data-simple-play="on"].ps-game[data-game="count"] #choices .choice{
+  min-width:0;min-height:83px!important;font-size:29px!important;
+ }
+}
+:root.ps-unified[data-theme="dark"] .ps-spoken-help{
+ background:var(--ps-surface);border-color:var(--ps-edge);color:var(--ps-ink);
+}
+:root.ps-unified[data-theme="dark"][data-simple-play="on"] #simplePlaySetting{
+ background:var(--ps-surface)!important;border-color:var(--ps-edge)!important;
+}
