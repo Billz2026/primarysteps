@@ -305,6 +305,9 @@ header{
   .range{width:160px}
 }
 </style>
+<script>document.documentElement.classList.add("ps-unified");</script>
+<link rel="stylesheet" href="assets/css/primary-steps.css">
+<script src="assets/js/primary-steps.js" defer></script>
 </head>
 
 <body>
@@ -380,7 +383,7 @@ header{
     <div class="setting">
       <div>
         <h3>Auto‑play welcomes</h3>
-        <p>Plays welcome voice the first time you open a page.</p>
+        <p>Optional welcome recordings on supported pages. Off by default.</p>
       </div>
       <div class="right">
         <input class="toggle" id="autoplayWelcome" type="checkbox" checked>
@@ -437,10 +440,7 @@ header{
       </div>
     </div>
 
-    <div class="note">
-      <strong>Tip:</strong> To make every page follow these settings, add this line inside the <code>&lt;head&gt;</code> of each page:
-      <br><code>&lt;script src="assets/js/ps-settings.js"&gt;&lt;/script&gt;</code>
-    </div>
+    
 
   </section>
 </main>

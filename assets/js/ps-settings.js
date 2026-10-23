@@ -6,11 +6,11 @@
   const KEY = "ps_settings_v1";
 
   const DEFAULTS = {
-    theme: "system",          // "dark" | "light" | "system"
+    theme: "light",          // "dark" | "light" | "system"
     soundEnabled: true,
     volume: 0.9,              // 0.0 - 1.0
     voiceEnabled: true,
-    autoplayWelcome: true,
+    autoplayWelcome: false,
     reduceMotion: false,
     largeUI: false,
   };
