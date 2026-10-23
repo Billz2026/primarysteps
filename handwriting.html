@@ -169,11 +169,12 @@
   }
 </style>
 <script src="assets/js/ps-settings.js"></script>
-<script>document.documentElement.classList.add("ps-unified");</script>
+<script>document.documentElement.classList.add("ps-unified","ps-handwriting-game");</script>
 <link rel="stylesheet" href="assets/css/primary-steps.css">
 <script src="assets/js/primary-steps.js" defer></script>
 <link rel="icon" type="image/svg+xml" href="assets/primary-steps-favicon.svg">
 <link rel="alternate icon" href="assets/primary-steps-icon-512.png" type="image/png">
+<link rel="stylesheet" href="assets/css/subject-menu.css?v=2">
 </head>
 <body>
 <header>
@@ -203,18 +204,15 @@
 
 <section class="hero">
   <div class="hwrap">
-    <h1>Handwriting Practice</h1>
-    <p class="lead">
-      Trace the guide word on the board. Use <strong>Clear</strong> if you need a fresh start, then tap <strong>Next</strong> to move on.
-      This matches the calm “Number Tracing” style (no auto-skip).
-    </p>
+    <h1>Trace a Word ✏️</h1>
+    <p class="lead">Trace the word. Tap <strong>Next</strong> when you are ready.</p>
   </div>
 </section>
 
 <section class="grid">
   <div class="card" aria-label="Tracing board">
     <div class="head">
-      <div class="pill">Trace on the board</div>
+      <div class="pill">My writing board</div>
       <div class="row">
         <button class="btn" id="clearBtn" type="button">Clear</button>
         <button class="btn primary" id="prevBtn" type="button">Prev</button>
@@ -225,7 +223,7 @@
       <div class="canvasWrap">
         <div class="guideWord" id="guideWord" aria-live="polite">apple</div>
         <canvas id="pad" width="1200" height="720" aria-label="Drawing pad"></canvas>
-        <div class="small">Tip: use finger on tablet, or mouse on desktop.</div>
+        <div class="small">Use your finger or mouse.</div>
       </div>
     </div>
   </div>
@@ -268,7 +266,7 @@
       </div>
 
       <div class="hint">
-        No scoring—just calm practice. If you want to repeat a word, press <strong>Prev</strong>.
+        Take your time. Use <strong>Prev</strong> to practise again.
       </div>
     </div>
   </div>

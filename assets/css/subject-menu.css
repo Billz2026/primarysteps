@@ -161,3 +161,43 @@ html.ps-subject-page .ps-sr-only{
 :root.ps-unified[data-contrast=high].ps-subject-page :is(.ps-choice__name,.ps-subject-hero h1,.ps-subject-hero p){color:#101820!important}
 @media(prefers-reduced-motion:reduce){html.ps-subject-page .ps-choice{transition:none!important}html.ps-subject-page .ps-choice:hover{transform:none!important}}
 :root.ps-unified[data-reduce-motion].ps-subject-page .ps-choice:hover{transform:none!important}
+
+
+/* Handwriting is already a working activity: visually refresh without adding another menu. */
+html.ps-handwriting-game .hero{padding:28px 20px 12px}
+html.ps-handwriting-game .hero .hwrap{
+ max-width:1290px;padding:24px 30px;background:linear-gradient(110deg,#E2F4EF,#C5E5D9);
+ border:2px solid #B7DBCF;border-radius:26px;
+ box-shadow:0 8px 24px rgba(34,72,84,.07);
+}
+html.ps-handwriting-game .hero h1{
+ margin:0 0 8px;font:900 clamp(32px,4vw,47px)/1.12 ui-rounded,"Trebuchet MS",system-ui,sans-serif;
+ color:#29495A;letter-spacing:-.035em;
+}
+html.ps-handwriting-game .hero p.lead{
+ font-size:clamp(16px,1.8vw,19px);font-weight:700;max-width:700px;color:#476573;line-height:1.5;
+}
+html.ps-handwriting-game .grid{max-width:1330px;gap:20px;margin:18px auto 35px;grid-template-columns:minmax(0,1.35fr) minmax(290px,.65fr)}
+html.ps-handwriting-game .grid .card{border-radius:25px;border:2px solid #D5E8E5!important;box-shadow:0 9px 25px rgba(41,83,88,.075)}
+html.ps-handwriting-game .grid .card .head{background:#F1FAF7;border-bottom:1px solid #D5E8E5}
+html.ps-handwriting-game .grid .card .pill{background:#DDF2EA!important;color:#1F6C70!important;font-size:15px!important;font-weight:900!important}
+html.ps-handwriting-game .grid .card .btn{min-height:49px;border-radius:15px!important;font-size:15px!important;padding:11px 14px}
+html.ps-handwriting-game #guideWord{color:#3B7E79;font-family:ui-rounded,"Trebuchet MS",system-ui,sans-serif;text-shadow:none;font-size:clamp(43px,7vw,80px)}
+html.ps-handwriting-game #pad{
+ height:390px;display:block;background:repeating-linear-gradient(to bottom,#FFFFFF 0px,#FFFFFF 48px,#E2F1F2 49px,#FFFFFF 50px)!important;
+ border:2px solid #C6E0E0!important;border-radius:21px;
+}
+html.ps-handwriting-game .hint{font-size:14px;line-height:1.4}
+html.ps-handwriting-game .small{font-size:13px}
+@media(max-width:980px){html.ps-handwriting-game .grid{grid-template-columns:1fr}}
+@media(max-width:620px){
+ html.ps-handwriting-game .hero{padding:14px 12px 6px}
+ html.ps-handwriting-game .hero .hwrap{padding:18px}
+ html.ps-handwriting-game .grid{padding:0 12px;gap:12px}
+ html.ps-handwriting-game .grid .card .head{flex-wrap:wrap}
+ html.ps-handwriting-game #pad{height:330px}
+}
+:root.ps-unified[data-theme=dark].ps-handwriting-game .hero .hwrap,
+:root.ps-unified[data-theme=dark].ps-handwriting-game .grid .card .head{background:var(--ps-surface)!important;border-color:var(--ps-edge)}
+:root.ps-unified[data-theme=dark].ps-handwriting-game .hero :is(h1,p.lead){color:var(--ps-ink)}
+:root.ps-unified[data-contrast=high].ps-handwriting-game .hero .hwrap{background:#FFF;border-color:#536475}
