@@ -1,9 +1,9 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="ps-unified ps-game" data-game="count">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Count &amp; Tap • Primary Steps</title>
+<title>Count Numbers • Primary Steps</title>
 <style>
   :root{
     --bg:#0b0d12;
@@ -237,6 +237,8 @@
 
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
+<link rel="stylesheet" href="assets/css/learning-game.css?v=1">
+<script src="assets/js/learning-game.js?v=1" defer></script>
 </head>
 <body>
 <header>
@@ -261,55 +263,53 @@
 
 <main class="container">
   <section class="hero">
-    <h1>Count &amp; Tap</h1>
-    <p>Count what you see, then tap the correct number. For bigger numbers we use <strong>tens + ones</strong> blocks so it stays easy and fun.</p>
+    <h1>🍎 Let’s Count!</h1>
+    <p>Count the dots. Tap your answer.</p>
   </section>
 
-  <section class="grid">
+  <section class="grid ps-count-grid">
     <!-- LEFT: Question -->
     <div class="card">
       <div class="head">
-        <div class="pill">Question</div>
+        <div class="pill">Count the dots</div>
         <div class="controls">
-          <button class="btn" id="newBtn">New</button>
-          <button class="btn primary" id="sayBtn" title="Read the number aloud">🔊 Say</button>
-          <span class="divider"></span>
-          <button class="btn primary" data-range="0" id="r1">1–20</button>
-          <button class="btn" data-range="1" id="r2">21–50</button>
-          <button class="btn" data-range="2" id="r3">51–100</button>
+          <button class="btn primary" id="newBtn" type="button">Next →</button>
+          <button class="btn" id="sayBtn" type="button" title="Repeat counting instructions">🔊 Listen</button>
+          
         </div>
       </div>
+      <details class="ps-game-advanced"><summary>Grown-ups: number range</summary><div class="controls"><button class="btn primary" data-range="0" id="r1" type="button">1–20</button><button class="btn" data-range="1" id="r2" type="button">21–50</button><button class="btn" data-range="2" id="r3" type="button">51–100</button></div></details>
       <div class="body">
         <div class="scene">
           <div class="sceneTitle">
-            <div class="q" id="questionText">How many are there?</div>
+            <div class="q" id="questionText">How many?</div>
             <button class="btn ghost" id="hintBtn" title="Show a hint">Hint</button>
           </div>
 
           <!-- dynamic -->
           <div id="visualArea"></div>
 
-          <div class="feedback" id="feedback">Count carefully, then choose a number.</div>
+          <div class="feedback" id="feedback" role="status" aria-live="polite">Tap the number you counted.</div>
         </div>
 
-        <div class="tagbar">
+        <details class="ps-game-advanced"><summary>My stars and progress</summary><div class="tagbar">
           <div class="tag">Streak: <strong id="streak">0</strong></div>
           <div class="tag">Correct: <strong id="correct">0</strong></div>
           <div class="tag">Tries: <strong id="tries">0</strong></div>
           <div class="tag">Stars earned: <strong id="stars">0</strong></div>
-        </div>
+        </div></details>
       </div>
     </div>
 
     <!-- RIGHT: Choices -->
     <div class="card">
       <div class="head">
-        <div class="pill">Choose the answer</div>
+        <div class="pill">Tap the number</div>
       </div>
       <div class="body">
         <div class="row" id="choices"></div>
         <div class="feedback" style="margin-top:12px">
-          Tip: For numbers above 20, count the <strong>tens blocks</strong> first, then add the extra ones.
+          Take your time. You can tap Hint.
         </div>
       </div>
     </div>
@@ -344,6 +344,7 @@
   let streak = 0;
   let stars = 0;
   let hinted = false;
+  let roundFinished = false;
 
   // Progress (shared idea with other pages)
   const LS_KEY = "ps_numbers_count_progress_v1";
@@ -471,11 +472,12 @@
   }
 
   function newRound(){
+    roundFinished = false;
     const r = ranges[rangeIndex];
     target = randInt(r.min, r.max);
     buildVisual();
     buildChoices();
-    feedbackEl.textContent = "Count carefully, then choose a number.";
+    feedbackEl.textContent = "Tap the number you counted.";
     save();
   }
 
@@ -491,32 +493,28 @@
   }
 
   function choose(v){
+    if(roundFinished)return;
     tries++;
     if(v === target){
+      roundFinished=true;
       correct++;
       streak++;
-      feedbackEl.textContent = "✅ Nice! That’s " + target + ". Tap “New” for the next one.";
-      if(streak % 5 === 0) awardStar(); // every 5 in a row
-      buildChoices(); // refresh buttons so kids don't double tap
-      newRound();
+      feedbackEl.textContent = "✅ Well done! Tap Next when you're ready.";
+      if(streak % 5 === 0)awardStar();
+      choicesEl.querySelectorAll("button").forEach(b=>{b.disabled=true;b.setAttribute("aria-disabled","true")});
     } else {
-      streak = 0;
-      feedbackEl.textContent = "Try again — count carefully.";
+      streak=0;
+      feedbackEl.textContent="Try again. Count slowly.";
     }
-    sync();
-    save();
+    sync();save();
   }
 
-  function speakNumber(n){
-    try{
-      const u = new SpeechSynthesisUtterance(String(n));
-      u.rate = 0.9;
-      u.pitch = 1.0;
-      speechSynthesis.cancel();
-      speechSynthesis.speak(u);
-    }catch(e){
-      // silent fail
-    }
+  function speakInstructions(){
+    const p=window.PSSettings?.load?.()||{soundEnabled:true,voiceEnabled:true,volume:.9};
+    if(!p.soundEnabled||!p.voiceEnabled||!("speechSynthesis" in window))return;
+    const u=new SpeechSynthesisUtterance("Count the dots. Tap the correct number.");
+    u.lang="en-GB";u.rate=.84;u.volume=p.volume??.9;
+    speechSynthesis.cancel();speechSynthesis.speak(u);
   }
 
   function showHint(){
@@ -533,7 +531,7 @@
 
   // Wire up controls
   document.getElementById('newBtn').addEventListener('click', newRound);
-  sayBtn.addEventListener('click', ()=>speakNumber(target));
+  sayBtn.addEventListener('click', speakInstructions);
   hintBtn.addEventListener('click', showHint);
 
   document.querySelectorAll('[data-range]').forEach(btn => {
