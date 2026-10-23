@@ -1,0 +1,282 @@
+/* Primary Steps • Phase 3 • Unified remaining games, dashboards and parent pages.
+   Presentation only: existing gameplay controls and handlers remain unchanged. */
+:root.ps-unified.ps-v4{
+ --ps-v4-a:#DFF2EB;--ps-v4-b:#B9E5D5;--ps-v4-edge:#AFDACB;--ps-v4-action:#176B75;
+ --ps-v4-text:#284154;--ps-v4-shadow:0 11px 28px rgba(42,87,96,.085);
+ --ps-v4-heading:ui-rounded,"Trebuchet MS","Avenir Next",system-ui,sans-serif;
+}
+:root.ps-unified.ps-v4[data-section="numbers"],
+:root.ps-unified.ps-v4[data-section="memory"]{
+ --ps-v4-a:#E0F0FD;--ps-v4-b:#B8DAF4;--ps-v4-edge:#B4D3E8;--ps-v4-action:#346F9B;
+}
+:root.ps-unified.ps-v4[data-section="phonics"],
+:root.ps-unified.ps-v4[data-section="spelling"]{
+ --ps-v4-a:#EEE9FB;--ps-v4-b:#D3C8F0;--ps-v4-edge:#CDC1EA;--ps-v4-action:#6C5C9F;
+}
+:root.ps-unified.ps-v4[data-section="maths"],
+:root.ps-unified.ps-v4[data-section="puzzles"]{
+ --ps-v4-a:#E2F6E8;--ps-v4-b:#BCE4CA;--ps-v4-edge:#B1DCC0;--ps-v4-action:#347C60;
+}
+:root.ps-unified.ps-v4[data-section="drawing"]{
+ --ps-v4-a:#FFF0E7;--ps-v4-b:#F7D0BC;--ps-v4-edge:#EFCEB9;--ps-v4-action:#AB654C;
+}
+:root.ps-unified.ps-v4[data-section="games"],
+:root.ps-unified.ps-v4[data-section="clock"],
+:root.ps-unified.ps-v4[data-section="progress"]{
+ --ps-v4-a:#FFF5DA;--ps-v4-b:#F3DEA8;--ps-v4-edge:#EAD69A;--ps-v4-action:#856329;
+}
+html.ps-unified.ps-v4 body{
+ background:linear-gradient(180deg,#F0F9F7 0,#F7FAFC 520px)!important;
+ color:var(--ps-ink)!important;line-height:1.45;
+}
+html.ps-unified.ps-v4 :is(.container,.wrap,.hwrap){max-width:1380px}
+html.ps-unified.ps-v4 main{max-width:1380px;margin-left:auto;margin-right:auto}
+html.ps-unified.ps-v4 .container{width:min(1380px,calc(100% - 42px));padding-left:0;padding-right:0}
+html.ps-unified.ps-v4 main:not(.container){
+ width:min(1380px,calc(100% - 42px));margin-top:22px;margin-bottom:28px;
+}
+html.ps-unified.ps-v4 :is(.hero,.ps-v4-heading){
+ position:relative;margin:20px auto 23px;max-width:1380px;
+ width:min(1380px,calc(100% - 42px));
+ padding:24px clamp(22px,3.3vw,43px);overflow:visible;
+ background:linear-gradient(115deg,var(--ps-v4-a),var(--ps-v4-b))!important;
+ border:2px solid var(--ps-v4-edge)!important;
+ border-radius:29px!important;
+ box-shadow:var(--ps-v4-shadow);
+}
+html.ps-unified.ps-v4 .container > .hero{width:100%;margin:20px 0 23px}
+html.ps-unified.ps-v4 .hero .hwrap{padding:0;max-width:none}
+html.ps-unified.ps-v4 :is(.hero h1,.ps-v4-heading h1,main > .card > h1,main > .card > .head > h1){
+ font:900 clamp(31px,3.4vw,47px)/1.12 var(--ps-v4-heading);
+ letter-spacing:-.045em;color:var(--ps-v4-text)!important;margin:0 0 9px;
+}
+html.ps-unified.ps-v4 :is(.hero p,.hero .lead,.ps-v4-heading p,main > .card > .head > p){
+ font-size:clamp(16px,1.55vw,19px);font-weight:650;line-height:1.45;
+ color:#466273!important;max-width:79ch;margin:0;
+}
+html.ps-unified.ps-v4 .hero .heroCard{max-width:none}
+html.ps-unified.ps-v4 :is(.panel,.card,.heroCard,.stat,.setting,.goal,.badge){
+ background:#FFFFFF!important;border:2px solid #DAE6EA!important;
+ color:var(--ps-v4-text)!important;
+ border-radius:24px!important;
+ box-shadow:var(--ps-v4-shadow);
+}
+html.ps-unified.ps-v4 .heroCard{
+ background:linear-gradient(110deg,var(--ps-v4-a),var(--ps-v4-b))!important;
+ border-color:var(--ps-v4-edge)!important;
+}
+html.ps-unified.ps-v4 .card{min-width:0;overflow:hidden}
+html.ps-unified.ps-v4 .card .head{
+ padding:17px 21px;border-bottom:1px solid #DBE8EA;
+ background:linear-gradient(110deg,#F8FCFB,#EFF8F6)!important;
+ color:#284154!important;
+ display:flex;gap:12px;align-items:center;
+}
+html.ps-unified.ps-v4 .card > .body{padding:20px}
+html.ps-unified.ps-v4 .grid{gap:18px}
+html.ps-unified.ps-v4 .grid.two{gap:20px}
+html.ps-unified.ps-v4 .head h1{font-family:var(--ps-v4-heading);letter-spacing:-.025em}
+html.ps-unified.ps-v4 :is(.pill,.tag,.chip,.mini,.voltag){
+ background:var(--ps-v4-a)!important;color:var(--ps-v4-action)!important;
+ border:1px solid var(--ps-v4-edge)!important;
+ font-weight:800;border-radius:14px;
+}
+html.ps-unified.ps-v4 :is(.btn,.seg,.segbtn,.tileBtn,.ps-v4-button){
+ min-height:50px;min-width:44px;
+ border-radius:15px!important;font-size:15px;
+ padding:10px 15px;font-weight:800;
+ touch-action:manipulation;cursor:pointer;
+}
+html.ps-unified.ps-v4 :is(.btn,.seg,.segbtn,.ps-v4-button){
+ background:#FFFFFF!important;border:2px solid var(--ps-v4-edge)!important;color:#27485A!important;
+ display:inline-flex;align-items:center;justify-content:center;gap:7px;
+}
+html.ps-unified.ps-v4 :is(.btn.primary,.seg.on,.segbtn.active){
+ background:var(--ps-v4-action)!important;
+ border-color:var(--ps-v4-action)!important;color:#FFFFFF!important;
+}
+html.ps-unified.ps-v4 .btn.good{background:#DDF3E5!important;border-color:#A7D4B7!important;color:#176241!important}
+html.ps-unified.ps-v4 .btn.danger{background:#FFF0EC!important;border-color:#E5BDB2!important;color:#8B3F34!important}
+html.ps-unified.ps-v4 :is(.btn,.seg,.segbtn,.ps-v4-button,.choice,.tileBtn):focus-visible{
+ outline:3px solid var(--ps-v4-action)!important;outline-offset:3px;
+}
+html.ps-unified.ps-v4 :is(.controls,.row,.actions){row-gap:10px}
+html.ps-unified.ps-v4 :is(.stage,.scene,.sentenceBox,.targetBox,.padShell,.boardWrap,.canvasWrap,.spotWrap,.dragArea,.selectorGrid){
+ background:#F9FCFD!important;border:2px solid #DDE9EA!important;
+ border-radius:23px!important;color:#284154;
+ box-shadow:none;
+}
+html.ps-unified.ps-v4 :is(.stage,.scene,.sentenceBox,.targetBox){padding:clamp(13px,2vw,23px);min-height:190px}
+html.ps-unified.ps-v4 :is(.msg,.feedback,.status){
+ color:#3E6170!important;font-size:clamp(15px,1.5vw,18px);
+ font-weight:750;line-height:1.44;
+}
+html.ps-unified.ps-v4 .msg{
+ padding:13px 16px!important;border:1px solid #D3E6E8!important;
+ border-radius:16px!important;background:#F0F8FA!important;
+}
+html.ps-unified.ps-v4 .msg.good,
+html.ps-unified.ps-v4 .msg.on,
+html.ps-unified.ps-v4 .status.good{
+ background:#E6F5EC!important;border-color:#AED8BB!important;color:#17603F!important;
+}
+html.ps-unified.ps-v4 .msg.bad,
+html.ps-unified.ps-v4 .status.bad{
+ background:#FFF2E9!important;border-color:#E9C0AC!important;color:#9A4932!important;
+}
+html.ps-unified.ps-v4 :is(.field label,label){font-size:14px;font-weight:750;color:#496575}
+html.ps-unified.ps-v4 :is(.field select,select,input:not([type=checkbox]):not([type=radio]):not([type=range]):not([type=color])){
+ background:#FFFFFF!important;color:#283F51!important;border:2px solid #C6DCE2!important;
+ border-radius:14px!important;min-height:48px;font-size:16px;
+}
+html.ps-unified.ps-v4 :is(input[type=range],input[type=checkbox],input[type=radio]){accent-color:var(--ps-v4-action)}
+html.ps-unified.ps-v4 :is(.choice,.choices button,.tileBtn,.block,.orderSlot){
+ min-height:64px;border-radius:18px!important;
+ border:2px solid var(--ps-v4-edge)!important;
+ background:#FFFFFF!important;color:#294657!important;
+ font-weight:850;box-shadow:0 3px 9px rgba(50,84,97,.045);
+}
+html.ps-unified.ps-v4 :is(.choice,.choices button,.tileBtn,.block):hover{
+ border-color:var(--ps-v4-action)!important;background:var(--ps-v4-a)!important;
+}
+html.ps-unified.ps-v4 .choiceGrid{gap:13px}
+html.ps-unified.ps-v4 .choice{font-size:clamp(24px,3vw,37px)}
+html.ps-unified.ps-v4 .block{font-size:clamp(22px,3vw,31px)}
+html.ps-unified.ps-v4 :is(.bigQ,.word,.sentence){
+ color:#2D5262!important;font-weight:900;letter-spacing:-.02em;
+}
+html.ps-unified.ps-v4 :is(.small,.smallMuted,.muted,.hint,.lead,.desc,.kbd){
+ color:var(--ps-muted)!important;line-height:1.42;
+}
+html.ps-unified.ps-v4 .kbd{background:#F3F7F8;border:1px solid var(--ps-v4-edge);border-radius:8px;padding:2px 6px}
+html.ps-unified.ps-v4 :is(.stat,.goal,.setting,.badge){padding:17px}
+html.ps-unified.ps-v4 .stat .v{font:900 36px/1.15 var(--ps-v4-heading);color:#284A5D}
+html.ps-unified.ps-v4 :is(.cards,.badges){gap:15px}
+html.ps-unified.ps-v4 .badge.on{border-color:#C8BCE9!important;background:#F2EBFF!important;opacity:1}
+html.ps-unified.ps-v4 .bar{height:14px;background:#E6EDF1;border:1px solid #CFE1E5;border-radius:99px;overflow:hidden}
+html.ps-unified.ps-v4 .bar > i{background:linear-gradient(90deg,#57BEB8,#8CAFE9)!important}
+html.ps-unified.ps-v4 .setting{align-items:center;gap:14px}
+html.ps-unified.ps-v4 .setting h3{font-size:18px;margin:0 0 6px}
+html.ps-unified.ps-v4 .setting p{font-size:14px;color:var(--ps-muted)!important}
+html.ps-unified.ps-v4 .segment{border:2px solid var(--ps-v4-edge);border-radius:16px;overflow:hidden}
+html.ps-unified.ps-v4 .segbtn{border-radius:0!important;margin:0}
+html.ps-unified.ps-v4 .toggle:checked{background:var(--ps-v4-action)!important}
+html.ps-unified.ps-v4 .toggle{width:54px;height:30px;flex:none}
+html.ps-unified.ps-v4 .toggle::after{width:24px;height:24px}
+html.ps-unified.ps-v4 .toggle:checked::after{transform:translateX(24px)}
+/* Number tracing: keep ghost visible without imposing new scoring mechanics. */
+html.ps-unified.ps-v4[data-page="numbers-trace.html"] .padShell{background:#FFFFFF!important}
+html.ps-unified.ps-v4[data-page="numbers-trace.html"] #ghostNum{
+ color:rgba(75,133,159,.10)!important;-webkit-text-stroke:7px rgba(58,125,155,.30)!important;
+ filter:none!important;text-shadow:none!important;
+}
+html.ps-unified.ps-v4[data-page="numbers-trace.html"] canvas,
+html.ps-unified.ps-v4[data-page="drawing-play.html"] canvas,
+html.ps-unified.ps-v4[data-page="handwriting-play.html"] canvas{
+ touch-action:none;max-width:100%;border-radius:19px;
+}
+html.ps-unified.ps-v4[data-page="drawing-play.html"] .overlayLabel{color:#FFFFFF!important;background:#31586A!important}
+html.ps-unified.ps-v4[data-page="drawing-play.html"] .thumb{background:#FFFFFF!important;border:2px solid #D9E7EA!important;border-radius:18px!important}
+html.ps-unified.ps-v4[data-page="drawing-play.html"] .thumb:hover{background:var(--ps-v4-a)!important}
+html.ps-unified.ps-v4[data-page="drawing-play.html"] .swatch{min-height:40px;min-width:40px;border:2px solid #B3C8CF;box-shadow:none}
+html.ps-unified.ps-v4[data-page="drawing-play.html"] .swatch.active{outline:3px solid var(--ps-v4-action)}
+/* Memory, puzzles, standalone games: retain board-specific colours/shapes. */
+html.ps-unified.ps-v4[data-section="memory"] :is(.pairsGrid,.seqRow,.spotBoard),
+html.ps-unified.ps-v4[data-section="puzzles"] :is(.board,.slots,.pieces){
+ border-radius:20px;gap:11px;
+}
+html.ps-unified.ps-v4[data-section="games"] :is(.c4Wrap,.c4Board,.sudoku,.sudoku .cell,.tray,.bins,.dropArea){
+ max-width:100%;
+}
+html.ps-unified.ps-v4[data-page="game-sudoku.html"] .boardWrap{padding:15px}
+html.ps-unified.ps-v4[data-page="game-sudoku.html"] .pad button{min-height:53px;border-radius:12px}
+html.ps-unified.ps-v4[data-page="spelling-play.html"] main{
+ max-width:850px!important;margin:28px auto!important;
+}
+html.ps-unified.ps-v4[data-page="spelling-play.html"] main > .card,
+html.ps-unified.ps-v4[data-page="clock-play.html"] main > .card{
+ padding:clamp(20px,3vw,36px);
+ border:2px solid var(--ps-v4-edge)!important;
+ background:linear-gradient(145deg,#FFFFFF,#F8FCFD)!important;
+ text-align:center;
+}
+html.ps-unified.ps-v4[data-page="spelling-play.html"] .word{
+ color:#31556B;font:900 clamp(46px,8vw,78px)/1.2 var(--ps-v4-heading);
+}
+html.ps-unified.ps-v4[data-page="spelling-play.html"] main > .card > button,
+html.ps-unified.ps-v4[data-page="clock-play.html"] #controls button,
+html.ps-unified.ps-v4[data-page="letters-sounds.html"] .controls button{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:57px;padding:12px 22px;border:2px solid var(--ps-v4-edge);
+ border-radius:17px;background:#FFFFFF;color:#28495C;font-size:17px;font-weight:850;
+}
+html.ps-unified.ps-v4[data-page="spelling-play.html"] main > .card > button:first-of-type,
+html.ps-unified.ps-v4[data-page="clock-play.html"] #controls button:first-of-type{
+ background:var(--ps-v4-action);color:#FFFFFF;border-color:var(--ps-v4-action);
+}
+html.ps-unified.ps-v4[data-page="spelling-play.html"] #input{max-width:610px;margin:0 auto;display:block;font-size:25px;text-align:center}
+html.ps-unified.ps-v4[data-page="clock-play.html"] main{max-width:850px!important}
+html.ps-unified.ps-v4[data-page="clock-play.html"] .clock{
+ width:min(320px,80vw);height:min(320px,80vw);
+ background:#FFF!important;border:11px solid #86B1C0;
+ box-shadow:0 10px 24px rgba(56,94,101,.12),inset 0 0 0 2px #EAF3F5;
+}
+html.ps-unified.ps-v4[data-page="clock-play.html"] .clock .hand{background:#304E61!important}
+html.ps-unified.ps-v4[data-page="clock-play.html"] .clock .center{background:#E8A865!important}
+html.ps-unified.ps-v4[data-page="clock-play.html"] #controls{gap:12px}
+html.ps-unified.ps-v4[data-page="clock-play.html"] #controls input{width:112px;text-align:center;font-size:23px;font-weight:850}
+html.ps-unified.ps-v4[data-page="letters-sounds.html"] main{max-width:1000px!important}
+html.ps-unified.ps-v4[data-page="letters-sounds.html"] .panel{grid-template-columns:1fr 1fr;gap:22px;padding:20px!important}
+html.ps-unified.ps-v4[data-page="letters-sounds.html"] .choices{gap:12px}
+html.ps-unified.ps-v4[data-page="letters-sounds.html"] .choice{
+ -webkit-text-stroke:0!important;text-shadow:none!important;
+ background:#FFFFFF!important;color:#31576E!important;font-size:36px;
+}
+html.ps-unified.ps-v4[data-page="letters-sounds.html"] .big{
+ background:#EEF8FC!important;color:#3C84A3!important;
+ -webkit-background-clip:unset!important;background-clip:unset!important;
+ -webkit-text-stroke:0!important;text-shadow:none!important;
+ border:2px solid #B8D8E4;border-radius:22px;font-size:clamp(100px,12vw,160px);
+}
+html.ps-unified.ps-v4 .toast{color:#FFFFFF!important;background:#27485A!important;border-color:#496677!important}
+@media(max-width:1020px){
+ html.ps-unified.ps-v4 .grid.two{grid-template-columns:1fr}
+ html.ps-unified.ps-v4 .container{width:calc(100% - 32px)}
+}
+@media(max-width:720px){
+ html.ps-unified.ps-v4 :is(.hero,.ps-v4-heading){padding:19px;width:calc(100% - 24px);margin:13px auto 16px}
+ html.ps-unified.ps-v4 main:not(.container){width:calc(100% - 24px)}
+ html.ps-unified.ps-v4 .container{width:calc(100% - 24px)}
+ html.ps-unified.ps-v4 .card .head{padding:14px;flex-wrap:wrap}
+ html.ps-unified.ps-v4 .card > .body{padding:14px}
+ html.ps-unified.ps-v4 .grid{gap:12px}
+ html.ps-unified.ps-v4 :is(.stage,.scene,.sentenceBox){padding:12px}
+ html.ps-unified.ps-v4 .choiceGrid{gap:9px}
+ html.ps-unified.ps-v4 .panel{padding:14px}
+ html.ps-unified.ps-v4 .right{min-width:0}
+ html.ps-unified.ps-v4 .segment{flex-wrap:wrap}
+ html.ps-unified.ps-v4 .setting{flex-wrap:wrap}
+ html.ps-unified.ps-v4 .stat .v{font-size:29px}
+ html.ps-unified.ps-v4[data-page="letters-sounds.html"] .panel{grid-template-columns:1fr}
+ html.ps-unified.ps-v4[data-page="clock-play.html"] #controls input{width:94px}
+}
+:root.ps-unified.ps-v4[data-theme="dark"] body{background:var(--ps-bg)!important}
+:root.ps-unified.ps-v4[data-theme="dark"] :is(.hero,.ps-v4-heading,.card,.panel,.setting,.stat,.goal,.badge,.heroCard){
+ background:var(--ps-surface)!important;border-color:var(--ps-edge)!important;
+ color:var(--ps-ink)!important;
+}
+:root.ps-unified.ps-v4[data-theme="dark"] :is(.hero h1,.hero p,.hero .lead,.card .head,.stat .v,.setting h3,.setting p,.card h1){
+ color:var(--ps-ink)!important;background:transparent!important;
+}
+:root.ps-unified.ps-v4[data-theme="dark"] :is(.stage,.scene,.sentenceBox,.canvasWrap,.padShell,.boardWrap){
+ background:var(--ps-surface)!important;color:var(--ps-ink);border-color:var(--ps-edge)!important;
+}
+:root.ps-unified.ps-v4[data-theme="dark"] :is(.msg,.feedback,.status,.small,.muted){color:var(--ps-muted)!important}
+:root.ps-unified.ps-v4[data-theme="dark"] :is(.btn,.segbtn,.chip,.tag,.pill){border-color:var(--ps-edge)!important}
+:root.ps-unified.ps-v4[data-contrast="high"] :is(.hero,.card,.panel,.setting,.stat){
+ background:#FFFFFF!important;border-color:#536575!important;
+}
+@media(prefers-reduced-motion:reduce){
+ html.ps-unified.ps-v4 *,html.ps-unified.ps-v4 *::before,html.ps-unified.ps-v4 *::after{animation:none!important;transition:none!important}
+}
+:root.ps-unified.ps-v4[data-reduce-motion] *, :root.ps-unified.ps-v4[data-reduce-motion] *::before, :root.ps-unified.ps-v4[data-reduce-motion] *::after{animation:none!important;transition:none!important}
