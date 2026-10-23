@@ -10,7 +10,7 @@
  function header(){
   var back=section()==="settings"||section()==="progress"?"index.html":section()+".html";if(back===file)back="index.html";
   var h=document.createElement("header");h.className="ps-shell";
-  h.innerHTML='<div class="ps-shell__inner"><a class="ps-brand" href="index.html"><img class="ps-brand__icon" src="assets/primary-steps-icon-512.png" alt=""><span class="ps-brand__name">Primary Steps</span></a><nav class="ps-shell__actions" aria-label="Page navigation"><a class="ps-shell__button ps-shell__back" href="'+back+'">← Back</a><button type="button" class="ps-shell__button ps-shell__sound" data-ps-sound><span data-sound-icon aria-hidden="true">🔊</span><span data-sound-text>Sound on</span></button><a class="ps-shell__button ps-shell__parent" href="settings.html" aria-label="Parent Zone">Parent Zone</a></nav></div>';
+  h.innerHTML='<div class="ps-shell__inner"><a class="ps-brand" href="index.html" aria-label="Primary Steps home"><span class="ps-brand__mark" aria-hidden="true"><span>A</span><span>B</span><span>★</span></span><span class="ps-brand__lockup"><span class="ps-brand__name">Primary <strong>Steps</strong></span><span class="ps-brand__tagline">LEARN · PLAY · GROW</span></span></a><nav class="ps-shell__actions" aria-label="Page navigation"><a class="ps-shell__button ps-shell__back" href="'+back+'">← Back</a><button type="button" class="ps-shell__button ps-shell__sound" data-ps-sound><span data-sound-icon aria-hidden="true">🔊</span><span data-sound-text>Sound on</span></button><a class="ps-shell__button ps-shell__parent" href="settings.html" aria-label="Parent Zone">Parents ⚙</a></nav></div>';
   document.body.insertBefore(h,document.body.firstChild);root.classList.add("ps-enhanced");
  }
  function dock(){
