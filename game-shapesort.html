@@ -526,7 +526,7 @@
   ui.medBtn.addEventListener('click', ()=> setDifficulty('medium'));
   ui.hardBtn.addEventListener('click', ()=> setDifficulty('hard'));
 
-  setDifficulty('medium');
+  setDifficulty(window.PSSettings?.load?.().simplePlay ? 'easy' : 'medium');
 })();
 </script>
 

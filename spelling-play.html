@@ -97,8 +97,9 @@ function setModeUI(){
 }
 
 function next(){
-  level = levelCycle[levelIndex % 3];
-  levelIndex++;
+  const simple=window.PSSettings?.load?.().simplePlay ?? true;
+  level = simple ? "easy" : levelCycle[levelIndex % 3];
+  if(!simple)levelIndex++;
 
   const list = WORDS[level];
   current = pick(list).toLowerCase();
