@@ -568,3 +568,30 @@ html.ps-unified .ps-brand__name{color:var(--ps-ink)}
  html.ps-home .ps-tile:hover{transform:none!important}
 }
 :root.ps-unified[data-reduce-motion].ps-home .ps-tile:hover{transform:none!important}
+
+
+/* Concept 3: Open-book Primary Steps brand */
+html.ps-unified .ps-brand{gap:12px;flex-shrink:0}
+html.ps-unified .ps-brand__new-icon{width:94px;height:85px;object-fit:contain;display:block;flex:none;filter:drop-shadow(0 4px 7px rgba(48,85,102,.08))}
+html.ps-unified .ps-brand__lockup{display:flex;flex-direction:column;align-items:flex-start;gap:5px}
+html.ps-unified .ps-brand__name{display:flex;flex-direction:column;align-items:flex-start;gap:0;font-family:var(--ps-title-font,ui-rounded,"Trebuchet MS",system-ui,sans-serif);font-size:clamp(29px,2.45vw,37px);line-height:.91;letter-spacing:-.045em;font-weight:900;color:#304356!important;white-space:nowrap}
+html.ps-unified .ps-brand__name strong{font-size:inherit;font-weight:900;color:#248C8E!important}
+html.ps-unified .ps-brand__tagline{display:block;font-size:11px;line-height:1.1;letter-spacing:.05em;font-weight:750;text-transform:none;color:#68798B;white-space:nowrap}
+html.ps-unified .ps-brand__tagline b{color:#F0B963;padding:0 2px;font-size:13px;font-weight:900}
+html.ps-unified .ps-brand__tagline b:last-of-type{color:#F59485}
+html.ps-unified .ps-shell__inner{min-height:106px}
+:root.ps-unified[data-theme="dark"] .ps-brand__name{color:#F8FAFC!important}
+:root.ps-unified[data-theme="dark"] .ps-brand__name strong{color:#70CFD0!important}
+:root.ps-unified[data-theme="dark"] .ps-brand__tagline{color:#CBD8E3}
+@media(max-width:660px){
+ html.ps-unified .ps-shell__inner{min-height:78px;padding:8px 13px}
+ html.ps-unified .ps-brand{gap:7px}
+ html.ps-unified .ps-brand__new-icon{width:63px;height:61px}
+ html.ps-unified .ps-brand__name{font-size:clamp(21px,5vw,26px);line-height:.9}
+ html.ps-unified .ps-brand__tagline{font-size:9px;letter-spacing:.02em}
+}
+@media(max-width:390px){
+ html.ps-unified .ps-brand__new-icon{width:53px;height:55px}
+ html.ps-unified .ps-brand__name{font-size:20px}
+ html.ps-unified .ps-brand__tagline{display:none}
+}
