@@ -341,6 +341,17 @@ header{
 
   <section class="panel">
 
+    <div class="setting" id="simplePlaySetting">
+      <div>
+        <h3><label for="simplePlay">🧩 Simple play</label></h3>
+        <p>Fewer answers, easier starting questions and less on-screen clutter. Recommended for beginners; turn off for the full challenge.</p>
+      </div>
+      <div class="right">
+        <input class="toggle" id="simplePlay" type="checkbox" checked aria-describedby="simplePlayHelp">
+        <span class="ps-sr-only" id="simplePlayHelp">Turn simpler learning activities on or off</span>
+      </div>
+    </div>
+
     <div class="setting">
       <div>
         <h3>Theme</h3>
@@ -471,6 +482,7 @@ header{
     autoplayWelcome: $("autoplayWelcome"),
     reduceMotion: $("reduceMotion"),
     largeUI: $("largeUI"),
+    simplePlay: $("simplePlay"),
     resetStars: $("resetStars"),
     replayWelcomes: $("replayWelcomes"),
     resetAll: $("resetAll"),
@@ -498,6 +510,7 @@ header{
 
     el.reduceMotion.checked = !!cur.reduceMotion;
     el.largeUI.checked = !!cur.largeUI;
+    el.simplePlay.checked = !!cur.simplePlay;
   }
 
   render();
@@ -511,6 +524,7 @@ header{
   el.autoplayWelcome.addEventListener("change", () => { window.PSSettings.set({ autoplayWelcome: el.autoplayWelcome.checked }); render(); });
   el.reduceMotion.addEventListener("change", () => { window.PSSettings.set({ reduceMotion: el.reduceMotion.checked }); render(); });
   el.largeUI.addEventListener("change", () => { window.PSSettings.set({ largeUI: el.largeUI.checked }); render(); });
+  el.simplePlay.addEventListener("change", () => { window.PSSettings.set({ simplePlay: el.simplePlay.checked }); render(); });
 
   el.volume.addEventListener("input", () => {
     const v = Number(el.volume.value) / 100;

@@ -13,6 +13,7 @@
     autoplayWelcome: false,
     reduceMotion: false,
     largeUI: false,
+    simplePlay: true,         // fewer choices and gentler starts; can be switched off
   };
 
   function clamp01(n) {
@@ -51,6 +52,7 @@
   function applyPrefs(s) {
     document.documentElement.toggleAttribute("data-reduce-motion", !!s.reduceMotion);
     document.documentElement.toggleAttribute("data-large-ui", !!s.largeUI);
+    document.documentElement.setAttribute("data-simple-play", s.simplePlay ? "on" : "off");
   }
 
   // Public API
