@@ -1,0 +1,104 @@
+/* Primary Steps — unified, calm learning game surfaces */
+html.ps-game{--game-a:#DFF3ED;--game-b:#B7E3D4;--game-edge:#AFD8C9;--game-accent:#176B75}
+html.ps-game[data-game="count"]{--game-a:#E5F2FE;--game-b:#C4DFF7;--game-edge:#B2D2EA;--game-accent:#326F9C}
+html.ps-game[data-game="phonics"]{--game-a:#F0EAFC;--game-b:#D6CBF1;--game-edge:#CDBFE8;--game-accent:#6856A0}
+html.ps-game[data-game="maths"]{--game-a:#E6F6E9;--game-b:#C4E8D1;--game-edge:#B5DBC3;--game-accent:#2B7D66}
+html.ps-game body{background:linear-gradient(180deg,#F1F9F8,#F7FAFC 460px)!important}
+html.ps-game :is(.hero,.ps-game-intro){width:min(1380px,calc(100% - 40px));max-width:1380px;margin:19px auto 18px!important;padding:21px 31px!important;background:linear-gradient(115deg,var(--game-a),var(--game-b))!important;border:2px solid var(--game-edge);border-radius:28px;box-shadow:0 8px 24px rgba(34,85,93,.075)}
+html.ps-game .hero .hwrap{max-width:none}
+html.ps-game .hero h1,html.ps-game .ps-game-intro h1,html.ps-game .cardHead h1{font:900 clamp(30px,3.4vw,43px)/1.12 ui-rounded,"Trebuchet MS",system-ui,sans-serif!important;color:#28465A;letter-spacing:-.045em;margin:0 0 8px}
+html.ps-game .hero p,html.ps-game .ps-game-intro p,html.ps-game .cardHead p{margin:0;color:#465F71;font-weight:650;font-size:clamp(16px,1.5vw,19px);line-height:1.4}
+html.ps-game :is(.grid,.container,main.ps-trace-main){width:min(1380px,calc(100% - 40px));max-width:1380px;margin:0 auto 32px;padding:0!important}
+html.ps-game .grid{display:grid;grid-template-columns:1fr;gap:17px}
+html.ps-game .card{background:var(--ps-surface)!important;border:2px solid var(--ps-edge)!important;border-radius:25px!important;box-shadow:0 9px 24px rgba(35,72,82,.07)!important;overflow:hidden;color:var(--ps-ink)}
+html.ps-game .card .head,html.ps-game .cardHead{padding:19px 23px!important;border-bottom:1px solid var(--ps-edge);background:#F8FCFC}
+html.ps-game .card .body{padding:22px!important}
+html.ps-game :is(.pill,.tag){font-weight:900!important;color:var(--game-accent)!important;border:1px solid var(--game-edge)!important;background:var(--game-a)!important}
+html.ps-game :is(.btn,.ps-game-primary,.ps-game-secondary,.ps-game-listen){min-height:55px;border-radius:16px!important;font-size:17px!important;font-weight:850!important;padding:11px 18px!important;cursor:pointer;touch-action:manipulation}
+html.ps-game :is(.btn.primary,.ps-game-primary){background:var(--game-accent)!important;border:2px solid var(--game-accent)!important;color:#FFFFFF!important}
+html.ps-game :is(.btn:not(.primary),.ps-game-secondary,.ps-game-listen){background:#FFFFFF!important;border:2px solid var(--game-edge)!important;color:#254457!important}
+html.ps-game .btn:hover,html.ps-game .ps-game-listen:hover{border-color:var(--game-accent)!important}
+html.ps-game :is(.btn,.ps-game-listen):focus-visible{outline:3px solid var(--game-accent)!important;outline-offset:3px}
+html.ps-game .ps-game-tools{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+html.ps-game .ps-game-advanced{margin:15px 0 0;padding:12px 15px;border:1px solid var(--ps-edge);border-radius:15px;background:var(--ps-surface)}
+html.ps-game .ps-game-advanced summary{cursor:pointer;color:var(--ps-muted);font-size:14px;font-weight:800;min-height:29px;list-style:revert}
+html.ps-game .ps-game-advanced .field{margin:12px 0 0}
+html.ps-game .ps-game-advanced .controls{padding:12px 0 0}
+html.ps-game .ps-game-advanced select{color:var(--ps-ink);background:#FFF;border:2px solid var(--game-edge);border-radius:14px;padding:10px 13px;font-size:16px;min-height:48px}
+html.ps-game .stage,html.ps-game .scene{background:#FBFDFE!important;border:2px solid #DCE9ED!important;border-radius:23px!important;padding:20px!important;min-height:260px}
+html.ps-game .msg,html.ps-game .feedback{font-size:clamp(16px,1.6vw,19px);font-weight:750;color:#415D6E;line-height:1.45}
+html.ps-game .msg{border-radius:16px!important;padding:15px 17px!important;background:#F1F7F8!important;border:1px solid #DAE7EB!important}
+html.ps-game .msg.good{background:#E4F5EA!important;border-color:#AFDCC2!important;color:#17633C!important}
+html.ps-game .msg.bad{background:#FFF0EA!important;border-color:#EECBB9!important;color:#924B32!important}
+html.ps-game .stage .center{gap:20px!important}
+html.ps-game .stage .bigQ{font:900 clamp(48px,7vw,85px)/1.15 ui-rounded,"Trebuchet MS",system-ui,sans-serif;letter-spacing:0;color:#26475A}
+html.ps-game .stage .big{font-size:clamp(73px,9vw,110px);color:var(--game-accent)}
+html.ps-game .stage .word{font-size:clamp(39px,6vw,60px);color:#294959}
+html.ps-game .stage .small,html.ps-game .stage .smallMuted{color:var(--ps-muted);font-size:clamp(14px,1.35vw,17px);line-height:1.35}
+html.ps-game :is(.choice,.block){background:#FFFFFF!important;border:3px solid var(--game-edge)!important;color:#28495B!important;border-radius:21px!important;min-height:83px;cursor:pointer;touch-action:manipulation}
+html.ps-game .choiceGrid{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:16px!important}
+html.ps-game .choice{justify-content:center!important;text-align:center!important;font-size:clamp(27px,4vw,43px)!important;font-weight:900!important;min-width:0}
+html.ps-game .choice .tag{display:none!important}
+html.ps-game .choice span{font-size:inherit!important}
+html.ps-game :is(.choice,.block):is(:hover,:focus-visible){background:var(--game-a)!important;border-color:var(--game-accent)!important}
+html.ps-game .block{display:grid;place-items:center;min-width:72px;width:82px;height:82px;font-size:31px}
+html.ps-game .block.on{background:var(--game-a)!important;border-color:var(--game-accent)!important}
+html.ps-game #ans{display:block;width:160px;min-height:79px;border:3px solid var(--game-edge)!important;background:#FFFFFF!important;color:#28495B!important;text-align:center;font-size:40px!important;font-weight:900!important;border-radius:17px!important}
+html.ps-game .ps-numberpad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;width:min(310px,100%);margin:auto}
+html.ps-game .ps-numberpad button{min-height:59px;font:900 28px/1 ui-rounded,"Trebuchet MS",system-ui,sans-serif;border:2px solid var(--game-edge);background:#FFFFFF;color:#26475A;border-radius:15px;cursor:pointer}
+html.ps-game .ps-numberpad button:is(:hover,:focus-visible){background:var(--game-a);border-color:var(--game-accent)}
+html.ps-game .ps-count-grid{grid-template-columns:minmax(0,1.22fr) minmax(295px,.78fr)!important;align-items:stretch!important}
+html.ps-game .ps-count-grid > .card{min-width:0}
+html.ps-game .ps-count-grid .head{min-height:85px}
+html.ps-game .ps-count-grid .q{font-size:clamp(21px,2vw,30px);color:#29495C}
+html.ps-game .ps-count-grid .scene{min-height:315px}
+html.ps-game .ps-count-grid .onesGrid{grid-template-columns:repeat(5,minmax(0,1fr));gap:13px;max-width:490px;margin:auto}
+html.ps-game .ps-count-grid .dot{width:54px;height:54px;max-width:100%;aspect-ratio:1;border-radius:50%;background:radial-gradient(circle at 37% 30%,#FFD7B2,#ED9D70);border:2px solid #D88660;box-shadow:0 5px 8px rgba(135,81,57,.12)}
+html.ps-game .ps-count-grid .ten{background:#E5F4FB;border:2px solid #B2D7E8;box-shadow:none}
+html.ps-game .ps-count-grid .tenDot{background:#72B9D8;border:0}
+html.ps-game .ps-count-grid .one{background:#EEB47D;border:2px solid #D79664;box-shadow:none;border-radius:50%}
+html.ps-game .ps-count-grid #choices{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+html.ps-game .ps-count-grid #choices .btn.choice{min-height:105px;width:100%;font-size:clamp(33px,4vw,51px)!important;justify-content:center;border:3px solid var(--game-edge)!important}
+html.ps-game .ps-count-grid #choices .btn.choice:disabled{opacity:.55;cursor:default}
+html.ps-game .ps-count-grid .tagbar{gap:8px;font-size:12px}
+html.ps-game .ps-count-grid .tagbar .tag{padding:6px 9px}
+html.ps-game .ps-count-grid .feedback{margin-top:18px}
+html.ps-game .ps-count-grid .ps-instruction{font-weight:700}
+html.ps-game .ps-trace-main{padding-top:20px!important}
+html.ps-game .ps-trace-board{border:2px solid var(--game-edge)!important;border-radius:29px;background:#FFF;box-shadow:0 10px 28px rgba(40,78,85,.08);overflow:hidden}
+html.ps-game .ps-trace-head{padding:20px 26px;background:linear-gradient(120deg,var(--game-a),var(--game-b));border-bottom:2px solid var(--game-edge);display:flex;align-items:center;justify-content:space-between;gap:15px;flex-wrap:wrap}
+html.ps-game .ps-trace-head h1{margin:0;color:#2A4856;font:900 clamp(30px,3.2vw,42px)/1.1 ui-rounded,"Trebuchet MS",system-ui,sans-serif}
+html.ps-game .ps-trace-head p{margin:8px 0 0;font-weight:750;color:#47636F;font-size:18px}
+html.ps-game .ps-trace-letter{padding:9px 20px;border-radius:15px;background:#FFF;color:var(--game-accent);font-size:27px;font-weight:900}
+html.ps-game .ps-trace-canvaswrap{padding:18px 22px;background:#FFF}
+html.ps-game #c{width:100%;height:min(52vh,470px);min-height:300px;display:block;border:2px solid #DCEAE9;border-radius:22px;background:repeating-linear-gradient(0deg,#FFFFFF 0px,#FFFFFF 68px,#EDF5F6 69px,#FFFFFF 70px);touch-action:none}
+html.ps-game .ps-trace-controls{display:flex;align-items:center;justify-content:center;gap:13px;flex-wrap:wrap;padding:19px 20px 23px}
+html.ps-game .ps-trace-controls button{min-width:130px}
+html.ps-game .ps-trace-controls #next{min-width:174px}
+html.ps-game .ps-game-count-note{font-size:13px;color:var(--ps-muted);margin-top:10px}
+@media(max-width:950px){html.ps-game .ps-count-grid{grid-template-columns:1fr!important}}
+@media(max-width:650px){
+ html.ps-game :is(.hero,.ps-game-intro){width:calc(100% - 24px);padding:17px 19px!important;border-radius:22px}
+ html.ps-game :is(.grid,.container,main.ps-trace-main){width:calc(100% - 24px)}
+ html.ps-game .card .head{padding:13px 14px!important}
+ html.ps-game .card .body{padding:14px!important}
+ html.ps-game .stage,html.ps-game .scene{padding:15px!important}
+ html.ps-game .stage .bigQ{font-size:clamp(43px,9vw,65px)}
+ html.ps-game .choiceGrid{gap:9px!important}
+ html.ps-game .choice{min-height:75px!important}
+ html.ps-game .ps-count-grid #choices .btn.choice{min-height:86px}
+ html.ps-game .ps-count-grid .dot{width:43px;height:43px}
+ html.ps-game .ps-count-grid .onesGrid{gap:9px}
+ html.ps-game .ps-trace-canvaswrap{padding:9px}
+ html.ps-game #c{min-height:280px;height:47vh}
+ html.ps-game .ps-trace-controls{padding:15px 9px 19px;gap:8px}
+ html.ps-game .ps-trace-controls button{min-width:0;flex:1;font-size:15px!important}
+ html.ps-game .ps-trace-controls #next{min-width:95px}
+ html.ps-game .ps-trace-head{padding:17px 16px}
+}
+:root.ps-unified[data-theme="dark"].ps-game body{background:var(--ps-bg)!important}
+:root.ps-unified[data-theme="dark"].ps-game :is(.hero,.ps-game-intro,.ps-trace-head){background:var(--ps-surface)!important;border-color:var(--ps-edge)}
+:root.ps-unified[data-theme="dark"].ps-game :is(.hero h1,.hero p,.ps-game-intro h1,.ps-game-intro p,.ps-trace-head h1,.ps-trace-head p){color:var(--ps-ink)}
+:root.ps-unified[data-theme="dark"].ps-game :is(.card .head,.stage,.scene,.ps-game-advanced){background:var(--ps-surface)!important}
+:root.ps-unified[data-contrast="high"].ps-game :is(.hero,.ps-game-intro,.stage,.scene,.card){border-color:#526474!important;background:#FFF!important}
+@media(prefers-reduced-motion:reduce){html.ps-game *{transition:none!important;animation:none!important}}
