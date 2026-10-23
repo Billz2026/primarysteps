@@ -162,6 +162,10 @@ header{
   .brand span{display:none}
 }
 </style>
+<script src="assets/js/ps-settings.js"></script>
+<script>document.documentElement.classList.add("ps-unified");</script>
+<link rel="stylesheet" href="assets/css/primary-steps.css">
+<script src="assets/js/primary-steps.js" defer></script>
 </head>
 
 <body>
@@ -230,7 +234,7 @@ header{
   const FLAG_KEY = "ps_numbers_welcome_played";
 
   window.addEventListener("load", () => {
-    if (localStorage.getItem(FLAG_KEY)) return;
+    if (!window.PSSettings || !window.PSSettings.canAutoplayWelcome() || localStorage.getItem(FLAG_KEY)) return;
 
     const audio = new Audio(AUDIO_PATH);
     audio.volume = 1;
