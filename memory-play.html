@@ -291,7 +291,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
             <option value="hard">Hard</option>
           </select>
         </div>
-        <button class="btn primary" id="newBtn" type="button">New</button>
+        <button class="btn primary" id="newBtn" type="button">Next →</button>
         <button class="btn" id="resetBtn" type="button">Reset</button>
       </div>
     </div>
@@ -339,7 +339,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
       build: ()=>({ symbols:[], revealed:[], matched:new Set(), moves:0, lock:false }),
       newRound: (st, diff)=>{
         const pool = ['🍎','🍌','🍇','🍓','🍉','🍒','🥝','🍍','🐶','🐱','🦁','🐸','🐼','🦊','🐵','🦄'];
-        const pairs = diff==='easy' ? 4 : diff==='hard' ? 8 : 6; // total cards = pairs*2
+        const pairs = diff==='easy' ? (window.PSSettings?.load?.().simplePlay ? 2 : 4) : diff==='hard' ? 8 : 6; // total cards = pairs*2
         const picks = shuffle(pool.slice()).slice(0, pairs);
         st.symbols = shuffle([...picks, ...picks]);
         st.revealed = [];
@@ -407,114 +407,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
         await nextSeqRound(st);
       },
       render: ()=>{}
-    }
-  ];
-
-  async function nextSeqRound(st){
-    st.input = [];
-    const row = ui.stage.querySelector('#row');
-    const lvlEl = ui.stage.querySelector('#lvl');
-    const turnEl = ui.stage.querySelector('#turn');
-    if(lvlEl) lvlEl.textContent = String(st.level);
-
-    // add one new step
-    st.seq.push(randInt(0,3));
-    st.playing = true;
-    if(turnEl) turnEl.textContent = 'Watch';
-
-    // flash sequence
-    const btns = row.querySelectorAll('.seqBtn');
-    for(const idx of st.seq){
-      btns[idx].classList.add('flash');
-      btns[idx].style.borderColor = 'rgba(125,211,252,.45)';
-      btns[idx].style.background = 'rgba(125,211,252,.18)';
-      await sleep(350);
-      btns[idx].style.borderColor = '';
-      btns[idx].style.background = '';
-      btns[idx].classList.remove('flash');
-      await sleep(180);
-    }
-    st.playing = false;
-    if(turnEl) turnEl.textContent = 'Tap';
-    setMsg('', `Your turn: repeat the sequence.`);
-  }
-
-  async function handleSeqClick(st, idx){
-    if(st.playing) return;
-    const row = ui.stage.querySelector('#row');
-    const btns = row.querySelectorAll('.seqBtn');
-    // tiny feedback flash
-    btns[idx].style.borderColor = 'rgba(52,211,153,.45)';
-    btns[idx].style.background = 'rgba(52,211,153,.14)';
-    setTimeout(()=>{ btns[idx].style.borderColor=''; btns[idx].style.background=''; }, 120);
-
-    st.input.push(idx);
-    const pos = st.input.length - 1;
-    if(st.input[pos] !== st.seq[pos]){
-      setMsg('bad', `Not quite. Press <strong>New</strong> to try again.`);
-      st.playing = true; // lock
-      return;
-    }
-    if(st.input.length === st.seq.length){
-      setMsg('good', `✅ Great memory! Next level…`);
-      st.level += 1;
-      st.playing = true;
-      await sleep(500);
-      st.playing = false;
-      await nextSeqRound(st);
-    }
-  }
-
-  async function onPick(st, i){
-    if(st.lock) return;
-    if(st.matched.has(i)) return;
-
-    const grid = ui.stage.querySelector('#grid');
-    const btn = grid.querySelector('[data-i="'+i+'"]');
-    if(!btn) return;
-
-    // prevent picking same card twice
-    if(st.revealed.includes(i)) return;
-
-    // reveal
-    btn.textContent = st.symbols[i];
-    btn.classList.add('revealed');
-    st.revealed.push(i);
-
-    if(st.revealed.length === 2){
-      st.lock = true;
-      st.moves += 1;
-      ui.stage.querySelector('#moves').textContent = String(st.moves);
-
-      const [a,b] = st.revealed;
-      const match = st.symbols[a] === st.symbols[b];
-
-      if(match){
-        st.matched.add(a);
-        st.matched.add(b);
-        const done = st.matched.size / 2;
-        ui.stage.querySelector('#done').textContent = String(done);
-        grid.querySelector('[data-i="'+a+'"]').classList.add('matched');
-        grid.querySelector('[data-i="'+b+'"]').classList.add('matched');
-        setMsg('good', `✅ Match! Keep going…`);
-        st.revealed = [];
-        st.lock = false;
-
-        // check win
-        if(st.matched.size === st.symbols.length){
-          setMsg('good', `🎉 Completed! Moves: <strong>${st.moves}</strong>. Press <strong>New</strong> for another.`);
-        }
-      } else {
-        setMsg('bad', `Not a match. Try again…`);
-        await sleep(650);
-        // hide
-        [a,b].forEach(idx=>{
-          const el = grid.querySelector('[data-i="'+idx+'"]');
-          if(!el) return;
-          el.textContent = '❓';
-          el.classList.remove('revealed');
-        });
-        st.revealed = [
+    },
     /* SPOT THE DIFFERENCE */
     {
       key:'spotdiff',
@@ -646,8 +539,113 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
         setMsg('', `Find the differences, then tap them.`);
       }
     },
+  ];
 
-];
+  async function nextSeqRound(st){
+    st.input = [];
+    const row = ui.stage.querySelector('#row');
+    const lvlEl = ui.stage.querySelector('#lvl');
+    const turnEl = ui.stage.querySelector('#turn');
+    if(lvlEl) lvlEl.textContent = String(st.level);
+
+    // add one new step
+    st.seq.push(randInt(0,3));
+    st.playing = true;
+    if(turnEl) turnEl.textContent = 'Watch';
+
+    // flash sequence
+    const btns = row.querySelectorAll('.seqBtn');
+    for(const idx of st.seq){
+      btns[idx].classList.add('flash');
+      btns[idx].style.borderColor = 'rgba(125,211,252,.45)';
+      btns[idx].style.background = 'rgba(125,211,252,.18)';
+      await sleep(350);
+      btns[idx].style.borderColor = '';
+      btns[idx].style.background = '';
+      btns[idx].classList.remove('flash');
+      await sleep(180);
+    }
+    st.playing = false;
+    if(turnEl) turnEl.textContent = 'Tap';
+    setMsg('', `Your turn: repeat the sequence.`);
+  }
+
+  async function handleSeqClick(st, idx){
+    if(st.playing) return;
+    const row = ui.stage.querySelector('#row');
+    const btns = row.querySelectorAll('.seqBtn');
+    // tiny feedback flash
+    btns[idx].style.borderColor = 'rgba(52,211,153,.45)';
+    btns[idx].style.background = 'rgba(52,211,153,.14)';
+    setTimeout(()=>{ btns[idx].style.borderColor=''; btns[idx].style.background=''; }, 120);
+
+    st.input.push(idx);
+    const pos = st.input.length - 1;
+    if(st.input[pos] !== st.seq[pos]){
+      setMsg('bad', `Not quite. Press <strong>New</strong> to try again.`);
+      st.playing = true; // lock
+      return;
+    }
+    if(st.input.length === st.seq.length){
+      setMsg('good', `✅ Great memory! Next level…`);
+      st.level += 1;
+      st.playing = true;
+      await sleep(500);
+      st.playing = false;
+      await nextSeqRound(st);
+    }
+  }
+
+  async function onPick(st, i){
+    if(st.lock) return;
+    if(st.matched.has(i)) return;
+
+    const grid = ui.stage.querySelector('#grid');
+    const btn = grid.querySelector('[data-i="'+i+'"]');
+    if(!btn) return;
+
+    // prevent picking same card twice
+    if(st.revealed.includes(i)) return;
+
+    // reveal
+    btn.textContent = st.symbols[i];
+    btn.classList.add('revealed');
+    st.revealed.push(i);
+
+    if(st.revealed.length === 2){
+      st.lock = true;
+      st.moves += 1;
+      ui.stage.querySelector('#moves').textContent = String(st.moves);
+
+      const [a,b] = st.revealed;
+      const match = st.symbols[a] === st.symbols[b];
+
+      if(match){
+        st.matched.add(a);
+        st.matched.add(b);
+        const done = st.matched.size / 2;
+        ui.stage.querySelector('#done').textContent = String(done);
+        grid.querySelector('[data-i="'+a+'"]').classList.add('matched');
+        grid.querySelector('[data-i="'+b+'"]').classList.add('matched');
+        setMsg('good', `✅ Match! Keep going…`);
+        st.revealed = [];
+        st.lock = false;
+
+        // check win
+        if(st.matched.size === st.symbols.length){
+          setMsg('good', `🎉 Completed! Moves: <strong>${st.moves}</strong>. Press <strong>New</strong> for another.`);
+        }
+      } else {
+        setMsg('bad', `Not a match. Try again…`);
+        await sleep(650);
+        // hide
+        [a,b].forEach(idx=>{
+          const el = grid.querySelector('[data-i="'+idx+'"]');
+          if(!el) return;
+          el.textContent = '❓';
+          el.classList.remove('revealed');
+        });
+        st.revealed = [];
         st.lock = false;
       }
     }
