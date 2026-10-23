@@ -109,3 +109,8 @@ html.ps-home body{padding-bottom:92px}
 @media(prefers-reduced-motion:reduce){html.ps-unified *,html.ps-unified *::before,html.ps-unified *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
 html.ps-unified[data-reduce-motion] *,html.ps-unified[data-reduce-motion] *::before,html.ps-unified[data-reduce-motion] *::after{transition:none!important;animation:none!important;scroll-behavior:auto!important}
 html.ps-unified[data-large-ui]{font-size:18px}html.ps-unified[data-large-ui] :is(.btn,.pill,.chip,.ps-shell__button){min-height:56px}
+
+/* Small-screen navigation remains visible; dark-mode actions retain legible contrast. */
+@media(max-width:620px){.ps-shell__back::before{content:"←";font-size:22px}}
+@media(max-width:390px){.ps-shell__sound [data-sound-text]{display:none!important}}
+:root.ps-unified[data-theme="dark"] :is(.btn.primary,.pill.primary,.segbtn.active,.ps-listen){color:#172534!important}
