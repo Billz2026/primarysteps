@@ -173,6 +173,10 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
   white-space:nowrap;
 }
 </style>
+<script src="assets/js/ps-settings.js"></script>
+<script>document.documentElement.classList.add("ps-unified");</script>
+<link rel="stylesheet" href="assets/css/primary-steps.css">
+<script src="assets/js/primary-steps.js" defer></script>
 </head>
 <body>
 
@@ -470,7 +474,7 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
 
   applyMeta();
   // initial stage
-  ui.stage.innerHTML = `<div class="center"><div class="pill">${active.name}</div><div class="small">Press <strong>New</strong> to start.</div></div>`;
+  newRound();
 })();
 </script>
 </body>
