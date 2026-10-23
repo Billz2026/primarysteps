@@ -329,7 +329,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
     return audioCtx;
   }
   function tone(freq=700, ms=70, gain=0.03, type='sine'){
-    if(!soundOn) return;
+    if(!soundOn || window.PSSettings?.load?.().soundEnabled===false) return;
     const ctx = getCtx();
     const o = ctx.createOscillator();
     const g = ctx.createGain();
@@ -346,7 +346,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
     o.stop(now + ms/1000 + 0.02);
   }
   function clink(){
-    if(!soundOn) return;
+    if(!soundOn || window.PSSettings?.load?.().soundEnabled===false) return;
     const ctx = getCtx();
     const now = ctx.currentTime;
 

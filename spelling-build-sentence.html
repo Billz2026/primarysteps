@@ -504,7 +504,7 @@ a:focus-visible, button:focus-visible, input:focus-visible{
 
   let soundOn=false, audioCtx=null;
   function beep(freq=700, ms=70, gain=0.03){
-    if(!soundOn) return;
+    if(!soundOn || window.PSSettings?.load?.().soundEnabled===false) return;
     if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const o=audioCtx.createOscillator(), g=audioCtx.createGain();
     o.frequency.value=freq; g.gain.value=gain;

@@ -282,7 +282,7 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
   let ctx = null;
 
   function beep(freq=600, dur=80, gain=0.05, type='sine'){
-    if(!soundOn) return;
+    if(!soundOn || window.PSSettings?.load?.().soundEnabled===false) return;
     try{
       if(!ctx) ctx = audioCtx();
       const o = ctx.createOscillator();
