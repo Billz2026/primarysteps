@@ -345,6 +345,7 @@
   let stars = 0;
   let hinted = false;
   let roundFinished = false;
+  const simplePlay=()=>window.PSSettings?.load?.().simplePlay ?? true;
 
   // Progress (shared idea with other pages)
   const LS_KEY = "ps_numbers_count_progress_v1";
@@ -449,15 +450,16 @@
     choicesEl.innerHTML = "";
 
     const r = ranges[rangeIndex];
-    const span = r.max - r.min;
+    const max=simplePlay() && rangeIndex===0 ? 10 : r.max;
+    const span = max - r.min;
     const set = new Set([target]);
 
-    // create 4 choices including target, spread around the range
-    while(set.size < 4){
+    // Three choices in Simple Play, four in standard play.
+    while(set.size < (simplePlay()?3:4)){
       // bias close to target so it's not too easy
       const wiggle = Math.max(4, Math.floor(span * 0.12));
       let candidate = target + randInt(-wiggle, wiggle);
-      candidate = clamp(candidate, r.min, r.max);
+      candidate = clamp(candidate, r.min, max);
       set.add(candidate);
     }
 
@@ -474,7 +476,7 @@
   function newRound(){
     roundFinished = false;
     const r = ranges[rangeIndex];
-    target = randInt(r.min, r.max);
+    target = randInt(r.min, simplePlay() && rangeIndex===0 ? 10 : r.max);
     buildVisual();
     buildChoices();
     feedbackEl.textContent = "Tap the number you counted.";

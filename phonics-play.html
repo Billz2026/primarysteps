@@ -307,6 +307,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
     }catch(e){}
   }
 
+  const simplePlay=()=>window.PSSettings?.load?.().simplePlay ?? true;
   const ACTIVITIES = [
     {
       key:'soundmatch',
@@ -321,7 +322,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
         const t = bank[randInt(0, bank.length-1)];
         st.target = t;
         const picks = new Set([t]);
-        while(picks.size < 3){
+        while(picks.size < (simplePlay()?2:3)){
           picks.add(bank[randInt(0, bank.length-1)]);
         }
         st.options = shuffle([...picks]);
@@ -394,9 +395,9 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
         const vowelPool = new Set([vowel]);
         const codaPool  = new Set([coda]);
 
-        while(onsetPool.size < 4) onsetPool.add(onsets[randInt(0,onsets.length-1)]);
-        while(vowelPool.size < 3) vowelPool.add(vowels[randInt(0,vowels.length-1)]);
-        while(codaPool.size  < 4) codaPool.add(codas[randInt(0,codas.length-1)]);
+        while(onsetPool.size < (simplePlay()?2:4)) onsetPool.add(onsets[randInt(0,onsets.length-1)]);
+        while(vowelPool.size < (simplePlay()?2:3)) vowelPool.add(vowels[randInt(0,vowels.length-1)]);
+        while(codaPool.size < (simplePlay()?2:4)) codaPool.add(codas[randInt(0,codas.length-1)]);
 
         st.pool = {
           onset: shuffle([...onsetPool]),
@@ -517,6 +518,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
   ui.resetBtn.addEventListener('click', reset);
   ui.difficulty.addEventListener('change', ()=> newRound());
 
+  if(simplePlay())ui.difficulty.value="easy";
   newRound();
 })();
 </script>

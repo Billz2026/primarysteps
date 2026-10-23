@@ -262,6 +262,7 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
     return arr;
   }
 
+  const simplePlay=()=>window.PSSettings?.load?.().simplePlay ?? true;
   const ACTIVITIES = [
     {
       key:'quickadd',
@@ -269,7 +270,7 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
       lead:'Type the answer, then press Check.',
       build: ()=>({ a:0, b:0, answer:"", done:false }),
       newRound:(st, diff)=>{
-        const max = diff==='easy' ? 10 : diff==='hard' ? 50 : 20;
+        const max = diff==='easy' ? (simplePlay()?5:10) : diff==='hard' ? 50 : 20;
         st.a = randInt(0, max);
         st.b = randInt(0, max);
         st.answer = "";
@@ -296,7 +297,7 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
       lead:'Type the answer, then press Check.',
       build: ()=>({ a:0, b:0, answer:"", done:false }),
       newRound:(st, diff)=>{
-        const max = diff==='easy' ? 10 : diff==='hard' ? 50 : 20;
+        const max = diff==='easy' ? (simplePlay()?5:10) : diff==='hard' ? 50 : 20;
         let a = randInt(0, max);
         let b = randInt(0, max);
         if(diff!=='hard' && b>a){ [a,b]=[b,a]; } // avoid negatives for easy/medium
@@ -326,8 +327,8 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
       build: ()=>({ a:0, b:0, answer:"", done:false }),
       newRound:(st, diff)=>{
         // Keep questions age-appropriate and scale with difficulty
-        const aMax = diff==='easy' ? 5 : diff==='hard' ? 12 : 10;
-        const bMax = diff==='easy' ? 5 : diff==='hard' ? 12 : 10;
+        const aMax = diff==='easy' ? (simplePlay()?3:5) : diff==='hard' ? 12 : 10;
+        const bMax = diff==='easy' ? (simplePlay()?3:5) : diff==='hard' ? 12 : 10;
 
         // Avoid too many zero questions; include occasionally for learning
         const includeZero = (diff==='easy');
@@ -360,7 +361,7 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
       build: ()=>({ a:0, b:0, answer:"", done:false }),
       newRound:(st, diff)=>{
         // Keep division child‑friendly with whole number answers only
-        const max = diff==='easy' ? 5 : diff==='hard' ? 12 : 10;
+        const max = diff==='easy' ? (simplePlay()?3:5) : diff==='hard' ? 12 : 10;
 
         st.b = randInt(1, max); // divisor (never zero)
         const quotient = randInt(1, max);
@@ -392,11 +393,11 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
       lead:'Pick the missing number.',
       build: ()=>({ target:10, a:0, missing:0, options:[], done:false }),
       newRound:(st, diff)=>{
-        st.target = (diff==='hard') ? 20 : 10;
+        st.target = (diff==='hard') ? 20 : (simplePlay() && diff==='easy' ? 5 : 10);
         st.a = randInt(0, st.target);
         st.missing = st.target - st.a;
         const picks = new Set([st.missing]);
-        while(picks.size < 3){
+        while(picks.size < (simplePlay()?2:3)){
           picks.add(randInt(0, st.target));
         }
         st.options = shuffle([...picks]);
@@ -484,6 +485,7 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
 
   applyMeta();
   // initial stage
+  if(simplePlay())ui.difficulty.value='easy';
   newRound();
 })();
 </script>

@@ -753,10 +753,9 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
   ui.resetBtn.addEventListener('click', reset);
   ui.difficulty.addEventListener('change', ()=> newRound());
 
-  // init view (don’t auto-start)
-  applyMeta();
-  active.render(state);
-  setMsg('', `Press <strong>New</strong> to start ${active.name}.`);
+  // Start with the simplest board; no extra setup screen.
+  if(window.PSSettings?.load?.().simplePlay)ui.difficulty.value='easy';
+  newRound();
 })();
 </script>
 </body>

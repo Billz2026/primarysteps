@@ -240,7 +240,7 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
       <div class="pill" id="pill">Find the Letter</div>
       <div class="row">
         <label style="font-size:12px;color:var(--muted);font-weight:900;">Difficulty</label>
-        <select id="difficulty">
+        <select id="difficulty" aria-label="Letter difficulty">
           <option value="easy">Easy</option>
           <option value="medium" selected>Medium</option>
           <option value="hard">Hard</option>
@@ -444,8 +444,10 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
     }
     return a;
   }
+  function simplePlay(){return window.PSSettings?.load?.().simplePlay ?? true;}
   function pickTarget(){
-    return ALPHA[Math.floor(Math.random()*ALPHA.length)];
+    const bank=simplePlay()?['A','B','C','M','S','T']:ALPHA;
+    return bank[Math.floor(Math.random()*bank.length)];
   }
 
   function buildRound(){
@@ -460,7 +462,7 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
     drawPrimary3D(targetCanvas, target, 1.0);
 
     const diff = difficultyEl.value;
-    let count = diff === 'easy' ? 8 : diff === 'medium' ? 12 : 18;
+    let count = simplePlay() ? 4 : diff === 'easy' ? 8 : diff === 'medium' ? 12 : 18;
 
     const distractors = shuffle(ALPHA.filter(l => l !== target)).slice(0, count - 1);
     const set = shuffle([target, ...distractors]);
@@ -507,6 +509,7 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
     beep(760, 70, 0.03);
   });
 
+  if(simplePlay())difficultyEl.value="easy";
   buildRound();
   window.addEventListener('resize', () => drawPrimary3D(targetCanvas, target, 1.0));
 })();
