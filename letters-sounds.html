@@ -118,25 +118,25 @@ p{margin:0;color:var(--muted)}
   <section class="card">
     <div class="head">
       <h1>Letter Sounds</h1>
-      <p>Press <b>Play</b> and choose the matching letter.</p>
+      <p>Tap Play, then choose the letter you hear.</p>
     </div>
 
     <div class="panel">
       <div>
-        <div class="big" id="big">A</div>
+        <div class="big" id="big" aria-hidden="true">🔊</div>
         <div class="controls" style="margin-top:12px">
           <button class="btn" id="play">🔊 Play</button>
-          <button class="btn" id="new">New</button>
+          <button class="btn" id="new">Next →</button>
           <div class="pill">Voice: browser</div>
         </div>
         <div class="small" style="margin-top:10px">
-          Note: Sound uses your device’s built-in voice. If it’s muted, check volume.
+          Uses your device voice to speak letter names. It is not a recorded phonics sound.
         </div>
       </div>
 
       <div>
         <div class="choices" id="choices"></div>
-        <div class="status" id="status">Ready.</div>
+        <div class="status" id="status" role="status" aria-live="polite">Tap Play, then choose.</div>
       </div>
     </div>
   </section>
@@ -148,30 +148,36 @@ const big = document.getElementById("big");
 const choices = document.getElementById("choices");
 const statusEl = document.getElementById("status");
 let target = "A";
+let finished = false;
+const simplePlay=()=>window.PSSettings?.load?.().simplePlay ?? true;
 
 function speak(text){
+  const opts=window.PSSettings?.load?.()||{soundEnabled:true,voiceEnabled:true,volume:.9};
+  if(!opts.soundEnabled||!opts.voiceEnabled)return;
   try{
     window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance(text);
-    u.rate = 0.9;
-    u.pitch = 1.0;
+    const u = new SpeechSynthesisUtterance("The letter "+text);
+    u.lang="en-GB";u.rate=.82;u.volume=opts.volume??.9;
     window.speechSynthesis.speak(u);
   }catch(e){}
 }
 
 function pick(){
-  target = letters[Math.floor(Math.random()*letters.length)];
-  big.textContent = target;
-  statusEl.textContent = "Ready.";
-  statusEl.className = "status";
+  const bank=simplePlay()?["A","B","C","M","S","T"]:letters;
+  target=bank[Math.floor(Math.random()*bank.length)];
+  finished=false;
+  big.textContent="🔊";
+  statusEl.textContent="Tap Play, then choose.";
+  statusEl.className="status";
   buildChoices();
 }
 
 function buildChoices(){
   choices.innerHTML = "";
   const opts = new Set([target]);
-  while(opts.size < 6){
-    opts.add(letters[Math.floor(Math.random()*letters.length)]);
+  const bank=simplePlay()?["A","B","C","M","S","T"]:letters;
+  while(opts.size < (simplePlay()?3:6)){
+    opts.add(bank[Math.floor(Math.random()*bank.length)]);
   }
   const arr = Array.from(opts);
   for(let i=arr.length-1;i>0;i--){
@@ -179,16 +185,20 @@ function buildChoices(){
     [arr[i], arr[j]] = [arr[j], arr[i]];
   }
   arr.forEach(ch=>{
-    const b = document.createElement("div");
+    const b = document.createElement("button");
+    b.type="button";
     b.className = "choice";
     b.textContent = ch;
+    b.setAttribute("aria-label","Letter "+ch);
     b.onclick = ()=>{
+      if(finished)return;
       if(ch === target){
-        statusEl.textContent = "✅ Correct!";
+        finished=true;
+        big.textContent=target;
+        statusEl.textContent = "✅ Well done! Tap Next when you are ready.";
         statusEl.className = "status good";
-        setTimeout(pick, 650);
       }else{
-        statusEl.textContent = "❌ Try again.";
+        statusEl.textContent = "Try another letter. You can listen again.";
         statusEl.className = "status";
       }
     };
