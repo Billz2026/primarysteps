@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="ps-unified ps-game" data-game="maths">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -180,6 +180,8 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
 <script src="assets/js/primary-steps.js" defer></script>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
+<link rel="stylesheet" href="assets/css/learning-game.css?v=1">
+<script src="assets/js/learning-game.js?v=1" defer></script>
 </head>
 <body>
 
@@ -206,7 +208,7 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
 <section class="hero">
   <div class="hwrap">
     <h1 id="pageTitle">Maths</h1>
-    <p class="lead" id="pageLead">Press New to start.</p>
+    <p class="lead" id="pageLead">Solve the question.</p>
   </div>
 </section>
 
@@ -214,23 +216,18 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
   <div class="card" aria-label="Maths activity">
     <div class="head">
       <div class="pill" id="actPill">Loading…</div>
-      <div class="row">
-        <div class="field">
-          <label for="difficulty">Difficulty</label>
-          <select id="difficulty">
-            <option value="easy">Easy</option>
-            <option value="medium" selected>Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </div>
-        <button class="btn primary" id="newBtn" type="button">New</button>
-        <button class="btn" id="checkBtn" type="button">Check</button>
-        <button class="btn" id="resetBtn" type="button">Reset</button>
+      <div class="ps-game-tools">
+        <button class="btn primary" id="checkBtn" type="button">✓ Check</button>
+        <button class="btn" id="newBtn" type="button">Next →</button>
+        <button class="btn" id="resetBtn" type="button">↻ Try again</button>
       </div>
+      <details class="ps-game-advanced"><summary>Grown-ups: difficulty</summary>
+      <div class="field"><label for="difficulty">Level</label>
+      <select id="difficulty"><option value="easy" selected>Easy</option><option value="medium">Medium</option><option value="hard">Hard</option></select></div></details>
     </div>
     <div class="body">
       <div class="stage" id="stage"></div>
-      <div class="msg" id="message">Press <strong>New</strong> to start.</div>
+      <div class="msg" id="message" role="status" aria-live="polite">Choose the answer.</div>
     </div>
   </div>
 </section>
@@ -280,13 +277,14 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
       },
       check:(st)=>{
         if(st.done) return;
+        if(String(st.answer).trim()===""){setMsg("bad","Enter your answer.");return;}
         const val = Number(st.answer);
         if(!Number.isFinite(val)) { setMsg('bad', 'Type a number first.'); return; }
-        st.done = true;
-        if(val === st.a + st.b){
-          setMsg('good', `✅ Correct! Press <strong>New</strong> for another.`);
+        st.done = (val === st.a + st.b);
+        if(st.done){
+          setMsg('good', `✅ Well done! Tap <strong>Next</strong> when ready.`);
         } else {
-          setMsg('bad', `Not quite. The answer was <strong>${st.a + st.b}</strong>. Press <strong>New</strong> to try again.`);
+          setMsg('bad', `Try another answer.`);
         }
       }
     },
@@ -308,13 +306,14 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
       },
       check:(st)=>{
         if(st.done) return;
+        if(String(st.answer).trim()===""){setMsg("bad","Enter your answer.");return;}
         const val = Number(st.answer);
         if(!Number.isFinite(val)) { setMsg('bad', 'Type a number first.'); return; }
-        st.done = true;
-        if(val === st.a - st.b){
-          setMsg('good', `✅ Correct! Press <strong>New</strong> for another.`);
+        st.done = (val === st.a - st.b);
+        if(st.done){
+          setMsg('good', `✅ Well done! Tap <strong>Next</strong> when ready.`);
         } else {
-          setMsg('bad', `Not quite. The answer was <strong>${st.a - st.b}</strong>. Press <strong>New</strong> to try again.`);
+          setMsg('bad', `Try another answer.`);
         }
       }
     },
@@ -340,14 +339,15 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
       },
       check:(st)=>{
         if(st.done) return;
+        if(String(st.answer).trim()===""){setMsg("bad","Enter your answer.");return;}
         const val = Number(st.answer);
         if(!Number.isFinite(val)) { setMsg('bad', 'Type a number first.'); return; }
-        st.done = true;
         const correctAns = st.a * st.b;
-        if(val === correctAns){
-          setMsg('good', `✅ Correct! Press <strong>New</strong> for another.`);
+        st.done = (val === correctAns);
+        if(st.done){
+          setMsg('good', `✅ Well done! Tap <strong>Next</strong> when ready.`);
         } else {
-          setMsg('bad', `Not quite. The answer was <strong>${correctAns}</strong>. Press <strong>New</strong> to try again.`);
+          setMsg('bad', `Try another answer.`);
         }
       }
     },
@@ -371,14 +371,15 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
       },
       check:(st)=>{
         if(st.done) return;
+        if(String(st.answer).trim()===""){setMsg("bad","Enter your answer.");return;}
         const val = Number(st.answer);
         if(!Number.isFinite(val)) { setMsg('bad', 'Type a number first.'); return; }
-        st.done = true;
         const correctAns = st.a / st.b;
-        if(val === correctAns){
-          setMsg('good', `✅ Correct! Press <strong>New</strong> for another.`);
+        st.done = (val === correctAns);
+        if(st.done){
+          setMsg('good', `✅ Well done! Tap <strong>Next</strong> when ready.`);
         } else {
-          setMsg('bad', `Not quite. The answer was <strong>${correctAns}</strong>. Press <strong>New</strong> to try again.`);
+          setMsg('bad', `Try another answer.`);
         }
       }
     },
@@ -408,16 +409,17 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
         `;
         const wrap = ui.stage.querySelector('#choices');
         st.options.forEach(opt=>{
-          const el = document.createElement('div');
+          const el = document.createElement('button');
+          el.type = 'button';
           el.className = 'choice';
           el.innerHTML = `<span style="font-size:22px">${opt}</span><span class="tag">Choose</span>`;
           el.addEventListener('click', ()=>{
             if(st.done) return;
-            st.done = true;
+            st.done = (opt === st.missing);
             if(opt === st.missing){
-              setMsg('good', `✅ Correct! Press <strong>New</strong> for another.`);
+              setMsg('good', `✅ Well done! Tap <strong>Next</strong> when ready.`);
             } else {
-              setMsg('bad', `Not quite. The answer was <strong>${st.missing}</strong>. Press <strong>New</strong> to try again.`);
+              setMsg('bad', `Try another answer.`);
             }
           });
           wrap.appendChild(el);
@@ -435,13 +437,16 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
         <div class="pill">${tag}</div>
         <div class="bigQ">${st.a} ${op} ${st.b} = ?</div>
         <div class="inputRow">
-          <input id="ans" type="number" inputmode="numeric" placeholder="Answer" />
+          <input id="ans" type="number" inputmode="numeric" placeholder="?" aria-label="Your answer" />
         </div>
-        <div class="small">Tip: press <strong>Check</strong> when you’re ready.</div>
+        <div class="ps-numberpad" aria-label="Number buttons">
+          <button type="button" data-key="1">1</button><button type="button" data-key="2">2</button><button type="button" data-key="3">3</button><button type="button" data-key="4">4</button><button type="button" data-key="5">5</button><button type="button" data-key="6">6</button><button type="button" data-key="7">7</button><button type="button" data-key="8">8</button><button type="button" data-key="9">9</button><button type="button" data-key="minus" aria-label="Negative">−</button><button type="button" data-key="0">0</button><button type="button" data-key="back" aria-label="Delete last digit">⌫</button>
+        </div>
+        <div class="small">Tap Check when ready.</div>
       </div>
     `;
     const input = ui.stage.querySelector('#ans');
-    input.focus({preventScroll:true});
+    // Large number buttons are available without opening the mobile keyboard.
     input.addEventListener('input', ()=> st.answer = input.value);
     input.addEventListener('keydown', (e)=>{
       if(e.key === 'Enter'){ active.check && active.check(state); }
@@ -467,7 +472,7 @@ input[type="number"]:focus{box-shadow:0 0 0 6px var(--ring);}
   }
   function reset(){
     newRound();
-    setMsg('', `Reset done. Press <strong>New</strong> or keep going.`);
+    setMsg('', `Try again at your own pace.`);
   }
 
   ui.newBtn.addEventListener('click', newRound);
