@@ -663,3 +663,72 @@ html.ps-unified[data-simple-play="on"] .ps-spoken-help{
 :root.ps-unified[data-theme="dark"][data-simple-play="on"] #simplePlaySetting{
  background:var(--ps-surface)!important;border-color:var(--ps-edge)!important;
 }
+
+/* Home navigation v7 — fewer choices first, every activity one tap away. */
+html.ps-home .ps-welcome{
+ min-height:205px;padding:20px clamp(26px,3vw,46px);
+ margin:18px 0 17px;grid-template-columns:minmax(0,1fr) 180px;
+ gap:14px;border-radius:28px;
+}
+html.ps-home .ps-welcome h1{font-size:clamp(37px,3.7vw,55px);margin:14px 0 7px}
+html.ps-home .ps-welcome p{font-size:clamp(18px,1.6vw,21px);margin-bottom:12px}
+html.ps-home .ps-welcome__friend{width:168px;height:160px}
+html.ps-home .ps-welcome__friend svg{max-width:165px}
+html.ps-home .ps-listen{min-height:49px;padding:11px 18px;font-size:15px}
+html.ps-home .ps-section-head{min-height:50px;margin-bottom:14px}
+html.ps-home .ps-section-head h2{font-size:clamp(27px,2.5vw,37px)}
+html.ps-home .ps-section-head__hint{font:700 16px/1.4 var(--ps-title-font);margin:5px 0 0;color:var(--ps-muted)}
+html.ps-home .ps-home-grid--featured{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+html.ps-home .ps-home-grid--extra{grid-template-columns:repeat(4,minmax(0,1fr));gap:18px}
+html.ps-home .ps-tile{min-height:265px;padding:10px 19px 18px;border-radius:25px}
+html.ps-home .ps-tile__picture{width:min(90%,240px);height:172px}
+html.ps-home .ps-tile__label{font-size:clamp(24px,2.25vw,31px)}
+html.ps-home .ps-tile__go{width:46px;height:46px;font-size:26px;border-radius:15px}
+html.ps-home .ps-all-activities-btn{
+ width:min(100%,450px);display:flex;align-items:center;justify-content:center;gap:12px;
+ margin:24px auto 18px;min-height:65px;border:2px solid #A5CFCA;
+ background:#E8F6F1!important;color:#225E64;
+ border-radius:20px;font-size:clamp(18px,2vw,21px);
+}
+html.ps-home .ps-all-activities-btn[aria-expanded="true"]{background:#FFFFFF!important}
+html.ps-home .ps-more-btn__chevron{font-size:23px}
+html.ps-home .ps-more-section{scroll-margin-top:118px;margin-top:13px}
+html.ps-home .ps-more-header{margin-bottom:18px}
+html.ps-home .ps-more-header h2{font:900 clamp(25px,2.6vw,35px)/1.2 var(--ps-title-font);margin:0 0 4px}
+html.ps-home .ps-more-header p{margin:0;color:var(--ps-muted);font-size:16px}
+html.ps-home[data-simple-play="off"] .ps-all-activities-btn{display:none!important}
+@media(max-width:1000px){
+ html.ps-home .ps-home-grid--featured,html.ps-home .ps-home-grid--extra{grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+ html.ps-home .ps-tile{min-height:245px}
+}
+@media(max-width:660px){
+ html.ps-home .ps-welcome{min-height:0;grid-template-columns:minmax(0,1fr) 84px;padding:16px 17px;margin:12px 0 16px;gap:8px;border-radius:22px}
+ html.ps-home .ps-welcome h1{font-size:clamp(27px,6.7vw,38px);margin:11px 0 5px}
+ html.ps-home .ps-welcome p{font-size:15px;margin-bottom:10px}
+ html.ps-home .ps-eyebrow{font-size:9px;padding:6px 9px}
+ html.ps-home .ps-welcome__friend{display:grid;width:83px;height:88px;align-self:center;border-radius:29px}
+ html.ps-home .ps-welcome__friend svg{height:83px;width:83px}
+ html.ps-home .ps-listen{min-height:44px;padding:9px 14px;font-size:14px}
+ html.ps-home .ps-section-head{margin:0 0 12px;min-height:0}
+ html.ps-home .ps-section-head h2{font-size:clamp(24px,6vw,30px)}
+ html.ps-home .ps-section-head__hint{font-size:13px}
+ html.ps-home .ps-home-grid--featured,html.ps-home .ps-home-grid--extra{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+ html.ps-home .ps-tile{min-height:190px;padding:8px 11px 12px;border-radius:20px}
+ html.ps-home .ps-tile__picture{width:100%;height:126px}
+ html.ps-home .ps-tile__label{font-size:clamp(19px,5vw,25px)}
+ html.ps-home .ps-tile__go{width:33px;height:33px;font-size:20px;border-radius:11px}
+ html.ps-home .ps-all-activities-btn{min-height:59px;margin:17px auto 15px;font-size:18px}
+ html.ps-home .ps-continue{max-width:42%}
+}
+@media(max-width:390px){
+ html.ps-home .ps-welcome{grid-template-columns:minmax(0,1fr) 72px}
+ html.ps-home .ps-welcome__friend{display:grid;width:68px;height:73px}
+ html.ps-home .ps-welcome__friend svg{width:68px;height:73px}
+ html.ps-home .ps-tile{min-height:174px;padding:7px 9px 11px}
+ html.ps-home .ps-tile__picture{height:110px}
+ html.ps-home .ps-tile__label{font-size:19px}
+ html.ps-home .ps-tile__go{width:30px;height:30px}
+}
+@media(max-width:320px){
+ html.ps-home .ps-home-grid--featured,html.ps-home .ps-home-grid--extra{grid-template-columns:1fr}
+}
