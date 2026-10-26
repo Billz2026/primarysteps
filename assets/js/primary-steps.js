@@ -70,66 +70,67 @@
  }
 
  function addSpokenHelp(){
-  if(home || file==="settings.html" || file==="progress.html")return;
-  if(!root.classList.contains("ps-game")&&!root.classList.contains("ps-v4"))return;
-  // Activities that already expose a spoken help button don't need a duplicate.
-  if(document.querySelector('#listen[data-ps-read],#sayBtn,[data-ps-listen]'))return;
-  var hints={
-   "letters-find.html":"Find the same letter. Tap the one that matches.",
-   "letters-sounds.html":"Tap Play. Listen carefully, then choose a letter.",
-   "numbers-trace.html":"Choose a number. Trace it with your finger. Tap Done when ready.",
-   "phonics-play.html":"Listen to the sound. Tap the matching letter. You can listen again.",
-   "maths-play.html":"Look at the numbers. Enter an answer and tap Check.",
-   "spelling-play.html":"Look at the word. Try spelling it. Tap Check when ready.",
-   "spelling-missing-word.html":"Read the sentence. Tap the word that fits.",
-   "spelling-build-sentence.html":"Put the words in order. Build a sentence.",
-   "memory-play.html":"Turn over two pictures. Find the matching pair.",
-   "puzzles-play.html":"Look at the pictures. Tap or move each piece to solve the puzzle.",
-   "drawing-play.html":"Pick a colour. Use your finger to draw a picture.",
-   "clock-play.html":"Look at the clock. Choose the time.",
-   "handwriting-play.html":"Follow the letters with your finger to practise writing.",
-   "game-coins.html":"Look at the coins. Count them or put them in order.",
-   "game-connect4.html":"Tap a column. Try to make four in a row.",
-   "game-shapesort.html":"Tap a shape, then tap where it belongs.",
-   "game-sudoku.html":"Tap a square. Choose a number.",
-   "games-play.html":"Choose a game, then tap the pictures to play."
+  var guidance={
+   "clock-play.html":"Look at the clock. Tap the correct time. For Set the Time, move the hands and tap Check.",
+   "drawing-play.html":"Pick a colour. Draw with your finger or mouse. You can tap Undo.",
+   "game-coins.html":"Count the coins. Tap the answer. Try the easy level first.",
+   "game-connect4.html":"Choose a column to drop a piece. Try to make four in a row.",
+   "game-shapesort.html":"Tap a shape. Then tap the matching box. You can take your time.",
+   "game-sudoku.html":"Tap an empty square. Choose a number. Each row and column needs different numbers.",
+   "games-play.html":"Tap a game to start. Follow the pictures to play.",
+   "handwriting.html":"Trace the word with your finger. Tap Next for a new word.",
+   "handwriting-play.html":"Follow the letters on the board with your finger. Tap Done when you finish.",
+   "letters-find.html":"Find the same letter. Tap the letter that matches.",
+   "letters-sounds.html":"Tap Play to hear a letter sound. Listen and choose the matching letter.",
+   "letters-trace.html":"Follow the dotted letter with your finger. Tap Next for another letter.",
+   "maths-play.html":"Look at the numbers. Type your answer. Tap Check.",
+   "memory-play.html":"Turn over two pictures. Try to find a matching pair.",
+   "numbers-count.html":"Count the pictures. Tap the number you counted.",
+   "numbers-trace.html":"Follow the number with your finger. Tap Done when you're ready.",
+   "phonics-play.html":"Listen to the sound. Choose the matching letter.",
+   "puzzles-play.html":"Look at the puzzle. Tap or move the pieces to finish it.",
+   "spelling-build-sentence.html":"Tap the words in order to make a sentence. Tap Check.",
+   "spelling-missing-word.html":"Read the sentence. Tap the word that fits in the gap.",
+   "spelling-play.html":"Look at the word. Type it in the box. Tap Check."
   };
-  var hint=hints[file];if(!hint)return;
-  if(file==="phonics-play.html" && new URLSearchParams(location.search).get("activity")==="blendbuilder")
-    hint="Choose a starting sound, a middle sound, and an ending sound. Tap Check.";
-  if(file==="memory-play.html" && new URLSearchParams(location.search).get("activity")==="sequence")
-    hint="Watch the pattern. Then tap the same order.";
-  var host=document.querySelector(".hero")||document.querySelector("main .card");
-  if(!host)return;
-  var btn=document.createElement("button");
-  btn.type="button";btn.className="ps-spoken-help";btn.textContent="🔊 Listen";
-  btn.setAttribute("aria-label","Listen to the instructions");
-  var feedback=document.createElement("span");
-  feedback.className="ps-spoken-help__note";feedback.setAttribute("role","status");
-  btn.addEventListener("click",function(){
-   var s=window.PSSettings?.load?.();
-   if(!s?.soundEnabled || !s?.voiceEnabled){
-    feedback.textContent="Voice is off in Parent Zone.";return;
-   }
-   if(!window.speechSynthesis || !window.SpeechSynthesisUtterance){
-    feedback.textContent="Speech is not available on this device.";return;
-   }
-   feedback.textContent="";
-   window.speechSynthesis.cancel();
-   var utterance=new SpeechSynthesisUtterance(hint);
-   utterance.lang="en-GB";utterance.rate=.82;utterance.volume=s.volume??.9;
-   window.speechSynthesis.speak(utterance);
+  var hint=guidance[file];
+  if(!hint)return;
+  if(file==="phonics-play.html"&&new URLSearchParams(location.search).get("activity")==="blendbuilder")
+   hint="Choose the first sound, the middle sound and the last sound. Tap Check.";
+  if(file==="memory-play.html"&&new URLSearchParams(location.search).get("activity")==="sequence")
+   hint="Watch the pattern. Then tap the pictures in the same order.";
+  if(file==="clock-play.html"&&new URLSearchParams(location.search).get("activity")==="set")
+   hint="Look at the time shown. Tap Hour plus to move the hand. Tap Check when it matches.";
+  if(file==="drawing-play.html"&&new URLSearchParams(location.search).get("activity")==="colouring")
+   hint="Choose a picture and a colour. Use your finger to colour the picture.";
+  root.classList.add("ps-play-page");
+  root.setAttribute("data-ps-play-page",file.replace(".html",""));
+  document.querySelectorAll("#msg,#message,#feedback,#feedbackEl").forEach(function(el){
+   if(!el.hasAttribute("aria-live"))el.setAttribute("aria-live","polite");
   });
-  var wrapper=document.createElement("div");
-  wrapper.className="ps-spoken-help__wrap";wrapper.append(btn,feedback);
-  if(host.classList.contains("hero"))host.appendChild(wrapper);
-  else {
-   var title=host.querySelector("h1");
-   if(title)title.insertAdjacentElement("afterend",wrapper);
-   else host.insertBefore(wrapper,host.firstChild);
-  }
+  if(document.querySelector(".ps-spoken-help"))return;
+  var host=document.querySelector("main .hero .hwrap, main .hero, body > section.hero .hwrap, body > section.hero, main .card, body > .hero .hwrap");
+  if(!host)return;
+  var wrapper=document.createElement("div");wrapper.className="ps-spoken-help__wrap ps-play-instructions";
+  var summary=document.createElement("span");summary.className="ps-play-instructions__text";
+  summary.textContent=hint;
+  var btn=document.createElement("button");btn.type="button";btn.className="ps-spoken-help";btn.textContent="🔊 Hear instructions";
+  btn.setAttribute("aria-label","Hear how to play this activity");
+  var status=document.createElement("span");status.className="ps-spoken-help__note";status.setAttribute("role","status");
+  btn.addEventListener("click",function(){
+   var prefs=window.PSSettings?.load?.();
+   if(prefs&&(!prefs.soundEnabled||!prefs.voiceEnabled)){status.textContent="Turn on voice in Parent Zone.";return;}
+   if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){status.textContent="Spoken instructions are unavailable on this device.";return;}
+   status.textContent="";
+   window.speechSynthesis.cancel();
+   var u=new SpeechSynthesisUtterance(hint);u.lang="en-GB";u.rate=.82;u.volume=prefs?.volume??.9;
+   window.speechSynthesis.speak(u);
+  });
+  wrapper.append(summary,btn,status);
+  if(host.classList.contains("card")){
+   var heading=host.querySelector("h1");if(heading)heading.insertAdjacentElement("afterend",wrapper);else host.insertBefore(wrapper,host.firstChild);
+  }else host.appendChild(wrapper);
  }
-
  function init(){if(!home)header();dock();remember();enhanceCards();addSpokenHelp();if(home)homeSetup();document.querySelectorAll("[data-ps-sound]").forEach(function(b){showSound(b);b.addEventListener("click",toggleSound)})}
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
