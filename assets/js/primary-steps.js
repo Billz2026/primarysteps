@@ -173,6 +173,43 @@
   var row=document.querySelector(".grid > .card .head .row");
   if(say&&row){say.classList.add("ps-number-speak");row.insertBefore(say,row.firstChild);}
  }
- function init(){if(!home)header();dock();remember();enhanceCards();tidyBeginnerPanels();addSpokenHelp();if(home)homeSetup();document.querySelectorAll("[data-ps-sound]").forEach(function(b){showSound(b);b.addEventListener("click",toggleSound)})}
+ function addQuestionReplay(){
+  var voice=window.PSVoice,anchor=null,getText=null,label="Hear question";
+  function q(sel){return document.querySelector(sel)}
+  if(file==="letters-find.html"){
+   anchor=q(".targetBox .stat")||q("#targetLabel");
+   getText=function(){return "Find the letter "+(q("#targetLabel")?.textContent||"")+". Tap the letter that matches.";};
+   label="Hear the letter to find";
+  }else if(file==="maths-play.html"){
+   anchor=q("#stage");
+   getText=function(){
+    var x=q("#stage .bigQ")?.textContent;
+    if(x){
+     return "What is "+x.replace(/[×x]/g," times ").replace(/[÷]/g," divided by ").replace(/[−-]/g," minus ").replace(/[+]/g," plus ").replace(/=/g," equals ").replace(/[?]/g,"")+"?";
+    }
+    return q("#pageLead")?.textContent||"Look at the question and choose an answer.";
+   };
+  }else if(file==="spelling-play.html"){
+   anchor=q("#word");
+   getText=function(){return "Listen to the word. "+(q("#word")?.textContent||"").replace(/\s+/g," ")+". Type the word and tap Check.";};
+   label="Hear the word";
+  }else if(file==="spelling-missing-word.html"){
+   anchor=q("#sentence");
+   getText=function(){return "Listen to the sentence. "+(q("#sentence")?.textContent||"").replace(/[?]/g," blank ")+". Choose the missing word.";};
+   label="Hear the sentence";
+  }else if(file==="clock-play.html"){
+   anchor=q("#target");
+   getText=function(){
+    var isSet=new URLSearchParams(location.search).get("activity")==="set";
+    return isSet?"Make the clock show "+(q("#target")?.textContent||"the time shown")+". Move the hands and tap Check.":"Look at the clock hands. Choose the time you see.";
+   };
+  }else if(file==="spelling-build-sentence.html"){
+   anchor=q("#tiles");
+   getText=function(){return "Tap the word tiles to make a sentence. Tap Check when you finish.";};
+   label="Hear the task";
+  }
+  if(anchor&&getText)voice.attach(anchor,getText,label);
+ }
+ function init(){if(!home)header();dock();remember();enhanceCards();tidyBeginnerPanels();addSpokenHelp();addQuestionReplay();if(home)homeSetup();document.querySelectorAll("[data-ps-sound]").forEach(function(b){showSound(b);b.addEventListener("click",toggleSound)})}
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
