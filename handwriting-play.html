@@ -475,11 +475,10 @@ canvas{
   ui.difficulty.addEventListener('change', ()=> newRound());
   window.addEventListener('resize', ()=> resizeCanvas(), {passive:true});
 
-  // init
+  // init: open with a ready-to-use board, not an extra setup step.
   applyMeta();
-  resizeCanvas();
-  drawGuides(true);
-  setMsg('', `Press <strong>New</strong> to start ${active.name}.`);
+  if(window.PSSettings?.load?.().simplePlay!==false)ui.difficulty.value='easy';
+  newRound();
 })();
 </script>
 </body>
