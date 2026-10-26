@@ -98,6 +98,16 @@ p{margin:0;color:var(--muted)}
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script>document.documentElement.classList.add("ps-v4");document.documentElement.dataset.section="letters";document.documentElement.dataset.page="letters-sounds.html";</script>
 <link rel="stylesheet" href="assets/css/remaining-uniform.css?v=1">
+<style>
+/* The spoken task stays clear; browser-voice implementation notes belong to grown-ups. */
+:root[data-simple-play="on"] .ps-voice-tech{display:none!important}
+#play{background:#E6F6EF!important;border:2px solid #A5D8CA!important;color:#205D66!important;font-weight:900!important;min-height:56px!important}
+#new{background:#247987!important;color:#FFF!important;border:2px solid #247987!important;min-height:56px!important}
+#choices .choice{border:2px solid #B5D9E1!important;background:#FFF!important;color:#294E60!important;text-shadow:none!important;-webkit-text-stroke:0!important;min-height:83px}
+#choices .choice:focus-visible{outline:3px solid #217B85!important;outline-offset:3px!important}
+#choices .choice[aria-pressed="true"]{background:#DEF6E8!important;border-color:#2C8862!important}
+@media(max-width:550px){#choices .choice{min-height:80px}}
+</style>
 </head>
 <body>
 <header class="header">
@@ -125,11 +135,11 @@ p{margin:0;color:var(--muted)}
       <div>
         <div class="big" id="big" aria-hidden="true">🔊</div>
         <div class="controls" style="margin-top:12px">
-          <button class="btn" id="play">🔊 Hear word</button>
-          <button class="btn" id="new">Next →</button>
-          <div class="pill">Voice: browser</div>
+          <button class="btn" id="play" type="button" aria-label="Hear the word clue again">🔊 Hear word</button>
+          <button class="btn" id="new" type="button">Next →</button>
+          <div class="pill ps-voice-tech">Device voice</div>
         </div>
-        <div class="small" style="margin-top:10px">
+        <div class="small ps-voice-tech" style="margin-top:10px">
           Word clues use your device voice. They are not recorded phonics sounds.
         </div>
       </div>
@@ -167,7 +177,8 @@ function speak(letter){
 
 function pick(){
   const bank=simplePlay()?["A","B","C","M","S","T"]:letters;
-  target=bank[Math.floor(Math.random()*bank.length)];
+  const remaining=bank.filter(letter=>letter!==target);
+  target=remaining[Math.floor(Math.random()*remaining.length)];
   finished=false;
   big.textContent="🔊";
   statusEl.textContent="Tap Hear word, then choose.";
@@ -193,6 +204,7 @@ function buildChoices(){
     b.className = "choice";
     b.textContent = ch;
     b.setAttribute("aria-label","Letter "+ch);
+    b.setAttribute("aria-pressed","false");
     b.onclick = ()=>{
       if(finished)return;
       if(ch === target){
@@ -200,6 +212,8 @@ function buildChoices(){
         big.textContent=target;
         statusEl.textContent = "✅ Well done! Tap Next when you are ready.";
         statusEl.className = "status good";
+        choices.querySelectorAll("button").forEach(choice=>choice.setAttribute("aria-disabled","true"));
+        b.setAttribute("aria-pressed","true");
       }else{
         statusEl.textContent = "Try another letter. You can listen again.";
         statusEl.className = "status";
