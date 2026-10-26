@@ -27,7 +27,33 @@
  }
  function homeSetup(){
   var b=document.getElementById("ps-more-toggle"),m=document.getElementById("ps-more");
-  if(b&&m)b.addEventListener("click",function(){m.hidden=!m.hidden;b.setAttribute("aria-expanded",String(!m.hidden));b.textContent=m.hidden?"Explore more activities ↓":"Show fewer activities ↑"});
+  var featured=document.getElementById("ps-favourites"),extra=document.getElementById("ps-extra-activities");
+  if(b&&m&&featured&&extra){
+   var all=Array.from(document.querySelectorAll("[data-activity]"));
+   var byName={};all.forEach(function(a){byName[a.dataset.activity]=a});
+   var defaults=["letters","numbers","drawing","games"];
+   var s=window.PSSettings?window.PSSettings.load():{simplePlay:true};
+   var picks=[],candidate=Array.isArray(s.homeFavourites)?s.homeFavourites:defaults;
+   candidate.concat(defaults).forEach(function(name){if(byName[name]&&picks.indexOf(name)<0&&picks.length<4)picks.push(name)});
+   var simple=s.simplePlay!==false;
+   if(simple){
+    picks.forEach(function(name){featured.appendChild(byName[name])});
+    all.forEach(function(a){if(picks.indexOf(a.dataset.activity)<0)extra.appendChild(a)});
+    b.hidden=false;
+   }else{
+    all.forEach(function(a){featured.appendChild(a)});
+    m.hidden=true;b.hidden=true;
+   }
+   function setOpen(open){
+    m.hidden=!open;b.setAttribute("aria-expanded",String(open));
+    var label=b.querySelector(".ps-more-btn__label");
+    var arrow=b.querySelector(".ps-more-btn__chevron");
+    if(label)label.textContent=open?"Show fewer activities":"See all 12 activities";
+    if(arrow)arrow.textContent=open?"↑":"↓";
+   }
+   setOpen(false);
+   b.addEventListener("click",function(){var open=m.hidden;setOpen(open);if(open)m.scrollIntoView({block:"start",behavior:"auto"})});
+  }
   var listen=document.getElementById("ps-listen");
   if(listen)listen.addEventListener("click",function(){
    if(!window.speechSynthesis){listen.textContent="Audio unavailable";return;}
