@@ -212,6 +212,18 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script>document.documentElement.classList.add("ps-v4");document.documentElement.dataset.section="letters";document.documentElement.dataset.page="letters-find.html";</script>
 <link rel="stylesheet" href="assets/css/remaining-uniform.css?v=1">
+<style>
+/* Letters: three confident choices in Simple Play; grown-up controls stay available in full mode. */
+:root[data-simple-play="on"] .ps-find-difficulty,
+:root[data-simple-play="on"] #difficulty,
+:root[data-simple-play="on"] #soundBtn,
+:root[data-simple-play="on"] #scoreLabel,
+:root[data-simple-play="on"] #round{display:none!important}
+:root[data-simple-play="on"] #tiles{grid-template-columns:repeat(3,minmax(0,1fr))!important;gap:14px}
+:root[data-simple-play="on"] #tiles .tile{min-height:100px;min-width:0;border-width:3px!important;border-radius:20px}
+#tiles .tile:focus-visible{outline:3px solid #267F8F;outline-offset:3px}
+@media(max-width:520px){:root[data-simple-play="on"] #tiles{gap:8px}:root[data-simple-play="on"] #tiles .tile{min-height:82px;padding:6px}}
+</style>
 </head>
 <body>
 <header>
@@ -231,7 +243,7 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
 
 <section class="hero">
   <h1>Find the Letter</h1>
-  <p class="lead">Tap the letter that matches the target. Find the matching letter. Take your time.</p>
+  <p class="lead">Look at the big letter. Tap the one that matches.</p>
 </section>
 
 <div class="grid">
@@ -239,13 +251,13 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
     <div class="head">
       <div class="pill" id="pill">Find the Letter</div>
       <div class="row">
-        <label style="font-size:12px;color:var(--muted);font-weight:900;">Difficulty</label>
+        <label for="difficulty" class="ps-find-difficulty" style="font-size:12px;color:var(--muted);font-weight:900;">Difficulty</label>
         <select id="difficulty" aria-label="Letter difficulty">
           <option value="easy">Easy</option>
           <option value="medium" selected>Medium</option>
           <option value="hard">Hard</option>
         </select>
-        <button class="btn primary" id="newBtn" type="button">New</button>
+        <button class="btn primary" id="newBtn" type="button">Next →</button>
         <button class="btn" id="soundBtn" type="button" aria-pressed="true">Sound: On</button>
       </div>
     </div>
@@ -258,7 +270,7 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
               <span id="scoreLabel">Score: 0</span>
             </div>
             <canvas id="targetCanvas" class="targetCanvas" aria-label="Target letter"></canvas>
-            <div class="msg" id="msg"></div>
+            <div class="msg" id="msg" role="status" aria-live="polite"></div>
           </div>
 
           <div>
@@ -295,8 +307,8 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
       o.stop(ctx.currentTime + dur/1000);
     }catch(e){}
   }
-  function goodSound(){ beep(880, 90, 0.06, 'sine'); }
-  function badSound(){ beep(240, 120, 0.06, 'sawtooth'); }
+  function goodSound(){ beep(730, 65, 0.018, 'sine'); }
+  function badSound(){ if(!simplePlay())beep(240, 90, 0.015, 'sine'); }
 
   // ---------- PRIMARY-style 3D letter renderer ----------
   const FONT_STACK = `"Arial Black","Impact","Segoe UI Black","Franklin Gothic Heavy",system-ui,-apple-system,"Segoe UI",Roboto,Arial`;
@@ -447,7 +459,8 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
   function simplePlay(){return window.PSSettings?.load?.().simplePlay ?? true;}
   function pickTarget(){
     const bank=simplePlay()?['A','B','C','M','S','T']:ALPHA;
-    return bank[Math.floor(Math.random()*bank.length)];
+    const other=bank.filter(ch=>ch!==target);
+    return other[Math.floor(Math.random()*other.length)];
   }
 
   function buildRound(){
@@ -462,9 +475,10 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
     drawPrimary3D(targetCanvas, target, 1.0);
 
     const diff = difficultyEl.value;
-    let count = simplePlay() ? 4 : diff === 'easy' ? 8 : diff === 'medium' ? 12 : 18;
+    let count = simplePlay() ? 3 : diff === 'easy' ? 8 : diff === 'medium' ? 12 : 18;
 
-    const distractors = shuffle(ALPHA.filter(l => l !== target)).slice(0, count - 1);
+    const bank=simplePlay()?['A','B','C','M','S','T']:ALPHA;
+    const distractors = shuffle(bank.filter(l => l !== target)).slice(0, count - 1);
     const set = shuffle([target, ...distractors]);
 
     tilesEl.innerHTML = '';
@@ -475,6 +489,7 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
       tile.setAttribute('aria-label', `Letter ${letter}`);
 
       const c = document.createElement('canvas');
+      c.setAttribute('aria-hidden','true');c.dataset.letter=letter;
       tile.appendChild(c);
       tilesEl.appendChild(tile);
 
@@ -489,11 +504,11 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
           scoreLabel.textContent = `Score: ${score}`;
           setMsg('good', `Correct! 🎉 You found <strong>${target}</strong>.`);
           goodSound();
-          prompt.textContent = "Great job! Press New for the next round.";
+          prompt.textContent = "Well done! Tap Next when you are ready.";
         } else {
           tile.classList.add('wrong');
           badSound();
-          setMsg('bad', `Try again 🙂 Find <strong>${target}</strong>.`);
+          setMsg('bad', `Have another look. Find <strong>${target}</strong>.`);
         }
       });
     });
@@ -511,7 +526,10 @@ select:focus{box-shadow:0 0 0 6px rgba(80,200,255,.22);}
 
   if(simplePlay())difficultyEl.value="easy";
   buildRound();
-  window.addEventListener('resize', () => drawPrimary3D(targetCanvas, target, 1.0));
+  window.addEventListener('resize', () => {
+    drawPrimary3D(targetCanvas, target, 1.0);
+    tilesEl.querySelectorAll('canvas[data-letter]').forEach(c=>drawPrimary3D(c,c.dataset.letter,0.85));
+  });
 })();
 </script>
 </body>
