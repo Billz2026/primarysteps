@@ -312,6 +312,14 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script>document.documentElement.classList.add("ps-v4");document.documentElement.dataset.section="games";document.documentElement.dataset.page="game-shapesort.html";</script>
 <link rel="stylesheet" href="assets/css/remaining-uniform.css?v=1">
+<style>
+/* Children see the sorting activity first; parents keep difficulty choices in full mode. */
+:root[data-simple-play="on"] #soundBtn,
+:root[data-simple-play="on"] #resetBtn,
+:root[data-simple-play="on"] .grid.two > .card:nth-child(2){display:none!important}
+:root[data-simple-play="on"] .grid.two{grid-template-columns:minmax(0,1fr)!important;max-width:1020px;margin-left:auto;margin-right:auto}
+:root[data-simple-play="on"] #newBtn{min-height:55px;font-size:17px!important}
+</style>
 </head>
 <body>
 <header>
@@ -510,7 +518,7 @@
     ui.hardBtn.classList.toggle('on', d==='hard');
     buildRound();
     render();
-    setMsg('', `Difficulty: <strong>${d}</strong>.`);
+    setMsg('', window.PSSettings?.load?.().simplePlay ? 'Tap a shape, then tap the matching box.' : `Difficulty: <strong>${d}</strong>.`);
     beep(720,60,0.02);
   }
 
