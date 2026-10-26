@@ -3,6 +3,42 @@
  "use strict";
  var root=document.documentElement;root.classList.add("ps-unified");
  var file=location.pathname.split("/").pop()||"index.html",home=file==="index.html";
+ // One opt-in speech path for questions and feedback. No voice starts automatically.
+ window.PSVoice={
+  speak:function(text,status){
+   var prefs=window.PSSettings?.load?.();
+   if(prefs&&(!prefs.soundEnabled||!prefs.voiceEnabled)){
+    if(status)status.textContent="Voice is off in Parent Zone.";
+    return false;
+   }
+   if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){
+    if(status)status.textContent="Speech is not available on this device.";
+    return false;
+   }
+   var phrase=String(text||"").replace(/\s+/g," ").trim();
+   if(!phrase){if(status)status.textContent="No question to read yet.";return false}
+   if(status)status.textContent="";
+   try{
+    window.speechSynthesis.cancel();
+    var utterance=new SpeechSynthesisUtterance(phrase);
+    utterance.lang="en-GB";utterance.rate=.81;utterance.pitch=1;utterance.volume=prefs?.volume??.9;
+    window.speechSynthesis.speak(utterance);return true;
+   }catch(e){if(status)status.textContent="Speech could not play.";return false}
+  },
+  attach:function(target,getText,label){
+   var anchor=typeof target==="string"?document.querySelector(target):target;
+   if(!anchor||!getText)return null;
+   var group=document.createElement("div");group.className="ps-question-audio";
+   var button=document.createElement("button");button.type="button";
+   button.className="ps-question-audio__button";button.textContent="🔊 "+(label||"Hear question");
+   button.setAttribute("aria-label",label||"Hear this question again");
+   var note=document.createElement("span");note.className="ps-question-audio__note";note.setAttribute("role","status");
+   button.addEventListener("click",function(){window.PSVoice.speak(getText(),note)});
+   group.append(button,note);
+   anchor.insertAdjacentElement("afterend",group);return button;
+  }
+ };
+
  function section(){var p=file.replace(".html","");return p.indexOf("game-")===0?"games":p.split("-")[0]}
  function soundOn(){return window.PSSettings?window.PSSettings.load().soundEnabled:true}
  function showSound(b){if(!b)return;var on=soundOn();b.setAttribute("aria-pressed",String(on));b.setAttribute("aria-label",on?"Sound on. Tap to mute":"Sound off. Tap to enable");var i=b.querySelector("[data-sound-icon]"),t=b.querySelector("[data-sound-text]");if(i)i.textContent=on?"🔊":"🔇";if(t)t.textContent=on?"Sound on":"Sound off"}
