@@ -601,6 +601,19 @@ canvas {
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script>document.documentElement.classList.add("ps-v4");document.documentElement.dataset.section="drawing";document.documentElement.dataset.page="drawing-play.html";</script>
 <link rel="stylesheet" href="assets/css/remaining-uniform.css?v=1">
+<style>
+/* Give beginning artists one clear set of drawing controls. */
+:root[data-simple-play="on"] #newBtn,
+:root[data-simple-play="on"] #toolMarker,
+:root[data-simple-play="on"] #toolSpray,
+:root[data-simple-play="on"] .sliderRow,
+:root[data-simple-play="on"] .ps-drawing-sound,
+:root[data-simple-play="on"] .ps-drawing-smooth,
+:root[data-simple-play="on"] .ps-drawing-tips{display:none!important}
+:root[data-simple-play="on"] #toolBrush,
+:root[data-simple-play="on"] #toolEraser{min-height:54px;min-width:100px;font-size:17px!important}
+:root[data-simple-play="on"] #palette{gap:12px}
+</style>
 </head>
 <body>
 <header>
@@ -655,7 +668,7 @@ canvas {
             <div class="overlayLabel" id="overlayLabel" style="display:none;">Colouring</div>
             <canvas id="canvas" width="1200" height="800"></canvas>
           </div>
-          <div class="msg" id="msg">Tip: Press <span class="kbd">E</span> for eraser, <span class="kbd">B</span> for brush.</div>
+          <div class="msg" id="msg" role="status" aria-live="polite">Pick a colour. Draw with your finger. Tap Undo if you need to.</div>
         </div>
       </div>
     </div>
@@ -695,11 +708,11 @@ canvas {
         <div class="spacer"></div>
 
         <div class="row">
-          <label class="switch">
+          <label class="switch ps-drawing-sound">
             <input type="checkbox" id="sound" checked>
             <span>Sound</span>
           </label>
-          <label class="switch">
+          <label class="switch ps-drawing-smooth">
             <input type="checkbox" id="smooth" checked>
             <span>Smooth lines</span>
           </label>
@@ -707,7 +720,7 @@ canvas {
 
         <div class="spacer"></div>
 
-        <div class="small" style="color:var(--muted);line-height:1.4;">
+        <div class="small ps-drawing-tips" style="color:var(--muted);line-height:1.4;">
           <strong>Colouring:</strong> pick a picture, then colour on top.<br>
           <strong>Tip:</strong> Use <span class="kbd">Undo</span> if you make a mistake.
         </div>
