@@ -185,7 +185,11 @@
    getText=function(){
     var x=q("#stage .bigQ")?.textContent;
     if(x){
-     return "What is "+x.replace(/[×x]/g," times ").replace(/[÷]/g," divided by ").replace(/[−-]/g," minus ").replace(/[+]/g," plus ").replace(/=/g," equals ").replace(/[?]/g,"")+"?";
+     var bonds=x.match(/^\s*(\d+)\s*\+\s*\?\s*=\s*(\d+)\s*$/);
+     if(bonds)return "What number can we add to "+bonds[1]+" to make "+bonds[2]+"?";
+     var phrase=x.replace(/\s*=\s*\?\s*$/,"").replace(/[×x]/g," times ")
+      .replace(/[÷]/g," divided by ").replace(/[−-]/g," minus ").replace(/[+]/g," plus ");
+     return "What is "+phrase.trim()+"?";
     }
     return q("#pageLead")?.textContent||"Look at the question and choose an answer.";
    };
