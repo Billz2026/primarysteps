@@ -818,3 +818,23 @@ html.ps-play-page .ps-question-audio__note:empty{display:none}
  html.ps-play-page .ps-question-audio{margin:8px 0 13px}
  html.ps-play-page .ps-question-audio__button{min-height:54px;min-width:145px}
 }
+
+
+/* Clear word-selection and separate, optional word-hearing buttons. */
+html.ps-play-page .ps-audio-word-choice{display:flex;align-items:stretch;gap:9px;margin-bottom:10px;min-height:58px}
+html.ps-play-page .ps-audio-word-choice .choiceBtn{flex:1;min-width:0;margin:0!important;font-size:clamp(19px,2vw,24px)}
+html.ps-play-page .ps-audio-word-choice__hear{
+ flex:0 0 56px;min-height:56px;border:2px solid #A3CFC7!important;
+ border-radius:15px!important;background:#EAF8F2!important;color:#275B67!important;
+ font-size:22px!important;cursor:pointer
+}
+html.ps-play-page .ps-audio-word-tile{display:inline-flex;align-items:stretch;gap:4px;min-height:55px}
+html.ps-play-page .ps-audio-word-tile .tile{border-radius:14px 6px 6px 14px!important;font-size:18px}
+html.ps-play-page .ps-audio-word-tile__hear{
+ min-width:46px;min-height:52px;border:2px solid #A3CFC7!important;
+ border-radius:6px 14px 14px 6px!important;background:#EAF8F2!important;
+ color:#275B67!important;font-size:19px!important;cursor:pointer
+}
+html.ps-play-page .ps-audio-word-choice__hear:focus-visible,
+html.ps-play-page .ps-audio-word-tile__hear:focus-visible{outline:3px solid #24858C!important;outline-offset:3px}
+:root.ps-unified[data-theme="dark"].ps-play-page :is(.ps-audio-word-choice__hear,.ps-audio-word-tile__hear){background:var(--ps-surface)!important;color:var(--ps-ink)!important}
