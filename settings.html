@@ -6,7 +6,7 @@
 <title>Settings – Primary Steps</title>
 
 <!-- Global settings (theme/audio) -->
-<script src="assets/js/ps-settings.js?v=2"></script>
+<script src="assets/js/ps-settings.js?v=3"></script>
 
 <style>
 :root{
@@ -306,14 +306,21 @@ header{
 }
 </style>
 <script>document.documentElement.classList.add("ps-unified");</script>
-<link rel="stylesheet" href="assets/css/primary-steps.css?v=6">
-<script src="assets/js/primary-steps.js?v=6" defer></script>
+<link rel="stylesheet" href="assets/css/primary-steps.css?v=7">
+<script src="assets/js/primary-steps.js?v=7" defer></script>
 
 
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script>document.documentElement.classList.add("ps-v4");document.documentElement.dataset.section="settings";document.documentElement.dataset.page="settings.html";</script>
 <link rel="stylesheet" href="assets/css/remaining-uniform.css?v=1">
+<style>
+.ps-home-picks-setting{align-items:flex-start}
+.ps-home-picks-controls{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px;min-width:300px}
+.ps-home-picks-controls label{display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:800;color:var(--ps-ink)}
+.ps-home-picks-controls select{width:100%;min-height:48px;border:2px solid var(--ps-edge);border-radius:13px;padding:8px 10px;background:var(--ps-surface);font:700 15px system-ui,sans-serif}
+@media(max-width:710px){.ps-home-picks-setting{flex-direction:column}.ps-home-picks-controls{width:100%;min-width:0}}
+</style>
 </head>
 
 <body>
@@ -352,6 +359,19 @@ header{
       </div>
     </div>
 
+
+    <div class="setting ps-home-picks-setting" id="homeFavouritesSetting">
+      <div>
+        <h3>⭐ Homepage favourites</h3>
+        <p>Choose the four activities shown first in Simple Play. All twelve activities remain accessible through “See all activities”.</p>
+      </div>
+      <div class="ps-home-picks-controls">
+        <label for="homeFav1">Picture 1<select id="homeFav1"></select></label>
+        <label for="homeFav2">Picture 2<select id="homeFav2"></select></label>
+        <label for="homeFav3">Picture 3<select id="homeFav3"></select></label>
+        <label for="homeFav4">Picture 4<select id="homeFav4"></select></label>
+      </div>
+    </div>
     <div class="setting">
       <div>
         <h3>Theme</h3>
@@ -483,10 +503,32 @@ header{
     reduceMotion: $("reduceMotion"),
     largeUI: $("largeUI"),
     simplePlay: $("simplePlay"),
+    homeFavourites: [1,2,3,4].map(n=>$("homeFav"+n)),
     resetStars: $("resetStars"),
     replayWelcomes: $("replayWelcomes"),
     resetAll: $("resetAll"),
   };
+
+  const homeOptions=[
+    ["letters","Letters"],["numbers","Numbers"],["phonics","Phonics"],["maths","Maths"],
+    ["drawing","Drawing"],["games","Games"],["spelling","Spelling"],["handwriting","Writing"],
+    ["memory","Memory"],["puzzles","Puzzles"],["clock","Clock"],["progress","My Stars"]
+  ];
+  const homeDefaults=["letters","numbers","drawing","games"];
+  function currentHomeFavourites(){
+    const saved=window.PSSettings.load().homeFavourites;
+    const chosen=[];
+    [...(Array.isArray(saved)?saved:[]),...homeDefaults,...homeOptions.map(x=>x[0])].forEach(name=>{
+      if(homeOptions.some(x=>x[0]===name)&&!chosen.includes(name)&&chosen.length<4)chosen.push(name);
+    });
+    return chosen;
+  }
+  el.homeFavourites.forEach(select=>{
+    homeOptions.forEach(([value,label])=>{
+      const option=document.createElement("option");option.value=value;option.textContent=label;
+      select.appendChild(option);
+    });
+  });
 
   function setThemeButtons(theme) {
     [el.themeSystem, el.themeDark, el.themeLight].forEach(b => b.classList.remove("active"));
@@ -511,6 +553,8 @@ header{
     el.reduceMotion.checked = !!cur.reduceMotion;
     el.largeUI.checked = !!cur.largeUI;
     el.simplePlay.checked = !!cur.simplePlay;
+    const favourites=currentHomeFavourites();
+    el.homeFavourites.forEach((select,i)=>{ select.value=favourites[i]; });
   }
 
   render();
@@ -525,6 +569,15 @@ header{
   el.reduceMotion.addEventListener("change", () => { window.PSSettings.set({ reduceMotion: el.reduceMotion.checked }); render(); });
   el.largeUI.addEventListener("change", () => { window.PSSettings.set({ largeUI: el.largeUI.checked }); render(); });
   el.simplePlay.addEventListener("change", () => { window.PSSettings.set({ simplePlay: el.simplePlay.checked }); render(); });
+  el.homeFavourites.forEach((select,i)=>{
+    select.addEventListener("change",()=>{
+      const picks=currentHomeFavourites(), chosen=select.value, old=picks[i], swap=picks.indexOf(chosen);
+      picks[i]=chosen;
+      if(swap>=0&&swap!==i)picks[swap]=old;
+      window.PSSettings.set({homeFavourites:picks});
+      render();
+    });
+  });
 
   el.volume.addEventListener("input", () => {
     const v = Number(el.volume.value) / 100;
