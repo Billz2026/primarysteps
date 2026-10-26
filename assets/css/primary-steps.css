@@ -776,3 +776,17 @@ html.ps-play-page[data-simple-play="on"][data-ps-play-page="numbers-trace"] .ran
  html.ps-play-page .ps-play-instructions__text{font-size:15px}
  html.ps-play-page .ps-play-instructions .ps-spoken-help{min-height:46px;font-size:14px}
 }
+
+
+/* Preserve beginner learning controls while tucking away adult-only option cards. */
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="spelling-missing-word"] .grid.two,
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="spelling-build-sentence"] .grid.two{
+ grid-template-columns:minmax(0,1fr)!important;max-width:1080px;margin-left:auto;margin-right:auto;
+}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="spelling-missing-word"] .grid.two > .card:nth-child(2),
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="spelling-build-sentence"] .grid.two > .card:nth-child(2){display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="numbers-trace"] .grid{
+ grid-template-columns:minmax(0,1fr)!important;max-width:1080px;margin-left:auto;margin-right:auto;
+}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="numbers-trace"] .grid > .card:nth-child(2){display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="numbers-trace"] #sayBtn{display:inline-flex!important}
