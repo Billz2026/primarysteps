@@ -14,6 +14,7 @@
     reduceMotion: false,
     largeUI: false,
     simplePlay: true,         // fewer choices and gentler starts; can be switched off
+    homeFavourites: ["letters", "numbers", "drawing", "games"],
   };
 
   function clamp01(n) {
