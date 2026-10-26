@@ -232,7 +232,7 @@
 <script src="assets/js/ps-settings.js?v=2"></script>
 <script>document.documentElement.classList.add("ps-unified");</script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=7">
-<script src="assets/js/primary-steps.js?v=7" defer></script>
+<script src="assets/js/primary-steps.js?v=8" defer></script>
 
 
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
@@ -274,7 +274,7 @@
         <div class="pill">Count the dots</div>
         <div class="controls">
           <button class="btn primary" id="newBtn" type="button">Next →</button>
-          <button class="btn" id="sayBtn" type="button" title="Repeat counting instructions">🔊 Listen</button>
+          <button class="btn" id="sayBtn" type="button" title="Hear the counting question again" aria-label="Hear the counting question again">🔊 Hear question</button>
           
         </div>
       </div>
@@ -512,11 +512,7 @@
   }
 
   function speakInstructions(){
-    const p=window.PSSettings?.load?.()||{soundEnabled:true,voiceEnabled:true,volume:.9};
-    if(!p.soundEnabled||!p.voiceEnabled||!("speechSynthesis" in window))return;
-    const u=new SpeechSynthesisUtterance("Count the dots. Tap the correct number.");
-    u.lang="en-GB";u.rate=.84;u.volume=p.volume??.9;
-    speechSynthesis.cancel();speechSynthesis.speak(u);
+    window.PSVoice?.speak("How many dots can you see? Count each dot slowly. Then tap the number you counted.",feedbackEl);
   }
 
   function showHint(){
