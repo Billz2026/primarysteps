@@ -677,7 +677,8 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
   ui.difficulty.addEventListener('change', ()=> newRound());
 
   applyMeta();
-  ui.stage.innerHTML = `<div class="small">Press <strong>New</strong> to start ${active.name}.</div>`;
+  if(window.PSSettings?.load?.().simplePlay!==false)ui.difficulty.value="easy";
+  newRound();
 })();
 </script>
 </body>
