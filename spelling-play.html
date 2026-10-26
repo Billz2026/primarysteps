@@ -20,8 +20,8 @@ button{margin-top:12px;padding:10px 16px;border-radius:999px;border:1px solid rg
 </style>
 <script src="assets/js/ps-settings.js?v=2"></script>
 <script>document.documentElement.classList.add("ps-unified");</script>
-<link rel="stylesheet" href="assets/css/primary-steps.css?v=6">
-<script src="assets/js/primary-steps.js?v=6" defer></script>
+<link rel="stylesheet" href="assets/css/primary-steps.css?v=7">
+<script src="assets/js/primary-steps.js?v=7" defer></script>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script>document.documentElement.classList.add("ps-v4");document.documentElement.dataset.section="spelling";document.documentElement.dataset.page="spelling-play.html";</script>
@@ -33,10 +33,10 @@ button{margin-top:12px;padding:10px 16px;border-radius:999px;border:1px solid rg
   <div class="card">
     <h1 id="title">Spelling</h1>
     <div class="word" id="word"></div>
-    <input id="input" placeholder="Type the spelling">
+    <input id="input" placeholder="Type the word" aria-label="Type the word shown" autocomplete="off" spellcheck="false">
     <button onclick="check()">Check</button>
     <button onclick="next()">Next</button>
-    <div class="msg" id="msg">Press Check</div>
+    <div class="msg" id="msg" role="status" aria-live="polite">Type the word. Tap Check.</div>
   </div>
 </main>
 
@@ -90,9 +90,9 @@ function setModeUI(){
     inputEl.placeholder = "Type the full word";
     msgEl.textContent = "Look at the hints, then type the full word.";
   }else{
-    titleEl.textContent = "Look, Cover, Write";
+    titleEl.textContent = "Copy the Word";
     inputEl.placeholder = "Type the spelling";
-    msgEl.textContent = "Read the word, then type it.";
+    msgEl.textContent = "Type the word you can see.";
   }
 }
 
@@ -113,10 +113,10 @@ function next(){
     const b = Math.min(blanks, Math.max(1, current.length - 2));
     masked = makeMask(current, b);
     wordEl.textContent = padWordDisplay(masked.toUpperCase());
-    msgEl.textContent = `Level: ${level.toUpperCase()} • Fill the missing letters and type the whole word.`;
+    msgEl.textContent = "Fill in the missing letters. Tap Check.";
   }else{
     wordEl.textContent = current.toUpperCase();
-    msgEl.textContent = `Level: ${level.toUpperCase()} • Read the word, then type it.`;
+    msgEl.textContent = "Type the word you can see. Tap Check.";
   }
 }
 
