@@ -206,7 +206,7 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
 <script src="assets/js/ps-settings.js?v=2"></script>
 <script>document.documentElement.classList.add("ps-unified");</script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=7">
-<script src="assets/js/primary-steps.js?v=7" defer></script>
+<script src="assets/js/primary-steps.js?v=8" defer></script>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <link rel="stylesheet" href="assets/css/learning-game.css?v=1">
@@ -295,16 +295,25 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
     return arr;
   }
 
+  // Word-based clues avoid the inaccurate letter-name pronunciations of browser TTS.
+  const soundClues={
+   s:["sun","first"],a:["apple","first"],t:["top","first"],p:["pig","first"],
+   i:["insect","first"],n:["nest","first"],c:["cat","first"],k:["kite","first"],
+   e:["egg","first"],h:["hat","first"],r:["rabbit","first"],m:["moon","first"],
+   d:["dog","first"],g:["goat","first"],o:["octopus","first"],u:["umbrella","first"],
+   b:["ball","first"],f:["fish","first"],l:["lion","first"],j:["jam","first"],
+   v:["van","first"],w:["web","first"],x:["box","last"],y:["yellow","first"],
+   z:["zip","first"],qu:["queen","first"],ch:["chip","first"],sh:["ship","first"],
+   th:["thumb","first"],ng:["sing","last"]
+  };
   function speak(text){
-    // optional: browser speech. If blocked, silently ignore.
-    try{
-      const prefs=window.PSSettings?.load?.()||{soundEnabled:true,voiceEnabled:true,volume:.9};
-      if(!prefs.soundEnabled||!prefs.voiceEnabled)return;
-      const u = new SpeechSynthesisUtterance(text);
-      u.lang="en-GB";u.rate=.84;u.pitch=1;u.volume=prefs.volume??.9;
-      speechSynthesis.cancel();
-      speechSynthesis.speak(u);
-    }catch(e){}
+   window.PSVoice?.speak("Listen to the word "+text+".",ui.msg);
+  }
+  function speakSoundCue(sound){
+   const clue=soundClues[sound];
+   if(!clue){speak(sound);return;}
+   const phrase="Listen to the "+clue[1]+" sound in "+clue[0]+". "+clue[0]+". Which letter or letters make that sound?";
+   window.PSVoice?.speak(phrase,ui.msg);
   }
 
   const simplePlay=()=>window.PSSettings?.load?.().simplePlay ?? true;
@@ -332,15 +341,15 @@ select:focus{box-shadow: 0 0 0 6px var(--ring);}
       render:(st)=>{
         ui.stage.innerHTML = `
           <div class="big" aria-hidden="true">🔊</div>
-          <div class="smallMuted">Listen. Tap the matching letter.</div>
+          <div class="smallMuted">Hear a word clue. Choose the matching sound.</div>
           <div class="row" style="justify-content:center;margin-top:10px;">
-            <button class="btn good" id="hearBtn" type="button">🔊 Hear letter</button>
+            <button class="btn good" id="hearBtn" type="button">🔊 Hear sound clue</button>
           </div>
           <div class="choiceGrid" id="choices"></div>
         `;
         ui.stage.querySelector('#hearBtn').addEventListener('click', ()=>{
           // speak a simple hint (kept simple — speech engines vary)
-          speak(st.target);
+          speakSoundCue(st.target);
         });
 
         const wrap = ui.stage.querySelector('#choices');
