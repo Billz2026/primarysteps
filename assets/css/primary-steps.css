@@ -790,3 +790,10 @@ html.ps-play-page[data-simple-play="on"][data-ps-play-page="numbers-trace"] .gri
 }
 html.ps-play-page[data-simple-play="on"][data-ps-play-page="numbers-trace"] .grid > .card:nth-child(2){display:none!important}
 html.ps-play-page[data-simple-play="on"][data-ps-play-page="numbers-trace"] #sayBtn{display:inline-flex!important}
+
+
+/* Simple Play starts Memory and Puzzles on easy without a difficulty setup bar. */
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="memory-play"] .field:has(> #difficulty),
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="puzzles-play"] .field:has(> #difficulty){display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="memory-play"] #resetBtn,
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="puzzles-play"] #resetBtn{display:none!important}
