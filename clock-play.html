@@ -57,81 +57,108 @@ button{
 </style>
 <script src="assets/js/ps-settings.js?v=2"></script>
 <script>document.documentElement.classList.add("ps-unified");</script>
-<link rel="stylesheet" href="assets/css/primary-steps.css?v=6">
-<script src="assets/js/primary-steps.js?v=6" defer></script>
+<link rel="stylesheet" href="assets/css/primary-steps.css?v=7">
+<script src="assets/js/primary-steps.js?v=7" defer></script>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script>document.documentElement.classList.add("ps-v4");document.documentElement.dataset.section="clock";document.documentElement.dataset.page="clock-play.html";</script>
 <link rel="stylesheet" href="assets/css/remaining-uniform.css?v=1">
 </head>
 <body>
-<header>
-  <a href="clock.html">← Back to Clock</a>
-</header>
-<main>
-  <div class="card">
-    <h1 id="title">Clock</h1>
-    <div class="clock">
-      <div class="hand hour" id="hour"></div>
-      <div class="hand minute" id="minute"></div>
-      <div class="center"></div>
-    </div>
-    <div class="controls" id="controls"></div>
-    <div class="msg" id="msg">Press New to start.</div>
+<header><a href="clock.html">← Back to Clock</a></header>
+<main class="ps-clock-main">
+ <section class="card ps-clock-card" aria-labelledby="title">
+  <h1 id="title">Learn the Clock</h1>
+  <p id="ps-clock-instruction">Look at the clock. Choose the time.</p>
+  <div class="clock" role="img" aria-label="Learning clock with hour and minute hands">
+   <div class="hand hour" id="hour"></div>
+   <div class="hand minute" id="minute"></div>
+   <div class="center"></div>
   </div>
+  <div class="ps-clock-target" id="target" aria-live="polite"></div>
+  <div class="controls" id="controls"></div>
+  <div class="msg" id="msg" role="status" aria-live="polite">Choose an answer.</div>
+ </section>
 </main>
-
+<style>
+.ps-clock-card{text-align:center;max-width:700px;margin:auto}
+.ps-clock-card h1{font-size:clamp(28px,4vw,43px);margin:0 0 9px}
+#ps-clock-instruction{font-size:clamp(17px,2vw,22px);font-weight:750;color:var(--ps-ink);margin:0}
+.ps-clock-card .clock{width:min(70vw,270px);height:min(70vw,270px);margin:18px auto 15px;border:7px solid #4B91A3;background:#FFF;border-radius:50%;box-shadow:inset 0 0 0 5px #E1F4F1,0 9px 25px rgba(37,70,91,.12)}
+.ps-clock-card .hand.hour{height:29%;width:9px;background:#355A70;z-index:3}
+.ps-clock-card .hand.minute{height:40%;width:6px;background:#298B92;z-index:4}
+.ps-clock-card .center{z-index:5;background:#234C59;width:16px;height:16px}
+.ps-clock-number{position:absolute;transform:translate(-50%,-50%);color:#254D5F;font-weight:900;font-size:clamp(16px,2.5vw,23px);pointer-events:none}
+.ps-clock-main #controls{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:17px auto 0}
+.ps-clock-main #controls button{min-height:56px;min-width:100px;border:2px solid #A5D5CE;background:#E4F5EF;color:#215A64;border-radius:16px;font-size:17px;cursor:pointer}
+.ps-clock-main #controls button.ps-clock-primary{background:#197983;color:#FFF;border-color:#197983}
+.ps-clock-main #controls button:focus-visible{outline:3px solid #197983;outline-offset:3px}
+.ps-clock-main .msg{font-size:17px;font-weight:750;margin-top:15px}
+.ps-clock-target{font-size:clamp(23px,4vw,32px);font-weight:900;color:#255A67}
+@media(max-width:450px){.ps-clock-main{padding:12px}.ps-clock-card{padding:15px}.ps-clock-main #controls button{min-width:90px;font-size:16px}}
+</style>
 <script>
-const params = new URLSearchParams(location.search);
-const mode = params.get("activity") || "read";
-const title = document.getElementById("title");
-const hourHand = document.getElementById("hour");
-const minHand = document.getElementById("minute");
-const msg = document.getElementById("msg");
-const controls = document.getElementById("controls");
-
-let h=0,m=0;
-
+(function(){
+"use strict";
+const params=new URLSearchParams(location.search);
+const mode=params.get("activity")==="set"?"set":"read";
+const simple=window.PSSettings?.load?.().simplePlay!==false;
+const title=document.getElementById("title"),instructions=document.getElementById("ps-clock-instruction");
+const hourHand=document.getElementById("hour"),minuteHand=document.getElementById("minute");
+const message=document.getElementById("msg"),controls=document.getElementById("controls"),targetLabel=document.getElementById("target");
+const clock=document.querySelector(".ps-clock-card .clock");
+let goalHour=12,goalMinute=0,shownHour=12,shownMinute=0,solved=false;
+for(let n=1;n<=12;n++){
+ const el=document.createElement("span");el.className="ps-clock-number";el.textContent=String(n);
+ const rad=(n*30-90)*Math.PI/180;
+ el.style.left=(50+39*Math.cos(rad))+"%";el.style.top=(50+39*Math.sin(rad))+"%";clock.appendChild(el);
+}
+function randomHour(){return 1+Math.floor(Math.random()*12)}
+function timeLabel(h,m){return h+":"+String(m).padStart(2,"0")}
 function draw(){
-  hourHand.style.transform = `translate(-50%,-100%) rotate(${(h%12)*30 + m*0.5}deg)`;
-  minHand.style.transform = `translate(-50%,-100%) rotate(${m*6}deg)`;
+ hourHand.style.transform="translate(-50%,-100%) rotate("+((shownHour%12)*30+shownMinute*.5)+"deg)";
+ minuteHand.style.transform="translate(-50%,-100%) rotate("+(shownMinute*6)+"deg)";
 }
-
-function newTime(){
-  h = Math.floor(Math.random()*12);
-  m = [0,15,30,45][Math.floor(Math.random()*4)];
-  draw();
+function note(text,good){message.textContent=text;message.className="msg"+(good===true?" good":good===false?" bad":"")}
+function button(label,fn,primary){
+ const b=document.createElement("button");b.type="button";b.textContent=label;
+ if(primary)b.className="ps-clock-primary";
+ b.addEventListener("click",fn);controls.appendChild(b);
+ return b;
 }
-
-if(mode==="read"){
-  title.textContent="Read the Clock";
-  newTime();
-  controls.innerHTML = `
-    <input id="h" placeholder="Hour">
-    <input id="m" placeholder="Min">
-    <button onclick="check()">Check</button>
-    <button onclick="newTime()">New</button>
-  `;
-  window.check = ()=>{
-    const ih = Number(document.getElementById("h").value);
-    const im = Number(document.getElementById("m").value);
-    if(ih===h && im===m){
-      msg.textContent="Correct!";
-      msg.className="msg good";
-    }else{
-      msg.textContent=`Not quite. It was ${h}:${m.toString().padStart(2,'0')}`;
-      msg.className="msg bad";
-    }
-  };
-}else{
-  title.textContent="Set the Time";
-  newTime();
-  controls.innerHTML = `
-    <button onclick="h=(h+1)%12;draw()">Hour +</button>
-    <button onclick="m=(m+15)%60;draw()">Min +</button>
-    <button onclick="newTime()">New</button>
-  `;
+function next(){
+ goalHour=randomHour();goalMinute=simple?0:[0,15,30,45][Math.floor(Math.random()*4)];
+ shownHour=mode==="read"?goalHour:12;shownMinute=mode==="read"?goalMinute:0;
+ solved=false;draw();controls.replaceChildren();
+ if(mode==="read"){
+  title.textContent="Read the Clock";instructions.textContent="What time does the clock show?";
+  targetLabel.textContent="";
+  let choices=[timeLabel(goalHour,goalMinute)];
+  while(choices.length<3){
+   const alternative=timeLabel(randomHour(),goalMinute);
+   if(!choices.includes(alternative))choices.push(alternative);
+  }
+  for(let i=choices.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[choices[i],choices[j]]=[choices[j],choices[i]];}
+  choices.forEach(t=>button(t,function(){
+   if(solved)return;
+   if(t===timeLabel(goalHour,goalMinute)){solved=true;note("Well done! You found the time.",true)}
+   else note("Have another look. Try again.",false);
+  },false));
+ }else{
+  title.textContent="Set the Time";instructions.textContent="Make the clock show this time:";
+  targetLabel.textContent=timeLabel(goalHour,goalMinute);
+  button("Hour +",function(){shownHour=shownHour%12+1;draw();note("Keep going.")});
+  if(!simple)button("15 Minutes +",function(){shownMinute=(shownMinute+15)%60;draw();note("Keep going.")});
+  button("✓ Check",function(){
+   if(shownHour===goalHour&&shownMinute===goalMinute){solved=true;note("Well done! That's the time.",true)}
+   else note("Not quite. Move the hands and try again.",false);
+  },true);
+ }
+ button("Next →",next,true);
+ note(mode==="read"?"Tap the time you see.":"Use the buttons to move the hands.");
 }
+next();
+})();
 </script>
 </body>
 </html>
