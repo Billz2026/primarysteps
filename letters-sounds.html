@@ -91,7 +91,7 @@ p{margin:0;color:var(--muted)}
 <script src="assets/js/ps-settings.js?v=2"></script>
 <script>document.documentElement.classList.add("ps-unified");</script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=7">
-<script src="assets/js/primary-steps.js?v=7" defer></script>
+<script src="assets/js/primary-steps.js?v=8" defer></script>
 
 
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
@@ -118,19 +118,19 @@ p{margin:0;color:var(--muted)}
   <section class="card">
     <div class="head">
       <h1>Letter Sounds</h1>
-      <p>Tap Play, then choose the letter you hear.</p>
+      <p>Hear a word. Choose the letter for its first sound.</p>
     </div>
 
     <div class="panel">
       <div>
         <div class="big" id="big" aria-hidden="true">🔊</div>
         <div class="controls" style="margin-top:12px">
-          <button class="btn" id="play">🔊 Play</button>
+          <button class="btn" id="play">🔊 Hear word</button>
           <button class="btn" id="new">Next →</button>
           <div class="pill">Voice: browser</div>
         </div>
         <div class="small" style="margin-top:10px">
-          Uses your device voice to speak letter names. It is not a recorded phonics sound.
+          Word clues use your device voice. They are not recorded phonics sounds.
         </div>
       </div>
 
@@ -151,15 +151,18 @@ let target = "A";
 let finished = false;
 const simplePlay=()=>window.PSSettings?.load?.().simplePlay ?? true;
 
-function speak(text){
-  const opts=window.PSSettings?.load?.()||{soundEnabled:true,voiceEnabled:true,volume:.9};
-  if(!opts.soundEnabled||!opts.voiceEnabled)return;
-  try{
-    window.speechSynthesis.cancel();
-    const u = new SpeechSynthesisUtterance("The letter "+text);
-    u.lang="en-GB";u.rate=.82;u.volume=opts.volume??.9;
-    window.speechSynthesis.speak(u);
-  }catch(e){}
+const wordClues={
+ A:"apple",B:"ball",C:"cat",D:"dog",E:"egg",F:"fish",G:"goat",H:"hat",
+ I:"insect",J:"jam",K:"kite",L:"lion",M:"moon",N:"nest",O:"octopus",
+ P:"pig",Q:"queen",R:"rain",S:"sun",T:"top",U:"umbrella",V:"van",
+ W:"web",X:"box",Y:"yellow",Z:"zoo"
+};
+function speak(letter){
+  const word=wordClues[letter]||"";
+  const phrase=letter==="X"
+    ?"Listen to the last sound in "+word+". Which letter makes that sound?"
+    :"Listen to the first sound in "+word+". "+word+". Which letter makes that sound?";
+  window.PSVoice?.speak(phrase,statusEl);
 }
 
 function pick(){
@@ -167,7 +170,7 @@ function pick(){
   target=bank[Math.floor(Math.random()*bank.length)];
   finished=false;
   big.textContent="🔊";
-  statusEl.textContent="Tap Play, then choose.";
+  statusEl.textContent="Tap Hear word, then choose.";
   statusEl.className="status";
   buildChoices();
 }
