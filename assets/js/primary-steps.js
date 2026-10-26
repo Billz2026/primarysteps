@@ -131,6 +131,12 @@
    var heading=host.querySelector("h1");if(heading)heading.insertAdjacentElement("afterend",wrapper);else host.insertBefore(wrapper,host.firstChild);
   }else host.appendChild(wrapper);
  }
- function init(){if(!home)header();dock();remember();enhanceCards();addSpokenHelp();if(home)homeSetup();document.querySelectorAll("[data-ps-sound]").forEach(function(b){showSound(b);b.addEventListener("click",toggleSound)})}
+ function tidyBeginnerPanels(){
+  if(file!=="numbers-trace.html"||window.PSSettings?.load?.().simplePlay===false)return;
+  var say=document.getElementById("sayBtn");
+  var row=document.querySelector(".grid > .card .head .row");
+  if(say&&row){say.classList.add("ps-number-speak");row.insertBefore(say,row.firstChild);}
+ }
+ function init(){if(!home)header();dock();remember();enhanceCards();tidyBeginnerPanels();addSpokenHelp();if(home)homeSetup();document.querySelectorAll("[data-ps-sound]").forEach(function(b){showSound(b);b.addEventListener("click",toggleSound)})}
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init();
 })();
