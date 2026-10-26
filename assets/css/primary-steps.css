@@ -732,3 +732,47 @@ html.ps-home[data-simple-play="off"] .ps-all-activities-btn{display:none!importa
 @media(max-width:320px){
  html.ps-home .ps-home-grid--featured,html.ps-home .ps-home-grid--extra{grid-template-columns:1fr}
 }
+
+
+/* v7: universal independent-play guidance and fewer distracting controls. */
+html.ps-play-page .ps-play-instructions{
+ display:flex;flex-wrap:wrap;align-items:center;gap:11px;
+ margin:12px 0 8px;padding:12px 15px;border-radius:18px;
+ background:#ECF8F5;border:1px solid #B8DED4;max-width:960px;
+}
+html.ps-play-page .ps-play-instructions__text{
+ flex:1 1 220px;font:800 clamp(15px,1.5vw,18px)/1.4 ui-rounded,"Trebuchet MS",system-ui,sans-serif;
+ color:#285A63;
+}
+html.ps-play-page .ps-play-instructions .ps-spoken-help{
+ min-height:47px;min-width:0;flex:none;padding:10px 14px;
+ border-radius:13px;font-size:15px;
+}
+html.ps-play-page :is(.btn,button,select,input[type="number"],input[type="text"]){touch-action:manipulation}
+html.ps-play-page :is(button,.btn,a):focus-visible{outline:3px solid #167E89!important;outline-offset:3px}
+html.ps-play-page :is(.msg,.feedback,#feedback,#message){line-height:1.55}
+html.ps-play-page[data-simple-play="on"] .ps-game-advanced{display:none!important}
+html.ps-play-page[data-simple-play="on"] .ps-game-main .hero p.lead{max-width:850px}
+
+/* Hide only nonessential controls. Main play, answer, hint, check, next and clear remain reachable. */
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="game-coins"] :is(#soundBtn,#resetBtn,#mMake,#mSort,#mOrder,#dMed,#dHard){display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="game-connect4"] :is(#soundBtn,#resetBtn){display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="game-sudoku"] :is(#resetBtn,#diffMed,#diffHard){display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="handwriting-play"] :is(#difficultyField,#penField,#colorField){display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="handwriting"] :is(#soundBtn,#thinBtn,#thickBtn,#randomBtn){display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="numbers-trace"] :is(.rangePicker,#soundBtn,#thinBtn,#thickBtn,#resetStarsBtn,.rangeRow){display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="numbers-trace"] .numGrid{max-height:160px;overflow:auto}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="spelling-missing-word"] :is(.heroRight,.quickRow,.controls[aria-label="Quick filters"],#toggleContrast,#soundBtn,#resetBtn,#medBtn,#hardBtn){display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="spelling-build-sentence"] :is(.heroRight,.quickRow,.controls[aria-label="Quick filters"],#toggleContrast,#soundBtn2,#resetBtn2,#medBtn2,#hardBtn2){display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="spelling-missing-word"] header .hero,
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="spelling-build-sentence"] header .hero{display:none!important}
+html.ps-play-page[data-simple-play="on"][data-ps-play-page="numbers-trace"] .rangePicker{display:none!important}
+:root.ps-unified[data-theme="dark"].ps-play-page .ps-play-instructions{
+ background:var(--ps-surface);border-color:var(--ps-edge)
+}
+:root.ps-unified[data-theme="dark"].ps-play-page .ps-play-instructions__text{color:var(--ps-ink)}
+@media(max-width:640px){
+ html.ps-play-page .ps-play-instructions{padding:10px 12px;gap:8px;margin:8px 0}
+ html.ps-play-page .ps-play-instructions__text{font-size:15px}
+ html.ps-play-page .ps-play-instructions .ps-spoken-help{min-height:46px;font-size:14px}
+}
