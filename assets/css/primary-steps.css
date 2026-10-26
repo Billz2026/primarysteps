@@ -797,3 +797,24 @@ html.ps-play-page[data-simple-play="on"][data-ps-play-page="memory-play"] .field
 html.ps-play-page[data-simple-play="on"][data-ps-play-page="puzzles-play"] .field:has(> #difficulty){display:none!important}
 html.ps-play-page[data-simple-play="on"][data-ps-play-page="memory-play"] #resetBtn,
 html.ps-play-page[data-simple-play="on"][data-ps-play-page="puzzles-play"] #resetBtn{display:none!important}
+
+
+/* Audio-first learning: opt-in, replayable questions without autoplay. */
+html.ps-play-page .ps-question-audio{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin:10px 0 16px}
+html.ps-play-page .ps-question-audio__button{
+ appearance:none;min-height:53px;padding:11px 18px;border:2px solid #9BCFC6!important;
+ background:#E9F8F2!important;color:#255866!important;border-radius:16px!important;
+ font:850 16px/1.25 ui-rounded,"Trebuchet MS",system-ui,sans-serif!important;
+ box-shadow:0 3px 10px rgba(23,81,84,.06);cursor:pointer;
+}
+html.ps-play-page .ps-question-audio__button:hover{border-color:#2E807F!important}
+html.ps-play-page .ps-question-audio__button:focus-visible{outline:3px solid #217C87!important;outline-offset:3px}
+html.ps-play-page .ps-question-audio__note{color:var(--ps-muted);font-size:14px;font-weight:700}
+html.ps-play-page .ps-question-audio__note:empty{display:none}
+:root.ps-unified[data-theme="dark"].ps-play-page .ps-question-audio__button{
+ color:var(--ps-ink)!important;background:var(--ps-surface)!important;border-color:var(--ps-edge)!important
+}
+@media(max-width:600px){
+ html.ps-play-page .ps-question-audio{margin:8px 0 13px}
+ html.ps-play-page .ps-question-audio__button{min-height:54px;min-width:145px}
+}
