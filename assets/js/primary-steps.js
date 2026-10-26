@@ -17,7 +17,7 @@
    }
    var phrase=String(text||"").replace(/\s+/g," ").trim();
    if(!phrase){if(status)status.textContent="No question to read yet.";return false}
-   if(status)status.textContent="";
+   if(status&&!/(?:^|\s)(?:msg|feedback|status)(?:\s|$)/.test(status.className||""))status.textContent="";
    try{
     window.speechSynthesis.cancel();
     var utterance=new SpeechSynthesisUtterance(phrase);
