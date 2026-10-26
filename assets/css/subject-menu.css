@@ -259,3 +259,60 @@ html.ps-subject-page .ps-choice-more:focus-visible{outline:3px solid var(--subje
  html.ps-subject-page.ps-subject-enhanced[data-simple-play="on"]:not(.ps-show-all) .ps-choice-grid{grid-template-columns:1fr!important}
 }
 @media(prefers-reduced-motion:reduce){html.ps-subject-page .ps-choice{transition:none!important}}
+
+
+/* v2: concise, accessible subject menus. */
+html.ps-subject-page .ps-subject-main{padding-top:16px}
+html.ps-subject-page .ps-subject-hero{min-height:164px;padding:18px clamp(20px,3vw,40px);border-radius:26px;gap:13px}
+html.ps-subject-page .ps-subject-hero h1{font-size:clamp(36px,3.7vw,55px);margin:10px 0 7px}
+html.ps-subject-page .ps-subject-hero p{font-size:clamp(16px,1.5vw,19px);margin:0 0 12px}
+html.ps-subject-page .ps-subject-hero__art{width:150px;height:132px}
+html.ps-subject-page .ps-subject-title{margin:17px 0 15px;font-size:clamp(27px,2.5vw,34px)}
+html.ps-subject-page .ps-choice-grid{gap:16px}
+html.ps-subject-page .ps-choice{min-height:246px;padding:12px 19px 17px;border-radius:24px}
+html.ps-subject-page .ps-choice__picture{height:166px;width:min(92%,230px)}
+html.ps-subject-page .ps-choice__name{font-size:clamp(23px,2.2vw,29px)}
+html.ps-subject-page .ps-choice__arrow{width:43px;height:43px;font-size:24px;border-radius:13px}
+html.ps-subject-page .ps-choice--start{border-color:var(--subject-strong)!important;box-shadow:0 0 0 3px rgba(255,255,255,.95),0 10px 26px rgba(39,80,90,.12)!important}
+html.ps-subject-page .ps-choice__start-badge{
+ position:absolute;top:12px;left:13px;z-index:2;display:inline-flex;align-items:center;gap:7px;
+ padding:8px 13px;border-radius:13px;color:#FFFFFF;background:#235B62;
+ font:900 14px/1 ui-rounded,"Trebuchet MS",system-ui,sans-serif;
+}
+html.ps-subject-page.ps-subject-enhanced[data-simple-play="on"]:not(.ps-show-all) .ps-choice:nth-child(n+3){display:none!important}
+html.ps-subject-page.ps-subject-enhanced[data-simple-play="on"]:not(.ps-show-all) .ps-choice-grid{
+ grid-template-columns:repeat(2,minmax(0,1fr))!important;max-width:1020px;
+}
+html.ps-subject-page .ps-choice-more{
+ display:block;margin:19px auto 8px;padding:14px 23px;
+ border:2px solid var(--subject-border);background:#FFFFFF;color:#264D5C;border-radius:16px;
+ min-height:55px;font:900 17px/1.2 ui-rounded,"Trebuchet MS",system-ui,sans-serif;cursor:pointer;
+ box-shadow:0 6px 14px rgba(39,80,90,.07)
+}
+html.ps-subject-page .ps-choice-more:is(:hover,:focus-visible){border-color:var(--subject-strong);background:#F2FAF8}
+html.ps-subject-page .ps-choice-more:focus-visible{outline:3px solid var(--subject-strong);outline-offset:4px}
+@media(max-width:630px){
+ html.ps-subject-page .ps-subject-main{padding-top:9px}
+ html.ps-subject-page .ps-subject-hero{min-height:138px;padding:14px 16px;border-radius:21px}
+ html.ps-subject-page .ps-subject-hero h1{font-size:clamp(29px,7vw,39px);margin:7px 0 4px}
+ html.ps-subject-page .ps-subject-hero p{font-size:14px;margin-bottom:7px}
+ html.ps-subject-page .ps-subject-hero__eyebrow{font-size:9px;padding:5px 8px}
+ html.ps-subject-page .ps-subject-hero__art{width:94px;height:105px}
+ html.ps-subject-page .ps-subject-title{margin:15px 0 12px;font-size:clamp(23px,6vw,28px)}
+ html.ps-subject-page .ps-choice{min-height:198px;padding:7px 10px 12px;border-radius:21px}
+ html.ps-subject-page .ps-choice__picture{height:129px;width:100%}
+ html.ps-subject-page .ps-choice__name{font-size:clamp(18px,4.9vw,23px)}
+ html.ps-subject-page .ps-choice__arrow{width:31px;height:31px;font-size:19px;border-radius:10px}
+ html.ps-subject-page .ps-choice__start-badge{padding:6px 9px;top:7px;left:8px;font-size:12px}
+ html.ps-subject-page .ps-choice-more{min-height:55px;margin-top:15px;font-size:16px}
+}
+@media(max-width:390px){
+ html.ps-subject-page .ps-subject-hero__art{display:none}
+ html.ps-subject-page .ps-choice{min-height:184px;padding:6px 8px 11px}
+ html.ps-subject-page .ps-choice__picture{height:112px}
+ html.ps-subject-page .ps-choice__start-badge{font-size:11px;padding:6px 8px}
+}
+@media(max-width:320px){
+ html.ps-subject-page.ps-subject-enhanced[data-simple-play="on"]:not(.ps-show-all) .ps-choice-grid{grid-template-columns:1fr!important}
+}
+@media(prefers-reduced-motion:reduce){html.ps-subject-page .ps-choice{transition:none!important}}
