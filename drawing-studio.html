@@ -10,9 +10,9 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
-<link rel="stylesheet" href="assets/css/drawing-studio.css?v=4">
+<link rel="stylesheet" href="assets/css/drawing-studio.css?v=5">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
-<script src="assets/js/drawing-studio.js?v=4" defer></script>
+<script src="assets/js/drawing-studio.js?v=5" defer></script>
 </head>
 <body>
 <main class="ds-main" aria-labelledby="ds-title">
@@ -29,8 +29,23 @@
  <section class="ds-workspace" aria-label="Drawing workspace">
   <div class="ds-rail ds-tools-rail" role="group" aria-label="Drawing tools">
    <span class="ds-rail__title">Tools</span>
-   <button id="ds-brush" type="button" class="ds-button ds-tool ds-button--active" aria-pressed="true" aria-label="Brush tool">
+   <button id="ds-pencil" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Pencil tool">
+    <span class="ds-tool__icon" aria-hidden="true">✏️</span><span>Pencil</span>
+   </button>
+   <button id="ds-brush" type="button" class="ds-button ds-tool ds-button--active" aria-pressed="true" aria-label="Paintbrush tool">
     <span class="ds-tool__icon" aria-hidden="true">🖌️</span><span>Brush</span>
+   </button>
+   <button id="ds-marker" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Marker pen tool">
+    <span class="ds-tool__icon" aria-hidden="true">🖍️</span><span>Marker</span>
+   </button>
+   <button id="ds-crayon" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Crayon tool">
+    <span class="ds-tool__icon" aria-hidden="true">🌈</span><span>Crayon</span>
+   </button>
+   <button id="ds-spray" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Spray paint tool">
+    <span class="ds-tool__icon" aria-hidden="true">💨</span><span>Spray</span>
+   </button>
+   <button id="ds-fill" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Paint bucket fill tool">
+    <span class="ds-tool__icon" aria-hidden="true">🪣</span><span>Fill</span>
    </button>
    <button id="ds-eraser" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Eraser tool">
     <span class="ds-tool__icon" aria-hidden="true">◻️</span><span>Eraser</span>
@@ -55,6 +70,7 @@
     <label class="ds-eraser-slider-label" for="ds-eraser-size">Size <output id="ds-eraser-size-value">200</output></label>
     <input id="ds-eraser-size" class="ds-size ds-eraser-size" type="range" min="20" max="520" value="200" step="10" aria-label="Adjust eraser size">
    </div>
+   <p class="ds-tool-hint" id="ds-tool-hint">Paintbrush · smooth, colourful strokes</p>
    <p class="ds-status" id="ds-status" role="status" aria-live="polite">Your drawing stays on this device as you create.</p>
   </div>
   <div class="ds-rail ds-colours-rail" role="group" aria-label="Choose a drawing colour">
@@ -72,8 +88,10 @@
   <details class="ds-tools" id="ds-more">
    <summary>⚙ More tools</summary>
    <div class="ds-more">
-    <label for="ds-size">Brush size: <output id="ds-size-value">16 px</output></label>
-    <input id="ds-size" class="ds-size" type="range" min="4" max="48" value="16" step="2" aria-label="Brush size">
+    <div id="ds-size-wrap" class="ds-tool-size-wrap">
+     <label for="ds-size"><span id="ds-size-label">Paintbrush size</span>: <output id="ds-size-value">16 px</output></label>
+     <input id="ds-size" class="ds-size" type="range" min="2" max="90" value="16" step="1" aria-label="Adjust selected drawing tool size">
+    </div>
     <label class="ds-switch" for="ds-pencil-only">
      <input id="ds-pencil-only" type="checkbox"> Use Apple Pencil only
     </label>
