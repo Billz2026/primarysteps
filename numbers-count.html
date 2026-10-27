@@ -1,548 +1,192 @@
 <!doctype html>
-<html lang="en" class="ps-unified ps-game" data-game="count">
+<html lang="en" class="ps-unified ps-number-premium" data-number-game="count">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#F7FAFC">
+<meta name="description" content="Count the pictures and choose the matching number. Calm, touch-friendly Primary Steps learning.">
 <title>Count Numbers • Primary Steps</title>
-<style>
-  :root{
-    --bg:#0b0d12;
-    --panel:#121621;
-    --card:rgba(15,19,32,.75);
-    --text:#eef2ff;
-    --muted:#a9b2c7;
-    --line:rgba(255,255,255,.12);
-    --accent:#7dd3fc;
-    --good:#9bffb6;
-    --warn:#ffd18b;
-    --shadow:0 14px 38px rgba(0,0,0,.38);
-    --r:18px;
-    --r2:16px;
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; color:var(--text);
-    background:
-      radial-gradient(900px 500px at 20% 0%, rgba(125,211,252,.18), transparent 60%),
-      radial-gradient(900px 500px at 85% 20%, rgba(167,139,250,.18), transparent 60%),
-      var(--bg);
-    min-height:100vh;
-  }
-
-  /* Header */
-  header{
-    position:sticky; top:0; z-index:20;
-    backdrop-filter: blur(12px);
-    background: rgba(18,22,33,.75);
-    border-bottom:1px solid var(--line);
-  }
-  .topbar{max-width:1150px;margin:0 auto;padding:12px 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;}
-  .brand{display:flex;align-items:center;gap:12px;text-decoration:none;color:var(--text);min-width:0}
-  .brand img{height:52px;width:auto;display:block}
-  .brand span{font-weight:750;font-size:14px;letter-spacing:.04em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-  nav{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end}
-  nav a{
-    color:var(--text); text-decoration:none;
-    padding:9px 14px; border-radius:999px;
-    background:rgba(15,19,32,.7);
-    border:1px solid var(--line);
-    font-size:13px; font-weight:650;
-  }
-  nav a.active{
-    border-color:rgba(125,211,252,.35);
-    background:rgba(125,211,252,.10);
-  }
-  @media (max-width: 980px){ nav{justify-content:flex-start} }
-  @media (max-width:520px){ .brand span{display:none} }
-
-  /* Layout */
-  .container{max-width:1150px;margin:0 auto;padding:26px 18px 60px;}
-  .hero{margin-bottom:14px;}
-  .hero h1{margin:0 0 6px;font-size:clamp(22px,3vw,30px);letter-spacing:-.3px}
-  .hero p{margin:0;color:var(--muted);font-size:14px;max-width:80ch}
-
-  .grid{display:grid;grid-template-columns:1.1fr .9fr;gap:14px;align-items:start}
-  @media (max-width: 980px){ .grid{grid-template-columns:1fr} }
-
-  .card{
-    background: linear-gradient(180deg, rgba(18,22,33,.95), rgba(11,13,18,.85));
-    border:1px solid var(--line);
-    border-radius:var(--r);
-    box-shadow:var(--shadow);
-    overflow:hidden;
-  }
-  .head{
-    padding:14px 14px 10px;
-    border-bottom:1px solid var(--line);
-    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-  }
-  .pill{
-    display:inline-flex;align-items:center;gap:8px;
-    font-size:12px;font-weight:850;
-    padding:6px 10px;border-radius:999px;
-    background: rgba(125,211,252,.14);
-    border:1px solid rgba(125,211,252,.25);
-  }
-  .body{padding:14px}
-  .row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .btn{
-    appearance:none;border:1px solid var(--line);
-    background:rgba(255,255,255,.06);
-    color:var(--text);
-    font-weight:850;
-    padding:10px 12px;border-radius:14px;
-    cursor:pointer;
-    transition: transform .06s ease, background .15s ease, border-color .15s ease;
-  }
-  .btn:hover{background:rgba(255,255,255,.09)}
-  .btn:active{transform: translateY(1px)}
-  .btn.primary{
-    border-color: rgba(125,211,252,.35);
-    background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
-  }
-  .btn.good{
-    border-color: rgba(155,255,182,.30);
-    background: linear-gradient(180deg, rgba(155,255,182,.18), rgba(155,255,182,.06));
-  }
-  .btn.ghost{
-    border-style:dashed;
-    background:rgba(255,255,255,.03);
-    color:var(--muted);
-  }
-  .btn.choice{
-    min-width:72px;
-    font-size:18px;
-    border-radius:16px;
-  }
-
-  .controls{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
-  .divider{flex:1 1 auto;min-width:8px}
-  .tagbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;color:var(--muted);margin-top:10px}
-  .tag{
-    padding:8px 10px;border-radius:999px;
-    border:1px dashed rgba(255,255,255,.18);
-    background:rgba(255,255,255,.03);
-    font-weight:750;
-  }
-  .tag strong{color:var(--text)}
-  .feedback{margin-top:10px;color:var(--muted);font-weight:700;line-height:1.35}
-
-  /* Scene */
-  .scene{
-    border-radius:var(--r2);
-    border:1px solid rgba(255,255,255,.10);
-    background:rgba(15,19,32,.55);
-    padding:12px;
-    min-height:240px;
-  }
-  .sceneTitle{
-    display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;
-    margin-bottom:10px;
-  }
-  .q{
-    font-weight:900;
-    letter-spacing:-.2px;
-  }
-
-  /* Ones grid (1–20) */
-  .onesGrid{
-    display:grid;
-    grid-template-columns: repeat(8, minmax(0, 1fr));
-    gap:10px;
-    padding:8px;
-  }
-  @media (max-width:520px){ .onesGrid{grid-template-columns: repeat(6, minmax(0, 1fr));} }
-  .dot{
-    height:44px;
-    border-radius:14px;
-    background: radial-gradient(circle at 30% 30%, rgba(125,211,252,.35), rgba(255,255,255,.06));
-    border:1px solid rgba(255,255,255,.18);
-    box-shadow: 0 12px 24px rgba(0,0,0,.18);
-  }
-
-  /* Tens + ones */
-  .blocks{
-    display:flex;
-    flex-wrap:wrap;
-    gap:12px;
-    padding:8px;
-    align-items:flex-start;
-  }
-  .ten{
-    width:120px;
-    border-radius:16px;
-    border:1px solid rgba(125,211,252,.22);
-    background: linear-gradient(180deg, rgba(125,211,252,.14), rgba(255,255,255,.03));
-    box-shadow: 0 12px 24px rgba(0,0,0,.18);
-    padding:10px;
-    position:relative;
-    overflow:hidden;
-  }
-  .ten::after{
-    content:"";
-    position:absolute; inset:-40% -60%;
-    background: radial-gradient(circle at 25% 30%, rgba(255,255,255,.14), transparent 55%);
-    transform: rotate(12deg);
-    pointer-events:none;
-  }
-  .tenGrid{
-    display:grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap:6px;
-    position:relative;
-    z-index:1;
-  }
-  .tenDot{
-    height:16px;
-    border-radius:7px;
-    background: radial-gradient(circle at 30% 30%, rgba(125,211,252,.30), rgba(255,255,255,.05));
-    border:1px solid rgba(255,255,255,.14);
-  }
-
-  .onesWrap{
-    display:flex;
-    flex-wrap:wrap;
-    gap:10px;
-    align-items:flex-start;
-    padding:6px;
-  }
-  .one{
-    width:44px;height:44px;border-radius:14px;
-    background: radial-gradient(circle at 30% 30%, rgba(167,139,250,.24), rgba(255,255,255,.05));
-    border:1px solid rgba(255,255,255,.16);
-    box-shadow: 0 10px 20px rgba(0,0,0,.16);
-  }
-
-  /* tiny toast */
-  .toast{
-    position:fixed;left:50%;bottom:18px;transform:translateX(-50%);
-    background:rgba(18,22,33,.92);
-    border:1px solid rgba(255,255,255,.14);
-    padding:10px 12px;border-radius:14px;
-    box-shadow:0 20px 50px rgba(0,0,0,.45);
-    color:var(--text);
-    font-weight:800;
-    opacity:0;pointer-events:none;
-    transition:opacity .2s ease, transform .2s ease;
-  }
-  .toast.show{opacity:1;transform:translateX(-50%) translateY(-6px);}
-</style>
-<script src="assets/js/ps-settings.js?v=2"></script>
-<script>document.documentElement.classList.add("ps-unified");</script>
-<link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
-<script src="assets/js/primary-steps.js?v=8" defer></script>
-
-
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
-<link rel="stylesheet" href="assets/css/learning-game.css?v=1">
-<script src="assets/js/learning-game.js?v=1" defer></script>
+<script src="assets/js/ps-settings.js?v=2"></script>
+<link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
+<link rel="stylesheet" href="assets/css/numbers-premium.css?v=1">
+<script src="assets/js/primary-steps.js?v=9" defer></script>
 </head>
 <body>
-<header>
-  <div class="topbar">
-    <a href="index.html" class="brand">
-      <img src="assets/primary-steps-mark.svg" alt="Primary Steps" onerror="this.src='assets/logo.png'">
-      <span>Primary Steps</span>
-    </a>
-    <nav aria-label="Primary">
-      <a href="index.html">Home</a>
-      <a href="letters.html">Letters</a>
-      <a class="active" href="numbers.html">Numbers</a>
-      <a href="phonics.html">Phonics</a>
-      <a href="spelling.html">Spelling</a>
-      <a href="maths.html">Maths</a>
-      <a href="memory.html">Memory</a>
-      <a href="progress.html">Progress</a>
-      <a href="settings.html">Settings</a>
-    </nav>
+<main class="np-main">
+<section class="np-board" aria-labelledby="np-title">
+ <div class="np-header">
+  <span class="np-eyebrow">Primary Steps · Numbers</span>
+  <h1 id="np-title">Let's Count!</h1>
+  <p>Count the dots. Choose the number.</p>
+ </div>
+ <div class="np-content">
+  <div class="np-count-layout">
+   <section aria-labelledby="np-count-heading">
+    <h2 class="np-question" id="np-count-heading">How many dots?</h2>
+    <div id="np-visual" class="np-count-visual" role="group" aria-label="Counting dots. Tap a dot as you count it."></div>
+    <div class="np-count-tools np-buttons" style="margin-top:13px">
+     <button type="button" class="np-btn np-btn--audio" id="np-hear">🔊 Hear question</button>
+     <button type="button" class="np-btn" id="np-hint">💡 Help me count</button>
+    </div>
+   </section>
+   <section aria-labelledby="np-choices-heading">
+    <h2 class="np-question" id="np-choices-heading">Tap the number</h2>
+    <div class="np-answers" id="np-answers" role="group" aria-label="Choose the number of dots"></div>
+    <div class="np-feedback" id="np-feedback" role="status" aria-live="polite" hidden></div>
+    <div class="np-count-actions">
+     <span style="font-weight:750;color:var(--np-muted);font-size:14px">No timer. Take your time.</span>
+     <button class="np-btn np-btn--primary" type="button" id="np-next">Next question →</button>
+    </div>
+   </section>
   </div>
-</header>
-
-<main class="container">
-  <section class="hero">
-    <h1>🍎 Let’s Count!</h1>
-    <p>Count the dots. Tap your answer.</p>
-  </section>
-
-  <section class="grid ps-count-grid">
-    <!-- LEFT: Question -->
-    <div class="card">
-      <div class="head">
-        <div class="pill">Count the dots</div>
-        <div class="controls">
-          <button class="btn primary" id="newBtn" type="button">Next →</button>
-          <button class="btn" id="sayBtn" type="button" title="Hear the counting question again" aria-label="Hear the counting question again">🔊 Hear question</button>
-          
-        </div>
-      </div>
-      <details class="ps-game-advanced"><summary>Grown-ups: number range</summary><div class="controls"><button class="btn primary" data-range="0" id="r1" type="button">1–20</button><button class="btn" data-range="1" id="r2" type="button">21–50</button><button class="btn" data-range="2" id="r3" type="button">51–100</button></div></details>
-      <div class="body">
-        <div class="scene">
-          <div class="sceneTitle">
-            <div class="q" id="questionText">How many?</div>
-            <button class="btn ghost" id="hintBtn" title="Show a hint">Hint</button>
-          </div>
-
-          <!-- dynamic -->
-          <div id="visualArea"></div>
-
-          <div class="feedback" id="feedback" role="status" aria-live="polite">Tap the number you counted.</div>
-        </div>
-
-        <details class="ps-game-advanced"><summary>My stars and progress</summary><div class="tagbar">
-          <div class="tag">Streak: <strong id="streak">0</strong></div>
-          <div class="tag">Correct: <strong id="correct">0</strong></div>
-          <div class="tag">Tries: <strong id="tries">0</strong></div>
-          <div class="tag">Stars earned: <strong id="stars">0</strong></div>
-        </div></details>
-      </div>
-    </div>
-
-    <!-- RIGHT: Choices -->
-    <div class="card">
-      <div class="head">
-        <div class="pill">Tap the number</div>
-      </div>
-      <div class="body">
-        <div class="row" id="choices"></div>
-        <div class="feedback" style="margin-top:12px">
-          Take your time. You can tap Hint.
-        </div>
-      </div>
-    </div>
-  </section>
+  <span class="np-voice-note" id="np-voice-note" role="status"></span>
+  <details class="np-growups">
+   <summary>Grown-ups: level and progress</summary>
+   <label for="np-range">Counting range</label>
+   <select id="np-range">
+    <option value="0">Count 1–20</option>
+    <option value="1">Count 21–50</option>
+    <option value="2">Count 51–100</option>
+   </select>
+   <p id="np-mode-note">Simple Play uses numbers 1–10. Switch off Simple Play in Parent Zone to use higher ranges.</p>
+   <div class="np-stats">
+    <span>Correct: <strong id="np-correct">0</strong></span>
+    <span>Tries: <strong id="np-tries">0</strong></span>
+    <span>Streak: <strong id="np-streak">0</strong></span>
+    <span>Stars earned: <strong id="np-stars">0</strong></span>
+   </div>
+  </details>
+ </div>
+</section>
+<nav class="np-nav" aria-label="Numbers activities">
+ <a href="numbers-count.html" aria-current="page">🔢 Count</a>
+ <a href="numbers-trace.html">✏️ Trace Numbers</a>
+</nav>
 </main>
-
-<div class="toast" id="toast">Saved!</div>
-
 <script>
-(() => {
-  const visualArea = document.getElementById('visualArea');
-  const choicesEl = document.getElementById('choices');
-  const feedbackEl = document.getElementById('feedback');
-  const correctEl = document.getElementById('correct');
-  const triesEl = document.getElementById('tries');
-  const streakEl = document.getElementById('streak');
-  const starsEl = document.getElementById('stars');
-  const sayBtn = document.getElementById('sayBtn');
-  const hintBtn = document.getElementById('hintBtn');
-  const toast = document.getElementById('toast');
-
-  const ranges = [
-    {label:"1–20", min:1, max:20},
-    {label:"21–50", min:21, max:50},
-    {label:"51–100", min:51, max:100},
-  ];
-
-  let rangeIndex = 0;
-  let target = 0;
-  let correct = 0;
-  let tries = 0;
-  let streak = 0;
-  let stars = 0;
-  let hinted = false;
-  let roundFinished = false;
-  const simplePlay=()=>window.PSSettings?.load?.().simplePlay ?? true;
-
-  // Progress (shared idea with other pages)
-  const LS_KEY = "ps_numbers_count_progress_v1";
-  const STARS_KEY = "ps_progress_stars"; // if your site already uses another key, it still won't break anything.
-
-  function clamp(n,a,b){ return Math.max(a, Math.min(b, n)); }
-  function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-
-  function load(){
-    try{
-      const data = JSON.parse(localStorage.getItem(LS_KEY) || "{}");
-      correct = +data.correct || 0;
-      tries = +data.tries || 0;
-      streak = +data.streak || 0;
-      stars = +data.stars || 0;
-      rangeIndex = clamp((+data.rangeIndex || 0), 0, 2);
-    }catch(e){}
-    sync();
-    setActiveRangeButton();
+(function(){
+ "use strict";
+ const ranges=[{min:1,max:20},{min:21,max:50},{min:51,max:100}];
+ const KEY="ps_numbers_count_progress_v1",STARS_KEY="ps_progress_stars";
+ const visual=document.getElementById("np-visual"),answers=document.getElementById("np-answers");
+ const feedback=document.getElementById("np-feedback"),range=document.getElementById("np-range");
+ const next=document.getElementById("np-next"),hear=document.getElementById("np-hear");
+ const hint=document.getElementById("np-hint"),voice=document.getElementById("np-voice-note");
+ const stats={correct:document.getElementById("np-correct"),tries:document.getElementById("np-tries"),
+  streak:document.getElementById("np-streak"),stars:document.getElementById("np-stars")};
+ const simple=()=>window.PSSettings?.load?.().simplePlay!==false;
+ let rangeIndex=0,target=1,previous=0,solved=false;
+ let correct=0,tries=0,streak=0,stars=0;
+ function randint(min,max){return min+Math.floor(Math.random()*(max-min+1))}
+ function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
+ function shuffle(items){let a=items.slice();for(let i=a.length-1;i>0;i--){let j=randint(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
+ function save(){
+  try{localStorage.setItem(KEY,JSON.stringify({correct,tries,streak,stars,rangeIndex}))}catch(_){}
+ }
+ function sync(){for(const key of Object.keys(stats))stats[key].textContent=String({correct,tries,streak,stars}[key])}
+ function load(){
+  try{
+   const x=JSON.parse(localStorage.getItem(KEY)||"{}");
+   correct=Math.max(0,Number(x.correct)||0);tries=Math.max(0,Number(x.tries)||0);
+   streak=Math.max(0,Number(x.streak)||0);stars=Math.max(0,Number(x.stars)||0);
+   rangeIndex=clamp(Number(x.rangeIndex)||0,0,2);
+  }catch(_){}
+  if(simple())rangeIndex=0;
+  range.value=String(rangeIndex);
+  range.disabled=simple();
+  document.getElementById("np-mode-note").textContent=simple()
+   ?"Simple Play uses numbers 1–10. Switch off Simple Play in Parent Zone to unlock larger ranges."
+   :"Choose a range above. These choices are saved on this device.";
+  sync();
+ }
+ function message(state,text){feedback.hidden=state==="neutral";feedback.dataset.state=state;feedback.textContent=text}
+ function countDot(number){
+  const dot=document.createElement("button");dot.type="button";
+  dot.className="np-dot";dot.dataset.countable="true";
+  dot.setAttribute("aria-label","Dot "+number+". Mark as counted");
+  dot.setAttribute("aria-pressed","false");
+  dot.addEventListener("click",()=>{
+   const counted=dot.classList.toggle("is-counted");
+   dot.setAttribute("aria-pressed",String(counted));
+   dot.setAttribute("aria-label","Dot "+number+(counted?". Counted":". Mark as counted"));
+  });
+  return dot;
+ }
+ function draw(){
+  visual.replaceChildren();
+  const frames=document.createElement("div");frames.className="np-frame-set";
+  const groups=Math.ceil(target/10);
+  for(let g=0;g<groups;g++){
+   const frame=document.createElement("div");frame.className="np-tenframe";
+   frame.setAttribute("aria-label","Group "+(g+1)+" of counting dots");
+   const filled=Math.min(10,target-g*10);
+   for(let n=0;n<10;n++){
+    if(n<filled)frame.appendChild(countDot(g*10+n+1));
+    else{const empty=document.createElement("span");empty.className="np-dot np-dot--empty";empty.setAttribute("aria-hidden","true");frame.appendChild(empty)}
+   }
+   frames.appendChild(frame);
   }
-
-  function save(){
-    localStorage.setItem(LS_KEY, JSON.stringify({correct, tries, streak, stars, rangeIndex}));
-  }
-
-  function showToast(msg){
-    toast.textContent = msg;
-    toast.classList.add("show");
-    setTimeout(()=>toast.classList.remove("show"), 900);
-  }
-
-  function sync(){
-    correctEl.textContent = String(correct);
-    triesEl.textContent = String(tries);
-    streakEl.textContent = String(streak);
-    starsEl.textContent = String(stars);
-  }
-
-  function setActiveRangeButton(){
-    [document.getElementById('r1'), document.getElementById('r2'), document.getElementById('r3')].forEach((b,i)=>{
-      b.classList.toggle('primary', i===rangeIndex);
-    });
-  }
-
-  function renderOnes(n){
-    visualArea.innerHTML = "";
-    const grid = document.createElement('div');
-    grid.className = "onesGrid";
-    for(let i=0;i<n;i++){
-      const d = document.createElement('div');
-      d.className = "dot";
-      grid.appendChild(d);
-    }
-    visualArea.appendChild(grid);
-  }
-
-  function renderTensOnes(n){
-    visualArea.innerHTML = "";
-    const tens = Math.floor(n / 10);
-    const ones = n % 10;
-
-    const wrap = document.createElement('div');
-    wrap.className = "blocks";
-
-    for(let t=0;t<tens;t++){
-      const ten = document.createElement('div');
-      ten.className = "ten";
-      const g = document.createElement('div');
-      g.className = "tenGrid";
-      for(let i=0;i<10;i++){
-        const td = document.createElement('div');
-        td.className = "tenDot";
-        g.appendChild(td);
-      }
-      ten.appendChild(g);
-      wrap.appendChild(ten);
-    }
-
-    const onesWrap = document.createElement('div');
-    onesWrap.className = "onesWrap";
-    for(let i=0;i<ones;i++){
-      const o = document.createElement('div');
-      o.className = "one";
-      onesWrap.appendChild(o);
-    }
-    wrap.appendChild(onesWrap);
-    visualArea.appendChild(wrap);
-  }
-
-  function buildVisual(){
-    hinted = false;
-    hintBtn.textContent = "Hint";
-    const r = ranges[rangeIndex];
-    if(r.max <= 20){
-      renderOnes(target);
-    }else{
-      renderTensOnes(target);
-    }
-  }
-
-  function buildChoices(){
-    choicesEl.innerHTML = "";
-
-    const r = ranges[rangeIndex];
-    const max=simplePlay() && rangeIndex===0 ? 10 : r.max;
-    const span = max - r.min;
-    const set = new Set([target]);
-
-    // Three choices in Simple Play, four in standard play.
-    while(set.size < (simplePlay()?3:4)){
-      // bias close to target so it's not too easy
-      const wiggle = Math.max(4, Math.floor(span * 0.12));
-      let candidate = target + randInt(-wiggle, wiggle);
-      candidate = clamp(candidate, r.min, max);
-      set.add(candidate);
-    }
-
-    const arr = [...set].sort(()=>Math.random()-0.5);
-    arr.forEach(v => {
-      const b = document.createElement('button');
-      b.className = "btn good choice";
-      b.textContent = String(v);
-      b.addEventListener('click', ()=>choose(v));
-      choicesEl.appendChild(b);
-    });
-  }
-
-  function newRound(){
-    roundFinished = false;
-    const r = ranges[rangeIndex];
-    target = randInt(r.min, simplePlay() && rangeIndex===0 ? 10 : r.max);
-    buildVisual();
-    buildChoices();
-    feedbackEl.textContent = "Tap the number you counted.";
-    save();
-  }
-
-  function awardStar(){
-    stars++;
-    // also try to increment any global stars if your Progress page reads it
-    try{
-      const s = JSON.parse(localStorage.getItem(STARS_KEY) || "{}");
-      s.numbers = (s.numbers || 0) + 1;
-      localStorage.setItem(STARS_KEY, JSON.stringify(s));
-    }catch(e){}
-    showToast("⭐ Star earned!");
-  }
-
-  function choose(v){
-    if(roundFinished)return;
+  visual.appendChild(frames);
+ }
+ function options(){
+  const max=simple()?10:ranges[rangeIndex].max,min=ranges[rangeIndex].min;
+  const count=simple()?3:4;
+  const set=new Set([target]);
+  // Work from neighbouring numbers without a random-loop dead end at range edges.
+  let pool=[];
+  for(let n=min;n<=max;n++)if(n!==target)pool.push(n);
+  pool.sort((a,b)=>Math.abs(a-target)-Math.abs(b-target)||a-b);
+  const neighbourhood=pool.slice(0,Math.max(count+3,Math.min(10,pool.length)));
+  for(const n of shuffle(neighbourhood)){if(set.size>=count)break;set.add(n)}
+  for(const n of pool){if(set.size>=count)break;set.add(n)}
+  const values=shuffle([...set]);
+  answers.replaceChildren();
+  answers.dataset.count=String(values.length);
+  values.forEach(value=>{
+   const btn=document.createElement("button");btn.type="button";btn.className="np-option";
+   btn.textContent=String(value);btn.setAttribute("aria-label","Answer "+value);
+   btn.addEventListener("click",()=>{
+    if(solved)return;
     tries++;
-    if(v === target){
-      roundFinished=true;
-      correct++;
-      streak++;
-      feedbackEl.textContent = "✅ Well done! Tap Next when you're ready.";
-      if(streak % 5 === 0)awardStar();
-      choicesEl.querySelectorAll("button").forEach(b=>{b.disabled=true;b.setAttribute("aria-disabled","true")});
-    } else {
-      streak=0;
-      feedbackEl.textContent="Try again. Count slowly.";
+    if(value===target){
+     solved=true;correct++;streak++;
+     btn.classList.add("is-correct");
+     answers.querySelectorAll("button").forEach(b=>b.disabled=true);
+     message("good","⭐ Well done! There are "+target+" dots.");
+     if(streak%5===0){stars++;try{
+      const x=JSON.parse(localStorage.getItem(STARS_KEY)||"{}");
+      x.numbers=(x.numbers||0)+1;localStorage.setItem(STARS_KEY,JSON.stringify(x));
+     }catch(_){}}
+    }else{
+     streak=0;
+     message("try","Try again. Tap each dot as you count.");
     }
     sync();save();
-  }
-
-  function speakInstructions(){
-    window.PSVoice?.speak("How many dots can you see? Count each dot slowly. Then tap the number you counted.",feedbackEl);
-  }
-
-  function showHint(){
-    if(hinted) return;
-    hinted = true;
-    hintBtn.textContent = "Hint shown";
-    const r = ranges[rangeIndex];
-    if(r.max <= 20){
-      feedbackEl.textContent = "Hint: count each dot one by one.";
-    }else{
-      feedbackEl.textContent = "Hint: count the tens blocks (10 each), then add the extra ones.";
-    }
-  }
-
-  // Wire up controls
-  document.getElementById('newBtn').addEventListener('click', newRound);
-  sayBtn.addEventListener('click', speakInstructions);
-  hintBtn.addEventListener('click', showHint);
-
-  document.querySelectorAll('[data-range]').forEach(btn => {
-    btn.addEventListener('click', () => {
-      rangeIndex = clamp(+btn.getAttribute('data-range'), 0, 2);
-      setActiveRangeButton();
-      newRound();
-    });
+   });
+   answers.appendChild(btn);
   });
-
-  if(simplePlay())document.getElementById("r1").textContent="1–10";
-  load();
-  newRound();
+ }
+ function newRound(){
+  const r=ranges[rangeIndex],max=simple()?10:r.max;
+  const pool=[];for(let n=r.min;n<=max;n++)if(n!==target)pool.push(n);
+  previous=target;target=pool.length?pool[randint(0,pool.length-1)]:r.min;
+  solved=false;voice.textContent="";draw();options();
+  message("neutral","");hint.textContent="💡 Help me count";save();
+ }
+ next.addEventListener("click",newRound);
+ hear.addEventListener("click",()=>{
+  window.PSVoice?.speak("How many dots can you see? Tap each dot while you count. Then choose the number.",voice);
+ });
+ hint.addEventListener("click",()=>{
+  message("hint","Tap each orange dot once. It will turn blue to help you keep track.");
+ });
+ range.addEventListener("change",()=>{
+  if(simple()){range.value="0";return}
+  rangeIndex=clamp(Number(range.value)||0,0,2);newRound();
+ });
+ load();newRound();
 })();
 </script>
 </body>
