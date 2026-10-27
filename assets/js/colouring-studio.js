@@ -185,13 +185,36 @@
   areas.innerHTML=p.art;
   const defs=svgEl("defs",{id:"cs-defs"});
   const ink=svgEl("g",{id:"cs-ink-layer","pointer-events":"none"});
+  // A normal outline copy draws hidden back edges over foreground objects.
+  // Mask each boundary beneath shapes in front, retaining crisp outlines over brush marks.
+  const artDefs=svgEl("defs",{id:"cs-art-defs"});
   const outline=svgEl("g",{id:"cs-outline-layer",fill:"none",stroke:"#273D4B","stroke-width":7,
    "stroke-linejoin":"round","stroke-linecap":"round","pointer-events":"none"});
-  outline.innerHTML=p.art;
-  for(const el of outline.querySelectorAll("[data-part]")){
-   el.removeAttribute("data-part");el.setAttribute("fill","none");
+  const regions=[...areas.querySelectorAll("[data-part]")];
+  regions.forEach((region,i)=>{
+   const line=region.cloneNode(true);
+   line.removeAttribute("data-part");line.removeAttribute("role");line.removeAttribute("tabindex");
+   line.setAttribute("fill","none");line.setAttribute("pointer-events","none");
+   if(i===regions.length-1){outline.appendChild(line);return}
+   const maskId="cs-art-occlusion-"+i;
+   const mask=svgEl("mask",{id:maskId,maskUnits:"userSpaceOnUse",
+    maskContentUnits:"userSpaceOnUse",x:0,y:0,width:800,height:520});
+   mask.appendChild(svgEl("rect",{x:0,y:0,width:800,height:520,fill:"#FFFFFF"}));
+   for(let j=i+1;j<regions.length;j++){
+    const cover=regions[j].cloneNode(true);
+    cover.removeAttribute("data-part");cover.removeAttribute("role");cover.removeAttribute("tabindex");
+    cover.setAttribute("fill","#000000");cover.setAttribute("stroke","none");
+    cover.setAttribute("pointer-events","none");
+    mask.appendChild(cover);
+   }
+   artDefs.appendChild(mask);
+   const wrapped=svgEl("g",{mask:"url(#"+maskId+")"});
+   wrapped.appendChild(line);outline.appendChild(wrapped);
+  });
+  for(const child of [...areas.children]){
+   if(!child.hasAttribute("data-part"))outline.appendChild(child.cloneNode(true));
   }
-  ui.svg.append(bg,areas,defs,ink,outline);
+  ui.svg.append(bg,areas,artDefs,defs,ink,outline);
   for(const el of ui.svg.querySelectorAll("#cs-area-layer [data-part],rect[data-part=background]")){
    const part=el.dataset.part||el.getAttribute("data-part");
    el.setAttribute("role","button");el.setAttribute("tabindex","0");
