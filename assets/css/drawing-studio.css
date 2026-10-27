@@ -331,3 +331,71 @@
  :root.ds-studio .ds-tool-hint{font-size:12px;padding:6px 8px}
  :root.ds-studio .ds-tool-size-wrap{gap:8px}
 }
+
+
+/* v6 — accessible expandable Fun Tools; keep the central canvas full width. */
+:root.ds-studio .ds-fun-wrapper{position:relative;width:100%;min-width:0}
+:root.ds-studio .ds-fun-toggle{
+ width:100%;min-width:0;
+ background:linear-gradient(145deg,#FFF6F9,#F0F7FE)!important;
+ border-color:#DCCEE7!important;
+}
+:root.ds-studio .ds-fun-toggle.ds-button--active{
+ background:#E8F3FD!important;border-color:#88B9D6!important;
+ color:#225E83!important;
+}
+:root.ds-studio .ds-fun-menu{
+ position:absolute;z-index:25;left:calc(100% + 13px);top:-95px;width:205px;
+ display:flex;flex-direction:column;gap:9px;padding:12px;
+ background:#FFF;border:2px solid #C8E2DD;border-radius:18px;
+ box-shadow:0 16px 46px rgba(28,83,93,.21);
+}
+:root.ds-studio .ds-fun-menu[hidden]{display:none!important}
+:root.ds-studio .ds-fun-choice{
+ width:100%;min-width:0!important;min-height:54px;
+ padding:9px 11px!important;white-space:normal;
+ justify-content:flex-start!important;text-align:left;
+ border-radius:13px!important;font-size:14px!important;
+}
+:root.ds-studio .ds-fun-choice[aria-pressed="true"]{
+ background:#E6F5EC!important;border-color:#83BDA1!important;
+}
+:root.ds-studio .ds-stamp-controls{
+ width:100%;display:flex;flex-wrap:wrap;align-items:center;justify-content:center;
+ gap:9px;margin:2px auto 0;padding:11px 14px;
+ border:1px solid #C6DBEA;border-radius:18px;background:#F0F8FD;
+}
+:root.ds-studio .ds-stamp-controls[hidden]{display:none!important}
+:root.ds-studio .ds-stamp-title{
+ font-size:14px;font-weight:900;color:#285C70;
+}
+:root.ds-studio .ds-stamp-choice{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-width:95px;min-height:48px;cursor:pointer;
+ border:2px solid #BDD8E5;border-radius:13px;
+ background:#FFF;color:#245D71;padding:9px 12px;
+ font:850 14px/1.2 ui-rounded,"Trebuchet MS",system-ui,sans-serif;
+ touch-action:manipulation;
+}
+:root.ds-studio .ds-stamp-choice[aria-pressed="true"]{
+ color:#FFF;background:#297B9B;border-color:#297B9B;
+ box-shadow:0 3px 0 #206581;
+}
+:root.ds-studio .ds-stamp-choice:focus-visible,
+:root.ds-studio .ds-fun-choice:focus-visible{
+ outline:3px solid #328A9A!important;outline-offset:3px;
+}
+@media(orientation:portrait) and (max-width:1100px){
+ :root.ds-studio .ds-fun-wrapper{height:100%}
+ :root.ds-studio .ds-fun-toggle{height:100%;min-height:53px}
+ :root.ds-studio .ds-fun-menu{
+  top:calc(100% + 7px);left:0;width:min(250px,calc(100vw - 40px));
+ }
+}
+@media(max-width:600px){
+ :root.ds-studio .ds-fun-toggle{min-height:58px}
+ :root.ds-studio .ds-fun-menu{padding:9px;gap:7px}
+ :root.ds-studio .ds-fun-choice{min-height:48px}
+ :root.ds-studio .ds-stamp-controls{padding:8px 6px;gap:7px}
+ :root.ds-studio .ds-stamp-choice{min-width:85px;min-height:47px;padding:7px}
+}
