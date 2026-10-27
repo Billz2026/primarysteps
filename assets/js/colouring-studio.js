@@ -118,7 +118,7 @@
  function previewSvg(picture){
   return '<svg xmlns="'+SVG_NS+'" viewBox="0 0 800 520" aria-hidden="true">'+
    '<rect width="800" height="520" fill="#FFFFFF"/>'+
-   '<g fill="#FFFFFF" stroke="#273D4B" stroke-width="7" stroke-linejoin="round" stroke-linecap="round">'+
+   '<g fill="#FFFFFF" stroke="#273D4B" stroke-width="7" stroke-linejoin="round" stroke-linecap="round" style="paint-order:stroke fill">'+
    picture.art+'</g></svg>';
  }
  function drawTabs(){
