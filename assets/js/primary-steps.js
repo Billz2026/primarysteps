@@ -144,7 +144,7 @@
   document.querySelectorAll("#msg,#message,#feedback,#feedbackEl").forEach(function(el){
    if(!el.hasAttribute("aria-live"))el.setAttribute("aria-live","polite");
   });
-  if(document.querySelector(".ps-spoken-help"))return;
+  if(document.querySelector(".ps-spoken-help")||document.querySelector(".pl-board"))return;
   var host=document.querySelector("main .hero .hwrap, main .hero, body > section.hero .hwrap, body > section.hero, main .card, body > .hero .hwrap");
   if(!host)return;
   var wrapper=document.createElement("div");wrapper.className="ps-spoken-help__wrap ps-play-instructions";
