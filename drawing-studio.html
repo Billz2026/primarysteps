@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" class="ps-unified ds-studio" data-section="drawing">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#EAF7F3">
+<meta name="description" content="Free Drawing Studio: a big, calm canvas for children. Draw with an iPad, Apple Pencil, finger or mouse.">
+<title>Free Drawing • Primary Steps</title>
+<link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
+<link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
+<script src="assets/js/ps-settings.js?v=2"></script>
+<link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
+<link rel="stylesheet" href="assets/css/drawing-studio.css?v=1">
+<script src="assets/js/primary-steps.js?v=9" defer></script>
+<script src="assets/js/drawing-studio.js?v=1" defer></script>
+</head>
+<body>
+<main class="ds-main" aria-labelledby="ds-title">
+ <div class="ds-top">
+  <div class="ds-titlebox">
+   <h1 id="ds-title">🎨 Free Drawing</h1>
+   <p>Choose a colour and start drawing. It's your canvas!</p>
+  </div>
+  <div class="ds-top__actions">
+   <button type="button" id="ds-expand" class="ds-button ds-button--expand" aria-pressed="false">⛶ Expand canvas</button>
+   <button type="button" id="ds-save" class="ds-button ds-button--save">↓ Save picture</button>
+  </div>
+ </div>
+ <section class="ds-workspace" aria-label="Drawing workspace">
+  <div class="ds-rail ds-tools-rail" role="group" aria-label="Drawing tools">
+   <span class="ds-rail__title">Tools</span>
+   <button id="ds-brush" type="button" class="ds-button ds-tool ds-button--active" aria-pressed="true" aria-label="Brush tool">
+    <span class="ds-tool__icon" aria-hidden="true">🖌️</span><span>Brush</span>
+   </button>
+   <button id="ds-eraser" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Eraser tool">
+    <span class="ds-tool__icon" aria-hidden="true">◻️</span><span>Eraser</span>
+   </button>
+   <button id="ds-undo" type="button" class="ds-button ds-tool" disabled aria-label="Undo last action">
+    <span class="ds-tool__icon" aria-hidden="true">↶</span><span>Undo</span>
+   </button>
+  </div>
+  <div class="ds-paper-area">
+   <div class="ds-paper">
+    <canvas id="ds-canvas" width="1600" height="1000" role="img" aria-label="Blank drawing paper. Draw here using your finger, Apple Pencil, stylus or mouse."></canvas>
+    <span class="ds-paper__corner" aria-hidden="true">My masterpiece ✨</span>
+   </div>
+   <p class="ds-status" id="ds-status" role="status" aria-live="polite">Your drawing stays on this device as you create.</p>
+  </div>
+  <div class="ds-rail ds-colours-rail" role="group" aria-label="Choose a drawing colour">
+   <span class="ds-rail__title">Colours</span>
+   <div id="ds-palette" class="ds-palette"></div>
+  </div>
+ </section>
+ <div class="ds-bottom">
+  <details class="ds-tools" id="ds-more">
+   <summary>⚙ More tools</summary>
+   <div class="ds-more">
+    <label for="ds-size">Brush size: <output id="ds-size-value">16 px</output></label>
+    <input id="ds-size" class="ds-size" type="range" min="4" max="48" value="16" step="2" aria-label="Brush size">
+    <label class="ds-switch" for="ds-pencil-only">
+     <input id="ds-pencil-only" type="checkbox"> Use Apple Pencil only
+    </label>
+   </div>
+   <p class="ds-bottom__note">Pencil-only mode ignores finger touches on the canvas. It requires a supported stylus.</p>
+  </details>
+  <button type="button" class="ds-button" id="ds-clear">↻ Start over</button>
+ </div>
+ <dialog class="ds-confirm" id="ds-confirm" aria-labelledby="ds-confirm-title" aria-describedby="ds-confirm-description">
+  <h2 id="ds-confirm-title">Start a new drawing?</h2>
+  <p id="ds-confirm-description">Your canvas will be cleared. You can still tap Undo to bring this picture back.</p>
+  <div class="ds-confirm__actions">
+   <button type="button" class="ds-button" id="ds-confirm-cancel">Keep drawing</button>
+   <button type="button" class="ds-button ds-button--save" id="ds-confirm-clear">Clear canvas</button>
+  </div>
+ </dialog>
+</main>
+</body>
+</html>
