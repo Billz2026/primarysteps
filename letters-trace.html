@@ -45,7 +45,7 @@
   <details class="pl-settings">
    <summary>Grown-ups: letter case</summary>
    <button type="button" id="pl-case-toggle" aria-pressed="false">Use lowercase letters (a–z)</button>
-   <p>These are simple printed-letter stroke guides. Handwriting conventions can differ between schools.</p>
+   <p>These printed-letter paths are practice guides. Letter formation may differ between schools. Done celebrates effort and does not grade handwriting accuracy.</p>
   </details>
  </div>
 </section>
@@ -213,7 +213,7 @@
  document.getElementById("pl-clear").addEventListener("click",()=>{strokes=[];activeStroke=null;pointerId=null;message("neutral","Board cleared. Start tracing again.");render()});
  document.getElementById("pl-done").addEventListener("click",()=>{
   if(!strokes.length){message("neutral","Have a go at tracing the letter first.");return}
-  message("correct","⭐ Nice practice! This is not a handwriting accuracy check. Tap Next when ready.");
+  message("correct","⭐ Great effort! Tap Next when you’re ready.");
  });
  hear.addEventListener("click",()=>{
   if(!window.PSVoice){voiceNote.textContent="Speech unavailable.";return}
