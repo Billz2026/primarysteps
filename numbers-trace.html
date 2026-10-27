@@ -10,7 +10,7 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
-<link rel="stylesheet" href="assets/css/numbers-premium.css?v=2">
+<link rel="stylesheet" href="assets/css/numbers-premium.css?v=3">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
 <script src="assets/js/numbers-progress.js?v=1" defer></script>
 </head>
@@ -23,19 +23,19 @@
   <p>Start at the dot. Follow the dotted number.</p>
  </div>
  <div class="np-content">
-  <h2 class="np-question" id="np-current">Number 0</h2>
+  <div class="np-trace-head"><h2 class="np-question" id="np-current">Trace 0</h2><span class="np-number-word" id="np-number-word">zero</span></div>
   <div class="np-trace-layout">
    <div class="np-trace-area">
     <canvas class="np-trace-canvas" id="np-canvas" aria-label="Trace number 0 with a finger, mouse or stylus" aria-describedby="np-trace-help"></canvas>
     <span class="np-trace-hint" aria-hidden="true">① Start at the dot</span>
     <p id="np-trace-help" class="np-question" style="font-size:15px;margin:10px auto 0">Follow the numbered dots and arrows. Take your time.</p>
-    <div class="np-feedback" id="np-feedback" role="status" aria-live="polite">Trace the number 0.</div>
+    <div class="np-feedback" id="np-feedback" data-state="idle" role="status" aria-live="polite" hidden></div>
    </div>
    <div class="np-trace-controls">
     <div class="np-trace-tools" role="group" aria-label="Tracing tools">
      <button class="np-btn" id="np-clear" type="button">↻ Clear</button>
      <button class="np-btn np-btn--audio" id="np-hear" type="button">🔊 Hear number</button>
-     <button class="np-btn" id="np-done" type="button">Done ⭐</button>
+     <button class="np-btn np-btn--practice" id="np-done" type="button">Done ⭐</button>
     </div>
     <div class="np-trace-navigation" role="group" aria-label="Choose number">
      <button class="np-btn" id="np-prev" type="button">← Previous</button>
@@ -84,6 +84,7 @@ const ranges=[{start:0,end:10},{start:11,end:20},{start:21,end:50},{start:51,end
 const KEY="ps_numbers_trace_done_v1";
 const canvas=document.getElementById("np-canvas"),ctx=canvas.getContext("2d");
 const heading=document.getElementById("np-current"),feedback=document.getElementById("np-feedback");
+const numberWord=document.getElementById("np-number-word");
 const voice=document.getElementById("np-voice-note"),selector=document.getElementById("np-range");
 const progress=document.getElementById("np-progress");
 const simple=()=>window.PSSettings?.load?.().simplePlay!==false;
@@ -94,8 +95,17 @@ try{
  if(Array.isArray(stored))marked=new Set(stored.filter(n=>Number.isInteger(n)&&n>=0&&n<=100));
 }catch(_){}
 function save(){try{localStorage.setItem(KEY,JSON.stringify([...marked].sort((a,b)=>a-b)))}catch(_){}}
-function message(state,text){feedback.dataset.state=state;feedback.textContent=text}
+function message(state,text){feedback.dataset.state=state;feedback.textContent=text;feedback.hidden=state==="idle"}
 function updateProgress(){progress.textContent=String(marked.size)}
+function numberName(value){
+ const ones=["zero","one","two","three","four","five","six","seven","eight","nine","ten",
+  "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
+ const tens=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
+ if(value<=19)return ones[value];
+ if(value===100)return "one hundred";
+ const ten=Math.floor(value/10),rem=value%10;
+ return tens[ten]+(rem?"-"+ones[rem]:"");
+}
 function currentDigit(){return String(current)}
 function resetInk(){pointer=null;activeStroke=null;strokes=[]}
 function canvasSize(){
@@ -111,8 +121,8 @@ function drawGlyph(char,x,scale){
  ctx.save();
  ctx.translate(x, (height-110*scale)/2);
  ctx.scale(scale,scale);
- ctx.lineWidth=3.6;ctx.strokeStyle="#3B91B2";
- ctx.lineJoin="round";ctx.lineCap="round";ctx.setLineDash([2.7,5.2]);
+ ctx.lineWidth=4.5;ctx.strokeStyle="#2686AD";
+ ctx.lineJoin="round";ctx.lineCap="round";ctx.setLineDash([2.8,4.1]);
  paths.forEach(path=>ctx.stroke(new Path2D(path)));
  ctx.setLineDash([]);
  paths.forEach((path,i)=>{
@@ -135,9 +145,10 @@ function drawGlyph(char,x,scale){
 function draw(){
  ctx.clearRect(0,0,width,height);
  const digits=currentDigit().split(""),unit=110;
- const scale=Math.min((width-36)/(digits.length*unit),(height-24)/113);
- const start=(width-digits.length*unit*scale)/2;
- digits.forEach((char,i)=>drawGlyph(char,start+i*unit*scale,scale));
+ const advance=104;
+ const scale=Math.min((width-30)/(digits.length*advance),(height-18)/97);
+ const start=(width-digits.length*advance*scale)/2;
+ digits.forEach((char,i)=>drawGlyph(char,start+i*advance*scale,scale));
  ctx.save();ctx.lineWidth=11;ctx.strokeStyle="#236C91";ctx.lineCap="round";ctx.lineJoin="round";
  for(const stroke of strokes){
   if(!stroke.length)continue;
@@ -170,9 +181,9 @@ function end(event){
 function setNumber(number){
  const r=ranges[rangeIndex];
  current=Math.min(r.end,Math.max(r.start,number));
- resetInk();heading.textContent="Number "+current;
+ resetInk();heading.textContent="Trace "+current;numberWord.textContent=numberName(current);
  canvas.setAttribute("aria-label","Trace number "+current+" with your finger, stylus or mouse");
- voice.textContent="";message("neutral","Trace the number "+current+".");
+ voice.textContent="";message("idle","");
  draw();
 }
 function setRange(idx){
