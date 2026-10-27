@@ -115,6 +115,36 @@
   let x=((seed||123456789)^Math.imul(index+1,0x9e3779b1))>>>0;
   return ()=>{x^=x<<13;x^=x>>>17;x^=x<<5;return (x>>>0)/4294967296};
  }
+ // Shape stamps are drawn as paths rather than emoji, so saved PNGs are crisp.
+ function paintStamp(shape,x,y,size,ink){
+  const r=size*.46;
+  ctx.save();ctx.translate(x,y);ctx.fillStyle=ink;ctx.strokeStyle=ink;
+  ctx.lineJoin="round";ctx.lineCap="round";
+  if(shape==="heart"){
+   ctx.beginPath();ctx.moveTo(0,r*.82);
+   ctx.bezierCurveTo(-r*.25,r*.53,-r*1.2,-r*.07,-r*.83,-r*.55);
+   ctx.bezierCurveTo(-r*.57,-r*.95,-r*.12,-r*.85,0,-r*.48);
+   ctx.bezierCurveTo(r*.12,-r*.85,r*.57,-r*.95,r*.83,-r*.55);
+   ctx.bezierCurveTo(r*1.2,-r*.07,r*.25,r*.53,0,r*.82);ctx.closePath();ctx.fill();
+  }else if(shape==="flower"){
+   for(let i=0;i<6;i++){
+    const angle=i*Math.PI/3;
+    ctx.beginPath();ctx.ellipse(Math.cos(angle)*r*.53,Math.sin(angle)*r*.53,r*.46,r*.30,
+      angle,0,Math.PI*2);ctx.fill();
+   }
+   ctx.beginPath();ctx.arc(0,0,r*.27,0,Math.PI*2);ctx.fillStyle="#F5CF65";ctx.fill();
+   ctx.strokeStyle="rgba(65,83,70,.30)";ctx.lineWidth=Math.max(1,size*.017);ctx.stroke();
+  }else{
+   ctx.beginPath();
+   for(let i=0;i<10;i++){
+    const angle=-Math.PI/2+i*Math.PI/5,radius=i%2===0?r:r*.45;
+    if(i===0)ctx.moveTo(Math.cos(angle)*radius,Math.sin(angle)*radius);
+    else ctx.lineTo(Math.cos(angle)*radius,Math.sin(angle)*radius);
+   }
+   ctx.closePath();ctx.fill();
+  }
+  ctx.restore();
+ }
  function paintSegment(stroke,a,b,index){
   const size=stroke.size,tool=stroke.tool;
   const dx=b.x-a.x,dy=b.y-a.y,distance=Math.hypot(dx,dy);
@@ -129,23 +159,58 @@
   };
   if(tool==="pencil")line(Math.max(1.6,size*.55),.98);
   else if(tool==="brush"){line(size*1.16,.20);line(size,.92)}
-  else if(tool==="marker")line(size*1.35,.43,"square");
+  else if(tool==="marker"){line(size*1.38,.20,"square");line(size*1.18,.48,"square")}
   else if(tool==="eraser")line(size,1);
-  else if(tool==="crayon"||tool==="spray"){
+  else if(tool==="rainbow"){
+   const colours=["#EE797D","#F2B75E","#F2D66B","#6CC59B","#63B2DD","#A18ADE"];
+   const normalX=distance>0?-dy/distance:0,normalY=distance>0?dx/distance:1;
+   const stripe=size/colours.length;
+   ctx.globalAlpha=.94;ctx.lineCap="round";
+   colours.forEach((ink,i)=>{
+    const offset=(i-(colours.length-1)/2)*stripe;
+    ctx.strokeStyle=ink;ctx.fillStyle=ink;ctx.lineWidth=stripe+1.3;
+    ctx.beginPath();ctx.moveTo(a.x+normalX*offset,a.y+normalY*offset);
+    if(distance===0)ctx.arc(a.x+normalX*offset,a.y+normalY*offset,stripe*.52,0,Math.PI*2);
+    else ctx.lineTo(b.x+normalX*offset,b.y+normalY*offset);
+    if(distance===0)ctx.fill();else ctx.stroke();
+   });
+  }
+  else if(tool==="stamp"){
+   // Each recorded input point creates exactly one stamp, even after replay.
+   paintStamp(stroke.stamp||"star",b.x,b.y,size,stroke.colour);
+  }
+  else if(tool==="crayon"||tool==="spray"||tool==="glitter"){
    const rand=randomFor(stroke.seed,index);
-   if(tool==="crayon")line(size*.82,.32);
-   const steps=Math.min(200,Math.max(1,Math.ceil(distance/(tool==="spray"?4:3))));
-   const dots=tool==="spray"?10:8;
+   if(tool==="crayon"){
+    line(size*.84,.31);line(size*.58,.24);
+   }else if(tool==="glitter")line(size*.55,.12);
+   const steps=Math.min(180,Math.max(1,Math.ceil(distance/(tool==="spray"?4:tool==="crayon"?3:5))));
+   const dots=tool==="spray"?10:tool==="crayon"?8:6;
    ctx.fillStyle=stroke.colour;
    for(let k=0;k<steps;k++){
     const f=distance===0?0:(k+.5)/steps;
     const bx=a.x+dx*f,by=a.y+dy*f;
     for(let j=0;j<dots;j++){
-     const angle=rand()*Math.PI*2,radius=Math.sqrt(rand())*size*(tool==="spray"?.64:.40);
+     const angle=rand()*Math.PI*2;
+     const radius=Math.sqrt(rand())*size*(tool==="spray"?.68:tool==="crayon"?.39:.57);
      const x=bx+Math.cos(angle)*radius,y=by+Math.sin(angle)*radius;
-     const dotRadius=tool==="spray"?(0.65+rand()*Math.max(.8,size*.047)):(.55+rand()*Math.max(1,size*.07));
-     ctx.globalAlpha=tool==="spray"?.14+rand()*.42:.35+rand()*.5;
+     const dotRadius=tool==="spray"?(0.5+rand()*Math.max(.8,size*.042)):
+       tool==="crayon"?(0.5+rand()*Math.max(1,size*.055)):
+       (1.1+rand()*Math.max(1,size*.055));
+     ctx.globalAlpha=tool==="spray"?.14+rand()*.40:tool==="crayon"?.26+rand()*.44:.34+rand()*.44;
      ctx.beginPath();ctx.arc(x,y,dotRadius,0,Math.PI*2);ctx.fill();
+    }
+    if(tool==="glitter"){
+     // Deterministic four-point reflective sparkle, without flashing animation.
+     ctx.globalAlpha=.85;
+     const x=bx+(rand()-.5)*size,y=by+(rand()-.5)*size;
+     const r=1.8+rand()*Math.max(1.4,size*.085);
+     ctx.fillStyle=rand()>.5?"#FFFFFF":stroke.colour;
+     ctx.beginPath();ctx.moveTo(x,y-r);ctx.lineTo(x+r*.24,y-r*.24);
+     ctx.lineTo(x+r,y);ctx.lineTo(x+r*.24,y+r*.24);
+     ctx.lineTo(x,y+r);ctx.lineTo(x-r*.24,y+r*.24);
+     ctx.lineTo(x-r,y);ctx.lineTo(x-r*.24,y-r*.24);
+     ctx.closePath();ctx.fill();ctx.fillStyle=stroke.colour;
     }
    }
   }
