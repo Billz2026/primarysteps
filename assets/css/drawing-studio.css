@@ -1,0 +1,181 @@
+/* Primary Steps — iPad-first Free Drawing Studio */
+:root.ds-studio{
+ --ds-ink:#244958;--ds-muted:#5A7680;--ds-edge:#C7E5E0;
+ --ds-teal:#187981;--ds-mint:#E6F6F0;--ds-paper:#FFFFFF;
+ --ds-shadow:0 16px 46px rgba(36,96,108,.10);
+}
+:root.ds-studio, :root.ds-studio body{min-height:100%}
+:root.ds-studio body{
+ background:linear-gradient(155deg,#EAF7F3,#F5FBFC 53%,#F4F7FB)!important;
+ overflow-x:hidden;
+}
+:root.ds-studio .ds-main{
+ width:min(1840px,calc(100% - 36px));margin:12px auto 24px;
+ color:var(--ds-ink);
+}
+:root.ds-studio .ds-top{
+ display:flex;align-items:center;justify-content:space-between;gap:14px;
+ min-height:62px;margin:0 0 10px;
+}
+:root.ds-studio .ds-titlebox h1{
+ margin:0;font:900 clamp(22px,2.5vw,29px)/1.13 ui-rounded,"Trebuchet MS",system-ui,sans-serif;
+ color:var(--ds-ink);
+}
+:root.ds-studio .ds-titlebox p{margin:4px 0 0;font-size:14px;color:var(--ds-muted);font-weight:720}
+:root.ds-studio .ds-top__actions{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+:root.ds-studio .ds-button{
+ display:inline-flex;align-items:center;justify-content:center;gap:8px;
+ min-height:53px;padding:11px 16px;flex-shrink:0;
+ border:2px solid #B9DBD5!important;border-radius:16px!important;
+ background:#FFF!important;color:#245E69!important;
+ font:850 16px/1.2 ui-rounded,"Trebuchet MS",system-ui,sans-serif!important;
+ box-shadow:0 3px 0 #E1EFEC;cursor:pointer;touch-action:manipulation;
+}
+:root.ds-studio .ds-button--save{
+ background:#187981!important;color:#FFF!important;border-color:#187981!important;
+ box-shadow:0 4px 0 #12656D;
+}
+:root.ds-studio .ds-button--active{
+ background:#DFF3EB!important;border-color:#6FAE9F!important;color:#155F61!important;
+}
+:root.ds-studio .ds-button:disabled{opacity:.5;box-shadow:none;cursor:not-allowed}
+:root.ds-studio :is(.ds-button,.ds-swatch,.ds-tools summary,.ds-size):focus-visible{
+ outline:4px solid #328A9A!important;outline-offset:3px;
+}
+:root.ds-studio .ds-workspace{
+ display:grid;grid-template-columns:76px minmax(0,1fr) 83px;gap:13px;
+ align-items:start;
+}
+:root.ds-studio .ds-rail{
+ background:rgba(255,255,255,.85);border:1px solid var(--ds-edge);
+ border-radius:23px;padding:10px;box-shadow:0 7px 21px rgba(31,98,106,.045);
+ display:flex;flex-direction:column;align-items:stretch;gap:10px;
+}
+:root.ds-studio .ds-rail__title{
+ font:850 12px/1.3 system-ui,sans-serif;text-align:center;
+ color:var(--ds-muted);margin:2px 0 1px;
+}
+:root.ds-studio .ds-tool{
+ min-width:0;width:100%;min-height:65px;padding:8px 3px;
+ flex-direction:column;gap:2px;
+ border-radius:16px!important;font-size:12px!important;
+}
+:root.ds-studio .ds-tool__icon{font-size:24px;line-height:1.2}
+:root.ds-studio .ds-paper-area{
+ min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px;
+}
+:root.ds-studio .ds-paper{
+ width:min(100%,calc((100dvh - 255px)*1.6));aspect-ratio:8/5;
+ position:relative;background:#FFF;border:3px solid #FFF;border-radius:23px;
+ box-shadow:0 0 0 1px #C7DDDC,var(--ds-shadow);overflow:hidden;
+}
+:root.ds-studio #ds-canvas{
+ position:absolute;inset:0;display:block;width:100%;height:100%;
+ touch-action:none;user-select:none;-webkit-user-select:none;
+ -webkit-touch-callout:none;background:#FFF;cursor:crosshair;
+}
+:root.ds-studio .ds-paper__corner{
+ position:absolute;left:15px;top:13px;pointer-events:none;
+ background:rgba(255,255,255,.91);border:1px solid #DAE9E6;
+ padding:8px 11px;border-radius:11px;color:#5C7A7C;font-size:12px;font-weight:800;
+}
+:root.ds-studio .ds-status{
+ min-height:29px;text-align:center;margin:0;font-size:13px;font-weight:750;
+ color:#50717A;line-height:1.45;
+}
+:root.ds-studio .ds-palette{
+ display:flex;flex-direction:column;align-items:center;gap:11px;
+}
+:root.ds-studio .ds-swatch{
+ width:52px;height:52px;border-radius:17px;border:3px solid #FFF;
+ box-shadow:0 0 0 1px rgba(42,91,106,.22),0 4px 9px rgba(28,86,103,.10);
+ position:relative;flex:none;cursor:pointer;touch-action:manipulation;
+}
+:root.ds-studio .ds-swatch[aria-pressed="true"]{
+ outline:3px solid #247D87;outline-offset:2px;
+}
+:root.ds-studio .ds-swatch[aria-pressed="true"]::after{
+ content:"✓";position:absolute;inset:0;display:grid;place-items:center;
+ font-weight:950;font-size:24px;color:var(--ds-check,#FFF);
+ text-shadow:0 1px 2px rgba(0,0,0,.15);
+}
+:root.ds-studio .ds-bottom{
+ display:flex;align-items:start;justify-content:space-between;gap:12px;
+ flex-wrap:wrap;margin:11px 92px 0;
+}
+:root.ds-studio .ds-tools{
+ flex:1;min-width:250px;background:#FFF;border:1px solid var(--ds-edge);
+ border-radius:17px;padding:8px 14px;color:var(--ds-muted);
+ font-size:14px;font-weight:780;
+}
+:root.ds-studio .ds-tools summary{cursor:pointer;min-height:32px;padding:6px 3px}
+:root.ds-studio .ds-more{
+ display:flex;flex-wrap:wrap;align-items:center;gap:14px;padding:10px 2px;
+}
+:root.ds-studio .ds-size{width:min(260px,100%);accent-color:#187981;min-height:44px}
+:root.ds-studio .ds-switch{display:flex;align-items:center;gap:9px;min-height:44px}
+:root.ds-studio .ds-switch input{width:21px;height:21px;accent-color:#187981}
+:root.ds-studio .ds-bottom__note{
+ margin:4px 0;font-size:13px;font-weight:750;color:var(--ds-muted);
+}
+:root.ds-studio .ds-confirm{
+ max-width:min(410px,calc(100% - 32px));border:1px solid #B7D9D3;
+ border-radius:23px;padding:23px;box-shadow:0 20px 80px rgba(17,65,74,.2);
+ background:#FFF;color:var(--ds-ink);
+}
+:root.ds-studio .ds-confirm::backdrop{background:rgba(31,60,67,.45)}
+:root.ds-studio .ds-confirm h2{font-size:22px;margin:0 0 8px;color:var(--ds-ink)}
+:root.ds-studio .ds-confirm p{line-height:1.5;color:#486B75}
+:root.ds-studio .ds-confirm__actions{display:flex;justify-content:flex-end;gap:9px;margin-top:17px}
+:root.ds-studio .ds-immersive-help{display:none}
+:root.ds-studio.ds-immersive .ps-shell,
+:root.ds-studio.ds-immersive .ps-dock{display:none!important}
+:root.ds-studio.ds-immersive .ds-main{
+ width:calc(100% - 24px);margin:7px auto;
+}
+:root.ds-studio.ds-immersive .ds-paper{
+ width:min(100%,calc((100dvh - 105px)*1.6));
+}
+:root.ds-studio.ds-immersive .ds-titlebox p{display:none}
+:root.ds-studio.ds-immersive .ds-top{min-height:49px;margin-bottom:6px}
+:root.ds-studio.ds-immersive .ds-immersive-help{display:inline}
+@media (max-width:1020px){
+ :root.ds-studio .ds-main{width:calc(100% - 20px);margin:8px auto 22px}
+ :root.ds-studio .ds-workspace{grid-template-columns:67px minmax(0,1fr) 70px;gap:9px}
+ :root.ds-studio .ds-rail{padding:8px;border-radius:19px}
+ :root.ds-studio .ds-paper{width:min(100%,calc((100dvh - 215px)*1.6))}
+ :root.ds-studio .ds-swatch{width:47px;height:47px;border-radius:15px}
+ :root.ds-studio .ds-bottom{margin:10px 74px 0}
+}
+@media (orientation:portrait) and (max-width:1100px){
+ :root.ds-studio .ds-workspace{display:flex;flex-direction:column;align-items:stretch}
+ :root.ds-studio .ds-paper-area{order:1}
+ :root.ds-studio .ds-paper{width:100%;max-width:100%}
+ :root.ds-studio .ds-tools-rail{order:2;flex-direction:row;justify-content:center;align-items:center;padding:8px;gap:9px}
+ :root.ds-studio .ds-tools-rail .ds-rail__title{display:none}
+ :root.ds-studio .ds-tools-rail .ds-button{width:auto;min-width:90px;min-height:54px;flex-direction:row;font-size:14px!important;padding:9px 13px}
+ :root.ds-studio .ds-colours-rail{order:3}
+ :root.ds-studio .ds-palette{flex-direction:row;flex-wrap:wrap;justify-content:center;gap:10px}
+ :root.ds-studio .ds-colours-rail .ds-rail__title{margin:0 5px}
+ :root.ds-studio .ds-bottom{margin:10px 0 0}
+}
+@media (max-width:600px){
+ :root.ds-studio .ds-top{align-items:flex-start}
+ :root.ds-studio .ds-titlebox h1{font-size:21px}
+ :root.ds-studio .ds-titlebox p{font-size:12px}
+ :root.ds-studio .ds-top__actions{gap:6px;justify-content:flex-end}
+ :root.ds-studio .ds-button{min-height:47px;padding:9px 11px;font-size:14px!important}
+ :root.ds-studio .ds-button--expand{min-width:47px}
+ :root.ds-studio .ds-workspace{gap:8px}
+ :root.ds-studio .ds-paper{border-radius:16px;border-width:2px}
+ :root.ds-studio .ds-paper__corner{top:7px;left:7px;font-size:11px;padding:6px 8px}
+ :root.ds-studio .ds-tools-rail .ds-button{min-width:0;flex:1;min-height:51px;padding:8px 6px}
+ :root.ds-studio .ds-swatch{width:44px;height:44px;border-radius:13px}
+ :root.ds-studio .ds-palette{gap:9px}
+ :root.ds-studio .ds-rail{border-radius:16px}
+ :root.ds-studio .ds-rail__title{font-size:11px}
+ :root.ds-studio .ds-main{padding-bottom:10px}
+}
+@media (prefers-reduced-motion:reduce){
+ :root.ds-studio *{transition:none!important;animation:none!important}
+}
