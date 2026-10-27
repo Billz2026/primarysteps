@@ -1,4 +1,4 @@
-/* Primary Steps — Free Drawing Studio v1. No network connection or autoplay. */
+/* Primary Steps — Free Drawing Studio v5. Six unique tools, eraser, saved vector art. */
 (() => {
  "use strict";
  const root=document.documentElement;
@@ -9,6 +9,14 @@
  const sizeReadout=document.getElementById("ds-size-value");
  const undoBtn=document.getElementById("ds-undo");
  const brushBtn=document.getElementById("ds-brush");
+ const pencilBtn=document.getElementById("ds-pencil");
+ const markerBtn=document.getElementById("ds-marker");
+ const crayonBtn=document.getElementById("ds-crayon");
+ const sprayBtn=document.getElementById("ds-spray");
+ const fillBtn=document.getElementById("ds-fill");
+ const toolHint=document.getElementById("ds-tool-hint");
+ const sizeWrap=document.getElementById("ds-size-wrap");
+ const sizeLabel=document.getElementById("ds-size-label");
  const eraserBtn=document.getElementById("ds-eraser");
  const expandBtn=document.getElementById("ds-expand");
  const saveBtn=document.getElementById("ds-save");
@@ -38,20 +46,39 @@
  if(!ctx){if(status)status.textContent="This device cannot open the drawing canvas.";return}
  canvas.width=W;canvas.height=H;
  const actions=[];
- let currentTool="brush",colour="#62A8E2",brushSize=16,eraserSize=200,pointerId=null,active=null;
+ const tools={
+  pencil:{name:"Pencil",help:"Fine, precise lines for sketches"},
+  brush:{name:"Paintbrush",help:"Smooth, bright paint strokes"},
+  marker:{name:"Marker pen",help:"Wide, semi-transparent colour"},
+  crayon:{name:"Crayon",help:"Grainy wax-crayon texture"},
+  spray:{name:"Spray paint",help:"Soft scattered colour dots"},
+  fill:{name:"Paint bucket",help:"Tap inside an enclosed shape to fill it"},
+  eraser:{name:"Eraser",help:"Erase with Small, Medium, Large or Huge"}
+ };
+ const toolButtons={pencil:pencilBtn,brush:brushBtn,marker:markerBtn,crayon:crayonBtn,spray:sprayBtn,fill:fillBtn,eraser:eraserBtn};
+ const toolSizes={pencil:5,brush:16,marker:28,crayon:24,spray:48};
+ let currentTool="brush",colour="#62A8E2",eraserSize=200,pointerId=null,active=null;
  let changedSinceLoad=false,saveTask=0,dbConnection=null,dbAllowed=!!window.indexedDB;
  const say=(message)=>{if(status)status.textContent=message};
  function isHex(value){return /^#[0-9a-f]{6}$/i.test(String(value||""))}
  function updateControls(){
-  brushBtn.setAttribute("aria-pressed",String(currentTool==="brush"));
-  eraserBtn.setAttribute("aria-pressed",String(currentTool==="eraser"));
-  brushBtn.classList.toggle("ds-button--active",currentTool==="brush");
-  eraserBtn.classList.toggle("ds-button--active",currentTool==="eraser");
+  for(const [name,button] of Object.entries(toolButtons)){
+   const selected=currentTool===name;
+   button.setAttribute("aria-pressed",String(selected));
+   button.classList.toggle("ds-button--active",selected);
+  }
   undoBtn.disabled=actions.length===0;
   for(const button of palette.querySelectorAll(".ds-swatch")){
-   button.setAttribute("aria-pressed",String(button.dataset.colour===colour));
+   button.setAttribute("aria-pressed",String(button.dataset.colour?.toUpperCase()===colour.toUpperCase()));
   }
-  sizeReadout.textContent=brushSize+" px";
+  const hasSize=currentTool!=="fill"&&currentTool!=="eraser";
+  sizeWrap.hidden=!hasSize;
+  if(hasSize){
+   sizeInput.value=String(toolSizes[currentTool]);
+   sizeLabel.textContent=tools[currentTool].name+" size";
+   sizeReadout.textContent=toolSizes[currentTool]+" px";
+  }
+  toolHint.textContent=tools[currentTool].name+" · "+tools[currentTool].help;
   eraserControls.hidden=currentTool!=="eraser";
   eraserInput.value=String(eraserSize);
   eraserReadout.textContent=String(eraserSize);
@@ -61,18 +88,85 @@
   customColour.value=colour;
   if(document.activeElement!==hexInput)hexInput.value=colour.toUpperCase();
  }
- function paintStroke(stroke){
-  const pts=stroke.points;if(!pts||!pts.length)return;
-  ctx.save();ctx.lineJoin="round";ctx.lineCap="round";
-  ctx.strokeStyle=stroke.tool==="eraser"?"#FFFFFF":stroke.colour;
-  ctx.fillStyle=ctx.strokeStyle;ctx.lineWidth=stroke.size;
-  if(pts.length===1){ctx.beginPath();ctx.arc(pts[0].x,pts[0].y,stroke.size/2,0,Math.PI*2);ctx.fill();}
-  else{
-   ctx.beginPath();ctx.moveTo(pts[0].x,pts[0].y);
-   for(let i=1;i<pts.length;i++)ctx.lineTo(pts[i].x,pts[i].y);
-   ctx.stroke();
+ function randomFor(seed,index){
+  let x=((seed||123456789)^Math.imul(index+1,0x9e3779b1))>>>0;
+  return ()=>{x^=x<<13;x^=x>>>17;x^=x<<5;return (x>>>0)/4294967296};
+ }
+ function paintSegment(stroke,a,b,index){
+  const size=stroke.size,tool=stroke.tool;
+  const dx=b.x-a.x,dy=b.y-a.y,distance=Math.hypot(dx,dy);
+  ctx.save();ctx.lineCap="round";ctx.lineJoin="round";
+  ctx.strokeStyle=tool==="eraser"?"#FFFFFF":stroke.colour;
+  ctx.fillStyle=ctx.strokeStyle;
+  const line=(width,alpha,cap)=>{
+   ctx.lineWidth=width;ctx.globalAlpha=alpha;ctx.lineCap=cap||"round";
+   ctx.beginPath();ctx.moveTo(a.x,a.y);
+   if(distance===0){ctx.arc(a.x,a.y,width/2,0,Math.PI*2);ctx.fill()}
+   else{ctx.lineTo(b.x,b.y);ctx.stroke()}
+  };
+  if(tool==="pencil")line(Math.max(1.6,size*.55),.98);
+  else if(tool==="brush"){line(size*1.16,.20);line(size,.92)}
+  else if(tool==="marker")line(size*1.35,.43,"square");
+  else if(tool==="eraser")line(size,1);
+  else if(tool==="crayon"||tool==="spray"){
+   const rand=randomFor(stroke.seed,index);
+   if(tool==="crayon")line(size*.82,.32);
+   const steps=Math.min(200,Math.max(1,Math.ceil(distance/(tool==="spray"?4:3))));
+   const dots=tool==="spray"?10:8;
+   ctx.fillStyle=stroke.colour;
+   for(let k=0;k<steps;k++){
+    const f=distance===0?0:(k+.5)/steps;
+    const bx=a.x+dx*f,by=a.y+dy*f;
+    for(let j=0;j<dots;j++){
+     const angle=rand()*Math.PI*2,radius=Math.sqrt(rand())*size*(tool==="spray"?.64:.40);
+     const x=bx+Math.cos(angle)*radius,y=by+Math.sin(angle)*radius;
+     const dotRadius=tool==="spray"?(0.65+rand()*Math.max(.8,size*.047)):(.55+rand()*Math.max(1,size*.07));
+     ctx.globalAlpha=tool==="spray"?.14+rand()*.42:.35+rand()*.5;
+     ctx.beginPath();ctx.arc(x,y,dotRadius,0,Math.PI*2);ctx.fill();
+    }
+   }
   }
   ctx.restore();
+ }
+ function paintStroke(stroke){
+  const points=stroke.points;if(!points?.length)return;
+  paintSegment(stroke,points[0],points[0],0);
+  for(let i=1;i<points.length;i++)paintSegment(stroke,points[i-1],points[i],i);
+ }
+ // Four-connected flood fill keeps paint inside genuinely closed shapes.
+ // Threshold accounts for antialiased pixels without ignoring dark outlines.
+ function fillArea(action){
+  const x=Math.min(W-1,Math.max(0,Math.floor(action.x)));
+  const y=Math.min(H-1,Math.max(0,Math.floor(action.y)));
+  if(!isHex(action.colour))return false;
+  let img;
+  try{img=ctx.getImageData(0,0,W,H)}catch(_){return false}
+  const data=img.data,origin=(y*W+x)*4;
+  const sr=data[origin],sg=data[origin+1],sb=data[origin+2],sa=data[origin+3];
+  const red=parseInt(action.colour.slice(1,3),16),green=parseInt(action.colour.slice(3,5),16),blue=parseInt(action.colour.slice(5,7),16);
+  if(Math.abs(sr-red)+Math.abs(sg-green)+Math.abs(sb-blue)<9&&sa===255)return false;
+  const visited=new Uint8Array(W*H),queue=new Int32Array(W*H);
+  let head=0,tail=1;
+  const starting=y*W+x;queue[0]=starting;visited[starting]=1;
+  function visit(n){
+   if(visited[n])return;
+   visited[n]=1;
+   const i=n*4;
+   if(Math.abs(data[i]-sr)+Math.abs(data[i+1]-sg)+Math.abs(data[i+2]-sb)<=48&&Math.abs(data[i+3]-sa)<=16){
+    queue[tail++]=n;
+   }
+  }
+  while(head<tail){
+   const n=queue[head++],i=n*4;
+   data[i]=red;data[i+1]=green;data[i+2]=blue;data[i+3]=255;
+   const px=n%W;
+   if(px>0)visit(n-1);
+   if(px<W-1)visit(n+1);
+   if(n>=W)visit(n-W);
+   if(n<W*(H-1))visit(n+W);
+  }
+  ctx.putImageData(img,0,0);
+  return true;
  }
  function render(){
   ctx.save();ctx.setTransform(1,0,0,1,0,0);ctx.globalCompositeOperation="source-over";ctx.globalAlpha=1;
@@ -80,6 +174,7 @@
   for(const action of actions){
    if(action.type==="clear"){ctx.save();ctx.fillStyle="#FFF";ctx.fillRect(0,0,W,H);ctx.restore()}
    else if(action.type==="stroke")paintStroke(action);
+   else if(action.type==="fill")fillArea(action);
   }
   updateControls();
  }
