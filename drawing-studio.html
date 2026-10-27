@@ -10,9 +10,9 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
-<link rel="stylesheet" href="assets/css/drawing-studio.css?v=5">
+<link rel="stylesheet" href="assets/css/drawing-studio.css?v=6">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
-<script src="assets/js/drawing-studio.js?v=5" defer></script>
+<script src="assets/js/drawing-studio.js?v=6" defer></script>
 </head>
 <body>
 <main class="ds-main" aria-labelledby="ds-title">
@@ -50,6 +50,16 @@
    <button id="ds-eraser" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Eraser tool">
     <span class="ds-tool__icon" aria-hidden="true">◻️</span><span>Eraser</span>
    </button>
+   <div class="ds-fun-wrapper">
+    <button id="ds-fun-toggle" type="button" class="ds-button ds-tool ds-fun-toggle" aria-expanded="false" aria-controls="ds-fun-menu" aria-label="Choose more fun painting tools">
+     <span class="ds-tool__icon" id="ds-fun-icon" aria-hidden="true">✨</span><span id="ds-fun-label">Fun</span>
+    </button>
+    <div class="ds-fun-menu" id="ds-fun-menu" role="group" aria-label="More creative tools" hidden>
+     <button id="ds-rainbow" class="ds-button ds-fun-choice" type="button" aria-pressed="false">🌈 Rainbow brush</button>
+     <button id="ds-glitter" class="ds-button ds-fun-choice" type="button" aria-pressed="false">✨ Glitter</button>
+     <button id="ds-stamp" class="ds-button ds-fun-choice" type="button" aria-pressed="false">⭐ Stamps</button>
+    </div>
+   </div>
    <button id="ds-undo" type="button" class="ds-button ds-tool" disabled aria-label="Undo last action">
     <span class="ds-tool__icon" aria-hidden="true">↶</span><span>Undo</span>
    </button>
@@ -58,6 +68,12 @@
    <div class="ds-paper">
     <canvas id="ds-canvas" width="1600" height="1000" role="img" aria-label="Blank drawing paper. Draw here using your finger, Apple Pencil, stylus or mouse."></canvas>
     <span class="ds-paper__corner" aria-hidden="true">My masterpiece ✨</span>
+   </div>
+   <div class="ds-stamp-controls" id="ds-stamp-controls" role="group" aria-label="Choose a stamp shape" hidden>
+    <span class="ds-stamp-title">Choose a stamp</span>
+    <button type="button" class="ds-stamp-choice" data-stamp="star" aria-pressed="true">⭐ Star</button>
+    <button type="button" class="ds-stamp-choice" data-stamp="heart" aria-pressed="false">❤️ Heart</button>
+    <button type="button" class="ds-stamp-choice" data-stamp="flower" aria-pressed="false">🌼 Flower</button>
    </div>
    <div class="ds-eraser-controls" id="ds-eraser-controls" role="group" aria-label="Choose eraser size" hidden>
     <span class="ds-eraser-title">Eraser size</span>
