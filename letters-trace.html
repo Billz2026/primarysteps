@@ -26,16 +26,20 @@
  <div class="pl-body">
   <div class="pl-trace-area">
    <canvas class="pl-trace-canvas" id="pl-canvas" aria-label="Trace uppercase letter A with your finger, stylus or mouse" aria-describedby="pl-trace-help"></canvas>
-   <span class="pl-trace-guide" aria-hidden="true">● Start at the dot</span>
+   <span class="pl-trace-guide" aria-hidden="true">① Start here · follow the arrows</span>
   </div>
-  <p id="pl-trace-help" class="pl-choice-label" style="font-size:16px;margin:13px auto 0">Trace with your finger or mouse. No timer.</p>
+  <p id="pl-trace-help" class="pl-choice-label" style="font-size:16px;margin:13px auto 0">Follow the numbered dots and arrows. Take your time.</p>
   <div class="pl-feedback" id="pl-feedback" data-state="neutral" role="status" aria-live="polite">Trace the letter A.</div>
   <div class="pl-trace-actions">
-   <button type="button" class="pl-button" id="pl-prev">← Previous</button>
-   <button type="button" class="pl-button" id="pl-clear">↻ Clear</button>
-   <button type="button" class="pl-button pl-button--audio" id="pl-hear">🔊 Hear letter</button>
-   <button type="button" class="pl-button" id="pl-done">Done ⭐</button>
-   <button type="button" class="pl-button pl-button--primary" id="pl-next">Next →</button>
+   <div class="pl-trace-actions__practice" role="group" aria-label="Tracing tools">
+    <button type="button" class="pl-button" id="pl-clear">↻ Clear</button>
+    <button type="button" class="pl-button pl-button--audio" id="pl-hear">🔊 Hear letter</button>
+    <button type="button" class="pl-button" id="pl-done">Done ⭐</button>
+   </div>
+   <div class="pl-trace-actions__navigation" role="group" aria-label="Change letter">
+    <button type="button" class="pl-button" id="pl-prev">← Previous</button>
+    <button type="button" class="pl-button pl-button--primary" id="pl-next">Next →</button>
+   </div>
   </div>
   <span class="pl-voice-note" id="pl-voice-note" role="status"></span>
   <details class="pl-settings">
@@ -55,24 +59,24 @@
 (function(){
  "use strict";
  const uppercase={
-  A:["M20 86 L50 14 L80 86","M31 61 L69 61"],
-  B:["M25 86 L25 15","M25 15 L53 15 Q77 15 75 34 Q75 50 53 50 L25 50","M25 50 L55 50 Q82 51 76 70 Q72 86 25 86"],
+  A:["M50 14 L20 86","M50 14 L80 86","M31 61 L69 61"],
+  B:["M25 15 L25 86","M25 15 L53 15 Q77 15 75 34 Q75 50 53 50 L25 50","M25 50 L55 50 Q82 51 76 70 Q72 86 25 86"],
   C:["M78 27 Q66 13 48 14 C25 14 18 34 18 51 C18 75 32 87 50 87 Q67 87 78 74"],
   D:["M24 15 L24 86","M24 15 L45 15 Q82 15 82 50 Q82 86 45 86 L24 86"],
-  E:["M76 15 L25 15 L25 86 L76 86","M25 50 L66 50"],
-  F:["M25 86 L25 15 L76 15","M25 50 L65 50"],
+  E:["M25 15 L25 86","M25 15 L76 15","M25 50 L66 50","M25 86 L76 86"],
+  F:["M25 15 L25 86","M25 15 L76 15","M25 50 L65 50"],
   G:["M79 29 Q67 13 50 14 C25 14 18 32 18 51 C18 75 33 87 52 87 Q71 87 80 70 L80 53 L58 53"],
   H:["M24 15 L24 86","M76 15 L76 86","M24 50 L76 50"],
   I:["M27 15 L73 15","M50 15 L50 86","M27 86 L73 86"],
   J:["M75 15 L75 65 Q74 86 52 86 Q28 86 23 68"],
   K:["M25 15 L25 86","M76 15 L25 55 L76 86"],
   L:["M26 15 L26 86 L76 86"],
-  M:["M19 86 L19 15 L50 53 L81 15 L81 86"],
-  N:["M22 86 L22 15 L78 86 L78 15"],
+  M:["M19 15 L19 86","M19 15 L50 53 L81 15 L81 86"],
+  N:["M22 15 L22 86","M22 15 L78 86","M78 15 L78 86"],
   O:["M50 14 C27 14 19 31 19 50 C19 73 29 87 50 87 C71 87 81 73 81 50 C81 29 70 14 50 14"],
-  P:["M25 86 L25 15 L54 15 Q81 15 80 37 Q79 58 54 58 L25 58"],
+  P:["M25 15 L25 86","M25 15 L54 15 Q81 15 80 37 Q79 58 54 58 L25 58"],
   Q:["M50 14 C28 14 19 31 19 50 C19 73 29 87 50 87 C71 87 81 73 81 50 C81 29 70 14 50 14","M59 70 L83 91"],
-  R:["M25 86 L25 15 L54 15 Q80 15 78 37 Q77 56 53 56 L25 56","M51 56 L79 86"],
+  R:["M25 15 L25 86","M25 15 L54 15 Q80 15 78 37 Q77 56 53 56 L25 56","M51 56 L79 86"],
   S:["M75 25 Q63 13 47 15 Q22 15 22 36 Q22 50 49 50 Q78 50 78 67 Q78 89 49 87 Q31 87 21 76"],
   T:["M20 15 L80 15","M50 15 L50 86"],
   U:["M22 15 L22 65 Q22 87 50 87 Q78 87 78 65 L78 15"],
@@ -136,18 +140,32 @@
   ctx.setLineDash([2.2,5.2]);
   paths.forEach(d=>ctx.stroke(new Path2D(d)));
   ctx.setLineDash([]);
+  // Each independent pen stroke has its own numbered starting marker and arrow.
+  const seen=[];
   paths.forEach((d,i)=>{
-   const nums=(d.match(/-?\d+(?:\.\d+)?/g)||[]).map(Number);
-   if(nums.length<4)return;
-   const [x,y,cx,cy]=nums,dist=Math.hypot(cx-x,cy-y)||1,dx=(cx-x)/dist,dy=(cy-y)/dist;
-   if(i===0){
-    ctx.beginPath();ctx.arc(x,y,6.3,0,Math.PI*2);ctx.fillStyle="#17747A";ctx.fill();
-    ctx.fillStyle="#FFFFFF";ctx.font="900 8px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("1",x,y+.3);
-   }
-   const ex=x+dx*17,ey=y+dy*17;
-   ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(ex-dx*7-dy*4,ey-dy*7+dx*4);
-   ctx.lineTo(ex-dx*7+dy*4,ey-dy*7-dx*4);ctx.closePath();
-   ctx.fillStyle="#206F7D";ctx.fill();
+   const tokens=d.match(/[A-Za-z]|-?\d+(?:\.\d+)?/g);
+   if(!tokens||tokens.length<6||tokens[0]!=="M")return;
+   const x=Number(tokens[1]),y=Number(tokens[2]);
+   const cx=Number(tokens[4]),cy=Number(tokens[5]);
+   const length=Math.hypot(cx-x,cy-y)||1;
+   const dx=(cx-x)/length,dy=(cy-y)/length;
+   // Offset a repeated start label a little so both numbers remain visible.
+   const overlaps=seen.filter(p=>Math.hypot(x-p.x,y-p.y)<13).length;
+   seen.push({x,y});
+   const badgeX=x+(overlaps?overlaps*15:0),badgeY=y+(overlaps?-11:0);
+   if(overlaps){ctx.beginPath();ctx.moveTo(x,y);ctx.lineTo(badgeX,badgeY);ctx.strokeStyle="#397F81";ctx.lineWidth=1;ctx.stroke();}
+   ctx.beginPath();ctx.arc(badgeX,badgeY,5.5,0,Math.PI*2);
+   ctx.fillStyle="#126E77";ctx.fill();
+   ctx.fillStyle="#FFFFFF";ctx.font="900 7.2px system-ui";
+   ctx.textAlign="center";ctx.textBaseline="middle";
+   ctx.fillText(String(i+1),badgeX,badgeY+.2);
+   // Arrow points in the initial direction of this stroke, not a generic diagonal.
+   const start=overlaps?21:17;
+   const ex=x+dx*start,ey=y+dy*start;
+   ctx.beginPath();ctx.moveTo(ex,ey);
+   ctx.lineTo(ex-dx*7-dy*4,ey-dy*7+dx*4);
+   ctx.lineTo(ex-dx*7+dy*4,ey-dy*7-dx*4);
+   ctx.closePath();ctx.fillStyle="#177F88";ctx.fill();
   });
   ctx.strokeStyle="#1E708B";ctx.lineWidth=4;ctx.lineCap="round";ctx.lineJoin="round";
   strokes.forEach(points=>{
@@ -184,7 +202,7 @@
  function end(e){
   if(pointerId!==e.pointerId)return;
   pointerId=null;activeStroke=null;
-  message("neutral","Good effort. Keep tracing or tap Done ⭐.");
+  message("neutral","Keep tracing, or tap Done ⭐ when you finish.");
  }
  canvas.addEventListener("pointerdown",down);canvas.addEventListener("pointermove",move);
  canvas.addEventListener("pointerup",end);canvas.addEventListener("pointercancel",end);
@@ -195,16 +213,16 @@
  document.getElementById("pl-clear").addEventListener("click",()=>{strokes=[];activeStroke=null;pointerId=null;message("neutral","Board cleared. Start tracing again.");render()});
  document.getElementById("pl-done").addEventListener("click",()=>{
   if(!strokes.length){message("neutral","Have a go at tracing the letter first.");return}
-  message("correct","⭐ Lovely effort! Tap Next when you're ready.");
+  message("correct","⭐ Nice practice! This is not a handwriting accuracy check. Tap Next when ready.");
  });
  hear.addEventListener("click",()=>{
   if(!window.PSVoice){voiceNote.textContent="Speech unavailable.";return}
-  window.PSVoice.speak("Trace the letter "+letter()+". Start at the dot and follow the dotted line.",voiceNote);
+  window.PSVoice.speak("Trace the letter "+letter()+". Start at dot one and follow each numbered stroke in order.",voiceNote);
  });
  caseToggle.addEventListener("click",()=>{
   lower=!lower;caseToggle.setAttribute("aria-pressed",String(lower));
   caseToggle.textContent=lower?"Use uppercase letters (A–Z)":"Use lowercase letters (a–z)";
-  strokes=[];resize();changeLetter(index);
+  changeLetter(index);
  });
  resize();changeLetter(0);
 })();
