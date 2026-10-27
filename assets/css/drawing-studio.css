@@ -43,7 +43,7 @@
  outline:4px solid #328A9A!important;outline-offset:3px;
 }
 :root.ds-studio .ds-workspace{
- display:grid;grid-template-columns:76px minmax(0,1fr) 83px;gap:13px;
+ display:grid;grid-template-columns:76px minmax(0,1fr) 125px;gap:13px;
  align-items:start;
 }
 :root.ds-studio .ds-rail{
@@ -84,7 +84,7 @@
  color:#50717A;line-height:1.45;
 }
 :root.ds-studio .ds-palette{
- display:flex;flex-direction:column;align-items:center;gap:11px;
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));justify-items:center;gap:11px;
 }
 :root.ds-studio .ds-swatch{
  width:52px;height:52px;border-radius:17px;border:3px solid #FFF;
@@ -141,7 +141,7 @@
 :root.ds-studio.ds-immersive .ds-immersive-help{display:inline}
 @media (max-width:1020px){
  :root.ds-studio .ds-main{width:calc(100% - 20px);margin:8px auto 22px}
- :root.ds-studio .ds-workspace{grid-template-columns:67px minmax(0,1fr) 70px;gap:9px}
+ :root.ds-studio .ds-workspace{grid-template-columns:67px minmax(0,1fr) 113px;gap:9px}
  :root.ds-studio .ds-rail{padding:8px;border-radius:19px}
  :root.ds-studio .ds-paper{width:min(100%,calc((100dvh - 215px)*1.6))}
  :root.ds-studio .ds-swatch{width:47px;height:47px;border-radius:15px}
