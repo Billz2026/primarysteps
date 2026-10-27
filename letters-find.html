@@ -19,20 +19,20 @@
  <div class="pl-heading">
   <div><span class="pl-eyebrow">Primary Steps · Letters</span>
    <h1 id="pl-title">Find the Letter</h1>
-   <p>Look at the big letter. Find the one that matches.</p>
+   <p>Look. Listen. Match.</p>
   </div>
   <span class="pl-heading__tag" aria-hidden="true">ABC</span>
  </div>
  <div class="pl-body">
-  <h2 class="pl-task-label" id="pl-task">Find this letter</h2>
-  <div class="pl-target" id="pl-target" aria-label="Find the letter A">A</div>
+  <h2 class="pl-task-label" id="pl-task">Find A</h2>
+  <div class="pl-target" id="pl-target" role="img" aria-label="Letter A">A</div>
   <div class="pl-speak-area">
    <button type="button" class="pl-button pl-button--audio" id="pl-hear">🔊 Hear the letter</button>
    <span class="pl-voice-note" id="pl-voice-note" role="status"></span>
   </div>
-  <h2 class="pl-choice-label">Tap the matching letter</h2>
+  <h2 class="pl-choice-label">Which one matches?</h2>
   <div class="pl-choices" id="pl-choices" role="group" aria-label="Choose the matching letter"></div>
-  <div class="pl-feedback" id="pl-feedback" data-state="neutral" role="status" aria-live="polite">Choose the letter that matches.</div>
+  <div class="pl-feedback" id="pl-feedback" data-state="neutral" role="status" aria-live="polite" hidden></div>
   <div class="pl-footer">
    <span class="pl-footer__hint">No timer. Take your time.</span>
    <button type="button" class="pl-button pl-button--primary" id="pl-next">Next letter →</button>
@@ -57,6 +57,7 @@
  const beginner=["A","B","C","M","S","T"];
  const target=document.getElementById("pl-target");
  const choices=document.getElementById("pl-choices");
+ const task=document.getElementById("pl-task");
  const feedback=document.getElementById("pl-feedback");
  const next=document.getElementById("pl-next");
  const hear=document.getElementById("pl-hear");
@@ -70,13 +71,13 @@
   for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}
   return arr;
  }
- function message(state,text){feedback.dataset.state=state;feedback.textContent=text}
+ function message(state,text){feedback.dataset.state=state;feedback.textContent=text;feedback.hidden=state==="neutral"}
  function newRound(){
   const bank=simple()?beginner:alphabet;
   current=pick(bank.filter(letter=>letter!==current));
   solved=false;
-  target.textContent=current;
-  target.setAttribute("aria-label","Find the letter "+current);
+  target.textContent=current;task.textContent="Find "+current;
+  target.setAttribute("aria-label","Letter "+current);
   hear.setAttribute("aria-label","Hear the letter "+current);
   voiceNote.textContent="";
   const count=simple()?3:({easy:4,medium:6,hard:9}[level.value]||4);
@@ -100,7 +101,7 @@
    });
    choices.appendChild(button);
   });
-  message("neutral","Choose the letter that matches.");
+  message("neutral","");
  }
  hear.addEventListener("click",function(){
   if(!window.PSVoice){voiceNote.textContent="Speech unavailable.";return}
