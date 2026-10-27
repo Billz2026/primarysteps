@@ -104,7 +104,7 @@
   if(ev.pointerId!==pointerId)return;
   ev.preventDefault?.();
   pointerId=null;active=null;
-  say("Drawing saved automatically on this device.");
+  say("Saving your drawing…");
   saveSoon();
  }
  canvas.addEventListener("pointerdown",begin);
@@ -199,11 +199,12 @@
   clearTimeout(saveTask);
   const saved=serialize();
   try{
-   if(dbConnection){await dbAction("readwrite",saved);return}
+   if(dbConnection){await dbAction("readwrite",saved);say("Drawing saved on this device.");return}
    localStorage.setItem(DRAFT_KEY,JSON.stringify(saved));
+   say("Drawing saved on this device.");
   }catch(error){
    // A smaller vector draft can sometimes be stored when browser storage is constrained.
-   try{localStorage.setItem(DRAFT_KEY,JSON.stringify(saved))}
+   try{localStorage.setItem(DRAFT_KEY,JSON.stringify(saved));say("Drawing saved on this device.")}
    catch(_){say("Automatic saving is unavailable. Tap Save Picture to keep your artwork.")}
   }
  }
@@ -249,7 +250,7 @@
  }
  saveBtn.addEventListener("click",downloadCanvas);
  window.addEventListener("pagehide",()=>{if(changedSinceLoad)saveDraft()});
- window.addEventListener("visibilitychange",()=>{
+ document.addEventListener("visibilitychange",()=>{
   if(document.visibilityState==="hidden"&&changedSinceLoad)saveDraft();
  });
  render();
