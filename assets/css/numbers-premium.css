@@ -245,3 +245,12 @@ html.ps-unified.ps-number-premium .np-trace-navigation .np-btn--primary{min-widt
 :root.ps-unified.ps-number-premium[data-theme="dark"] .np-btn--primary{background:#256F9A!important;color:#FFF!important}
 :root.ps-unified.ps-number-premium[data-theme="dark"] .np-trace-canvas{background:#243A4B}
 @media(prefers-reduced-motion:reduce){html.ps-unified.ps-number-premium *{transition:none!important;animation:none!important}}
+
+
+/* v2: maintain accessible dot tapping even on narrow phones. */
+html.ps-unified.ps-number-premium .np-dot{width:44px;min-width:44px;min-height:44px}
+@media(max-width:640px){
+ html.ps-unified.ps-number-premium .np-tenframe{gap:2px;padding:5px}
+ html.ps-unified.ps-number-premium .np-dot{width:44px;min-width:44px;min-height:44px}
+ html.ps-unified.ps-number-premium .np-frame-set{gap:9px}
+}
