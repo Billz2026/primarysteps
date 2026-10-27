@@ -12,6 +12,7 @@
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
 <link rel="stylesheet" href="assets/css/numbers-premium.css?v=2">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
+<script src="assets/js/numbers-progress.js?v=1" defer></script>
 </head>
 <body>
 <main class="np-main">
@@ -159,6 +160,7 @@
       const x=JSON.parse(localStorage.getItem(STARS_KEY)||"{}");
       x.numbers=(x.numbers||0)+1;localStorage.setItem(STARS_KEY,JSON.stringify(x));
      }catch(_){}}
+     window.PSNumbersProgress?.record(streak%5===0);
     }else{
      streak=0;
      message("try","Try again. Tap each dot as you count.");
