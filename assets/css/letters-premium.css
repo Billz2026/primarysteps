@@ -231,3 +231,37 @@ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice-label{ma
  html.ps-unified.ps-letter-premium .pl-trace-actions__navigation .pl-button{min-width:0}
  html.ps-unified.ps-letter-premium .pl-body{padding-bottom:22px}
 }
+
+
+/* Audio-first sound clues: optional non-reading picture support. */
+html.ps-unified.ps-letter-premium .pl-picture-trigger{
+ min-height:45px;min-width:143px;padding:9px 16px;font-size:15px;
+}
+html.ps-unified.ps-letter-premium .pl-picture{
+ display:flex;align-items:center;justify-content:center;gap:15px;
+ width:min(310px,100%);min-height:104px;margin:0 auto 12px;
+ border:2px solid #BDE2D8;background:#F1FBF7;border-radius:21px;
+ color:var(--pl-ink);font-size:23px;font-weight:900;
+}
+html.ps-unified.ps-letter-premium .pl-picture__icon{
+ font-family:system-ui,"Segoe UI Emoji","Apple Color Emoji",sans-serif;
+ font-size:clamp(54px,7vw,73px);line-height:1.3;
+}
+html.ps-unified.ps-letter-premium .pl-picture[hidden]{display:none!important}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-speak-area{
+ margin:13px auto 9px;flex-direction:column;gap:4px;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-task-label{
+ margin-bottom:12px
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice-label{
+ margin-top:13px
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-feedback[hidden]{display:none!important}
+:root.ps-unified.ps-letter-premium[data-theme="dark"] .pl-picture{
+ background:#274B4A;color:#F1FCF8;border-color:#4E8179
+}
+@media(max-width:550px){
+ html.ps-unified.ps-letter-premium .pl-picture{min-height:88px}
+ html.ps-unified.ps-letter-premium .pl-picture__icon{font-size:60px}
+}
