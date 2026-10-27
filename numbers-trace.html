@@ -119,7 +119,7 @@ function drawGlyph(char,x,scale){
   if(!tokens||tokens.length<6)return;
   const px=Number(tokens[1]),py=Number(tokens[2]),x2=Number(tokens[4]),y2=Number(tokens[5]);
   const len=Math.hypot(x2-px,y2-py)||1,dx=(x2-px)/len,dy=(y2-py)/len;
-  ctx.beginPath();ctx.arc(px,6?py:py,5.5,0,Math.PI*2);
+  ctx.beginPath();ctx.arc(px,py,5.5,0,Math.PI*2);
   ctx.fillStyle="#216F9B";ctx.fill();
   ctx.fillStyle="#FFF";ctx.font="900 7.5px system-ui";
   ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(String(i+1),px,py);
