@@ -270,3 +270,17 @@
  :root.ds-studio .ds-eraser-slider-label{font-size:13px}
  :root.ds-studio .ds-eraser-size{width:min(170px,100%);max-width:none}
 }
+
+
+/* Portrait iPad: colour choices wrap horizontally, not six tall grid rows. */
+@media (orientation:portrait) and (max-width:1100px){
+ :root.ds-studio .ds-colours-rail{
+  display:flex;flex-direction:row;flex-wrap:wrap;align-items:center;justify-content:center;gap:12px;
+ }
+ :root.ds-studio .ds-colours-rail .ds-rail__title{width:100%;margin:0;text-align:center}
+ :root.ds-studio .ds-palette{
+  display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center;
+  width:auto;max-width:100%;gap:9px;
+ }
+ :root.ds-studio .ds-custom-palette{align-self:center}
+}
