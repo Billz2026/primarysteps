@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en" class="ps-unified cs-studio" data-section="drawing">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#EAF7F3">
+<meta name="description" content="A calm, iPad-friendly children's colouring book with big pictures, easy tap-to-colour and saving.">
+<title>Colouring Studio • Primary Steps</title>
+<link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
+<link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
+<script src="assets/js/ps-settings.js?v=2"></script>
+<link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
+<link rel="stylesheet" href="assets/css/colouring-studio.css?v=1">
+<script src="assets/js/primary-steps.js?v=9" defer></script>
+<script src="assets/js/colouring-pictures.js?v=1" defer></script>
+<script src="assets/js/colouring-studio.js?v=1" defer></script>
+</head>
+<body>
+<main class="cs-main">
+ <section id="cs-gallery-screen" class="cs-gallery-screen" aria-labelledby="cs-main-title">
+  <div class="cs-intro">
+   <div>
+    <span class="cs-kicker">Primary Steps · Creative time</span>
+    <h1 id="cs-main-title">My Colouring Book <span aria-hidden="true">🎨</span></h1>
+    <p>Pick a picture. Choose a colour. Make it your own!</p>
+   </div>
+   <span class="cs-picture-count" id="cs-count">10 fun pictures</span>
+  </div>
+  <div class="cs-category-tabs" id="cs-categories" role="group" aria-label="Picture categories"></div>
+  <div class="cs-gallery-grid" id="cs-gallery-grid" aria-label="Choose a picture"></div>
+  <p class="cs-gallery-note">No timer, no right or wrong colours. Take your time.</p>
+ </section>
+ <section id="cs-editor-screen" class="cs-editor-screen" aria-label="Colouring canvas" hidden>
+  <div class="cs-editor-top">
+   <button class="cs-button" type="button" id="cs-back"><span aria-hidden="true">←</span> Pictures</button>
+   <div class="cs-editor-heading">
+    <h1 id="cs-picture-name">My Picture</h1>
+    <p>Choose a colour and tap your picture.</p>
+   </div>
+   <div class="cs-editor-actions">
+    <button class="cs-button" type="button" id="cs-expand" aria-pressed="false">⛶ Big canvas</button>
+    <button class="cs-button cs-button--save" type="button" id="cs-save">↓ Save picture</button>
+   </div>
+  </div>
+  <div class="cs-editor-workspace">
+   <div class="cs-mode-rail" role="group" aria-label="Colouring tools">
+    <span class="cs-rail-title">Tools</span>
+    <button id="cs-fill-mode" class="cs-button cs-mode cs-mode--active" type="button" aria-pressed="true">
+     <span aria-hidden="true">🪣</span><span>Tap Fill</span>
+    </button>
+    <button id="cs-brush-mode" class="cs-button cs-mode" type="button" aria-pressed="false">
+     <span aria-hidden="true">🖌️</span><span>Brush</span>
+    </button>
+    <button id="cs-erase-mode" class="cs-button cs-mode" type="button" aria-pressed="false">
+     <span aria-hidden="true">◻️</span><span>Eraser</span>
+    </button>
+    <button id="cs-undo" class="cs-button cs-mode" type="button" disabled>
+     <span aria-hidden="true">↶</span><span>Undo</span>
+    </button>
+   </div>
+   <div class="cs-paper-area">
+    <div class="cs-paper" id="cs-paper" aria-label="Colouring picture">
+     <svg id="cs-canvas" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 520" role="group" aria-label="Colouring picture with large tappable regions"></svg>
+    </div>
+    <div class="cs-size-controls" id="cs-size-controls" role="group" aria-label="Brush or eraser size" hidden>
+     <span id="cs-size-title">Brush size</span>
+     <button type="button" class="cs-size-choice" data-size="12">Small</button>
+     <button type="button" class="cs-size-choice" data-size="25">Medium</button>
+     <button type="button" class="cs-size-choice" data-size="48">Large</button>
+    </div>
+    <p class="cs-instruction" id="cs-instruction">Tap an area to colour it.</p>
+    <p class="cs-status" id="cs-status" role="status" aria-live="polite"></p>
+   </div>
+   <div class="cs-colour-rail" role="group" aria-label="Choose a colour">
+    <span class="cs-rail-title">Colours</span>
+    <div class="cs-swatches" id="cs-swatches"></div>
+    <label class="cs-custom-label" for="cs-custom-colour">🌈 More colours</label>
+    <input type="color" id="cs-custom-colour" value="#ED7E78" aria-label="Choose any colour">
+   </div>
+  </div>
+  <div class="cs-editor-bottom">
+   <button type="button" class="cs-button" id="cs-clear">↻ Start again</button>
+   <span>Your picture saves on this device.</span>
+  </div>
+ </section>
+ <dialog id="cs-clear-dialog" class="cs-dialog" aria-labelledby="cs-dialog-title" aria-describedby="cs-dialog-desc">
+  <h2 id="cs-dialog-title">Start this picture again?</h2>
+  <p id="cs-dialog-desc">Your colours will be cleared. You can tap Undo to get them back.</p>
+  <div class="cs-dialog-actions">
+   <button id="cs-keep" class="cs-button" type="button">Keep colouring</button>
+   <button id="cs-reset" class="cs-button cs-button--save" type="button">Start again</button>
+  </div>
+ </dialog>
+</main>
+</body>
+</html>
