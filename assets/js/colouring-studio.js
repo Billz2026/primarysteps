@@ -172,8 +172,9 @@
  }
  ui.custom.addEventListener("input",()=>selectColour(ui.custom.value,"Custom colour"));
  const areaByPart=part=>{
-  const areas=ui.svg.querySelectorAll("[data-part]");
-  return [...areas].find(el=>el.getAttribute("data-part")===part&&el.closest("#cs-area-layer"));
+  if(part==="background")return ui.svg.querySelector('rect[data-part="background"]');
+  const areas=ui.svg.querySelectorAll("#cs-area-layer [data-part]");
+  return [...areas].find(el=>el.getAttribute("data-part")===part);
  };
  function buildSvg(p){
   ui.svg.replaceChildren();
