@@ -1,137 +1,213 @@
 <!doctype html>
-<html lang="en" class="ps-unified ps-game" data-game="trace">
+<html lang="en" class="ps-unified ps-letter-premium" data-letter-game="trace">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#F7FAFC">
+<meta name="description" content="Trace letters on a large, touch-friendly handwriting board with start dots and stroke guides.">
 <title>Trace Letters • Primary Steps</title>
-<meta name="description" content="Practise tracing large letters at your own pace.">
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
-<link rel="stylesheet" href="assets/css/learning-game.css?v=1">
-<script src="assets/js/primary-steps.js?v=8" defer></script>
-<script src="assets/js/learning-game.js?v=1" defer></script>
-<style>
-html.ps-game .ps-trace-status{margin:12px 2px 0;padding:10px 15px;border-radius:13px;background:#ECF8F2;color:#235D62;font-size:17px;font-weight:800}
-html.ps-game .ps-trace-options{padding:0 22px 18px;margin:0;font-size:14px;color:#446879}
-html.ps-game .ps-trace-options summary{cursor:pointer;font-weight:800;min-height:33px;max-width:280px}
-html.ps-game .ps-trace-options button{margin-top:7px;min-height:48px;padding:9px 15px;border:2px solid #A6D8CA;background:#F1FAF7;color:#285C65;border-radius:13px;font-weight:850;cursor:pointer}
-html.ps-game #c{cursor:crosshair}
-@media(max-width:650px){html.ps-game .ps-trace-status{font-size:15px}html.ps-game .ps-trace-controls button{flex:1 1 calc(50% - 10px)!important}}
-</style>
+<link rel="stylesheet" href="assets/css/letters-premium.css?v=1">
+<script src="assets/js/primary-steps.js?v=9" defer></script>
 </head>
 <body>
-<main class="ps-trace-main">
-<section class="ps-trace-board" aria-labelledby="trace-title">
-<div class="ps-trace-head">
- <div><h1 id="trace-title">✏️ Trace the letter</h1><p>Follow the letter with your finger.</p></div>
- <div class="ps-trace-letter" aria-live="polite" aria-atomic="true">Letter <span id="letter">A</span></div>
-</div>
-<div class="ps-trace-canvaswrap">
- <canvas id="c" aria-label="Trace uppercase letter A" aria-describedby="trace-help"></canvas>
- <p class="ps-game-count-note" id="trace-help">Draw over the dotted letter with your finger or mouse. No timer.</p>
-<p class="ps-trace-status" id="trace-status" role="status" aria-live="polite">Trace the letter A.</p>
-</div>
-<div class="ps-trace-controls">
- <button class="btn" id="prev" type="button">← Previous</button>
- <button class="btn" id="clear" type="button">↻ Clear</button>
- <button class="ps-game-listen" id="listen" type="button" data-ps-read="Trace the letter A. Follow the shape slowly.">🔊 Listen</button>
- <button class="btn primary" id="next" type="button">Next →</button>
-</div>
-<details class="ps-trace-options"><summary>Grown-ups: letter case</summary><button id="case-toggle" type="button" aria-pressed="false">Use lowercase letters (a–z)</button></details>
+<main class="pl-main">
+<section class="pl-board" aria-labelledby="pl-title">
+ <div class="pl-heading">
+  <div><span class="pl-eyebrow">Primary Steps · Letters</span>
+   <h1 id="pl-title">Trace Letters</h1>
+   <p>Start at the dot. Follow the dotted lines.</p>
+  </div>
+  <span class="pl-heading__tag" id="pl-current" aria-live="polite">Letter A</span>
+ </div>
+ <div class="pl-body">
+  <div class="pl-trace-area">
+   <canvas class="pl-trace-canvas" id="pl-canvas" aria-label="Trace uppercase letter A with your finger, stylus or mouse" aria-describedby="pl-trace-help"></canvas>
+   <span class="pl-trace-guide" aria-hidden="true">● Start at the dot</span>
+  </div>
+  <p id="pl-trace-help" class="pl-choice-label" style="font-size:16px;margin:13px auto 0">Trace with your finger or mouse. No timer.</p>
+  <div class="pl-feedback" id="pl-feedback" data-state="neutral" role="status" aria-live="polite">Trace the letter A.</div>
+  <div class="pl-trace-actions">
+   <button type="button" class="pl-button" id="pl-prev">← Previous</button>
+   <button type="button" class="pl-button" id="pl-clear">↻ Clear</button>
+   <button type="button" class="pl-button pl-button--audio" id="pl-hear">🔊 Hear letter</button>
+   <button type="button" class="pl-button" id="pl-done">Done ⭐</button>
+   <button type="button" class="pl-button pl-button--primary" id="pl-next">Next →</button>
+  </div>
+  <span class="pl-voice-note" id="pl-voice-note" role="status"></span>
+  <details class="pl-settings">
+   <summary>Grown-ups: letter case</summary>
+   <button type="button" id="pl-case-toggle" aria-pressed="false">Use lowercase letters (a–z)</button>
+   <p>These are simple printed-letter stroke guides. Handwriting conventions can differ between schools.</p>
+  </details>
+ </div>
 </section>
+<nav class="pl-nav" aria-label="Letters activities">
+ <a href="letters-trace.html" aria-current="page">✏️ Trace Letters</a>
+ <a href="letters-find.html">🔎 Find Letters</a>
+ <a href="letters-sounds.html">🔊 Letter Sounds</a>
+</nav>
 </main>
 <script>
 (function(){
  "use strict";
+ const uppercase={
+  A:["M20 86 L50 14 L80 86","M31 61 L69 61"],
+  B:["M25 86 L25 15","M25 15 L53 15 Q77 15 75 34 Q75 50 53 50 L25 50","M25 50 L55 50 Q82 51 76 70 Q72 86 25 86"],
+  C:["M78 27 Q66 13 48 14 C25 14 18 34 18 51 C18 75 32 87 50 87 Q67 87 78 74"],
+  D:["M24 15 L24 86","M24 15 L45 15 Q82 15 82 50 Q82 86 45 86 L24 86"],
+  E:["M76 15 L25 15 L25 86 L76 86","M25 50 L66 50"],
+  F:["M25 86 L25 15 L76 15","M25 50 L65 50"],
+  G:["M79 29 Q67 13 50 14 C25 14 18 32 18 51 C18 75 33 87 52 87 Q71 87 80 70 L80 53 L58 53"],
+  H:["M24 15 L24 86","M76 15 L76 86","M24 50 L76 50"],
+  I:["M27 15 L73 15","M50 15 L50 86","M27 86 L73 86"],
+  J:["M75 15 L75 65 Q74 86 52 86 Q28 86 23 68"],
+  K:["M25 15 L25 86","M76 15 L25 55 L76 86"],
+  L:["M26 15 L26 86 L76 86"],
+  M:["M19 86 L19 15 L50 53 L81 15 L81 86"],
+  N:["M22 86 L22 15 L78 86 L78 15"],
+  O:["M50 14 C27 14 19 31 19 50 C19 73 29 87 50 87 C71 87 81 73 81 50 C81 29 70 14 50 14"],
+  P:["M25 86 L25 15 L54 15 Q81 15 80 37 Q79 58 54 58 L25 58"],
+  Q:["M50 14 C28 14 19 31 19 50 C19 73 29 87 50 87 C71 87 81 73 81 50 C81 29 70 14 50 14","M59 70 L83 91"],
+  R:["M25 86 L25 15 L54 15 Q80 15 78 37 Q77 56 53 56 L25 56","M51 56 L79 86"],
+  S:["M75 25 Q63 13 47 15 Q22 15 22 36 Q22 50 49 50 Q78 50 78 67 Q78 89 49 87 Q31 87 21 76"],
+  T:["M20 15 L80 15","M50 15 L50 86"],
+  U:["M22 15 L22 65 Q22 87 50 87 Q78 87 78 65 L78 15"],
+  V:["M19 15 L50 86 L81 15"],
+  W:["M15 15 L30 86 L50 41 L70 86 L85 15"],
+  X:["M22 15 L78 86","M78 15 L22 86"],
+  Y:["M20 15 L50 50 L80 15","M50 50 L50 86"],
+  Z:["M23 15 L78 15 L23 86 L78 86"]
+ };
+ const lowercase={
+  a:["M67 51 C60 39 46 38 34 45 C15 58 21 83 42 85 Q58 86 67 73","M68 43 L68 85"],
+  b:["M28 13 L28 85","M28 55 Q40 38 57 43 Q76 47 75 64 Q75 86 56 86 Q40 86 28 72"],
+  c:["M75 48 Q62 39 48 42 Q26 44 26 64 Q26 86 49 86 Q64 86 75 76"],
+  d:["M71 13 L71 85","M71 55 Q60 40 45 43 Q25 47 25 64 Q25 86 45 86 Q60 86 71 72"],
+  e:["M25 64 L74 64 Q75 42 51 42 Q27 42 25 62 Q23 85 51 86 Q66 86 75 76"],
+  f:["M69 20 Q47 9 44 34 L44 85","M27 44 L65 44"],
+  g:["M69 47 Q59 38 46 42 Q25 45 25 63 Q25 82 46 82 Q59 82 69 68","M69 43 L69 84 Q69 101 45 103 Q34 103 26 97"],
+  h:["M27 13 L27 85","M27 55 Q39 40 55 43 Q72 44 72 62 L72 85"],
+  i:["M50 44 L50 85","M50 21 L50 24"],
+  j:["M63 44 L63 86 Q63 103 38 102","M63 21 L63 24"],
+  k:["M27 13 L27 85","M71 43 L27 66 L72 85"],
+  l:["M48 13 L48 85"],
+  m:["M19 85 L19 44","M19 55 Q32 40 44 44 Q55 46 55 60 L55 85","M55 55 Q67 40 78 45 Q85 50 85 64 L85 85"],
+  n:["M27 85 L27 44","M27 55 Q40 40 56 44 Q72 46 72 65 L72 85"],
+  o:["M50 42 C33 42 24 52 24 64 C24 78 33 87 50 87 C67 87 76 78 76 64 C76 52 67 42 50 42"],
+  p:["M28 45 L28 103","M28 54 Q39 41 56 43 Q76 46 76 64 Q76 86 55 86 Q40 86 28 73"],
+  q:["M72 46 L72 104","M72 54 Q60 42 45 43 Q25 45 25 64 Q25 86 46 86 Q61 86 72 73"],
+  r:["M32 85 L32 44","M32 57 Q43 41 64 44"],
+  s:["M72 50 Q61 40 47 43 Q29 44 29 55 Q29 65 51 65 Q73 65 73 76 Q73 87 49 86 Q35 86 27 79"],
+  t:["M51 24 L51 72 Q51 87 70 85","M30 44 L70 44"],
+  u:["M28 44 L28 68 Q28 86 45 86 Q60 86 72 71","M72 44 L72 85"],
+  v:["M24 44 L49 85 L76 44"],
+  w:["M19 44 L32 85 L49 55 L66 85 L82 44"],
+  x:["M29 44 L72 85","M72 44 L29 85"],
+  y:["M24 44 L49 85","M76 44 L49 98"],
+  z:["M29 44 L72 44 L29 85 L72 85"]
+ };
  const alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
- let index=0,lowercase=false,activePointer=null,last=null,drawn=false;
- const canvas=document.getElementById("c"),ctx=canvas.getContext("2d");
- const label=document.getElementById("letter");
- const listen=document.getElementById("listen");
- const status=document.getElementById("trace-status");
- const caseBtn=document.getElementById("case-toggle");
- if(!ctx){status.textContent="This device cannot open the tracing board.";return;}
- function currentLetter(){return lowercase?alphabet[index].toLowerCase():alphabet[index];}
- function resizeCanvas(){
-  const rect=canvas.getBoundingClientRect();
-  const ratio=Math.min(2,window.devicePixelRatio||1);
-  canvas.width=Math.max(1,Math.round(rect.width*ratio));
-  canvas.height=Math.max(1,Math.round(rect.height*ratio));
-  ctx.setTransform(ratio,0,0,ratio,0,0);
+ const canvas=document.getElementById("pl-canvas"),ctx=canvas.getContext("2d");
+ const currentLabel=document.getElementById("pl-current"),feedback=document.getElementById("pl-feedback");
+ const hear=document.getElementById("pl-hear"),voiceNote=document.getElementById("pl-voice-note");
+ const caseToggle=document.getElementById("pl-case-toggle");
+ let index=0,lower=false,pointerId=null,strokes=[],activeStroke=null,width=0,height=0,transform={scale:1,x:0,y:0};
+ if(!ctx||typeof Path2D==="undefined"){feedback.textContent="This device does not support this tracing board.";return;}
+ function letter(){return lower?alphabet[index].toLowerCase():alphabet[index]}
+ function message(state,text){feedback.dataset.state=state;feedback.textContent=text}
+ function resize(){
+  const box=canvas.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);
+  width=Math.max(1,box.width);height=Math.max(1,box.height);
+  canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
+  ctx.setTransform(dpr,0,0,dpr,0,0);
+  const scale=Math.min((width-44)/116,(height-28)/116);
+  transform={scale,x:(width-100*scale)/2,y:(height-100*scale)/2};
+  render();
  }
- function drawGuide(){
-  const w=canvas.getBoundingClientRect().width,h=canvas.getBoundingClientRect().height;
-  ctx.clearRect(0,0,w,h);
-  const size=Math.min(w*.67,h*.75);
-  ctx.save();
-  ctx.textAlign="center";ctx.textBaseline="middle";
-  ctx.font="900 "+size+"px 'Arial Black','Trebuchet MS',system-ui,sans-serif";
-  ctx.fillStyle="rgba(110,192,180,.16)";
-  ctx.fillText(currentLetter(),w/2,h/2);
-  ctx.setLineDash([Math.max(10,size*.038),Math.max(9,size*.034)]);
-  ctx.lineWidth=Math.max(5,size*.018);
-  ctx.strokeStyle="#428D87";ctx.lineCap="round";
-  ctx.strokeText(currentLetter(),w/2,h/2);
+ function render(){
+  ctx.clearRect(0,0,width,height);
+  ctx.save();ctx.translate(transform.x,transform.y);ctx.scale(transform.scale,transform.scale);
+  const paths=(lower?lowercase:uppercase)[letter()];
+  ctx.lineWidth=3.8;ctx.lineCap="round";ctx.lineJoin="round";ctx.strokeStyle="#3D9590";
+  ctx.setLineDash([2.2,5.2]);
+  paths.forEach(d=>ctx.stroke(new Path2D(d)));
+  ctx.setLineDash([]);
+  paths.forEach((d,i)=>{
+   const nums=(d.match(/-?\d+(?:\.\d+)?/g)||[]).map(Number);
+   if(nums.length<4)return;
+   const [x,y,cx,cy]=nums,dist=Math.hypot(cx-x,cy-y)||1,dx=(cx-x)/dist,dy=(cy-y)/dist;
+   if(i===0){
+    ctx.beginPath();ctx.arc(x,y,6.3,0,Math.PI*2);ctx.fillStyle="#17747A";ctx.fill();
+    ctx.fillStyle="#FFFFFF";ctx.font="900 8px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("1",x,y+.3);
+   }else if(Math.hypot(x-nums[0],y-nums[1])>1000){/* no-op */}
+   const ex=x+dx*17,ey=y+dy*17;
+   ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(ex-dx*7-dy*4,ey-dy*7+dx*4);
+   ctx.lineTo(ex-dx*7+dy*4,ey-dy*7-dx*4);ctx.closePath();
+   ctx.fillStyle="#206F7D";ctx.fill();
+  });
+  ctx.strokeStyle="#1E708B";ctx.lineWidth=4;ctx.lineCap="round";ctx.lineJoin="round";
+  strokes.forEach(points=>{
+   if(!points.length)return;
+   ctx.beginPath();ctx.moveTo(points[0].x,points[0].y);
+   for(let i=1;i<points.length;i++)ctx.lineTo(points[i].x,points[i].y);
+   if(points.length===1){ctx.lineTo(points[0].x+.01,points[0].y+.01)}
+   ctx.stroke();
+  });
   ctx.restore();
  }
- function updateLabel(){
-  const char=currentLetter();
-  label.textContent=char;
-  canvas.setAttribute("aria-label","Trace "+(lowercase?"lowercase":"uppercase")+" letter "+char);
-  listen.setAttribute("data-ps-read","Trace the letter "+char+". Follow the dotted shape with your finger. You can take your time.");
-  caseBtn.textContent=lowercase?"Use uppercase letters (A–Z)":"Use lowercase letters (a–z)";
-  caseBtn.setAttribute("aria-pressed",String(lowercase));
+ function point(e){
+  const r=canvas.getBoundingClientRect();
+  return{x:(e.clientX-r.left-transform.x)/transform.scale,y:(e.clientY-r.top-transform.y)/transform.scale};
  }
- function resetBoard(){
-  activePointer=null;last=null;drawn=false;
-  updateLabel();resizeCanvas();drawGuide();
-  status.textContent="Trace the letter "+currentLetter()+".";
+ function changeLetter(i){
+  index=(i+26)%26;strokes=[];activeStroke=null;pointerId=null;
+  currentLabel.textContent="Letter "+letter();
+  canvas.setAttribute("aria-label","Trace "+(lower?"lowercase":"uppercase")+" letter "+letter()+" with finger or mouse");
+  hear.setAttribute("aria-label","Hear letter "+letter());
+  message("neutral","Trace the letter "+letter()+".");
+  voiceNote.textContent="";render();
  }
- function setLetter(i){index=(i+alphabet.length)%alphabet.length;resetBoard();}
- function point(e){const r=canvas.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top};}
- function pointerDown(e){
-  if(activePointer!==null||(e.pointerType==="mouse"&&e.button!==0))return;
-  e.preventDefault();activePointer=e.pointerId;
-  try{canvas.setPointerCapture(e.pointerId);}catch(_){}
-  last=point(e);drawn=true;
-  ctx.fillStyle="#277D91";ctx.beginPath();ctx.arc(last.x,last.y,6,0,Math.PI*2);ctx.fill();
+ function down(e){
+  if(pointerId!==null||(e.pointerType==="mouse"&&e.button!==0))return;
+  e.preventDefault();pointerId=e.pointerId;
+  try{canvas.setPointerCapture(e.pointerId)}catch(_){}
+  activeStroke=[point(e)];strokes.push(activeStroke);render();
  }
- function pointerMove(e){
-  if(activePointer!==e.pointerId||last===null)return;
-  e.preventDefault();
-  const here=point(e);ctx.save();ctx.beginPath();ctx.moveTo(last.x,last.y);
-  ctx.lineTo(here.x,here.y);ctx.lineWidth=12;ctx.lineCap="round";ctx.lineJoin="round";
-  ctx.strokeStyle="#277D91";ctx.stroke();ctx.restore();last=here;
+ function move(e){
+  if(pointerId!==e.pointerId||!activeStroke)return;
+  e.preventDefault();activeStroke.push(point(e));render();
  }
- function pointerEnd(e){
-  if(activePointer!==e.pointerId)return;
-  activePointer=null;last=null;
-  if(drawn)status.textContent="Keep tracing, or tap Next when you are ready.";
+ function end(e){
+  if(pointerId!==e.pointerId)return;
+  pointerId=null;activeStroke=null;
+  message("neutral","Good effort. Keep tracing or tap Done ⭐.");
  }
- function preserveOnResize(){
-  if(activePointer!==null)return;
-  if(!drawn){resizeCanvas();drawGuide();return;}
-  const snapshot=document.createElement("canvas");
-  snapshot.width=canvas.width;snapshot.height=canvas.height;
-  snapshot.getContext("2d").drawImage(canvas,0,0);
-  resizeCanvas();
-  const rect=canvas.getBoundingClientRect();
-  ctx.drawImage(snapshot,0,0,rect.width,rect.height);
- }
- canvas.addEventListener("pointerdown",pointerDown);
- canvas.addEventListener("pointermove",pointerMove);
- canvas.addEventListener("pointerup",pointerEnd);
- canvas.addEventListener("pointercancel",pointerEnd);
- window.addEventListener("pointerup",pointerEnd);
- window.addEventListener("pointercancel",pointerEnd);
- document.getElementById("prev").addEventListener("click",()=>setLetter(index-1));
- document.getElementById("next").addEventListener("click",()=>setLetter(index+1));
- document.getElementById("clear").addEventListener("click",resetBoard);
- caseBtn.addEventListener("click",()=>{lowercase=!lowercase;resetBoard()});
- window.addEventListener("resize",preserveOnResize);
- resetBoard();
+ canvas.addEventListener("pointerdown",down);canvas.addEventListener("pointermove",move);
+ canvas.addEventListener("pointerup",end);canvas.addEventListener("pointercancel",end);
+ window.addEventListener("pointerup",end);window.addEventListener("pointercancel",end);
+ window.addEventListener("resize",resize);
+ document.getElementById("pl-next").addEventListener("click",()=>changeLetter(index+1));
+ document.getElementById("pl-prev").addEventListener("click",()=>changeLetter(index-1));
+ document.getElementById("pl-clear").addEventListener("click",()=>{strokes=[];activeStroke=null;pointerId=null;message("neutral","Board cleared. Start tracing again.");render()});
+ document.getElementById("pl-done").addEventListener("click",()=>{
+  if(!strokes.length){message("neutral","Have a go at tracing the letter first.");return}
+  message("correct","⭐ Lovely effort! Tap Next when you're ready.");
+ });
+ hear.addEventListener("click",()=>{
+  if(!window.PSVoice){voiceNote.textContent="Speech unavailable.";return}
+  window.PSVoice.speak("Trace the letter "+letter()+". Start at the dot and follow the dotted line.",voiceNote);
+ });
+ caseToggle.addEventListener("click",()=>{
+  lower=!lower;caseToggle.setAttribute("aria-pressed",String(lower));
+  caseToggle.textContent=lower?"Use uppercase letters (A–Z)":"Use lowercase letters (a–z)";
+  strokes=[];resize();changeLetter(index);
+ });
+ resize();changeLetter(0);
 })();
 </script>
-</body></html>
+</body>
+</html>
