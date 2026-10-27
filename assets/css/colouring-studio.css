@@ -288,3 +288,54 @@
 :root.cs-studio .cs-listen:focus-visible{
  outline:4px solid #367F92!important;outline-offset:3px;
 }
+
+
+/* v3 gallery polish: larger art previews, spacious cards, no loss of iPad space.
+   The editor canvas is intentionally unaffected. */
+:root.cs-studio .cs-gallery-grid{
+ grid-template-columns:repeat(4,minmax(0,1fr));
+ gap:clamp(12px,1.65vw,22px);
+}
+:root.cs-studio .cs-picture-card{
+ border-radius:22px;
+ border-color:#C8E1DE;
+ box-shadow:0 7px 20px rgba(43,92,106,.075);
+}
+:root.cs-studio .cs-thumb{
+ min-height:0;
+ aspect-ratio:800/520;
+ padding:clamp(9px,1.1vw,16px);
+ background:linear-gradient(140deg,#FEFFFF 3%,#F2FAFC 53%,#F1FBF6 100%);
+}
+:root.cs-studio .cs-thumb svg{
+ width:100%;height:100%;max-height:none;
+ filter:none;
+}
+:root.cs-studio .cs-picture-info{
+ min-height:64px;padding:13px 17px;
+ border-top:1px solid #E6F0F0;
+}
+:root.cs-studio .cs-picture-name{
+ font-size:clamp(16px,1.12vw,18px);
+ line-height:1.28;
+}
+:root.cs-studio .cs-picture-arrow{
+ width:35px;height:35px;border-radius:12px;font-size:18px;
+}
+@media (hover:hover) and (pointer:fine){
+ :root.cs-studio .cs-picture-card:hover{
+  transform:translateY(-3px);
+  border-color:#78BCB1;
+  box-shadow:0 14px 32px rgba(43,92,106,.13);
+ }
+}
+@media(max-width:1250px){
+ :root.cs-studio .cs-gallery-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:740px){
+ :root.cs-studio .cs-gallery-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+ :root.cs-studio .cs-thumb{padding:9px}
+ :root.cs-studio .cs-picture-info{padding:10px;min-height:53px}
+ :root.cs-studio .cs-picture-name{font-size:14px}
+ :root.cs-studio .cs-picture-arrow{width:30px;height:30px;font-size:16px}
+}
