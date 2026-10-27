@@ -25,16 +25,18 @@
   custom:$("cs-custom-colour"),status:$("cs-status"),instruction:$("cs-instruction"),
   modeFill:$("cs-fill-mode"),modeBrush:$("cs-brush-mode"),modeErase:$("cs-erase-mode"),
   undo:$("cs-undo"),back:$("cs-back"),expand:$("cs-expand"),
-  save:$("cs-save"),clear:$("cs-clear"),sizeGroup:$("cs-size-controls"),
+  save:$("cs-save"),clear:$("cs-clear"),galleryListen:$("cs-gallery-listen"),editorListen:$("cs-editor-listen"),sizeGroup:$("cs-size-controls"),
   sizeTitle:$("cs-size-title"),dialog:$("cs-clear-dialog"),
   keep:$("cs-keep"),reset:$("cs-reset")
  };
  if(!pictures.length){ui.cards.textContent="Pictures are temporarily unavailable.";return}
  let category="all",current=null,colour=COLORS[0][1],mode="fill";
- let widths={brush:25,eraser:55},activeStroke=null,activePointer=null,activePath=null;
+ let widths={brush:25,eraser:48},activeStroke=null,activePointer=null,activePath=null;
  let drawings={},dirty=false,saveTimer=0,db=null,loading=true,lastPicture="";
  const STORE_KEY="ps_colouring_studio_v1",DB_NAME="PrimaryStepsColouring",DB_STORE="records",DB_ITEM="gallery";
  const setStatus=text=>{ui.status.textContent=text||""};
+ ui.galleryListen.addEventListener("click",()=>window.PSVoice?.speak("Choose a picture you like. Tap it to start colouring."));
+ ui.editorListen.addEventListener("click",()=>window.PSVoice?.speak("Choose a colour, then tap an area of your picture. You can also use the Brush or Undo.",ui.status));
  const hex=value=>/^#[0-9a-f]{6}$/i.test(String(value||""));
  const svgEl=(name,attributes={})=>{
   const el=document.createElementNS(SVG_NS,name);
