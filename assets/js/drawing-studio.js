@@ -14,6 +14,12 @@
  const saveBtn=document.getElementById("ds-save");
  const clearBtn=document.getElementById("ds-clear");
  const palette=document.getElementById("ds-palette");
+ const customColour=document.getElementById("ds-custom-colour");
+ const hexInput=document.getElementById("ds-hex");
+ const eraserControls=document.getElementById("ds-eraser-controls");
+ const eraserPresets=document.getElementById("ds-eraser-presets");
+ const eraserInput=document.getElementById("ds-eraser-size");
+ const eraserReadout=document.getElementById("ds-eraser-size-value");
  const pencilOnly=document.getElementById("ds-pencil-only");
  const confirmDialog=document.getElementById("ds-confirm");
  const confirmClear=document.getElementById("ds-confirm-clear");
@@ -32,9 +38,10 @@
  if(!ctx){if(status)status.textContent="This device cannot open the drawing canvas.";return}
  canvas.width=W;canvas.height=H;
  const actions=[];
- let currentTool="brush",colour="#62A8E2",brushSize=16,pointerId=null,active=null;
+ let currentTool="brush",colour="#62A8E2",brushSize=16,eraserSize=200,pointerId=null,active=null;
  let changedSinceLoad=false,saveTask=0,dbConnection=null,dbAllowed=!!window.indexedDB;
  const say=(message)=>{if(status)status.textContent=message};
+ function isHex(value){return /^#[0-9a-f]{6}$/i.test(String(value||""))}
  function updateControls(){
   brushBtn.setAttribute("aria-pressed",String(currentTool==="brush"));
   eraserBtn.setAttribute("aria-pressed",String(currentTool==="eraser"));
@@ -45,6 +52,14 @@
    button.setAttribute("aria-pressed",String(button.dataset.colour===colour));
   }
   sizeReadout.textContent=brushSize+" px";
+  eraserControls.hidden=currentTool!=="eraser";
+  eraserInput.value=String(eraserSize);
+  eraserReadout.textContent=String(eraserSize);
+  for(const preset of eraserPresets.querySelectorAll(".ds-eraser-preset")){
+   preset.setAttribute("aria-pressed",String(Number(preset.dataset.eraserSize)===eraserSize));
+  }
+  customColour.value=colour;
+  if(document.activeElement!==hexInput)hexInput.value=colour.toUpperCase();
  }
  function paintStroke(stroke){
   const pts=stroke.points;if(!pts||!pts.length)return;
@@ -81,7 +96,7 @@
   pointerId=ev.pointerId;
   try{canvas.setPointerCapture(pointerId)}catch(_){}
   const p=point(ev);
-  active={type:"stroke",tool:currentTool,colour,size:currentTool==="eraser"?Math.max(30,brushSize*3):brushSize,points:[p]};
+  active={type:"stroke",tool:currentTool,colour,size:currentTool==="eraser"?eraserSize:brushSize,points:[p]};
   actions.push(active);
   paintStroke(active);
   changedSinceLoad=true;updateControls();
@@ -112,9 +127,36 @@
  canvas.addEventListener("pointerup",finish);
  canvas.addEventListener("pointercancel",finish);
  canvas.addEventListener("lostpointercapture",finish);
- function setTool(tool){currentTool=tool;updateControls()}
+ function setTool(tool){
+  currentTool=tool;updateControls();
+  if(tool==="eraser")say("Eraser ready. Choose Small, Medium, Large or Huge.");
+ }
  brushBtn.addEventListener("click",()=>setTool("brush"));
  eraserBtn.addEventListener("click",()=>setTool("eraser"));
+ function setEraserSize(value){
+  eraserSize=Math.max(20,Math.min(520,Math.round(Number(value)||200)));
+  updateControls();say("Eraser size "+eraserSize+".");changedSinceLoad=true;saveSoon();
+ }
+ for(const b of eraserPresets.querySelectorAll("[data-eraser-size]")){
+  b.addEventListener("click",()=>setEraserSize(b.dataset.eraserSize));
+ }
+ eraserInput.addEventListener("input",()=>setEraserSize(eraserInput.value));
+ function chooseColour(value){
+  if(!isHex(value))return false;
+  colour=value.toUpperCase();
+  currentTool="brush";updateControls();
+  changedSinceLoad=true;saveSoon();return true;
+ }
+ customColour.addEventListener("input",()=>{
+  if(chooseColour(customColour.value))say("New colour selected.");
+ });
+ hexInput.addEventListener("input",()=>{
+  if(chooseColour(hexInput.value))say("Custom colour selected.");
+ });
+ hexInput.addEventListener("change",()=>{
+  if(!isHex(hexInput.value)){hexInput.value=colour;say("Use a colour code like #FF0000.");}
+  else chooseColour(hexInput.value);
+ });
  undoBtn.addEventListener("click",()=>{
   if(!actions.length)return;
   actions.pop();render();changedSinceLoad=true;
@@ -130,7 +172,7 @@
   b.setAttribute("aria-label",name+" colour");
   b.title=name;
   b.addEventListener("click",()=>{
-   colour=hex;setTool("brush");updateControls();say(name+" selected.");
+   if(chooseColour(hex))say(name+" selected.");
   });
   palette.appendChild(b);
  }
@@ -190,7 +232,7 @@
  function validRecord(data){
   return data&&data.version===1&&Array.isArray(data.actions)&&data.actions.length<=5000;
  }
- function serialize(){return {version:1,actions,colour,brushSize,updated:Date.now()}}
+ function serialize(){return {version:1,actions,colour,brushSize,eraserSize,updated:Date.now()}}
  function saveSoon(){
   clearTimeout(saveTask);
   saveTask=setTimeout(saveDraft,550);
@@ -220,13 +262,14 @@
    if(a&&a.type==="clear")actions.push({type:"clear"});
    else if(a&&a.type==="stroke"&&Array.isArray(a.points)&&a.points.length<=20000&&
       ["brush","eraser"].includes(a.tool)&&typeof a.colour==="string"&&
-      Number.isFinite(a.size)&&a.size>0&&a.size<=150){
+      Number.isFinite(a.size)&&a.size>0&&a.size<=600){
     const points=a.points.filter(p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H);
     actions.push({type:"stroke",tool:a.tool,colour:a.colour,size:a.size,points});
    }
   }
-  if(typeof previous.colour==="string"&&COLORS.some(x=>x[1]===previous.colour))colour=previous.colour;
+  if(isHex(previous.colour))colour=previous.colour.toUpperCase();
   if(Number.isFinite(previous.brushSize))brushSize=Math.max(4,Math.min(48,previous.brushSize));
+  if(Number.isFinite(previous.eraserSize))eraserSize=Math.max(20,Math.min(520,previous.eraserSize));
   sizeInput.value=brushSize;
   render();if(actions.length)say("Your last drawing has been restored.");
  }
