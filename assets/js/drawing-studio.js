@@ -1,4 +1,4 @@
-/* Primary Steps — Free Drawing Studio v5. Six unique tools, eraser, saved vector art. */
+/* Primary Steps — Free Drawing Studio v6. Expanded creative tools and deterministic artwork. */
 (() => {
  "use strict";
  const root=document.documentElement;
@@ -14,6 +14,14 @@
  const crayonBtn=document.getElementById("ds-crayon");
  const sprayBtn=document.getElementById("ds-spray");
  const fillBtn=document.getElementById("ds-fill");
+ const funToggle=document.getElementById("ds-fun-toggle");
+ const funMenu=document.getElementById("ds-fun-menu");
+ const funLabel=document.getElementById("ds-fun-label");
+ const funIcon=document.getElementById("ds-fun-icon");
+ const rainbowBtn=document.getElementById("ds-rainbow");
+ const glitterBtn=document.getElementById("ds-glitter");
+ const stampBtn=document.getElementById("ds-stamp");
+ const stampControls=document.getElementById("ds-stamp-controls");
  const toolHint=document.getElementById("ds-tool-hint");
  const sizeWrap=document.getElementById("ds-size-wrap");
  const sizeLabel=document.getElementById("ds-size-label");
@@ -53,11 +61,17 @@
   crayon:{name:"Crayon",help:"Grainy wax-crayon texture"},
   spray:{name:"Spray paint",help:"Soft scattered colour dots"},
   fill:{name:"Paint bucket",help:"Tap inside an enclosed shape to fill it"},
+  rainbow:{name:"Rainbow brush",help:"Paint five bright colours together"},
+  glitter:{name:"Glitter",help:"Add colourful dots and tiny sparkling stars"},
+  stamp:{name:"Stamps",help:"Tap or drag to print stars, hearts and flowers"},
   eraser:{name:"Eraser",help:"Erase with Small, Medium, Large or Huge"}
  };
- const toolButtons={pencil:pencilBtn,brush:brushBtn,marker:markerBtn,crayon:crayonBtn,spray:sprayBtn,fill:fillBtn,eraser:eraserBtn};
- const toolSizes={pencil:5,brush:16,marker:28,crayon:24,spray:48};
- let currentTool="brush",colour="#62A8E2",eraserSize=200,pointerId=null,active=null;
+ const toolButtons={pencil:pencilBtn,brush:brushBtn,marker:markerBtn,crayon:crayonBtn,spray:sprayBtn,fill:fillBtn,
+  rainbow:rainbowBtn,glitter:glitterBtn,stamp:stampBtn,eraser:eraserBtn};
+ const funNames=["rainbow","glitter","stamp"];
+ const stampChoices=[...stampControls.querySelectorAll("[data-stamp]")];
+ const toolSizes={pencil:5,brush:16,marker:28,crayon:24,spray:48,rainbow:42,glitter:42,stamp:65};
+ let currentTool="brush",colour="#62A8E2",eraserSize=200,currentStamp="star",pointerId=null,active=null;
  let changedSinceLoad=false,saveTask=0,dbConnection=null,dbAllowed=!!window.indexedDB;
  const say=(message)=>{if(status)status.textContent=message};
  function isHex(value){return /^#[0-9a-f]{6}$/i.test(String(value||""))}
@@ -68,6 +82,15 @@
    button.classList.toggle("ds-button--active",selected);
   }
   undoBtn.disabled=actions.length===0;
+  const funSelected=funNames.includes(currentTool);
+  funToggle.setAttribute("aria-pressed",String(funSelected));
+  funToggle.classList.toggle("ds-button--active",funSelected);
+  funIcon.textContent=currentTool==="rainbow"?"🌈":currentTool==="glitter"?"✨":currentTool==="stamp"?"⭐":"✨";
+  funLabel.textContent=currentTool==="rainbow"?"Rainbow":currentTool==="glitter"?"Glitter":currentTool==="stamp"?"Stamps":"Fun";
+  stampControls.hidden=currentTool!=="stamp";
+  for(const button of stampChoices){
+   button.setAttribute("aria-pressed",String(button.dataset.stamp===currentStamp));
+  }
   for(const button of palette.querySelectorAll(".ds-swatch")){
    button.setAttribute("aria-pressed",String(button.dataset.colour?.toUpperCase()===colour.toUpperCase()));
   }
@@ -203,6 +226,7 @@
   try{canvas.setPointerCapture(pointerId)}catch(_){}
   active={type:"stroke",tool:currentTool,colour,
    size:currentTool==="eraser"?eraserSize:toolSizes[currentTool],
+   stamp:currentTool==="stamp"?currentStamp:undefined,
    seed:(Math.random()*4294967296)>>>0,points:[p]};
   actions.push(active);paintSegment(active,p,p,0);
   changedSinceLoad=true;updateControls();
@@ -213,7 +237,7 @@
   const samples=typeof ev.getCoalescedEvents==="function"?ev.getCoalescedEvents():[ev];
   for(const sample of samples.length?samples:[ev]){
    const p=point(sample),last=active.points[active.points.length-1];
-   if(Math.hypot(p.x-last.x,p.y-last.y)<.75)continue;
+   if(Math.hypot(p.x-last.x,p.y-last.y)<(active.tool==="stamp"?Math.max(22,active.size*.72):.75))continue;
    active.points.push(p);
    paintSegment(active,last,p,active.points.length-1);
   }
@@ -228,13 +252,26 @@
  canvas.addEventListener("pointerup",finish);
  canvas.addEventListener("pointercancel",finish);
  canvas.addEventListener("lostpointercapture",finish);
+ function toggleFun(open){
+  funMenu.hidden=!open;
+  funToggle.setAttribute("aria-expanded",String(open));
+ }
+ funToggle.addEventListener("click",()=>toggleFun(funMenu.hidden));
  function setTool(tool){
   if(!tools[tool])return;
-  currentTool=tool;updateControls();
+  currentTool=tool;toggleFun(false);updateControls();
   say(tools[tool].name+" ready. "+tools[tool].help+".");
+  changedSinceLoad=true;saveSoon();
  }
  for(const [name,button] of Object.entries(toolButtons)){
   button.addEventListener("click",()=>setTool(name));
+ }
+ for(const button of stampChoices){
+  button.addEventListener("click",()=>{
+   currentStamp=button.dataset.stamp;updateControls();
+   say(button.textContent.trim()+" stamp selected.");
+   changedSinceLoad=true;saveSoon();
+  });
  }
  function setEraserSize(value){
   eraserSize=Math.max(20,Math.min(520,Math.round(Number(value)||200)));
@@ -338,7 +375,7 @@
   return data&&data.version===1&&Array.isArray(data.actions)&&data.actions.length<=5000;
  }
  function serialize(){return {version:1,actions,colour,brushSize:toolSizes.brush,
-  toolSizes,currentTool,eraserSize,updated:Date.now()}}
+  toolSizes,currentTool,currentStamp,eraserSize,updated:Date.now()}}
  function saveSoon(){
   clearTimeout(saveTask);
   saveTask=setTimeout(saveDraft,550);
@@ -371,10 +408,11 @@
     actions.push({type:"fill",x:a.x,y:a.y,colour:a.colour});
    }
    else if(a&&a.type==="stroke"&&Array.isArray(a.points)&&a.points.length<=20000&&
-     ["pencil","brush","marker","crayon","spray","eraser"].includes(a.tool)&&isHex(a.colour)&&
+     ["pencil","brush","marker","crayon","spray","rainbow","glitter","stamp","eraser"].includes(a.tool)&&isHex(a.colour)&&
      Number.isFinite(a.size)&&a.size>0&&a.size<=600){
     const points=a.points.filter(p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H);
     if(points.length)actions.push({type:"stroke",tool:a.tool,colour:a.colour,size:a.size,
+      stamp:["star","heart","flower"].includes(a.stamp)?a.stamp:"star",
       seed:Number.isInteger(a.seed)?a.seed:123456789,points});
    }
   }
@@ -388,6 +426,7 @@
   }
   if(Number.isFinite(previous.eraserSize))eraserSize=Math.max(20,Math.min(520,previous.eraserSize));
   if(typeof previous.currentTool==="string"&&tools[previous.currentTool])currentTool=previous.currentTool;
+  if(["star","heart","flower"].includes(previous.currentStamp))currentStamp=previous.currentStamp;
   render();if(actions.length)say("Your last drawing has been restored.");
  }
  function downloadCanvas(){
