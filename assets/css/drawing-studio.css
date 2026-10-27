@@ -284,3 +284,50 @@
  }
  :root.ds-studio .ds-custom-palette{align-self:center}
 }
+
+
+/* v5 — seven art tools plus Undo: compact, tactile, iPad first. */
+:root.ds-studio .ds-tools-rail{gap:6px;padding:8px}
+:root.ds-studio .ds-tools-rail .ds-tool{
+ min-height:54px;padding:7px 2px;gap:1px;
+ border-radius:13px!important;font-size:11px!important;
+}
+:root.ds-studio .ds-tool__icon{font-size:21px}
+:root.ds-studio .ds-tool-hint{
+ margin:2px auto 0;padding:7px 14px;min-height:34px;
+ background:#ECF7F4;border:1px solid #C9E4DD;border-radius:13px;
+ color:#295F68;font-size:13px;font-weight:850;
+ text-align:center;line-height:1.35;
+}
+:root.ds-studio .ds-tool-size-wrap{
+ display:flex;align-items:center;gap:14px;flex-wrap:wrap;min-height:45px;
+}
+:root.ds-studio .ds-tool-size-wrap[hidden]{display:none!important}
+:root.ds-studio .ds-tool-size-wrap label{font-size:14px;font-weight:850;color:#315F69}
+:root.ds-studio .ds-tool-size-wrap .ds-size{min-height:44px}
+:root.ds-studio .ds-tools-rail .ds-tool[aria-pressed="true"]{
+ box-shadow:0 3px 0 #B6DCD1;
+}
+@media(orientation:portrait) and (max-width:1100px){
+ :root.ds-studio .ds-tools-rail{
+  display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr));
+  justify-content:center;gap:8px;padding:9px;
+ }
+ :root.ds-studio .ds-tools-rail .ds-rail__title{display:none}
+ :root.ds-studio .ds-tools-rail .ds-tool{
+  display:flex;flex-direction:row;gap:8px;
+  min-width:0;width:100%;min-height:53px;padding:7px 8px;
+  font-size:12px!important;
+ }
+ :root.ds-studio .ds-tool__icon{font-size:20px}
+}
+@media(max-width:600px){
+ :root.ds-studio .ds-tools-rail{gap:6px;padding:7px}
+ :root.ds-studio .ds-tools-rail .ds-tool{
+  flex-direction:column;gap:1px;min-height:58px;
+  padding:6px 2px;font-size:11px!important;
+ }
+ :root.ds-studio .ds-tool__icon{font-size:22px}
+ :root.ds-studio .ds-tool-hint{font-size:12px;padding:6px 8px}
+ :root.ds-studio .ds-tool-size-wrap{gap:8px}
+}
