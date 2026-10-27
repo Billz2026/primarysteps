@@ -202,7 +202,16 @@
    "middle-dot-one":"middle-dot-left","middle-dot-two":"middle-dot",
    "middle-dot-three":"middle-dot-right"},
   cupcake:{"cupcake-paper":"cupcake-paper","frosting-lower":"bottom-frosting",
-   "frosting-top":"top-frosting","cake-bottom":"cake-base"}
+   "frosting-top":"top-frosting","cake-bottom":"cake-base"},
+  castle:{"left-tower-roof":"left-roof","right-tower-roof":"right-roof",
+   "central-roof":"middle-roof","left-window":"left-tower-window",
+   "right-window":"right-tower-window","bridge-path":"castle-path"},
+  "fire-engine":{"rear-body":"truck-bed","front-window":"cab-window",
+   "light":"siren","hose":"hose-reel","ladder":"ladder-rail-upper",
+   "front-bumper":"front-grille","headlamp":"front-light",
+   "bumper":"front-grille","wheel-one":"wheel-a",
+   "wheel-two":"wheel-b","wheel-hub-one":"rim-a",
+   "wheel-hub-two":"rim-b","rim-a":"rim-a","rim-b":"rim-b"}
  };
  const areaByPart=part=>{
   if(part==="background")return ui.svg.querySelector('rect[data-part="background"]');
