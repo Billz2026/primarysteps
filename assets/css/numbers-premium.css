@@ -426,3 +426,30 @@ html.ps-unified.ps-number-premium .np-trace-controls .np-btn--practice{
  html.ps-unified.ps-number-premium .np-btn,
  html.ps-unified.ps-number-premium .np-option{transition:none!important}
 }
+
+
+/* Simple Play: count real objects, not faint placeholder circles.
+   Centre one to ten dots in calm rows without changing the grown-up ten-frame mode. */
+html.ps-unified.ps-number-premium .np-count-visual[data-simple-round="yes"] .np-tenframe--simple{
+ display:flex;align-items:center;justify-content:center;flex-wrap:wrap;
+ width:min(100%,420px);max-width:420px;
+ gap:14px;padding:10px;
+ background:transparent;border:0;border-radius:0;box-shadow:none;
+}
+html.ps-unified.ps-number-premium .np-count-visual[data-simple-round="yes"] .np-dot{
+ width:63px;min-width:63px;min-height:63px;
+}
+html.ps-unified.ps-number-premium .np-count-visual[data-simple-round="yes"] .np-dot.is-counted::after{font-size:28px}
+@media(max-width:640px){
+ html.ps-unified.ps-number-premium .np-count-visual[data-simple-round="yes"] .np-tenframe--simple{
+  width:min(100%,315px);gap:8px;padding:4px
+ }
+ html.ps-unified.ps-number-premium .np-count-visual[data-simple-round="yes"] .np-dot{
+  width:44px;min-width:44px;min-height:44px
+ }
+}
+@media(max-width:370px){
+ html.ps-unified.ps-number-premium .np-count-visual[data-simple-round="yes"] .np-tenframe--simple{
+  gap:5px;padding:0
+ }
+}
