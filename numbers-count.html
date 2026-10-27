@@ -10,7 +10,7 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
-<link rel="stylesheet" href="assets/css/numbers-premium.css?v=2">
+<link rel="stylesheet" href="assets/css/numbers-premium.css?v=3">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
 <script src="assets/js/numbers-progress.js?v=1" defer></script>
 </head>
@@ -25,7 +25,7 @@
  <div class="np-content">
   <div class="np-count-layout">
    <section aria-labelledby="np-count-heading">
-    <h2 class="np-question" id="np-count-heading">How many dots?</h2>
+    <h2 class="np-question np-question--with-icon" id="np-count-heading"><span class="np-step-icon" aria-hidden="true">①</span> How many dots?</h2>
     <div id="np-visual" class="np-count-visual" role="group" aria-label="Counting dots. Tap a dot as you count it."></div>
     <div class="np-count-tools np-buttons" style="margin-top:13px">
      <button type="button" class="np-btn np-btn--audio" id="np-hear">🔊 Hear question</button>
@@ -33,7 +33,7 @@
     </div>
    </section>
    <section aria-labelledby="np-choices-heading">
-    <h2 class="np-question" id="np-choices-heading">Tap the number</h2>
+    <h2 class="np-question np-question--with-icon" id="np-choices-heading"><span class="np-step-icon" aria-hidden="true">②</span> Tap the number</h2>
     <div class="np-answers" id="np-answers" role="group" aria-label="Choose the number of dots"></div>
     <div class="np-feedback" id="np-feedback" role="status" aria-live="polite" hidden></div>
     <div class="np-count-actions">
@@ -163,6 +163,7 @@
      window.PSNumbersProgress?.record(streak%5===0);
     }else{
      streak=0;
+     btn.classList.add("is-try");
      message("try","Try again. Tap each dot as you count.");
     }
     sync();save();
