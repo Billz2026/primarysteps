@@ -186,36 +186,42 @@
  }
  function begin(ev){
   if(pointerId!==null||(ev.pointerType==="mouse"&&ev.button!==0))return;
-  if(pencilOnly.checked&&ev.pointerType!=="pen"){say("Pencil-only mode is on. Use an Apple Pencil or turn it off in More Tools.");return}
+  if(pencilOnly.checked&&ev.pointerType!=="pen"){
+   say("Pencil-only mode is on. Use an Apple Pencil or turn it off in More Tools.");return
+  }
   ev.preventDefault();
+  const p=point(ev);
+  if(currentTool==="fill"){
+   const action={type:"fill",x:p.x,y:p.y,colour};
+   if(fillArea(action)){
+    actions.push(action);changedSinceLoad=true;updateControls();
+    say("Area coloured. Tap Undo to change it.");saveSoon();
+   }else say("Choose a different colour or tap inside another area.");
+   return;
+  }
   pointerId=ev.pointerId;
   try{canvas.setPointerCapture(pointerId)}catch(_){}
-  const p=point(ev);
-  active={type:"stroke",tool:currentTool,colour,size:currentTool==="eraser"?eraserSize:brushSize,points:[p]};
-  actions.push(active);
-  paintStroke(active);
+  active={type:"stroke",tool:currentTool,colour,
+   size:currentTool==="eraser"?eraserSize:toolSizes[currentTool],
+   seed:(Math.random()*4294967296)>>>0,points:[p]};
+  actions.push(active);paintSegment(active,p,p,0);
   changedSinceLoad=true;updateControls();
  }
  function move(ev){
   if(ev.pointerId!==pointerId||!active)return;
   ev.preventDefault();
-  const events=typeof ev.getCoalescedEvents==="function" ? ev.getCoalescedEvents() : [ev];
-  for(const sample of events.length?events:[ev]){
-   const p=point(sample);
-   const old=active.points[active.points.length-1];
-   if(Math.hypot(p.x-old.x,p.y-old.y)<.75)continue;
+  const samples=typeof ev.getCoalescedEvents==="function"?ev.getCoalescedEvents():[ev];
+  for(const sample of samples.length?samples:[ev]){
+   const p=point(sample),last=active.points[active.points.length-1];
+   if(Math.hypot(p.x-last.x,p.y-last.y)<.75)continue;
    active.points.push(p);
-   ctx.save();ctx.lineCap="round";ctx.lineJoin="round";
-   ctx.strokeStyle=active.tool==="eraser"?"#FFFFFF":active.colour;ctx.lineWidth=active.size;
-   ctx.beginPath();ctx.moveTo(old.x,old.y);ctx.lineTo(p.x,p.y);ctx.stroke();ctx.restore();
+   paintSegment(active,last,p,active.points.length-1);
   }
  }
  function finish(ev){
   if(ev.pointerId!==pointerId)return;
   ev.preventDefault?.();
-  pointerId=null;active=null;
-  say("Saving your drawing…");
-  saveSoon();
+  pointerId=null;active=null;say("Saving your drawing…");saveSoon();
  }
  canvas.addEventListener("pointerdown",begin);
  canvas.addEventListener("pointermove",move);
@@ -223,11 +229,13 @@
  canvas.addEventListener("pointercancel",finish);
  canvas.addEventListener("lostpointercapture",finish);
  function setTool(tool){
+  if(!tools[tool])return;
   currentTool=tool;updateControls();
-  if(tool==="eraser")say("Eraser ready. Choose Small, Medium, Large or Huge.");
+  say(tools[tool].name+" ready. "+tools[tool].help+".");
  }
- brushBtn.addEventListener("click",()=>setTool("brush"));
- eraserBtn.addEventListener("click",()=>setTool("eraser"));
+ for(const [name,button] of Object.entries(toolButtons)){
+  button.addEventListener("click",()=>setTool(name));
+ }
  function setEraserSize(value){
   eraserSize=Math.max(20,Math.min(520,Math.round(Number(value)||200)));
   updateControls();say("Eraser size "+eraserSize+".");changedSinceLoad=true;saveSoon();
@@ -239,8 +247,8 @@
  function chooseColour(value){
   if(!isHex(value))return false;
   colour=value.toUpperCase();
-  currentTool="brush";updateControls();
-  changedSinceLoad=true;saveSoon();return true;
+  if(currentTool==="eraser")currentTool="brush";
+  updateControls();changedSinceLoad=true;saveSoon();return true;
  }
  customColour.addEventListener("input",()=>{
   if(chooseColour(customColour.value))say("New colour selected.");
@@ -258,7 +266,9 @@
   say("Last action undone.");saveSoon();
  });
  sizeInput.addEventListener("input",()=>{
-  brushSize=Math.max(4,Math.min(48,Number(sizeInput.value)||16));updateControls();
+  if(currentTool==="eraser"||currentTool==="fill")return;
+  toolSizes[currentTool]=Math.max(2,Math.min(90,Number(sizeInput.value)||16));
+  updateControls();changedSinceLoad=true;saveSoon();
  });
  for(const [name,hex,check] of COLORS){
   const b=document.createElement("button");b.type="button";b.className="ds-swatch";
@@ -327,7 +337,8 @@
  function validRecord(data){
   return data&&data.version===1&&Array.isArray(data.actions)&&data.actions.length<=5000;
  }
- function serialize(){return {version:1,actions,colour,brushSize,eraserSize,updated:Date.now()}}
+ function serialize(){return {version:1,actions,colour,brushSize:toolSizes.brush,
+  toolSizes,currentTool,eraserSize,updated:Date.now()}}
  function saveSoon(){
   clearTimeout(saveTask);
   saveTask=setTimeout(saveDraft,550);
@@ -355,17 +366,28 @@
   actions.length=0;
   for(const a of previous.actions){
    if(a&&a.type==="clear")actions.push({type:"clear"});
+   else if(a&&a.type==="fill"&&Number.isFinite(a.x)&&Number.isFinite(a.y)&&
+     a.x>=0&&a.x<=W&&a.y>=0&&a.y<=H&&isHex(a.colour)){
+    actions.push({type:"fill",x:a.x,y:a.y,colour:a.colour});
+   }
    else if(a&&a.type==="stroke"&&Array.isArray(a.points)&&a.points.length<=20000&&
-      ["brush","eraser"].includes(a.tool)&&typeof a.colour==="string"&&
-      Number.isFinite(a.size)&&a.size>0&&a.size<=600){
+     ["pencil","brush","marker","crayon","spray","eraser"].includes(a.tool)&&isHex(a.colour)&&
+     Number.isFinite(a.size)&&a.size>0&&a.size<=600){
     const points=a.points.filter(p=>p&&Number.isFinite(p.x)&&Number.isFinite(p.y)&&p.x>=0&&p.x<=W&&p.y>=0&&p.y<=H);
-    actions.push({type:"stroke",tool:a.tool,colour:a.colour,size:a.size,points});
+    if(points.length)actions.push({type:"stroke",tool:a.tool,colour:a.colour,size:a.size,
+      seed:Number.isInteger(a.seed)?a.seed:123456789,points});
    }
   }
   if(isHex(previous.colour))colour=previous.colour.toUpperCase();
-  if(Number.isFinite(previous.brushSize))brushSize=Math.max(4,Math.min(48,previous.brushSize));
+  if(Number.isFinite(previous.brushSize))toolSizes.brush=Math.max(2,Math.min(90,previous.brushSize));
+  if(previous.toolSizes&&typeof previous.toolSizes==="object"){
+   for(const key of Object.keys(toolSizes)){
+    const value=previous.toolSizes[key];
+    if(Number.isFinite(value))toolSizes[key]=Math.max(2,Math.min(90,value));
+   }
+  }
   if(Number.isFinite(previous.eraserSize))eraserSize=Math.max(20,Math.min(520,previous.eraserSize));
-  sizeInput.value=brushSize;
+  if(typeof previous.currentTool==="string"&&tools[previous.currentTool])currentTool=previous.currentTool;
   render();if(actions.length)say("Your last drawing has been restored.");
  }
  function downloadCanvas(){
