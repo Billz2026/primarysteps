@@ -179,3 +179,12 @@
 @media (prefers-reduced-motion:reduce){
  :root.ds-studio *{transition:none!important;animation:none!important}
 }
+
+
+/* Keep two full-size, comfortable swatches in the landscape palette. */
+:root.ds-studio .ds-palette{gap:9px}
+:root.ds-studio .ds-swatch{width:47px;height:47px}
+@media(max-width:1020px){
+ :root.ds-studio .ds-palette{gap:8px}
+ :root.ds-studio .ds-swatch{width:44px;height:44px}
+}
