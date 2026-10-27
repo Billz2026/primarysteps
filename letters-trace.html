@@ -143,7 +143,7 @@
    if(i===0){
     ctx.beginPath();ctx.arc(x,y,6.3,0,Math.PI*2);ctx.fillStyle="#17747A";ctx.fill();
     ctx.fillStyle="#FFFFFF";ctx.font="900 8px system-ui";ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("1",x,y+.3);
-   }else if(Math.hypot(x-nums[0],y-nums[1])>1000){/* no-op */}
+   }
    const ex=x+dx*17,ey=y+dy*17;
    ctx.beginPath();ctx.moveTo(ex,ey);ctx.lineTo(ex-dx*7-dy*4,ey-dy*7+dx*4);
    ctx.lineTo(ex-dx*7+dy*4,ey-dy*7-dx*4);ctx.closePath();
