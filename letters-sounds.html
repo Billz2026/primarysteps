@@ -88,7 +88,7 @@
   current=pick(bank.filter(ch=>ch!==current));solved=false;
   play.setAttribute("aria-label","Hear the word clue for this round");
   picture.hidden=true;picture.replaceChildren();
-  pictureButton.setAttribute("aria-expanded","false");
+  pictureButton.setAttribute("aria-expanded","false");pictureButton.textContent="👁 Show picture";
   voiceNote.textContent="Tap the speaker to listen.";
   choices.replaceChildren();
   const opts=new Set([current]);
