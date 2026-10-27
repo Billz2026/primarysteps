@@ -265,3 +265,159 @@ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-feedback[hidden]{
  html.ps-unified.ps-letter-premium .pl-picture{min-height:88px}
  html.ps-unified.ps-letter-premium .pl-picture__icon{font-size:60px}
 }
+
+
+/* v3: keep the learning interaction and primary actions in the initial desktop viewport.
+   Do not shrink mobile touch targets or rely on browser zoom. */
+@media (min-width: 900px) {
+ html.ps-unified.ps-letter-premium .pl-main{
+  width:min(1100px,calc(100% - 40px));margin:18px auto 30px;
+ }
+ html.ps-unified.ps-letter-premium .pl-heading{
+  padding:17px clamp(22px,3vw,37px);
+ }
+ html.ps-unified.ps-letter-premium .pl-heading h1{
+  font-size:clamp(28px,2.7vw,37px);
+ }
+ html.ps-unified.ps-letter-premium .pl-heading p{margin-top:3px}
+ html.ps-unified.ps-letter-premium .pl-body{
+  padding:18px clamp(20px,3.3vw,38px) 17px;
+  row-gap:9px;column-gap:28px;
+ }
+ /* Find: the target and the matching choices are equally visible. */
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-body{
+  display:grid;
+  grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr);
+  grid-template-areas:
+   "task choice-title"
+   "target choices"
+   "audio footer"
+   "feedback feedback"
+   "settings settings";
+  align-items:center;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-task-label{
+  grid-area:task;margin:0;align-self:end;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-target{
+  grid-area:target;width:clamp(158px,15vw,198px);height:clamp(158px,15vw,198px);
+  font-size:clamp(95px,10vw,135px);
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-speak-area{
+  grid-area:audio;margin:2px 0 0;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice-label{
+  grid-area:choice-title;margin:0;align-self:end;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choices{
+  grid-area:choices;width:100%;max-width:none;gap:10px;margin:0;align-self:center;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice{
+  min-height:clamp(128px,12vw,164px);
+  font-size:clamp(60px,6vw,93px)!important;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-feedback{
+  grid-area:feedback;margin:1px 0 0;max-width:none;min-height:50px;padding:11px 15px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-footer{
+  grid-area:footer;margin:2px 0 0;max-width:none;justify-content:center;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-footer__hint{display:none}
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-settings{
+  grid-area:settings;margin:4px 0 0;
+ }
+ /* Sounds: the speaker and the letter choices belong in one visible row. */
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-body{
+  display:grid;
+  grid-template-columns:minmax(220px,.8fr) minmax(0,1.2fr);
+  grid-template-areas:
+   "task choice-title"
+   "speaker choices"
+   "audio footer"
+   "picture picture"
+   "feedback feedback"
+   "settings settings";
+  align-items:center;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-task-label{grid-area:task;margin:0;align-self:end}
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] #pl-play{
+  grid-area:speaker;width:clamp(158px,15vw,198px);height:clamp(158px,15vw,198px);
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice-label{
+  grid-area:choice-title;margin:0;align-self:end
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choices{
+  grid-area:choices;width:100%;max-width:none;gap:10px;margin:0;align-self:center
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice{
+  min-height:clamp(128px,12vw,164px);font-size:clamp(60px,6vw,93px)!important
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-speak-area{
+  grid-area:audio;margin:2px 0 0;gap:4px
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-picture{grid-area:picture}
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-feedback{
+  grid-area:feedback;margin:1px 0 0;max-width:none;min-height:50px;padding:11px 15px
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-footer{
+  grid-area:footer;margin:2px 0 0;max-width:none;justify-content:center
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-footer__hint{display:none}
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-settings{grid-area:settings;margin:4px 0 0}
+ /* Trace: board stays large, while practice and Next are always alongside it. */
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-body{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(185px,220px);
+  grid-template-areas:
+   "board actions"
+   "help actions"
+   "feedback actions"
+   "voice voice"
+   "settings settings";
+  align-items:start;column-gap:21px;row-gap:6px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-area{
+  grid-area:board;width:100%;max-width:none;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-canvas{
+  height:clamp(270px,33vh,345px);
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] #pl-trace-help{
+  grid-area:help;margin:0!important;font-size:14px!important;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-feedback{
+  grid-area:feedback;margin:0;min-height:51px;padding:10px 14px;font-size:16px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-actions{
+  grid-area:actions;display:flex;flex-direction:column;justify-content:space-between;
+  align-items:stretch;width:100%;max-width:none;gap:13px;margin:0;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-actions__practice,
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-actions__navigation{
+  display:flex;flex-direction:column;gap:9px;width:100%;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-actions .pl-button{
+  min-height:50px;min-width:0;width:100%;padding:9px 12px;font-size:16px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-actions #pl-next{
+  min-width:0;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-voice-note{
+  grid-area:voice
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-settings{
+  grid-area:settings;margin:6px 0 0
+ }
+}
+@media (min-width:900px) and (max-height:760px) {
+ html.ps-unified.ps-letter-premium .pl-main{margin:9px auto 20px}
+ html.ps-unified.ps-letter-premium .pl-heading{padding-top:12px;padding-bottom:12px}
+ html.ps-unified.ps-letter-premium .pl-body{padding-top:13px;padding-bottom:12px}
+ html.ps-unified.ps-letter-premium .pl-choices .pl-choice{min-height:115px}
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-canvas{
+  height:clamp(235px,30vh,275px)
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-actions .pl-button{
+  min-height:44px;padding:7px 10px
+ }
+}
