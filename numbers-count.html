@@ -117,15 +117,18 @@
  }
  function draw(){
   visual.replaceChildren();
+  const beginner=simple();
+  visual.dataset.simpleRound=beginner?"yes":"no";
   const frames=document.createElement("div");frames.className="np-frame-set";
   const groups=Math.ceil(target/10);
   for(let g=0;g<groups;g++){
    const frame=document.createElement("div");frame.className="np-tenframe";
+   if(beginner)frame.classList.add("np-tenframe--simple");
    frame.setAttribute("aria-label","Group "+(g+1)+" of counting dots");
    const filled=Math.min(10,target-g*10);
    for(let n=0;n<10;n++){
     if(n<filled)frame.appendChild(countDot(g*10+n+1));
-    else{const empty=document.createElement("span");empty.className="np-dot np-dot--empty";empty.setAttribute("aria-hidden","true");frame.appendChild(empty)}
+    else if(!beginner){const empty=document.createElement("span");empty.className="np-dot np-dot--empty";empty.setAttribute("aria-hidden","true");frame.appendChild(empty)}
    }
    frames.appendChild(frame);
   }
