@@ -182,3 +182,52 @@ html.ps-unified.ps-letter-premium[data-large-ui] .pl-choice{min-height:170px}
 :root.ps-unified.ps-letter-premium[data-theme="dark"] .pl-button{background:#304C59!important;color:#EEF9FC!important}
 :root.ps-unified.ps-letter-premium[data-theme="dark"] .pl-button--primary{background:#317D89!important}
 :root.ps-unified.ps-letter-premium[data-theme="dark"] .pl-trace-canvas{background:repeating-linear-gradient(180deg,#253946 0,#253946 78px,#2D4651 79px,#253946 80px)}
+
+
+/* Letters finish pass — keep each task prominent and remove redundant chrome. */
+html.ps-unified.ps-letter-premium .pl-heading__tag{display:none}
+html.ps-unified.ps-letter-premium .pl-voice-note{
+ display:block;margin:6px auto 0;max-width:650px;text-align:center;
+ color:var(--pl-sub);font-size:15px;font-weight:750;line-height:1.4;
+}
+html.ps-unified.ps-letter-premium .pl-voice-note:empty{display:none}
+html.ps-unified.ps-letter-premium .pl-trace-actions{
+ display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;
+ gap:18px;max-width:880px;margin:22px auto 0;
+}
+html.ps-unified.ps-letter-premium .pl-trace-actions__practice,
+html.ps-unified.ps-letter-premium .pl-trace-actions__navigation{
+ display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+}
+html.ps-unified.ps-letter-premium .pl-trace-actions__navigation{justify-content:flex-end}
+html.ps-unified.ps-letter-premium .pl-trace-actions .pl-button{min-width:120px}
+html.ps-unified.ps-letter-premium .pl-trace-actions #pl-next{min-width:140px}
+html.ps-unified.ps-letter-premium .pl-trace-guide{
+ background:#EBF8F4;border-color:#B9DBD2;color:#235665;
+}
+html.ps-unified.ps-letter-premium .pl-nav{margin:15px 0 6px}
+html.ps-unified.ps-letter-premium .pl-nav a{min-height:48px}
+html.ps-unified.ps-letter-premium .pl-settings{border-top:1px solid var(--pl-border);padding-top:10px}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-task-label{
+ margin-bottom:10px
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-speak-area{
+ margin:15px auto 12px
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice-label{margin-top:18px}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice-label{margin-top:18px}
+@media(max-width:950px){
+ html.ps-unified.ps-letter-premium .pl-trace-actions{grid-template-columns:1fr;gap:14px}
+ html.ps-unified.ps-letter-premium .pl-trace-actions__practice,
+ html.ps-unified.ps-letter-premium .pl-trace-actions__navigation{justify-content:center}
+}
+@media(max-width:550px){
+ html.ps-unified.ps-letter-premium .pl-trace-actions__practice,
+ html.ps-unified.ps-letter-premium .pl-trace-actions__navigation{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;width:100%;
+ }
+ html.ps-unified.ps-letter-premium .pl-trace-actions__practice .pl-button:first-child{grid-column:1/-1}
+ html.ps-unified.ps-letter-premium .pl-trace-actions__practice .pl-button{min-width:0}
+ html.ps-unified.ps-letter-premium .pl-trace-actions__navigation .pl-button{min-width:0}
+ html.ps-unified.ps-letter-premium .pl-body{padding-bottom:22px}
+}
