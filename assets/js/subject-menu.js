@@ -1,4 +1,4 @@
-/* Primary Steps: calm, predictable picture menus (v2) */
+/* Primary Steps: calm, predictable picture menus (v3) */
 (function(){
  "use strict";
  var choices=[],subject="";
@@ -32,7 +32,7 @@
   first.setAttribute("aria-label","Start here: "+label(first));
   var title=document.getElementById("choose-title");if(title)title.textContent="Pick a picture to play";
   var copy=document.querySelector(".ps-subject-hero p");if(copy)copy.textContent="Tap a picture to begin.";
-  if(simple()&&choices.length>2){
+  if(simple()&&choices.length>2&&subject!=="letters"){
    grid.id=grid.id||"ps-activity-choices";
    var btn=document.createElement("button");btn.type="button";btn.className="ps-choice-more";
    btn.setAttribute("aria-controls",grid.id);
@@ -54,7 +54,7 @@
   if(!window.speechSynthesis||!window.SpeechSynthesisUtterance){b.textContent="Audio unavailable";return;}
   var prefs=window.PSSettings?.load?.();
   if(prefs&&(!prefs.soundEnabled||!prefs.voiceEnabled)){b.textContent="Sound is off";b.title="Turn on voice and sound in Parent Zone";return;}
-  var visible=simple()&&!document.documentElement.classList.contains("ps-show-all")?choices.slice(0,2):choices;
+  var visible=simple()&&subject!=="letters"&&!document.documentElement.classList.contains("ps-show-all")?choices.slice(0,2):choices;
   var names=visible.map(label);
   var sentence="Let's learn "+(b.getAttribute("data-ps-listen")||subject)+". Tap a picture to play. "+names.join(". ")+".";
   window.speechSynthesis.cancel();
