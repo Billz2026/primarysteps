@@ -173,10 +173,44 @@
   setStatus((name||"New colour")+" selected.");markDirty();
  }
  ui.custom.addEventListener("input",()=>selectColour(ui.custom.value,"Custom colour"));
+ // Artwork has been refined since the first release. Map legacy part names
+ // to their equivalent areas so children's earlier saved colours still appear.
+ const LEGACY_PARTS={
+  train:{"red-stripe":"locomotive-stripe",bumper:"train-cowcatcher"},
+  aeroplane:{"tail-wing":"rear-wing","lower-wing":"main-wing"},
+  bus:{"bus":"bus-body","headlight":"headlamp"},
+  balloon:{"balloon-mid":"balloon-mid"},
+  "toy-robot":{"robot-body":"robot-body","button-one":"belly-button-left",
+   "button-two":"heart-button","button-three":"belly-button-right"},
+  unicorn:{"mane-back":"back-mane","front-mane":"front-mane","head":"head"},
+  "pirate-ship":{"front-sail":"right-sail","back-sail":"left-sail","flag":"top-flag",
+   "side-stripe":"hull-stripe","sun":"sun"},
+  dragon:{"wing":"wing-right","spikes":"back-spikes","body":"dragon-body",
+   "nose":"snout","belly":"tummy"},
+  "christmas-tree":{"top-layer":"upper-branch","middle-layer":"middle-branch",
+   "bottom-layer":"lower-branch"},
+  present:{"gift-box":"box","gift-lid":"lid","vertical-ribbon":"ribbon-down",
+   "horizontal-ribbon":"ribbon-across","ribbon-tail-left":"bow-tail-left",
+   "ribbon-tail-right":"bow-tail-right","star-one":"sparkle-one",
+   "star-two":"sparkle-two"},
+  tree:{"left-leaves":"canopy-left","right-leaves":"canopy-right","top-leaves":"canopy-top"},
+  ladybird:{"body":"back-body"},
+  "sun-and-clouds":{"sun":"sun-disc","left-cheek":"sun-cheek-left",
+   "right-cheek":"sun-cheek-right"},
+  "easter-egg":{"egg-body":"egg","upper-band":"top-band","lower-band":"bottom-band",
+   "top-dot-left":"top-dot-left","top-dot-right":"top-dot-right",
+   "middle-dot-one":"middle-dot-left","middle-dot-two":"middle-dot",
+   "middle-dot-three":"middle-dot-right"},
+  cupcake:{"cupcake-paper":"cupcake-paper","frosting-lower":"bottom-frosting",
+   "frosting-top":"top-frosting","cake-bottom":"cake-base"}
+ };
  const areaByPart=part=>{
   if(part==="background")return ui.svg.querySelector('rect[data-part="background"]');
-  const areas=ui.svg.querySelectorAll("#cs-area-layer [data-part]");
-  return [...areas].find(el=>el.getAttribute("data-part")===part);
+  const areas=[...ui.svg.querySelectorAll("#cs-area-layer [data-part]")];
+  const direct=areas.find(el=>el.getAttribute("data-part")===part);
+  if(direct)return direct;
+  const legacy=LEGACY_PARTS[current?.id]?.[part];
+  return legacy?areas.find(el=>el.getAttribute("data-part")===legacy):undefined;
  };
  function buildSvg(p){
   ui.svg.replaceChildren();
