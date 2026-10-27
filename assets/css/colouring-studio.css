@@ -273,3 +273,18 @@
 @media (prefers-reduced-motion:reduce){
  :root.cs-studio *{animation:none!important;transition:none!important}
 }
+
+/* v2: optional simple spoken guidance without adding pressure or clutter. */
+:root.cs-studio .cs-listen{
+ display:inline-flex;align-items:center;justify-content:center;gap:6px;
+ margin-top:14px;min-height:43px;padding:8px 15px;
+ color:#236976;background:#FFF;border:2px solid #B5D9D2;
+ border-radius:13px;font:850 14px/1.1 ui-rounded,"Trebuchet MS",system-ui,sans-serif;
+ cursor:pointer;touch-action:manipulation;
+}
+:root.cs-studio .cs-listen--small{
+ margin-top:5px;min-height:38px;padding:6px 11px;font-size:12px;
+}
+:root.cs-studio .cs-listen:focus-visible{
+ outline:4px solid #367F92!important;outline-offset:3px;
+}
