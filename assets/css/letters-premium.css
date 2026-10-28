@@ -421,3 +421,16 @@ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-feedback[hidden]{
   min-height:44px;padding:7px 10px
  }
 }
+
+
+/* Trace Letters: accessible visual progress, scoped to the tracing activity. */
+html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-progress {
+ display:block;margin-top:7px;font-size:14px;line-height:1.45;
+ color:var(--pl-teal-deep);font-weight:800;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-guide {
+ max-width:calc(100% - 30px);
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="trace"] .pl-trace-progress {
+ color:#D6F4F1;
+}
