@@ -269,7 +269,7 @@
   }
   verified.add(current);saveVerified();updateSaved();
   // Only first checked completion per distinct number affects the shared progress bridge.
-  window.PSNumbersProgress?.record(verified.size%5===0);
+  window.PSProgress?.record("numbersTrace",String(current));
   message("good","⭐ Number "+current+" completed! Great tracing. Tap Next when you're ready.");
  });
  byId("np-hear").addEventListener("click",()=>{
@@ -293,9 +293,9 @@
   setRange(Number(selector.value)||0);
  });
  byId("np-reset").addEventListener("click",()=>{
-  if(!window.confirm("Clear checked tracing completions? Earlier practice and previously earned My Stars will be kept."))return;
-  verified.clear();saveVerified();updateSaved();
-  message("neutral","Checked completions cleared. Earlier practice remains saved.");
+  if(!window.confirm("Clear checked tracing completions? Earlier practice will be kept. Verified My Stars for tracing numbers will be reset."))return;
+  verified.clear();saveVerified();window.PSProgress?.clearActivity("numbersTrace");updateSaved();
+  message("neutral","Checked completions and their My Stars were cleared. Earlier practice remains saved.");
  });
  window.addEventListener("keydown",event=>{
   if(event.altKey||event.ctrlKey||event.metaKey||["INPUT","TEXTAREA","SELECT"].includes(document.activeElement?.tagName))return;
