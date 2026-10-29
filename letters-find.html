@@ -10,7 +10,7 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
-<link rel="stylesheet" href="assets/css/letters-premium.css?v=3">
+<link rel="stylesheet" href="assets/css/letters-premium.css?v=5">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
 </head>
 <body>
@@ -30,17 +30,34 @@
    <button type="button" class="pl-button pl-button--audio" id="pl-hear">🔊 Hear the letter</button>
    <span class="pl-voice-note" id="pl-voice-note" role="status"></span>
   </div>
-  <h2 class="pl-choice-label">Which one matches?</h2>
+  <h2 class="pl-choice-label" id="pl-choice-instruction">Which one matches?</h2>
   <div class="pl-choices" id="pl-choices" role="group" aria-label="Choose the matching letter"></div>
   <div class="pl-feedback" id="pl-feedback" data-state="neutral" role="status" aria-live="polite" hidden></div>
+  <div class="pl-find-progress" aria-label="Letter matching progress">
+   <div class="pl-find-progress__labels">
+    <span id="pl-step-label">Step 1 of 4 · Big letters</span>
+    <span id="pl-progress-label">0 of 5 matched</span>
+   </div>
+   <div class="pl-find-progress__track" id="pl-progress-track" role="progressbar" aria-label="Letters matched in this step" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
+    <span id="pl-progress-fill" class="pl-find-progress__fill"></span>
+   </div>
+  </div>
   <div class="pl-footer">
    <span class="pl-footer__hint">No timer. Take your time.</span>
    <button type="button" class="pl-button pl-button--primary" id="pl-next">Next letter →</button>
   </div>
   <details class="pl-settings" id="pl-settings">
-   <summary>Grown-ups: level</summary>
-   <label for="pl-level">Number of choices in full mode</label>
-   <select id="pl-level"><option value="easy">Easy · 4 letters</option><option value="medium">Medium · 6 letters</option><option value="hard">Hard · 9 letters</option></select>
+   <summary>Grown-ups: learning steps</summary>
+   <label for="pl-level">Choose a learning step</label>
+   <select id="pl-level">
+    <option value="auto">Automatic · start easy and build up</option>
+    <option value="0">Step 1 · Match capital letters (3 choices)</option>
+    <option value="1">Step 2 · More capital letters (4 choices)</option>
+    <option value="2">Step 3 · Match capitals to small letters (3 choices)</option>
+    <option value="3">Step 4 · More small letters (4 choices)</option>
+   </select>
+   <button type="button" id="pl-reset-progress">Start automatic practice again</button>
+   <p>Automatic practice moves up a step after five successful matches. A child can skip any question using Next; skipped questions do not count. Progress is saved on this device. This practice is not linked to My Stars yet.</p>
   </details>
  </div>
 </section>
@@ -53,64 +70,152 @@
 <script>
 (function(){
  "use strict";
- const alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
- const beginner=["A","B","C","M","S","T"];
+
+ // Four small, untimed steps. Start with recognisable capitals before introducing lowercase.
+ const STEPS=[
+  {title:"Big letters",bank:"ABCMST",choices:3,small:false},
+  {title:"More big letters",bank:"ABCDEFGHLMNPRST",choices:4,small:false},
+  {title:"Big and small letters",bank:"ABCMST",choices:3,small:true},
+  {title:"More small letters",bank:"ABCDEFGHIJKLMNOPQRSTUVWXYZ",choices:4,small:true}
+ ];
+ const GOAL=5,KEY="ps_find_letters_progress_v1";
  const target=document.getElementById("pl-target");
  const choices=document.getElementById("pl-choices");
  const task=document.getElementById("pl-task");
+ const choiceInstruction=document.getElementById("pl-choice-instruction");
  const feedback=document.getElementById("pl-feedback");
  const next=document.getElementById("pl-next");
  const hear=document.getElementById("pl-hear");
  const voiceNote=document.getElementById("pl-voice-note");
  const level=document.getElementById("pl-level");
- let current="",solved=false;
- function simple(){return window.PSSettings?.load?.().simplePlay!==false}
- function pick(items){return items[Math.floor(Math.random()*items.length)]}
- function shuffle(items){
-  const arr=items.slice();
-  for(let i=arr.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[arr[i],arr[j]]=[arr[j],arr[i]]}
-  return arr;
+ const reset=document.getElementById("pl-reset-progress");
+ const stepLabel=document.getElementById("pl-step-label");
+ const progressLabel=document.getElementById("pl-progress-label");
+ const progressTrack=document.getElementById("pl-progress-track");
+ const progressFill=document.getElementById("pl-progress-fill");
+ const defaultStep=window.PSSettings?.load?.().simplePlay===false?1:0;
+
+ function readProgress(){
+  try{
+   const raw=JSON.parse(localStorage.getItem(KEY)||"null");
+   if(raw&&Number.isInteger(raw.step)&&raw.step>=0&&raw.step<STEPS.length&&
+      Number.isInteger(raw.wins)&&raw.wins>=0&&raw.wins<=GOAL){
+    return{step:raw.step,wins:raw.wins,last:typeof raw.last==="string"?raw.last:""};
+   }
+  }catch(_){}
+  return{step:defaultStep,wins:0,last:""};
  }
- function message(state,text){feedback.dataset.state=state;feedback.textContent=text;feedback.hidden=state==="neutral"}
+ let saved=readProgress(),step=saved.step,wins=saved.wins;
+ let current=saved.last,solved=false,queue=[],wrongAnswers=0;
+ function saveProgress(){
+  if(level.value!=="auto")return;
+  saved={step,wins,last:current};
+  try{localStorage.setItem(KEY,JSON.stringify(saved))}catch(_){}
+ }
+ function shuffle(items){
+  const result=items.slice();
+  for(let i=result.length-1;i>0;i--){
+   const j=Math.floor(Math.random()*(i+1));
+   [result[i],result[j]]=[result[j],result[i]];
+  }
+  return result;
+ }
+ function message(state,text){
+  feedback.dataset.state=state;feedback.textContent=text;
+  feedback.hidden=state==="neutral";
+ }
+ function showProgress(){
+  const title=STEPS[step].title;
+  stepLabel.textContent="Step "+(step+1)+" of "+STEPS.length+" · "+title;
+  progressLabel.textContent=wins+" of "+GOAL+" matched";
+  progressTrack.setAttribute("aria-valuenow",String(wins));
+  progressFill.style.width=(wins/GOAL*100)+"%";
+ }
+ function takeNextLetter(bank){
+  if(!queue.length){
+   // A letter cannot repeat immediately and each deck is used before starting a new one.
+   queue=shuffle(bank.filter(ch=>ch!==current));
+  }
+  if(!queue.length)queue=shuffle(bank);
+  return queue.shift();
+ }
  function newRound(){
-  const bank=simple()?beginner:alphabet;
-  current=pick(bank.filter(letter=>letter!==current));
-  solved=false;
-  target.textContent=current;task.textContent="Find "+current;
-  target.setAttribute("aria-label","Letter "+current);
+  if(level.value==="auto"&&wins>=GOAL&&step<STEPS.length-1){
+   step++;wins=0;queue=[];
+  }
+  const config=STEPS[step],bank=config.bank.split("");
+  current=takeNextLetter(bank);
+  solved=false;wrongAnswers=0;
+  target.textContent=current;
+  task.textContent="Find "+current;
+  target.setAttribute("aria-label","Capital letter "+current);
+  choiceInstruction.textContent=config.small?"Find the small letter":"Which one matches?";
+  choices.setAttribute("aria-label",config.small?"Choose the matching lowercase letter":"Choose the matching capital letter");
   hear.setAttribute("aria-label","Hear the letter "+current);
   voiceNote.textContent="";
-  const count=simple()?3:({easy:4,medium:6,hard:9}[level.value]||4);
-  const others=shuffle(bank.filter(letter=>letter!==current)).slice(0,count-1);
-  const options=shuffle([current,...others]);
+  const distractors=shuffle(bank.filter(letter=>letter!==current)).slice(0,config.choices-1);
   choices.replaceChildren();
-  options.forEach(letter=>{
+  shuffle([current,...distractors]).forEach(letter=>{
    const button=document.createElement("button");
    button.type="button";button.className="pl-choice";
-   button.textContent=letter;button.setAttribute("aria-label","Letter "+letter);
+   button.textContent=config.small?letter.toLowerCase():letter;
+   button.setAttribute("aria-label",(config.small?"Small letter ":"Capital letter ")+letter);
    button.addEventListener("click",function(){
-    if(solved)return;
+    if(solved||button.disabled)return;
     if(letter===current){
      solved=true;button.classList.add("is-correct");
      choices.querySelectorAll("button").forEach(b=>b.disabled=true);
-     message("correct","⭐ Well done! You found "+current+".");
+     wins=Math.min(GOAL,wins+1);
+     showProgress();saveProgress();
+     if(wins===GOAL&&level.value==="auto"&&step<STEPS.length-1){
+      message("correct","⭐ Great matching! You finished this step. Tap Next for a new challenge.");
+     }else{
+      message("correct","⭐ Well done! You found "+(config.small?letter.toLowerCase():letter)+". Tap Next when you're ready.");
+     }
     }else{
+     wrongAnswers++;
      button.classList.add("is-incorrect");
-     message("try","Have another look. Try again.");
+     button.disabled=true;
+     if(config.small&&wrongAnswers>=2){
+      message("try","Capital "+current+" matches small "+current.toLowerCase()+". Take your time.");
+     }else{
+      message("try",config.small?"Look for the small version of "+current+". Try again.":"Look for the same letter. Try again.");
+     }
     }
    });
    choices.appendChild(button);
   });
-  message("neutral","");
+  showProgress();saveProgress();message("neutral","");
  }
  hear.addEventListener("click",function(){
-  if(!window.PSVoice){voiceNote.textContent="Speech unavailable.";return}
-  window.PSVoice.speak("Find the letter "+current+". Tap the matching letter.",voiceNote);
+  if(!window.PSVoice){voiceNote.textContent="Speech unavailable.";return;}
+  const isSmall=STEPS[step].small;
+  window.PSVoice.speak(
+   isSmall?"This is capital letter "+current+". Find its matching small letter.":"Find the capital letter "+current+". Look for the same letter.",
+   voiceNote
+  );
  });
  next.addEventListener("click",newRound);
- level.addEventListener("change",newRound);
+ level.addEventListener("change",function(){
+  if(level.value==="auto"){
+   const resume=readProgress();
+   step=resume.step;wins=resume.wins;current=resume.last;
+  }else{
+   step=Number(level.value);
+   wins=0;
+  }
+  queue=[];newRound();
+ });
+ reset.addEventListener("click",function(){
+  try{localStorage.removeItem(KEY)}catch(_){}
+  saved={step:defaultStep,wins:0,last:""};
+  level.value="auto";
+  step=defaultStep;wins=0;current="";queue=[];
+  newRound();
+ });
  newRound();
 })();
+
 </script>
 </body>
 </html>
