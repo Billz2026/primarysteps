@@ -434,3 +434,50 @@ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-guide {
 :root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="trace"] .pl-trace-progress {
  color:#D6F4F1;
 }
+
+
+/* Find Letters: gentle step progress. Parent options remain below the exercise. */
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-find-progress{
+ width:100%;max-width:790px;margin:15px auto 3px;
+ padding:12px 15px;background:var(--pl-tile);border:1px solid var(--pl-border);
+ border-radius:15px;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-find-progress__labels{
+ display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:5px 16px;
+ font-size:14px;font-weight:850;color:var(--pl-ink);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-find-progress__track{
+ height:8px;margin-top:10px;background:#D7E9E6;border-radius:99px;overflow:hidden;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-find-progress__fill{
+ display:block;height:100%;width:0;background:#327D75;border-radius:99px;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice.is-incorrect:disabled{
+ background:#E8EFF2!important;color:#657C86!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-feedback[hidden]{
+ display:none!important;
+}
+@media(min-width:900px){
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-body{
+  grid-template-areas:
+   "task choice-title"
+   "target choices"
+   "audio footer"
+   "feedback feedback"
+   "progress progress"
+   "settings settings";
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-find-progress{
+  grid-area:progress;max-width:none;margin:2px 0 0;
+ }
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-find-progress{
+ background:#304C59;border-color:var(--pl-border);
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-find-progress__track{
+ background:#486674;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-find-progress__fill{
+ background:#7CD8BA;
+}
