@@ -200,9 +200,8 @@ function answersForTarget(){
     solved=true;data.correct++;data.streak++;wins=Math.min(GOAL,wins+1);
     b.classList.add("is-correct");
     answers.querySelectorAll("button").forEach(button=>button.disabled=true);
-    const star=(data.streak%5===0);
-    if(star)awardStar();
-    window.PSNumbersProgress?.record(star);
+    // Verified My Stars rewards are tied to distinct numbers, not repeated answers.
+    window.PSProgress?.record("numbersCount",String(target));
     updateProgress();
     const finish=wins===GOAL&&level.value==="auto"&&step<LEVELS.length-1&&!(simple()&&step>=1);
     message("good","⭐ Well done! "+target+" is correct."+
