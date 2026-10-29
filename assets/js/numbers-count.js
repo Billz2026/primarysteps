@@ -29,7 +29,7 @@ function read(){
    const count=n=>Number.isSafeInteger(raw[n])&&raw[n]>=0?raw[n]:0;
    const savedStep=Number.isInteger(raw.step)?clamp(raw.step,0,4):0;
    const savedWins=Number.isInteger(raw.wins)?clamp(raw.wins,0,GOAL):0;
-   const simpleStep=Number.isInteger(raw.simpleStep)?clamp(raw.simpleStep,0,1):Math.min(savedStep,1);
+   const simpleStep=Number.isInteger(raw.simpleStep)?clamp(raw.simpleStep,0,1):(savedStep<=1?savedStep:0);
    const simpleWins=Number.isInteger(raw.simpleWins)?clamp(raw.simpleWins,0,GOAL):(savedStep<=1?savedWins:0);
    const simpleLast=Number.isInteger(raw.simpleLast)?raw.simpleLast:(savedStep<=1&&Number.isInteger(raw.last)?raw.last:0);
    return{correct:count("correct"),tries:count("tries"),streak:count("streak"),stars:count("stars"),
