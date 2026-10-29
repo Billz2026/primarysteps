@@ -29,21 +29,32 @@ function read(){
    const count=n=>Number.isSafeInteger(raw[n])&&raw[n]>=0?raw[n]:0;
    const savedStep=Number.isInteger(raw.step)?clamp(raw.step,0,4):0;
    const savedWins=Number.isInteger(raw.wins)?clamp(raw.wins,0,GOAL):0;
+   const simpleStep=Number.isInteger(raw.simpleStep)?clamp(raw.simpleStep,0,1):Math.min(savedStep,1);
+   const simpleWins=Number.isInteger(raw.simpleWins)?clamp(raw.simpleWins,0,GOAL):(savedStep<=1?savedWins:0);
+   const simpleLast=Number.isInteger(raw.simpleLast)?raw.simpleLast:(savedStep<=1&&Number.isInteger(raw.last)?raw.last:0);
    return{correct:count("correct"),tries:count("tries"),streak:count("streak"),stars:count("stars"),
-    step:savedStep,wins:savedWins,last:Number.isInteger(raw.last)?raw.last:0};
+    step:savedStep,wins:savedWins,last:Number.isInteger(raw.last)?raw.last:0,
+    simpleStep,simpleWins,simpleLast};
   }
  }catch(_){}
- return{correct:0,tries:0,streak:0,stars:0,step:0,wins:0,last:0};
+ return{correct:0,tries:0,streak:0,stars:0,step:0,wins:0,last:0,simpleStep:0,simpleWins:0,simpleLast:0};
 }
 let data=read(),auto={step:data.step,wins:data.wins,last:data.last};
-let step=auto.step,wins=auto.wins,previous=auto.last,target=0,solved=false;
+let simpleAuto={step:data.simpleStep,wins:data.simpleWins,last:data.simpleLast};
+let initial=simple()?simpleAuto:auto;
+let step=initial.step,wins=initial.wins,previous=initial.last,target=0,solved=false;
 let queue=[],mistakes=0;
 function save(){
- if(level.value==="auto")auto={step,wins,last:target};
+ if(level.value==="auto"){
+  if(simple())simpleAuto={step,wins,last:target};
+  else auto={step,wins,last:target};
+ }
  try{
   localStorage.setItem(KEY,JSON.stringify({
    correct:data.correct,tries:data.tries,streak:data.streak,stars:data.stars,
-   step:auto.step,wins:auto.wins,last:auto.last,rangeIndex:Math.max(0,auto.step-2)
+   step:auto.step,wins:auto.wins,last:auto.last,
+   simpleStep:simpleAuto.step,simpleWins:simpleAuto.wins,simpleLast:simpleAuto.last,
+   rangeIndex:Math.max(0,auto.step-2)
   }));
  }catch(_){}
 }
@@ -247,8 +258,8 @@ hint.addEventListener("click",()=>{
 });
 level.addEventListener("change",()=>{
  if(level.value==="auto"){
-  step=simple()?Math.min(auto.step,1):auto.step;
-  wins=(step===auto.step)?auto.wins:0;
+  const resumed=simple()?simpleAuto:auto;
+  step=resumed.step;wins=resumed.wins;previous=resumed.last;
  }else{
   const selection=Number(level.value);
   if(simple()&&selection>1){level.value="auto";return}
@@ -258,10 +269,10 @@ level.addEventListener("change",()=>{
 });
 reset.addEventListener("click",()=>{
  if(!window.confirm("Restart Count Numbers learning steps? Your total correct answers and earned stars will stay."))return;
- auto={step:0,wins:0,last:0};step=0;wins=0;previous=0;queue=[];
+ auto={step:0,wins:0,last:0};simpleAuto={step:0,wins:0,last:0};
+ step=0;wins=0;previous=0;queue=[];
  level.value="auto";newRound();
 });
 syncStats();setLevelControls();
-if(simple()&&step>1){step=0;wins=0;}
 level.value="auto";newRound();
 })();
