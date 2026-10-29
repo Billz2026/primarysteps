@@ -129,7 +129,9 @@ function newRound(){
    if(letter===current){
     solved=true;button.classList.add("is-correct");
     choices.querySelectorAll("button").forEach(b=>b.disabled=true);
-    wins=Math.min(GOAL,wins+1);showProgress();save();
+    wins=Math.min(GOAL,wins+1);
+    window.PSProgress?.record("lettersSounds",String(step)+":"+current);
+    showProgress();save();
     if(!picture.hidden)showPicture(true); // Now show the known word after success.
     const example=EXAMPLES[current].word;
     if(wins===GOAL&&level.value==="auto"&&step<STEPS.length-1){
