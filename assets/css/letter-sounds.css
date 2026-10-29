@@ -1,0 +1,456 @@
+/* Primary Steps — Letter Sounds visual design v1
+   Scoped to the sound activity; badge swatches are the single source of colour.
+   Mint #5CC4BC, aqua #8DCFE3, sky #698FE1, lavender #9B85DA,
+   coral #F38C7E, sunshine #FFC06B. */
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"]{
+ --sound-ink:#26455A;--sound-mint:#5CC4BC;--sound-aqua:#8DCFE3;
+ --sound-blue:#698FE1;--sound-lavender:#9B85DA;
+ --sound-coral:#F38C7E;--sound-sun:#FFC06B;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] body{
+ background:
+  radial-gradient(circle at 5% 20%,rgba(92,196,188,.2),transparent 29%),
+  radial-gradient(circle at 94% 12%,rgba(155,133,218,.19),transparent 30%),
+  radial-gradient(circle at 96% 90%,rgba(255,192,107,.14),transparent 28%),
+  linear-gradient(180deg,#F0F9F8,#F8FAFF 77%,#FFF9F4)!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-main{
+ width:min(1050px,calc(100% - 34px));margin:19px auto 35px;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-board{
+ border:2px solid #ACD8D4;border-radius:30px;
+ box-shadow:0 15px 45px rgba(42,97,110,.12);overflow:hidden;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading{
+ position:relative;overflow:hidden;isolation:isolate;
+ padding:22px clamp(23px,4vw,43px);
+ background:linear-gradient(107deg,#D8F6EA,#D9EFFB 48%,#EFE4FF);
+ border-bottom:3px solid #B7DCD9;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading::before,
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading::after{
+ content:"";position:absolute;z-index:-1;pointer-events:none;border-radius:50%;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading::before{
+ width:170px;height:170px;right:12%;top:-110px;background:rgba(255,192,107,.29);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading::after{
+ width:130px;height:130px;right:-48px;bottom:-85px;background:rgba(243,140,126,.22);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading h1{
+ color:#24485B!important;font-size:clamp(30px,3.5vw,42px);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-eyebrow{
+ color:#23696C;font-size:12px;letter-spacing:.09em;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading__mark{
+ display:grid;place-items:center;flex:0 0 auto;
+ width:98px;height:98px;border-radius:27px;
+ background:rgba(255,255,255,.70);
+ border:2px solid rgba(90,162,170,.35);
+ box-shadow:0 6px 0 rgba(79,156,156,.08);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading__mark img{
+ display:block;width:80px;height:80px;object-fit:contain;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-cues{
+ display:flex;gap:8px;flex-wrap:wrap;margin-top:11px;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-cues>span{
+ display:inline-flex;align-items:center;min-height:32px;
+ padding:4px 11px;border:1px solid #ADDBD9;border-radius:99px;
+ background:rgba(255,255,255,.7);
+ color:#345869;font-size:13px;font-weight:850;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-cues>span:nth-child(2){
+ background:#E6F3FF;border-color:#AFCFEE;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-cues>span:nth-child(3){
+ background:#FFF1E5;border-color:#F4CBAC;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-body{
+ background:linear-gradient(180deg,#FFFFFF,#FAFCFD);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] :is(.pl-task-label,.pl-choice-label){
+ color:var(--sound-ink)!important;font-weight:950;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-clue{
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:9px;min-width:0;width:100%;max-width:290px;margin:0 auto;padding:15px;
+ border:3px solid #E8C183;border-radius:27px;
+ background:linear-gradient(145deg,#FFF4DE,#FFE4C9 72%,#FFDFCB);
+ box-shadow:0 7px 0 rgba(206,152,87,.14);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-clue__label{
+ color:#775037;font-size:13px;font-weight:950;letter-spacing:.07em;text-transform:uppercase;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] #pl-play{
+ display:grid;place-items:center;
+ width:clamp(123px,14vw,156px);height:clamp(123px,14vw,156px);
+ min-height:123px;min-width:123px;margin:0;
+ border:4px solid #84BFE0;border-radius:29px;
+ background:linear-gradient(140deg,#E3F3FF,#A9D9F4)!important;
+ box-shadow:0 6px 0 rgba(69,122,161,.17);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] #pl-play svg{
+ stroke:#285D83;stroke-width:2.7;width:52%;height:52%;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-clue__tap{
+ color:#71513E;font-size:13px;font-weight:800;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] #pl-show-picture{
+ min-height:48px;min-width:150px;padding:9px 14px;border:2px solid #8CCAB7!important;
+ border-radius:14px!important;background:#DFF7EC!important;
+ color:#235B50!important;font-size:14px;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-picture{
+ width:100%;min-height:110px;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ gap:3px;padding:8px;background:linear-gradient(140deg,#FFFFFF,#F4F9FD);
+ border:2px solid #B4D6DE;border-radius:20px;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-picture[hidden]{
+ display:none!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-picture__emoji{
+ display:block;font-family:system-ui,"Apple Color Emoji","Segoe UI Emoji",sans-serif;
+ font-size:clamp(65px,7vw,85px);line-height:1.12;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-picture__caption{
+ color:#34586C;font-size:14px;font-weight:900;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choices{
+ width:100%;max-width:none;gap:11px;padding:12px;
+ border:2px solid #E0EAF1;border-radius:24px;
+ background:linear-gradient(145deg,#F7FBFE,#FFFDFE);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice{
+ min-height:128px;min-width:0;border-radius:21px!important;
+ color:#254557!important;font-size:clamp(61px,7vw,89px)!important;
+ border:3px solid transparent!important;
+ box-shadow:0 5px 0 rgba(51,97,114,.12),0 8px 18px rgba(51,97,114,.06)!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice:nth-child(6n+1){
+ background:linear-gradient(150deg,#D8F9EC,#B6EADC)!important;border-color:#62BFA7!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice:nth-child(6n+2){
+ background:linear-gradient(150deg,#DFF3FF,#B9DFFA)!important;border-color:#79BBE4!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice:nth-child(6n+3){
+ background:linear-gradient(150deg,#FFEDDF,#FFD4C5)!important;border-color:#F0A999!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice:nth-child(6n+4){
+ background:linear-gradient(150deg,#EDE7FF,#D4C6F5)!important;border-color:#AB98DF!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice:nth-child(6n+5){
+ background:linear-gradient(150deg,#FFF5D7,#FBE0AC)!important;border-color:#E4B86F!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice:nth-child(6n+6){
+ background:linear-gradient(150deg,#DFF7F3,#B3E4E2)!important;border-color:#6DBFB8!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice:not(:disabled):hover{
+ border-color:#247883!important;filter:saturate(1.12);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice.is-correct:nth-child(n){
+ background:#CEF4DF!important;color:#145637!important;
+ border-color:#379D70!important;box-shadow:0 5px 0 #A5D5B7!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice.is-incorrect:nth-child(n){
+ background:#F4E9EA!important;color:#65727C!important;
+ border-color:#CEB6C0!important;box-shadow:none!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-speak-area{
+ max-width:310px;margin:5px auto 0;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-voice-note{
+ display:block;min-height:18px;color:#345A6A;font-size:13px;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] #pl-next{
+ min-height:54px;background:#176B75!important;border-color:#176B75!important;
+ color:#FFFFFF!important;box-shadow:0 5px 0 rgba(22,94,105,.20);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] #pl-next:hover{
+ background:#105864!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-feedback{
+ border:2px solid #AEDBD1!important;background:#E9F7F4!important;
+ color:#285E60!important;border-radius:18px!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-feedback[hidden]{
+ display:none!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-feedback[data-state="correct"]{
+ background:#DCF7E5!important;border-color:#77C69B!important;color:#165D3D!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-feedback[data-state="try"]{
+ background:#FFF0E0!important;border-color:#EEC095!important;color:#825038!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-progress{
+ width:100%;padding:14px 20px 13px;margin:14px auto 0;
+ border:2px solid #C2DCE0;border-radius:22px;
+ background:linear-gradient(112deg,#E2F8EF,#DFF0FF 52%,#F1E6FF);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-progress__labels{
+ display:flex;justify-content:space-between;flex-wrap:wrap;align-items:center;gap:4px 16px;
+ font-size:15px;font-weight:850;color:#274D61;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-progress__stars{
+ display:flex;justify-content:center;align-items:center;gap:11px;margin:8px auto;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-progress__stars>span{
+ font-size:25px;line-height:1;color:#C6D9D6;-webkit-text-stroke:1px #8FAEAD;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-progress__stars>span.is-earned{
+ color:#F9BC58;-webkit-text-stroke:1px #B27629;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-progress__track{
+ height:13px;border:1px solid #B9D6D6;border-radius:99px;
+ background:#FFFFFF;overflow:hidden;
+ box-shadow:inset 0 2px 2px rgba(44,91,105,.10);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-progress__fill{
+ display:block;height:100%;width:0;border-radius:99px;
+ background:linear-gradient(90deg,#5CC4BC,#8DCFE3 23%,#698FE1 43%,#9B85DA 65%,#F38C7E 83%,#FFC06B);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-settings{
+ margin-top:14px;padding:8px 16px 14px;
+ border:2px solid #D8C8EF;border-radius:17px;
+ background:#F5F0FC;color:#524775;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-settings summary{
+ color:#514A78;font-weight:900;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-settings :is(select,button){
+ border-color:#B9A4E0;color:#35435E;background:#FFFFFF;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-nav{
+ margin-top:17px;gap:10px;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-nav a{
+ border:2px solid #90CFC3;border-radius:15px;
+ background:#E2F6EF;color:#215961!important;
+ min-height:50px;box-shadow:0 3px 0 rgba(48,111,110,.06);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-nav a:nth-child(2){
+ background:#E8E9FE;border-color:#ADA8EA;color:#4E4D88!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-nav a:nth-child(3){
+ background:#FFF0E6;border-color:#F1B69E;color:#895139!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-nav a[aria-current="page"]{
+ border-color:#E99D77;box-shadow:inset 0 -3px 0 rgba(134,74,50,.13);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="sounds"] :is(.pl-settings summary,.pl-settings select,.pl-settings button,.pl-nav a):focus-visible{
+ outline:4px solid #176B75!important;outline-offset:3px;
+}
+@media(min-width:900px){
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-body{
+  display:grid;grid-template-columns:minmax(205px,.77fr) minmax(0,1.23fr);
+  grid-template-areas:
+   "task choice-title"
+   "speaker choices"
+   "audio footer"
+   "feedback feedback"
+   "progress progress"
+   "settings settings";
+  align-items:center;column-gap:27px;row-gap:10px;padding-top:21px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-task-label{
+  grid-area:task;margin:0;align-self:end;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice-label{
+  grid-area:choice-title;margin:0;align-self:end;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-clue{
+  grid-area:speaker;align-self:center;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choices{
+  grid-area:choices;margin:0;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-speak-area{
+  grid-area:audio;max-width:none;width:100%;align-self:start;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-footer{
+  grid-area:footer;margin:0;max-width:none;justify-content:center;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-footer__hint{
+  display:none;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-feedback{
+  grid-area:feedback;margin:0;max-width:none;min-height:51px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-progress{
+  grid-area:progress;max-width:none;margin:2px 0 0;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-settings{
+  grid-area:settings;margin:2px 0 0;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice{
+  min-height:clamp(113px,11vw,147px);
+ }
+}
+@media(min-width:900px) and (max-height:760px){
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading{
+  padding-top:13px;padding-bottom:13px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice{
+  min-height:105px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] #pl-play{
+  width:120px;height:120px;min-width:120px;min-height:120px;
+ }
+}
+@media(max-width:899px){
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-clue{
+  margin-bottom:12px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choices{
+  margin:0 auto;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-speak-area{
+  margin:10px auto;
+ }
+}
+@media(max-width:640px){
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-main{
+  width:calc(100% - 22px);margin:13px auto 30px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading{
+  padding:17px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading__mark{
+  width:69px;height:69px;border-radius:20px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-heading__mark img{
+  width:54px;height:54px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-cues{
+  gap:4px;margin-top:8px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-cues>span{
+  font-size:11px;padding:4px 7px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-body{
+  padding:18px 13px 21px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-clue{
+  padding:12px;width:min(100%,246px);
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] #pl-play{
+  width:130px;height:130px;min-width:130px;min-height:130px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choices{
+  padding:9px;gap:8px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-choice{
+  min-height:102px;border-radius:17px!important;
+  font-size:clamp(52px,13vw,72px)!important;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-progress{
+  padding:10px 12px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] .pl-sound-progress__stars>span{
+  font-size:22px;
+ }
+}
+@media(prefers-reduced-motion:reduce){
+ html.ps-unified.ps-letter-premium[data-letter-game="sounds"] *{
+  transition:none!important;animation:none!important;
+ }
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] body{
+ background:linear-gradient(180deg,#1E3544,#192735)!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-board{
+ border-color:#537482;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-heading{
+ background:linear-gradient(110deg,#28574F,#304B68 60%,#4B4067);border-color:#587A80;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-heading__mark{
+ background:#FFFFFF;border-color:#73959D;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] :is(.pl-eyebrow,.pl-heading h1,.pl-task-label,.pl-choice-label){
+ color:#F1FAFB!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-sound-cues>span{
+ background:#304A60;border-color:#6D8B9B;color:#F1F8FA;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-body{
+ background:#273B49;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-sound-clue{
+ background:linear-gradient(145deg,#544839,#675043);border-color:#B78C63;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] :is(.pl-sound-clue__label,.pl-sound-clue__tap){
+ color:#FFF0DA;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] #pl-play{
+ background:#344D66!important;border-color:#85B5D5;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] #pl-play svg{
+ stroke:#F4FCFF;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] #pl-show-picture{
+ background:#2D594C!important;border-color:#78BBA2!important;color:#F0FFF5!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-sound-picture{
+ background:#293F4C;border-color:#648391;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-sound-picture__caption{
+ color:#F1FAFB;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-choices{
+ background:#29404C;border-color:#577886;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-choice:nth-child(n){
+ background:#344F5D!important;border-color:#7096A3!important;color:#F8FCFF!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-choice:nth-child(4n+2){
+ background:#3F4266!important;border-color:#9E96E0!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-choice:nth-child(4n+3){
+ background:#5A454D!important;border-color:#DAA3A2!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-choice.is-correct:nth-child(n){
+ background:#24523E!important;border-color:#70CE9E!important;color:#EAFFF3!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-choice.is-incorrect:nth-child(n){
+ background:#494652!important;border-color:#967983!important;color:#F5E9ED!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-sound-progress{
+ background:linear-gradient(110deg,#2D5550,#303D5D,#493D60);border-color:#60857F;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-sound-progress__labels{
+ color:#EFF9FC;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-settings{
+ background:#3A3751;border-color:#79689F;color:#F2EEFB;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-settings summary{
+ color:#F1ECFF;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="sounds"] .pl-nav a:nth-child(n){
+ background:#314A58;border-color:#7499A5;color:#F5FCFC!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="sounds"] body{
+ background:#FFFFFF!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="sounds"] :is(.pl-heading,.pl-body,.pl-sound-clue,.pl-choices,.pl-sound-progress,.pl-settings,.pl-sound-picture){
+ background:#FFFFFF!important;border-color:#263841!important;color:#101820!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="sounds"] :is(.pl-heading h1,.pl-eyebrow,.pl-task-label,.pl-choice-label,.pl-sound-clue__label,.pl-sound-clue__tap,.pl-voice-note,.pl-sound-progress__labels,.pl-sound-picture__caption){
+ color:#101820!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="sounds"] :is(.pl-sound-cues>span,.pl-choice,.pl-nav a){
+ background:#FFFFFF!important;border-color:#263841!important;color:#101820!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="sounds"] .pl-choice.is-correct:nth-child(n){
+ background:#CBF2DD!important;color:#174D30!important;border-color:#176843!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="sounds"] .pl-choice.is-incorrect:nth-child(n){
+ background:#FCE1E1!important;color:#5D2424!important;border-color:#843636!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="sounds"] #pl-next{
+ color:#FFFFFF!important;background:#176B75!important;
+}
