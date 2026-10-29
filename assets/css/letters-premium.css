@@ -1234,3 +1234,21 @@ html.ps-unified.ps-letter-premium[data-letter-game="trace"] :is(.pl-settings sum
 :root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="trace"] .pl-feedback[data-state="try"]{
  background:#FCEAD9!important;color:#6B3821!important;border-color:#8D4A2F!important;
 }
+
+
+/* Short laptop screens: protect the first-view work area. */
+@media(min-width:900px) and (max-height:760px){
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-trace-canvas{
+  height:clamp(225px,30vh,265px);
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="trace"] .pl-heading{
+  padding-top:13px;padding-bottom:13px;
+ }
+}
+/* High contrast takes precedence over the decorative background. */
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="trace"] body{
+ background:#FFFFFF!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="trace"] :is(.pl-heading h1,.pl-heading p,.pl-eyebrow,.pl-trace-topline__hint,#pl-trace-help,.pl-settings summary){
+ color:#101820!important;
+}
