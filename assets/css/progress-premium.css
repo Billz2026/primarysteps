@@ -1,0 +1,249 @@
+/* My Stars: consistent Primary Steps badge identity.
+   Original brand accents #5CC4BC #8DCFE3 #698FE1 #9B85DA #F38C7E #FFC06B */
+html.ps-unified.ps-progress-page body{
+ background:
+ radial-gradient(circle at 5% 20%,rgba(92,196,188,.2),transparent 32%),
+ radial-gradient(circle at 96% 13%,rgba(155,133,218,.18),transparent 32%),
+ radial-gradient(circle at 93% 89%,rgba(255,192,107,.16),transparent 28%),
+ linear-gradient(180deg,#EFF9F7,#F8FAFF 76%,#FFF9F2)!important;
+}
+html.ps-unified.ps-progress-page .pm-main{
+ width:min(1100px,calc(100% - 30px));margin:20px auto 38px;
+}
+html.ps-unified.ps-progress-page .pm-board{
+ border:2px solid #ACD8D4;border-radius:30px;
+ overflow:hidden;background:#FFFFFF;
+ box-shadow:0 15px 45px rgba(42,97,110,.12);
+}
+html.ps-unified.ps-progress-page .pm-header{
+ position:relative;isolation:isolate;overflow:hidden;
+ display:flex;align-items:center;justify-content:space-between;gap:17px;
+ padding:24px clamp(20px,4vw,44px);
+ background:linear-gradient(107deg,#D8F6EA,#D9EFFB 48%,#EFE4FF);
+ border-bottom:3px solid #B7DCD9;
+}
+html.ps-unified.ps-progress-page .pm-header::before,
+html.ps-unified.ps-progress-page .pm-header::after{
+ content:"";position:absolute;z-index:-1;border-radius:50%;pointer-events:none;
+}
+html.ps-unified.ps-progress-page .pm-header::before{
+ width:170px;height:170px;right:15%;top:-110px;background:rgba(255,192,107,.29);
+}
+html.ps-unified.ps-progress-page .pm-header::after{
+ width:130px;height:130px;right:-48px;bottom:-85px;background:rgba(243,140,126,.22);
+}
+html.ps-unified.ps-progress-page .pm-eyebrow{
+ display:block;color:#23696C;font-size:12px;font-weight:900;letter-spacing:.09em;text-transform:uppercase;
+}
+html.ps-unified.ps-progress-page .pm-header h1{
+ margin:6px 0 2px;color:#24485B!important;font:950 clamp(32px,4vw,44px)/1.1 ui-rounded,"Trebuchet MS",system-ui,sans-serif;
+}
+html.ps-unified.ps-progress-page .pm-header p{
+ margin:4px 0;color:#426172;font-size:16px;font-weight:800;
+}
+html.ps-unified.ps-progress-page .pm-header__mark{
+ width:100px;height:100px;border:2px solid rgba(90,162,170,.35);
+ border-radius:27px;background:rgba(255,255,255,.7);
+ box-shadow:0 6px 0 rgba(79,156,156,.08);
+ display:grid;place-items:center;flex:0 0 auto;
+}
+html.ps-unified.ps-progress-page .pm-header__mark img{
+ width:83px;height:83px;object-fit:contain;display:block;
+}
+html.ps-unified.ps-progress-page .pm-cues{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+html.ps-unified.ps-progress-page .pm-cues span{
+ display:inline-flex;align-items:center;min-height:33px;padding:5px 12px;
+ border:1px solid #ADDBD9;border-radius:99px;background:#FFFFFFBB;color:#345869;
+ font-size:13px;font-weight:850;
+}
+html.ps-unified.ps-progress-page .pm-cues span:nth-child(2){
+ background:#E6F3FF;border-color:#AFCFEE;
+}
+html.ps-unified.ps-progress-page .pm-cues span:nth-child(3){
+ background:#FFF1E5;border-color:#F4CBAC;
+}
+html.ps-unified.ps-progress-page .pm-content{padding:clamp(18px,3vw,31px);background:linear-gradient(#FFFFFF,#FBFDFE)}
+html.ps-unified.ps-progress-page .pm-intro{color:#36576A;font-size:17px;font-weight:800;line-height:1.5;margin:0 0 20px}
+html.ps-unified.ps-progress-page .pm-summary{
+ display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;
+}
+html.ps-unified.ps-progress-page .pm-stat{
+ min-width:0;min-height:135px;padding:15px 13px;
+ display:flex;flex-direction:column;align-items:center;justify-content:center;
+ text-align:center;border:2px solid #AED9CE;border-radius:20px;
+ background:linear-gradient(145deg,#DDF8EC,#F4FCF8);
+ box-shadow:0 4px 0 rgba(45,114,108,.08);
+}
+html.ps-unified.ps-progress-page .pm-stat--completed{background:linear-gradient(145deg,#DBF1FE,#F4FAFF);border-color:#9FCCEB}
+html.ps-unified.ps-progress-page .pm-stat--week{background:linear-gradient(145deg,#F0E8FF,#FBF8FF);border-color:#C2ABE6}
+html.ps-unified.ps-progress-page .pm-stat--streak{background:linear-gradient(145deg,#FFF0DF,#FFFAF0);border-color:#F2C5A1}
+html.ps-unified.ps-progress-page .pm-stat__icon{font-size:26px;line-height:1.15}
+html.ps-unified.ps-progress-page .pm-stat strong{
+ display:block;margin:5px 0;font:950 clamp(27px,3vw,34px)/1 ui-rounded,"Trebuchet MS",system-ui,sans-serif;
+ color:#24495C;
+}
+html.ps-unified.ps-progress-page .pm-stat>span:last-child{
+ color:#3B5E6E;font-size:13px;font-weight:850;line-height:1.35;
+}
+html.ps-unified.ps-progress-page .pm-section-heading{
+ display:flex;justify-content:space-between;align-items:end;flex-wrap:wrap;
+ gap:6px 13px;margin:26px 0 13px;
+}
+html.ps-unified.ps-progress-page .pm-section-heading h2{
+ margin:0;font:950 clamp(22px,2.6vw,28px)/1.2 ui-rounded,"Trebuchet MS",system-ui,sans-serif;color:#28485C;
+}
+html.ps-unified.ps-progress-page .pm-section-heading p{
+ margin:0;font-size:14px;font-weight:800;color:#536B7A;
+}
+html.ps-unified.ps-progress-page .pm-activity-grid{
+ display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:15px;
+}
+html.ps-unified.ps-progress-page .pm-activity{
+ min-width:0;padding:19px 20px;border:2px solid #88CDBD;border-radius:23px;
+ background:linear-gradient(135deg,#E0F9EE,#F7FCFA);
+ box-shadow:0 5px 0 rgba(53,132,122,.07);
+}
+html.ps-unified.ps-progress-page .pm-activity--blue{border-color:#9BC9EB;background:linear-gradient(135deg,#E0F2FF,#F8FCFF)}
+html.ps-unified.ps-progress-page .pm-activity--peach{border-color:#F1B5A0;background:linear-gradient(135deg,#FFF0E6,#FFF9F5)}
+html.ps-unified.ps-progress-page .pm-activity--yellow{border-color:#E8CB8D;background:linear-gradient(135deg,#FFF5D9,#FFFDF3)}
+html.ps-unified.ps-progress-page .pm-activity--lavender{border-color:#BBABE8;background:linear-gradient(135deg,#EFEAFF,#FAF8FF)}
+html.ps-unified.ps-progress-page .pm-activity__top{
+ display:flex;align-items:center;gap:12px;
+}
+html.ps-unified.ps-progress-page .pm-activity__icon{
+ display:grid;place-items:center;width:57px;height:57px;flex:0 0 auto;
+ font-size:26px;background:#FFFFFFAA;border:1px solid #A6D7D0;border-radius:18px;
+}
+html.ps-unified.ps-progress-page .pm-activity__copy h3{
+ margin:0;color:#254B5C;font:950 21px/1.2 ui-rounded,"Trebuchet MS",system-ui,sans-serif;
+}
+html.ps-unified.ps-progress-page .pm-activity__copy p{
+ margin:4px 0 0;color:#536A76;font-size:13px;font-weight:800;
+}
+html.ps-unified.ps-progress-page .pm-activity__stars{
+ display:flex;align-items:center;justify-content:center;gap:14px;margin:10px 0 5px;
+}
+html.ps-unified.ps-progress-page .pm-activity__stars span{
+ color:#BDCFCB;-webkit-text-stroke:1px #88A5A9;font-size:39px;line-height:1.1;
+}
+html.ps-unified.ps-progress-page .pm-activity__stars span.is-earned{
+ color:#F9BC58;-webkit-text-stroke:1px #AB7628;text-shadow:0 2px 0 #E9A33D;
+}
+html.ps-unified.ps-progress-page .pm-activity__count,
+html.ps-unified.ps-progress-page .pm-activity__next{
+ text-align:center;color:#375C6B;font-weight:850;font-size:14px;margin:8px 0 4px;
+}
+html.ps-unified.ps-progress-page .pm-activity__next{color:#526B78;font-size:13px}
+html.ps-unified.ps-progress-page .pm-activity__link{
+ display:flex;align-items:center;justify-content:center;min-height:48px;
+ width:100%;margin:14px 0 0;padding:10px 15px;border-radius:14px;
+ border:2px solid #176B75;background:#176B75;color:#FFFFFF!important;
+ font-size:15px;font-weight:900;text-decoration:none;
+}
+html.ps-unified.ps-progress-page .pm-activity__link:hover{background:#105864}
+html.ps-unified.ps-progress-page .pm-badges{
+ display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;
+}
+html.ps-unified.ps-progress-page .pm-badge{
+ display:flex;align-items:center;gap:11px;padding:14px;
+ min-height:81px;border:2px solid #D5DFE6;border-radius:18px;
+ background:#F6F9FB;color:#687A84;
+}
+html.ps-unified.ps-progress-page .pm-badge.is-earned{
+ border-color:#E7C17D;background:linear-gradient(125deg,#FFF1D1,#FFF9E9);color:#6E4E25;
+}
+html.ps-unified.ps-progress-page .pm-badge__icon{
+ flex:0 0 auto;font-size:30px;filter:grayscale(.8);opacity:.5;
+}
+html.ps-unified.ps-progress-page .pm-badge.is-earned .pm-badge__icon{filter:none;opacity:1}
+html.ps-unified.ps-progress-page .pm-badge__copy{display:flex;flex-direction:column;gap:4px}
+html.ps-unified.ps-progress-page .pm-badge__copy strong{font-size:15px;font-weight:950}
+html.ps-unified.ps-progress-page .pm-badge__copy span{font-size:12px;font-weight:750;line-height:1.3}
+html.ps-unified.ps-progress-page .pm-growups{
+ margin:22px 0 0;padding:12px 17px 16px;border:2px solid #D8C8EF;
+ border-radius:17px;background:#F5F0FC;color:#524775;
+ font-size:14px;line-height:1.5;
+}
+html.ps-unified.ps-progress-page .pm-growups summary{
+ color:#514A78;cursor:pointer;font-weight:900;min-height:37px;align-content:center;
+}
+html.ps-unified.ps-progress-page .pm-growups p{margin:8px 0}
+html.ps-unified.ps-progress-page .pm-history{
+ border-top:1px solid #DDCFF0;margin-top:12px;padding-top:8px;
+}
+html.ps-unified.ps-progress-page .pm-history p{
+ border-left:3px solid #B3A3DC;padding-left:10px;
+}
+html.ps-unified.ps-progress-page .pm-export{
+ border:2px solid #B9A4E0;border-radius:13px;background:#FFFFFF;
+ padding:10px 16px;min-height:46px;color:#514A78;font-weight:850;cursor:pointer;
+}
+html.ps-unified.ps-progress-page #pm-export-status{display:inline-block;margin:8px;color:#365D6A;font-weight:800}
+html.ps-unified.ps-progress-page .pm-nav{
+ display:flex;justify-content:center;flex-wrap:wrap;gap:10px;margin:16px auto 0;
+}
+html.ps-unified.ps-progress-page .pm-nav a{
+ display:inline-flex;align-items:center;justify-content:center;
+ min-height:49px;padding:10px 18px;border:2px solid #90CFC3;
+ border-radius:15px;background:#E2F6EF;color:#215961!important;
+ font-weight:850;text-decoration:none;
+}
+html.ps-unified.ps-progress-page .pm-nav a:nth-child(2){
+ background:#E8E9FE;border-color:#ADA8EA;color:#4E4D88!important;
+}
+html.ps-unified.ps-progress-page .pm-nav a:nth-child(3){
+ background:#FFF0E6;border-color:#F1B69E;color:#895139!important;
+}
+html.ps-unified.ps-progress-page :is(.pm-nav a,.pm-activity__link,.pm-export,.pm-growups summary):focus-visible{
+ outline:4px solid #176B75!important;outline-offset:3px;
+}
+@media(max-width:800px){
+ html.ps-unified.ps-progress-page .pm-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+ html.ps-unified.ps-progress-page .pm-badges{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px){
+ html.ps-unified.ps-progress-page .pm-main{width:calc(100% - 20px);margin:13px auto 29px}
+ html.ps-unified.ps-progress-page .pm-header{padding:17px}
+ html.ps-unified.ps-progress-page .pm-header__mark{width:68px;height:68px;border-radius:19px}
+ html.ps-unified.ps-progress-page .pm-header__mark img{width:54px;height:54px}
+ html.ps-unified.ps-progress-page .pm-content{padding:15px 13px 20px}
+ html.ps-unified.ps-progress-page .pm-cues{gap:4px;margin-top:8px}
+ html.ps-unified.ps-progress-page .pm-cues span{font-size:11px;padding:4px 8px}
+ html.ps-unified.ps-progress-page .pm-activity-grid{grid-template-columns:minmax(0,1fr)}
+ html.ps-unified.ps-progress-page .pm-badges{grid-template-columns:minmax(0,1fr)}
+ html.ps-unified.ps-progress-page .pm-stat{min-height:119px;padding:12px 7px}
+ html.ps-unified.ps-progress-page .pm-stat strong{font-size:27px}
+ html.ps-unified.ps-progress-page .pm-stat>span:last-child{font-size:12px}
+}
+@media(prefers-reduced-motion:reduce){
+ html.ps-unified.ps-progress-page *{transition:none!important;animation:none!important}
+}
+:root.ps-unified.ps-progress-page[data-theme="dark"] body{background:linear-gradient(180deg,#1E3544,#192735)!important}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-board{background:#273B49;border-color:#537482}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-header{background:linear-gradient(110deg,#28574F,#304B68 60%,#4B4067);border-color:#587A80}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-header__mark{background:#FFFFFF;border-color:#73959D}
+:root.ps-unified.ps-progress-page[data-theme="dark"] :is(.pm-eyebrow,.pm-header h1,.pm-header p){color:#F1FAFB!important}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-cues span{background:#304A60;border-color:#6D8B9B;color:#F1F8FA}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-content{background:#273B49}
+:root.ps-unified.ps-progress-page[data-theme="dark"] :is(.pm-intro,.pm-section-heading h2,.pm-section-heading p){color:#F1FAFB}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-stat{background:#304D5B;border-color:#6C9A99}
+:root.ps-unified.ps-progress-page[data-theme="dark"] :is(.pm-stat strong,.pm-stat>span:last-child){color:#F3FCFE}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-activity{background:#304D53;border-color:#6C9991}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-activity--blue{background:#324864;border-color:#7FA9D3}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-activity--peach{background:#594747;border-color:#C59791}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-activity--yellow{background:#554C3A;border-color:#BCA572}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-activity--lavender{background:#453F62;border-color:#9D8ACF}
+:root.ps-unified.ps-progress-page[data-theme="dark"] :is(.pm-activity__copy h3,.pm-activity__copy p,.pm-activity__count,.pm-activity__next){color:#F4FAFC}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-badge{background:#354552;border-color:#6C8391;color:#DFECF1}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-badge.is-earned{background:#5B4D31;border-color:#C5A16B;color:#FFF1D8}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-growups{background:#3A3751;border-color:#79689F;color:#F2EEFB}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-growups summary{color:#F1ECFF}
+:root.ps-unified.ps-progress-page[data-theme="dark"] .pm-nav a{background:#314A58;border-color:#7499A5;color:#F5FCFC!important}
+:root.ps-unified.ps-progress-page[data-contrast="high"] body{background:#FFFFFF!important}
+:root.ps-unified.ps-progress-page[data-contrast="high"] :is(.pm-header,.pm-content,.pm-stat,.pm-activity,.pm-badge,.pm-growups){
+ background:#FFFFFF!important;border-color:#263841!important;color:#101820!important;
+}
+:root.ps-unified.ps-progress-page[data-contrast="high"] :is(.pm-header h1,.pm-eyebrow,.pm-intro,.pm-stat strong,.pm-stat>span:last-child,.pm-section-heading h2,.pm-section-heading p,.pm-activity__copy h3,.pm-activity__copy p,.pm-activity__count,.pm-activity__next,.pm-badge__copy,.pm-growups summary){
+ color:#101820!important;
+}
+:root.ps-unified.ps-progress-page[data-contrast="high"] .pm-activity__link{color:#FFFFFF!important;background:#176B75!important}
