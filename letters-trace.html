@@ -10,21 +10,27 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
-<link rel="stylesheet" href="assets/css/letters-premium.css?v=4">
+<link rel="stylesheet" href="assets/css/letters-premium.css?v=8">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
 </head>
 <body>
 <main class="pl-main">
 <section class="pl-board" aria-labelledby="pl-title">
  <div class="pl-heading">
-  <div><span class="pl-eyebrow">Primary Steps · Letters</span>
+  <div class="pl-trace-heading__copy"><span class="pl-eyebrow">Primary Steps · Letters</span>
    <h1 id="pl-title">Trace Letters</h1>
    <p>Follow the dotted letter with your finger or mouse.</p>
+   <div class="pl-trace-cues" aria-label="Trace, listen and check">
+    <span><span aria-hidden="true">✏️</span> Trace</span>
+    <span><span aria-hidden="true">🔊</span> Listen</span>
+    <span><span aria-hidden="true">⭐</span> Check</span>
+   </div>
   </div>
-  <span class="pl-heading__tag" id="pl-current" aria-live="polite">Letter A</span>
+  <span class="pl-heading__mark" aria-hidden="true"><img src="assets/primary-steps-mark.svg" width="92" height="82" alt=""></span>
  </div>
  <div class="pl-body">
   <div class="pl-trace-area">
+   <div class="pl-trace-topline"><span class="pl-trace-letter-chip" id="pl-current" aria-live="polite">Letter A</span><span class="pl-trace-topline__hint">Follow the dots</span></div>
    <canvas class="pl-trace-canvas" id="pl-canvas" aria-label="Trace uppercase letter A with your finger, stylus or mouse" aria-describedby="pl-trace-help"></canvas>
    <span class="pl-trace-guide" aria-hidden="true">Start at ① · Follow the highlighted line</span>
   </div>
