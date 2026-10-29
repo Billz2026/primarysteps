@@ -4,14 +4,16 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#F7FAFC">
-<meta name="description" content="Listen to a word and choose its beginning letter. A calm, audio-first game for young learners.">
+<meta name="description" content="Listen, look and practise beginning letter sounds with calm, colourful phonics activities.">
 <title>Letter Sounds • Primary Steps</title>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
-<link rel="stylesheet" href="assets/css/letters-premium.css?v=3">
+<link rel="stylesheet" href="assets/css/letters-premium.css?v=8">
+<link rel="stylesheet" href="assets/css/letter-sounds.css?v=1">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
+<script src="assets/js/letter-sounds.js?v=1" defer></script>
 </head>
 <body>
 <main class="pl-main">
@@ -19,30 +21,54 @@
  <div class="pl-heading">
   <div><span class="pl-eyebrow">Primary Steps · Letters</span>
    <h1 id="pl-title">Letter Sounds</h1>
-   <p>Listen for the first sound in a word.</p>
+   <div class="pl-sound-cues" aria-label="Listen, look and choose">
+    <span>🔊 Listen</span><span>👀 Look</span><span>⭐ Choose</span>
+   </div>
   </div>
-  <span class="pl-heading__tag" aria-hidden="true">🔊 Listen</span>
+  <span class="pl-heading__mark" aria-hidden="true"><img src="assets/primary-steps-mark.svg" width="92" height="82" alt=""></span>
  </div>
  <div class="pl-body">
-  <h2 class="pl-task-label" id="pl-task">Tap the speaker to hear a word</h2>
-  <button class="pl-target pl-target--speaker pl-speak" id="pl-play" type="button" aria-label="Hear the word clue">
-   <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M11 25h11L35 14v36L22 39H11z"/><path d="M43 23c6 5 6 13 0 18M49 16c10 8 10 24 0 32"/></svg>
-  </button>
-  <div class="pl-speak-area">
+  <h2 class="pl-task-label" id="pl-task">Listen to the word</h2>
+  <div class="pl-sound-clue">
+   <span class="pl-sound-clue__label">Your sound clue</span>
+   <button class="pl-target pl-target--speaker pl-speak" id="pl-play" type="button" aria-label="Listen to a word. Play or replay the sound clue.">
+    <svg viewBox="0 0 64 64" aria-hidden="true" focusable="false"><path d="M11 25h11L35 14v36L22 39H11z"/><path d="M43 23c6 5 6 13 0 18M49 16c10 8 10 24 0 32"/></svg>
+   </button>
+   <span class="pl-sound-clue__tap">Tap to hear it again</span>
    <button class="pl-button pl-button--audio pl-picture-trigger" type="button" id="pl-show-picture" aria-expanded="false" aria-controls="pl-picture">👁 Show picture</button>
-   <span class="pl-voice-note" id="pl-voice-note" role="status">Tap the speaker to listen.</span>
+   <div class="pl-sound-picture" id="pl-picture" hidden role="note" aria-live="polite"></div>
   </div>
-  <div class="pl-picture" id="pl-picture" hidden role="note" aria-live="polite"></div>
   <h2 class="pl-choice-label" id="pl-sound-question">Which letter starts the word?</h2>
-  <div class="pl-choices" id="pl-choices" role="group" aria-label="Choose the matching letter sound"></div>
-  <div class="pl-feedback" id="pl-feedback" data-state="neutral" role="status" aria-live="polite">Listen to the word, then choose a letter.</div>
+  <div class="pl-choices" id="pl-choices" role="group" aria-label="Choose the letter making the beginning sound"></div>
+  <div class="pl-speak-area"><span class="pl-voice-note" id="pl-voice-note" role="status">Tap the speaker to listen, or show a picture.</span></div>
   <div class="pl-footer">
-   <span class="pl-footer__hint">Replay the word as often as you need.</span>
+   <span class="pl-footer__hint">No timer. Replay as often as you like.</span>
    <button type="button" class="pl-button pl-button--primary" id="pl-next">Next sound →</button>
   </div>
+  <div class="pl-feedback" id="pl-feedback" data-state="neutral" role="status" aria-live="polite" hidden></div>
+  <div class="pl-sound-progress" aria-label="Sound matching progress">
+   <div class="pl-sound-progress__labels">
+    <span id="pl-sound-step">Step 1 of 4 · First sounds</span>
+    <span id="pl-sound-count">0 of 6 sounds matched</span>
+   </div>
+   <div class="pl-sound-progress__stars" id="pl-sound-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+   <div class="pl-sound-progress__track" id="pl-sound-progress-track" role="progressbar" aria-label="Sounds matched this step" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0">
+    <span class="pl-sound-progress__fill" id="pl-sound-progress-fill"></span>
+   </div>
+  </div>
   <details class="pl-settings">
-   <summary>Grown-ups: about sound clues</summary>
-   <p>These prompts use your device voice and everyday word examples, not recorded individual phonemes. Listen for the beginning sound of the spoken word. Lowercase letters are used in answers. You may show the picture clue if listening is difficult. Voice is controlled in Parent Zone.</p>
+   <summary>Grown-ups: sound practice and levels</summary>
+   <label for="pl-sound-level">Choose a learning step</label>
+   <select id="pl-sound-level">
+    <option value="auto">Automatic · start easy and build up</option>
+    <option value="0">Step 1 · First sounds (3 letters)</option>
+    <option value="1">Step 2 · More sounds (4 letters)</option>
+    <option value="2">Step 3 · Growing sounds (4 letters)</option>
+    <option value="3">Step 4 · Sound explorer (6 letters)</option>
+   </select>
+   <button type="button" id="pl-sound-reset">Start automatic practice again</button>
+   <p>Listen for the <strong>first sound</strong> in a spoken word, then pick its lowercase letter. This uses your device's spoken words; it does not reproduce separately recorded pure phonemes. For precise sound modelling, use your school's phonics guidance. Q (usually “qu”) and X (often a final sound) are intentionally not part of this beginning-sound game.</p>
+   <p>Six successful matches move the automatic mode to the next step. Skipping is always allowed, with no timers. A picture can be shown when listening is difficult. Progress stays on this device and is not linked to My Stars yet.</p>
   </details>
  </div>
 </section>
@@ -52,86 +78,5 @@
  <a href="letters-sounds.html" aria-current="page">🔊 Letter Sounds</a>
 </nav>
 </main>
-<script>
-(function(){
- "use strict";
- const alphabet="ABCDEFGHIJKLMNOPQRSTUVWXYZ".split(""); // uncommon patterns are kept in full mode
- const beginner=["A","B","C","M","S","T"];
- const clues={
-  A:"apple",B:"ball",C:"cat",D:"dog",E:"egg",F:"fish",G:"goat",H:"hat",
-  I:"insect",J:"jam",K:"kite",L:"lion",M:"moon",N:"nest",O:"octopus",
-  P:"pig",Q:"queen",R:"rain",S:"sun",T:"tiger",U:"umbrella",V:"van",
-  W:"web",X:"box",Y:"yellow",Z:"zoo"
- };
- const play=document.getElementById("pl-play"),choices=document.getElementById("pl-choices");
- const question=document.getElementById("pl-sound-question");
- const feedback=document.getElementById("pl-feedback"),next=document.getElementById("pl-next");
- const voiceNote=document.getElementById("pl-voice-note");
- const picture=document.getElementById("pl-picture"),pictureButton=document.getElementById("pl-show-picture");
- const pictures={A:"🍎",B:"⚽",C:"🐈",D:"🐶",E:"🥚",F:"🐟",G:"🐐",H:"🎩",I:"🐜",K:"🪁",L:"🦁",M:"🌙",N:"🪺",O:"🐙",P:"🐷",Q:"👑",R:"🌧️",S:"☀️",T:"🐯",U:"☂️",V:"🚐",W:"🕸️",X:"📦",Y:"💛",Z:"🦓"};
-
- let current="",solved=false;
- function simple(){return window.PSSettings?.load?.().simplePlay!==false}
- function pick(arr){return arr[Math.floor(Math.random()*arr.length)]}
- function shuffle(arr){
-  const out=arr.slice();for(let i=out.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[out[i],out[j]]=[out[j],out[i]]}
-  return out;
- }
- function message(state,text){feedback.dataset.state=state;feedback.textContent=text}
- function hear(){
-  if(!window.PSVoice){voiceNote.textContent="Speech unavailable.";return}
-  const word=clues[current];
-  const phrase=current==="X"
-   ?"Listen to the last sound in this word. "+word+". "+word+". Which letter ends the word?"
-   :"Listen to the first sound in this word. "+word+". "+word+". Which letter starts the word?";
-  window.PSVoice.speak(phrase,voiceNote);
- }
- function newRound(){
-  const bank=simple()?beginner:alphabet;
-  current=pick(bank.filter(ch=>ch!==current));solved=false;
-  question.textContent=current==="X"?"Which letter ends the word?":"Which letter starts the word?";
-  play.setAttribute("aria-label","Hear the word clue for this round");
-  picture.hidden=true;picture.replaceChildren();
-  pictureButton.setAttribute("aria-expanded","false");pictureButton.textContent="👁 Show picture";
-  voiceNote.textContent="Tap the speaker to listen.";
-  choices.replaceChildren();
-  const opts=new Set([current]);
-  while(opts.size<(simple()?3:6))opts.add(pick(bank));
-  shuffle([...opts]).forEach(letter=>{
-   const b=document.createElement("button");b.type="button";b.className="pl-choice";
-   b.textContent=letter.toLowerCase();b.setAttribute("aria-label","Letter "+letter.toLowerCase());
-   b.addEventListener("click",function(){
-    if(solved)return;
-    if(letter===current){
-     solved=true;b.classList.add("is-correct");
-     choices.querySelectorAll("button").forEach(button=>button.disabled=true);
-     const word=clues[current];
-     message("correct","⭐ Well done! "+word[0].toUpperCase()+word.slice(1)+(current==="X"?" ends with ":" starts with ")+current.toLowerCase()+".");
-    }else{b.classList.add("is-incorrect");message("try","Listen again, then try another letter.");}
-   });
-   choices.appendChild(b);
-  });
-  message("neutral","Listen to the word, then choose a letter.");
- }
- pictureButton.addEventListener("click",()=>{
-  const isOpening=picture.hidden;
-  picture.hidden=!isOpening;
-  pictureButton.setAttribute("aria-expanded",String(isOpening));
-  pictureButton.textContent=isOpening?"Hide picture":"👁 Show picture";
-  if(isOpening){
-   const icon=document.createElement("span");icon.className="pl-picture__icon";
-   icon.setAttribute("aria-hidden","true");icon.textContent=pictures[current]||"💡";
-   picture.appendChild(icon);
-   if(!pictures[current]){
-    const label=document.createElement("span");label.textContent=clues[current];
-    picture.appendChild(label);
-   }
-  }else picture.replaceChildren();
- });
- play.addEventListener("click",hear);
- next.addEventListener("click",newRound);
- newRound();
-})();
-</script>
 </body>
 </html>
