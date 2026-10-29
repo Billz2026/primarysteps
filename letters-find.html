@@ -9,6 +9,7 @@
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
+<script src="assets/js/ps-progress.js?v=1"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
 <link rel="stylesheet" href="assets/css/letters-premium.css?v=7">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
@@ -173,6 +174,7 @@
      solved=true;button.classList.add("is-correct");
      choices.querySelectorAll("button").forEach(b=>b.disabled=true);
      wins=Math.min(GOAL,wins+1);
+     window.PSProgress?.record("lettersFind",String(step)+":"+current);
      showProgress();saveProgress();
      if(wins===GOAL&&level.value==="auto"&&step<STEPS.length-1){
       message("correct","⭐ Great matching! You finished this step. Tap Next for a new challenge.");
