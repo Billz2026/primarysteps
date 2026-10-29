@@ -4,60 +4,81 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#F7FAFC">
-<meta name="description" content="Count the pictures and choose the matching number. Calm, touch-friendly Primary Steps learning.">
+<meta name="description" content="Count dots, discover tens and ones, and choose the right number at your own pace.">
 <title>Count Numbers • Primary Steps</title>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
 <link rel="stylesheet" href="assets/css/numbers-premium.css?v=4">
+<link rel="stylesheet" href="assets/css/numbers-count.css?v=1">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
 <script src="assets/js/numbers-progress.js?v=1" defer></script>
+<script src="assets/js/numbers-count.js?v=1" defer></script>
 </head>
 <body>
 <main class="np-main">
 <section class="np-board" aria-labelledby="np-title">
- <div class="np-header">
-  <span class="np-eyebrow">Primary Steps · Numbers</span>
-  <h1 id="np-title">Let's Count!</h1>
-  <p>Count the dots. Choose the number.</p>
- </div>
+ <header class="np-header">
+  <div class="np-header__copy">
+   <span class="np-eyebrow">Primary Steps · Numbers</span>
+   <h1 id="np-title">Let's Count!</h1>
+   <div class="np-count-cues" aria-label="Look, count and choose">
+    <span>👀 Look</span><span>🔢 Count</span><span>⭐ Choose</span>
+   </div>
+  </div>
+  <span class="np-header__mark" aria-hidden="true"><img src="assets/primary-steps-mark.svg" width="92" height="82" alt=""></span>
+ </header>
  <div class="np-content">
   <div class="np-count-layout">
-   <section aria-labelledby="np-count-heading">
+   <section aria-labelledby="np-count-heading" class="np-count-column">
     <h2 class="np-question np-question--with-icon" id="np-count-heading"><span class="np-step-icon" aria-hidden="true">①</span> How many dots?</h2>
-    <div id="np-visual" class="np-count-visual" role="group" aria-label="Counting dots. Tap a dot as you count it."></div>
-    <div class="np-count-tools np-buttons" style="margin-top:13px">
+    <div class="np-count-visual" id="np-visual" role="group" aria-label="Count the dots and mark each one by tapping."></div>
+    <p class="np-visual-caption" id="np-visual-caption">Tap each dot to count</p>
+    <div class="np-count-tools np-buttons">
      <button type="button" class="np-btn np-btn--audio" id="np-hear">🔊 Hear question</button>
      <button type="button" class="np-btn" id="np-hint">💡 Help me count</button>
     </div>
    </section>
-   <section aria-labelledby="np-choices-heading">
+   <section aria-labelledby="np-choices-heading" class="np-answer-column">
     <h2 class="np-question np-question--with-icon" id="np-choices-heading"><span class="np-step-icon" aria-hidden="true">②</span> Tap the number</h2>
-    <div class="np-answers" id="np-answers" role="group" aria-label="Choose the number of dots"></div>
+    <div class="np-answers" id="np-answers" role="group" aria-label="Choose the correct number"></div>
     <div class="np-feedback" id="np-feedback" role="status" aria-live="polite" hidden></div>
     <div class="np-count-actions">
-     <span style="font-weight:750;color:var(--np-muted);font-size:14px">No timer. Take your time.</span>
+     <span class="np-count-actions__hint">No timer. Take your time.</span>
      <button class="np-btn np-btn--primary" type="button" id="np-next">Next question →</button>
     </div>
    </section>
   </div>
   <span class="np-voice-note" id="np-voice-note" role="status"></span>
+  <section class="np-learning-progress" aria-label="Counting learning progress">
+   <div class="np-learning-progress__labels">
+    <span id="np-stage-label">Step 1 of 5 · Count 1–5</span>
+    <span id="np-stage-count">0 of 5 correct</span>
+   </div>
+   <div class="np-learning-progress__stars" id="np-progress-stars" aria-hidden="true"><span>★</span><span>★</span><span>★</span><span>★</span><span>★</span></div>
+   <div class="np-learning-progress__track" id="np-progress-track" role="progressbar" aria-label="Correct counting answers in this step" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0"><span id="np-progress-fill" class="np-learning-progress__fill"></span></div>
+  </section>
   <details class="np-growups">
-   <summary>Grown-ups: level and progress</summary>
-   <label for="np-range">Counting range</label>
-   <select id="np-range">
-    <option value="0">Count 1–20</option>
-    <option value="1">Count 21–50</option>
-    <option value="2">Count 51–100</option>
+   <summary>Grown-ups: difficulty and saved progress</summary>
+   <label for="np-level">Choose a counting step</label>
+   <select id="np-level">
+    <option value="auto">Automatic · build confidence gradually</option>
+    <option value="0">Step 1 · Count 1–5 (3 choices)</option>
+    <option value="1">Step 2 · Count 6–10 (3 choices)</option>
+    <option value="2">Step 3 · Count 11–20 (4 choices)</option>
+    <option value="3">Step 4 · Tens and ones, 21–50</option>
+    <option value="4">Step 5 · Count 51–100</option>
    </select>
-   <p id="np-mode-note">Simple Play uses numbers 1–10. Switch off Simple Play in Parent Zone to use higher ranges.</p>
+   <p id="np-mode-note">Simple Play starts with numbers 1–10.</p>
+   <button type="button" id="np-reset-learning" class="np-btn">Restart learning steps</button>
    <div class="np-stats">
     <span>Correct: <strong id="np-correct">0</strong></span>
     <span>Tries: <strong id="np-tries">0</strong></span>
     <span>Streak: <strong id="np-streak">0</strong></span>
     <span>Stars earned: <strong id="np-stars">0</strong></span>
    </div>
+   <p>First count individual dots; later count groups of ten and single ones. Tapping pieces helps keep track. Five correct answers complete a step. Wrong or skipped questions do not count. Progress is stored only on this device. Every five consecutive correct answers earn a star.</p>
   </details>
  </div>
 </section>
@@ -66,134 +87,5 @@
  <a href="numbers-trace.html">✏️ Trace Numbers</a>
 </nav>
 </main>
-<script>
-(function(){
- "use strict";
- const ranges=[{min:1,max:20},{min:21,max:50},{min:51,max:100}];
- const KEY="ps_numbers_count_progress_v1",STARS_KEY="ps_progress_stars";
- const visual=document.getElementById("np-visual"),answers=document.getElementById("np-answers");
- const feedback=document.getElementById("np-feedback"),range=document.getElementById("np-range");
- const next=document.getElementById("np-next"),hear=document.getElementById("np-hear");
- const hint=document.getElementById("np-hint"),voice=document.getElementById("np-voice-note");
- const stats={correct:document.getElementById("np-correct"),tries:document.getElementById("np-tries"),
-  streak:document.getElementById("np-streak"),stars:document.getElementById("np-stars")};
- const simple=()=>window.PSSettings?.load?.().simplePlay!==false;
- let rangeIndex=0,target=1,previous=0,solved=false;
- let correct=0,tries=0,streak=0,stars=0;
- function randint(min,max){return min+Math.floor(Math.random()*(max-min+1))}
- function clamp(n,min,max){return Math.max(min,Math.min(max,n))}
- function shuffle(items){let a=items.slice();for(let i=a.length-1;i>0;i--){let j=randint(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
- function save(){
-  try{localStorage.setItem(KEY,JSON.stringify({correct,tries,streak,stars,rangeIndex}))}catch(_){}
- }
- function sync(){for(const key of Object.keys(stats))stats[key].textContent=String({correct,tries,streak,stars}[key])}
- function load(){
-  try{
-   const x=JSON.parse(localStorage.getItem(KEY)||"{}");
-   correct=Math.max(0,Number(x.correct)||0);tries=Math.max(0,Number(x.tries)||0);
-   streak=Math.max(0,Number(x.streak)||0);stars=Math.max(0,Number(x.stars)||0);
-   rangeIndex=clamp(Number(x.rangeIndex)||0,0,2);
-  }catch(_){}
-  if(simple())rangeIndex=0;
-  range.value=String(rangeIndex);
-  range.disabled=simple();
-  document.getElementById("np-mode-note").textContent=simple()
-   ?"Simple Play uses numbers 1–10. Switch off Simple Play in Parent Zone to unlock larger ranges."
-   :"Choose a range above. These choices are saved on this device.";
-  sync();
- }
- function message(state,text){feedback.hidden=state==="neutral";feedback.dataset.state=state;feedback.textContent=text}
- function countDot(number){
-  const dot=document.createElement("button");dot.type="button";
-  dot.className="np-dot";dot.dataset.countable="true";
-  dot.setAttribute("aria-label","Dot "+number+". Mark as counted");
-  dot.setAttribute("aria-pressed","false");
-  dot.addEventListener("click",()=>{
-   const counted=dot.classList.toggle("is-counted");
-   dot.setAttribute("aria-pressed",String(counted));
-   dot.setAttribute("aria-label","Dot "+number+(counted?". Counted":". Mark as counted"));
-  });
-  return dot;
- }
- function draw(){
-  visual.replaceChildren();
-  const beginner=simple();
-  visual.dataset.simpleRound=beginner?"yes":"no";
-  const frames=document.createElement("div");frames.className="np-frame-set";
-  const groups=Math.ceil(target/10);
-  for(let g=0;g<groups;g++){
-   const frame=document.createElement("div");frame.className="np-tenframe";
-   if(beginner)frame.classList.add("np-tenframe--simple");
-   frame.setAttribute("aria-label","Group "+(g+1)+" of counting dots");
-   const filled=Math.min(10,target-g*10);
-   for(let n=0;n<10;n++){
-    if(n<filled)frame.appendChild(countDot(g*10+n+1));
-    else if(!beginner){const empty=document.createElement("span");empty.className="np-dot np-dot--empty";empty.setAttribute("aria-hidden","true");frame.appendChild(empty)}
-   }
-   frames.appendChild(frame);
-  }
-  visual.appendChild(frames);
- }
- function options(){
-  const max=simple()?10:ranges[rangeIndex].max,min=ranges[rangeIndex].min;
-  const count=simple()?3:4;
-  const set=new Set([target]);
-  // Work from neighbouring numbers without a random-loop dead end at range edges.
-  let pool=[];
-  for(let n=min;n<=max;n++)if(n!==target)pool.push(n);
-  pool.sort((a,b)=>Math.abs(a-target)-Math.abs(b-target)||a-b);
-  const neighbourhood=pool.slice(0,Math.max(count+3,Math.min(10,pool.length)));
-  for(const n of shuffle(neighbourhood)){if(set.size>=count)break;set.add(n)}
-  for(const n of pool){if(set.size>=count)break;set.add(n)}
-  const values=shuffle([...set]);
-  answers.replaceChildren();
-  answers.dataset.count=String(values.length);
-  values.forEach(value=>{
-   const btn=document.createElement("button");btn.type="button";btn.className="np-option";
-   btn.textContent=String(value);btn.setAttribute("aria-label","Answer "+value);
-   btn.addEventListener("click",()=>{
-    if(solved)return;
-    tries++;
-    if(value===target){
-     solved=true;correct++;streak++;
-     btn.classList.add("is-correct");
-     answers.querySelectorAll("button").forEach(b=>b.disabled=true);
-     message("good","⭐ Well done! There are "+target+" dots.");
-     if(streak%5===0){stars++;try{
-      const x=JSON.parse(localStorage.getItem(STARS_KEY)||"{}");
-      x.numbers=(x.numbers||0)+1;localStorage.setItem(STARS_KEY,JSON.stringify(x));
-     }catch(_){}}
-     window.PSNumbersProgress?.record(streak%5===0);
-    }else{
-     streak=0;
-     btn.classList.add("is-try");
-     message("try","Try again. Tap each dot as you count.");
-    }
-    sync();save();
-   });
-   answers.appendChild(btn);
-  });
- }
- function newRound(){
-  const r=ranges[rangeIndex],max=simple()?10:r.max;
-  const pool=[];for(let n=r.min;n<=max;n++)if(n!==target)pool.push(n);
-  previous=target;target=pool.length?pool[randint(0,pool.length-1)]:r.min;
-  solved=false;voice.textContent="";draw();options();
-  message("neutral","");hint.textContent="💡 Help me count";save();
- }
- next.addEventListener("click",newRound);
- hear.addEventListener("click",()=>{
-  window.PSVoice?.speak("How many dots can you see? Tap each dot while you count. Then choose the number.",voice);
- });
- hint.addEventListener("click",()=>{
-  message("hint","Tap each orange dot once. It will turn blue to help you keep track.");
- });
- range.addEventListener("change",()=>{
-  if(simple()){range.value="0";return}
-  rangeIndex=clamp(Number(range.value)||0,0,2);newRound();
- });
- load();newRound();
-})();
-</script>
 </body>
 </html>
