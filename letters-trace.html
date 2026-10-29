@@ -9,6 +9,7 @@
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
+<script src="assets/js/ps-progress.js?v=1"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
 <link rel="stylesheet" href="assets/css/letters-premium.css?v=8">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
@@ -296,6 +297,10 @@
   const s=completionMessage();
   if(canCheckGuide&&!s.complete){
    message("try","Good effort! Follow more of the dotted lines, or choose Next when ready.");
+  }else if(s.complete){
+   const award=window.PSProgress?.record("lettersTrace",(lower?"lower:":"upper:")+letter().toUpperCase());
+   if(award?.new)message("correct","⭐ Letter "+letter()+" saved to My Stars. Great tracing!");
+   else if(award?.ok)message("correct","⭐ Letter "+letter()+" already recorded. You can practise again.");
   }
  });
  hear.addEventListener("click",()=>{
