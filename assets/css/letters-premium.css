@@ -481,3 +481,241 @@ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-feedback[hidden]{
 :root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-find-progress__fill{
  background:#7CD8BA;
 }
+
+
+/* Find Letters — visual identity sampled directly from Primary Steps badge.
+   Includes mint #5CC4BC, aqua #8DCFE3, sky #698FE1, lavender #9B85DA,
+   coral #F38C7E and sunshine #FFC06B. Only this activity is recoloured. */
+html.ps-unified.ps-letter-premium[data-letter-game="find"] {
+ --pl-badge-mint:#5CC4BC;
+ --pl-badge-aqua:#8DCFE3;
+ --pl-badge-sky:#698FE1;
+ --pl-badge-lavender:#9B85DA;
+ --pl-badge-coral:#F38C7E;
+ --pl-badge-sun:#FFC06B;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] body {
+ background:
+  radial-gradient(ellipse at 8% 11%,rgba(92,196,188,.19),transparent 35%),
+  radial-gradient(ellipse at 94% 26%,rgba(155,133,218,.16),transparent 32%),
+  linear-gradient(180deg,#F3FCFB 0%,#F7FAFC 70%,#FAF7FF 100%)!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-board {
+ border:2px solid #BEDFD9;
+ box-shadow:0 15px 40px rgba(41,92,103,.10);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-heading {
+ background:
+  radial-gradient(circle at 90% -16%,rgba(255,218,140,.62) 0,transparent 30%),
+  linear-gradient(105deg,#DDF5EC 4%,#DEEFFB 54%,#EEE5FC 100%);
+ border-bottom:2px solid #BEDFD9;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-eyebrow {
+ color:#286C6B;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-heading__mark {
+ display:grid;place-items:center;flex:0 0 auto;
+ width:100px;height:92px;border-radius:27px;
+ background:rgba(255,255,255,.56);
+ border:1px solid rgba(88,153,160,.18);
+ box-shadow:0 5px 17px rgba(41,92,103,.07);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-heading__mark img {
+ display:block;width:79px;height:72px;object-fit:contain;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-body {
+ background:linear-gradient(180deg,#FFFFFF 12%,#FBFDFE 100%);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-task-label {
+ color:#254B5C;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-target {
+ border:4px solid #F0B46F;
+ border-radius:31px;
+ background:linear-gradient(142deg,#FFF8DC 0%,#FFE8C9 55%,#FFDFC7 100%);
+ color:#254C60;
+ box-shadow:0 9px 24px rgba(189,133,70,.16),inset 0 3px 0 rgba(255,255,255,.75);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice-label {
+ color:#254B5C;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice {
+ color:#21475A!important;
+ border-width:3px!important;border-style:solid!important;
+ border-radius:23px!important;
+ box-shadow:0 5px 0 rgba(60,110,117,.08),0 10px 20px rgba(43,89,97,.045)!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice:nth-child(6n+1) {
+ background:#DDF5EE!important;border-color:#6EC4AF!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice:nth-child(6n+2) {
+ background:#E0F0FC!important;border-color:#8BC5E7!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice:nth-child(6n+3) {
+ background:#FFF0E8!important;border-color:#F3B6A4!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice:nth-child(6n+4) {
+ background:#EEE8FB!important;border-color:#B9A8E9!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice:nth-child(6n+5) {
+ background:#FFF5DE!important;border-color:#F4D18E!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice:nth-child(6n+6) {
+ background:#E8F5F2!important;border-color:#9DD8CD!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice:not(:disabled):hover {
+ border-color:#377B85!important;filter:saturate(1.06);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice.is-correct {
+ background:#CFF4DF!important;border-color:#3B9C74!important;
+ color:#175537!important;box-shadow:0 5px 0 #A6D9BB!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice.is-incorrect:disabled {
+ background:#F4E9EA!important;border-color:#D8BAC4!important;
+ color:#65727C!important;box-shadow:none!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-feedback {
+ border:2px solid #AEDBCF!important;background:#E9F7F4!important;
+ color:#275B5A!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-feedback[data-state="correct"] {
+ background:#DDF6E5!important;border-color:#80CAA4!important;color:#185739!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-feedback[data-state="try"] {
+ background:#FFF1E6!important;border-color:#F0BF9F!important;color:#805035!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-button--audio {
+ background:linear-gradient(135deg,#E3F3FE,#D9F0F3)!important;
+ border-color:#87C8D6!important;color:#155B71!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] #pl-next {
+ background:#176B75!important;color:#FFFFFF!important;
+ border-color:#176B75!important;box-shadow:0 5px 0 rgba(20,88,95,.17);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] #pl-next:hover {
+ background:#105864!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-find-progress {
+ background:linear-gradient(110deg,#E8F8F1,#E6F1FD 58%,#F2EBFC);
+ border:2px solid #C5DFDF;border-radius:19px;
+ box-shadow:0 3px 10px rgba(55,113,124,.045);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-find-progress__track {
+ height:13px;background:#FFFFFF;border:1px solid #BCDAD7;
+ box-shadow:inset 0 1px 3px rgba(52,107,106,.10);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-find-progress__fill {
+ background:linear-gradient(90deg,#5CC4BC 0%,#8DCFE3 25%,#698FE1 48%,#9B85DA 68%,#F38C7E 85%,#FFC06B 100%);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-settings {
+ margin-top:14px;padding:12px 16px 14px;border:1px solid #D9CDEE;
+ border-radius:16px;background:#F5F1FC;color:#4D496E;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-settings summary {
+ color:#554C79;min-height:42px;display:list-item;align-content:center;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-settings :is(select,button) {
+ background:#FFFFFF;color:#254B5C;border-color:#B9A5E0;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-nav a {
+ border-width:2px;border-color:#A8D9D0;background:#E5F7F1;
+ color:#225B63!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-nav a:nth-child(2) {
+ background:#E8ECFF;border-color:#B9BDF0;color:#414C80!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-nav a:nth-child(3) {
+ background:#FFF0E7;border-color:#F2C7AB;color:#82513A!important;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-nav a[aria-current="page"] {
+ box-shadow:inset 0 -3px 0 rgba(56,66,104,.13);
+ border-color:#756BC0;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] :is(.pl-settings summary,.pl-settings select,.pl-settings button,.pl-nav a):focus-visible {
+ outline:4px solid #176B75!important;outline-offset:3px;
+}
+@media(max-width:640px){
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-heading__mark {
+  width:70px;height:67px;border-radius:19px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-heading__mark img {
+  width:58px;height:54px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-target {
+  border-radius:25px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice {
+  border-radius:18px!important;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-settings {
+  padding:9px 13px;
+ }
+}
+/* Preserve the settings' intentionally reduced visual noise. */
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] body {
+ background:linear-gradient(180deg,#203847,#192735)!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-board {
+ border-color:#547483;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-heading {
+ background:linear-gradient(110deg,#27514F,#304B66 58%,#463D61);
+ border-color:#557783;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-heading__mark {
+ background:rgba(255,255,255,.10);
+ border-color:#77909B;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-body {
+ background:#273B49;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] :is(.pl-task-label,.pl-choice-label,.pl-eyebrow) {
+ color:#F1F8FA!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-target {
+ background:linear-gradient(135deg,#544637,#625346);
+ border-color:#D9A962;color:#FFF3DC!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-choice:nth-child(n) {
+ background:#344F5D!important;border-color:#6A8E9B!important;color:#F1F9FC!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-choice:nth-child(4n+2) {
+ background:#393F64!important;border-color:#918CD7!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-choice:nth-child(4n+3) {
+ background:#5D454C!important;border-color:#D59E9E!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-choice.is-correct:nth-child(n) {
+ background:#244E42!important;border-color:#73CBA0!important;color:#E3FFEF!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-choice.is-incorrect:nth-child(n) {
+ background:#484552!important;border-color:#947985!important;color:#E0D9E1!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-feedback[data-state="try"] {
+ background:#574439!important;border-color:#BE956B!important;color:#FFE7CE!important;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-find-progress {
+ background:linear-gradient(105deg,#31504D,#313E59,#483D59);
+ border-color:#60817F;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-settings {
+ background:#38364F;border-color:#6E639B;color:#EDEAF7;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-settings summary {
+ color:#F0EAFE;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] .pl-nav a:nth-child(n){
+ background:#304C59!important;border-color:#628B92!important;color:#F2FAFA!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="find"] :is(.pl-heading,.pl-body,.pl-find-progress,.pl-settings) {
+ background:#FFFFFF!important;border-color:#364D55!important;color:#101820!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="find"] :is(.pl-choice,.pl-target,.pl-nav a) {
+ background:#FFFFFF!important;color:#101820!important;border-color:#364D55!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="find"] .pl-choice.is-correct {
+ background:#D0F3DF!important;color:#123E29!important;border-color:#206C47!important;
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="find"] .pl-choice.is-incorrect {
+ background:#FCE7E7!important;color:#57242D!important;border-color:#843946!important;
+}
