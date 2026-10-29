@@ -4,38 +4,57 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#F7FAFC">
-<meta name="description" content="Trace numbers with your finger, stylus or mouse using gentle guides and starting dots.">
+<meta name="description" content="Follow numbered guides to practise tracing numbers with a finger, stylus or mouse.">
 <title>Trace Numbers • Primary Steps</title>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
 <link rel="stylesheet" href="assets/css/numbers-premium.css?v=4">
+<link rel="stylesheet" href="assets/css/numbers-trace.css?v=1">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
 <script src="assets/js/numbers-progress.js?v=1" defer></script>
+<script src="assets/js/numbers-trace.js?v=1" defer></script>
 </head>
 <body>
 <main class="np-main">
 <section class="np-board" aria-labelledby="np-title">
- <div class="np-header">
-  <span class="np-eyebrow">Primary Steps · Numbers</span>
-  <h1 id="np-title">Trace Numbers</h1>
-  <p>Start at the dot. Follow the dotted number.</p>
- </div>
- <div class="np-content">
-  <div class="np-trace-head"><h2 class="np-question" id="np-current">Trace 0</h2><span class="np-number-word" id="np-number-word">zero</span></div>
-  <div class="np-trace-layout">
-   <div class="np-trace-area">
-    <canvas class="np-trace-canvas" id="np-canvas" aria-label="Trace number 0 with a finger, mouse or stylus" aria-describedby="np-trace-help"></canvas>
-    <span class="np-trace-hint" aria-hidden="true">① Start at the dot</span>
-    <p id="np-trace-help" class="np-question" style="font-size:15px;margin:10px auto 0">Follow the numbered dots and arrows. Take your time.</p>
-    <div class="np-feedback" id="np-feedback" data-state="idle" role="status" aria-live="polite" hidden></div>
+ <header class="np-header">
+  <div class="np-header__copy">
+   <span class="np-eyebrow">Primary Steps · Numbers</span>
+   <h1 id="np-title">Trace Numbers</h1>
+   <div class="np-trace-cues" aria-label="Trace, listen and check">
+    <span>✏️ Trace</span><span>🔊 Listen</span><span>⭐ Check</span>
    </div>
+  </div>
+  <span class="np-header__mark" aria-hidden="true"><img src="assets/primary-steps-mark.svg" width="92" height="82" alt=""></span>
+ </header>
+ <div class="np-content">
+  <div class="np-trace-head">
+   <h2 class="np-question" id="np-current">Trace 0</h2>
+   <span class="np-number-word" id="np-number-word">zero</span>
+  </div>
+  <div class="np-trace-layout">
+   <section class="np-trace-area" aria-label="Number tracing board">
+    <div class="np-trace-board">
+     <span class="np-trace-board__heading">Follow the dotted number</span>
+     <canvas class="np-trace-canvas" id="np-canvas" aria-label="Follow the dotted guides to trace number 0" aria-describedby="np-trace-help np-guide-progress"></canvas>
+     <span class="np-trace-hint" aria-hidden="true">① Start at the dot</span>
+    </div>
+    <div id="np-trace-help" class="np-trace-help">
+     <p>Follow each numbered line with your finger or mouse.</p>
+     <div class="np-trace-progress" role="status" aria-live="polite">
+      <span id="np-guide-progress">0 of 1 guide lines followed</span>
+      <span id="np-digit-progress">0 of 1 digits followed</span>
+     </div>
+    </div>
+    <div class="np-feedback" id="np-feedback" data-state="idle" role="status" aria-live="polite" hidden></div>
+   </section>
    <div class="np-trace-controls">
     <div class="np-trace-tools" role="group" aria-label="Tracing tools">
      <button class="np-btn" id="np-clear" type="button">↻ Clear</button>
      <button class="np-btn np-btn--audio" id="np-hear" type="button">🔊 Hear number</button>
-     <button class="np-btn np-btn--practice" id="np-done" type="button">Done ⭐</button>
+     <button class="np-btn np-btn--practice" id="np-done" type="button">Check tracing ✓</button>
     </div>
     <div class="np-trace-navigation" role="group" aria-label="Choose number">
      <button class="np-btn" id="np-prev" type="button">← Previous</button>
@@ -45,18 +64,17 @@
   </div>
   <div class="np-voice-note" id="np-voice-note" role="status"></div>
   <details class="np-growups">
-   <summary>Grown-ups: range and saved practice</summary>
+   <summary>Grown-ups: range and checked completions</summary>
    <label for="np-range">Numbers to practise</label>
    <select id="np-range">
-    <option value="0">0–10</option>
-    <option value="1">11–20</option>
-    <option value="2">21–50</option>
-    <option value="3">51–100</option>
+    <option value="0">0–10</option><option value="1">11–20</option>
+    <option value="2">21–50</option><option value="3">51–100</option>
    </select>
    <p id="np-range-note">Simple Play begins with numbers 0–10.</p>
-   <p>Done saves a practice star; it does not grade handwriting accuracy. Printed number-writing styles may differ between schools.</p>
-   <p>Numbers practised: <strong id="np-progress">0</strong> / 101</p>
-   <button class="np-btn" id="np-reset" type="button">Reset saved practice</button>
+   <p>The check looks for approximately 72% coverage of <strong>each dotted guide stroke</strong> for every digit. This is a forgiving guide-following check, not handwriting recognition or an assessment of neatness and stroke direction. Next is always available.</p>
+   <p>Checked completions: <strong id="np-progress">0</strong> of 101 numbers.</p>
+   <p>Earlier practice records: <strong id="np-older-practice">0</strong> (kept separately because the old activity did not verify tracing).</p>
+   <button class="np-btn" id="np-reset" type="button">Reset checked completions</button>
   </details>
  </div>
 </section>
@@ -65,187 +83,5 @@
  <a href="numbers-trace.html" aria-current="page">✏️ Trace Numbers</a>
 </nav>
 </main>
-<script>
-(function(){
-"use strict";
-const DIGITS={
- "0":["M50 14 C27 14 19 31 19 52 C19 76 30 89 50 89 C70 89 81 76 81 52 C81 31 72 14 50 14"],
- "1":["M30 35 L51 15 L51 88"],
- "2":["M22 30 Q29 13 51 14 Q78 13 78 37 Q78 56 23 86 L80 86"],
- "3":["M23 23 Q50 8 70 24 Q82 40 58 50 Q81 56 76 73 Q67 97 22 80"],
- "4":["M68 14 L22 65 L80 65","M68 14 L68 88"],
- "5":["M75 15 L26 15 L26 49 Q45 39 64 45 Q82 53 76 73 Q62 96 23 80"],
- "6":["M72 20 Q44 8 26 40 Q13 79 44 88 Q70 95 77 72 Q81 48 55 48 Q31 47 24 64"],
- "7":["M20 15 L80 15 L40 88"],
- "8":["M50 50 C22 34 29 14 50 14 C72 14 79 34 50 50 C20 63 28 90 50 90 C73 90 81 62 50 50"],
- "9":["M73 48 C71 15 53 9 36 19 Q18 35 29 53 Q45 72 70 54 Q80 39 73 20 Q86 77 41 90"]
-};
-const ranges=[{start:0,end:10},{start:11,end:20},{start:21,end:50},{start:51,end:100}];
-const KEY="ps_numbers_trace_done_v1";
-const canvas=document.getElementById("np-canvas"),ctx=canvas.getContext("2d");
-const heading=document.getElementById("np-current"),feedback=document.getElementById("np-feedback");
-const numberWord=document.getElementById("np-number-word");
-const voice=document.getElementById("np-voice-note"),selector=document.getElementById("np-range");
-const progress=document.getElementById("np-progress");
-const simple=()=>window.PSSettings?.load?.().simplePlay!==false;
-let rangeIndex=0,current=0,pointer=null,activeStroke=null,strokes=[],width=1,height=1,dpr=1;
-let marked=new Set();
-try{
- const stored=JSON.parse(localStorage.getItem(KEY)||"[]");
- if(Array.isArray(stored))marked=new Set(stored.filter(n=>Number.isInteger(n)&&n>=0&&n<=100));
-}catch(_){}
-function save(){try{localStorage.setItem(KEY,JSON.stringify([...marked].sort((a,b)=>a-b)))}catch(_){}}
-function message(state,text){feedback.dataset.state=state;feedback.textContent=text;feedback.hidden=state==="idle"}
-function updateProgress(){progress.textContent=String(marked.size)}
-function numberName(value){
- const ones=["zero","one","two","three","four","five","six","seven","eight","nine","ten",
-  "eleven","twelve","thirteen","fourteen","fifteen","sixteen","seventeen","eighteen","nineteen"];
- const tens=["","","twenty","thirty","forty","fifty","sixty","seventy","eighty","ninety"];
- if(value<=19)return ones[value];
- if(value===100)return "one hundred";
- const ten=Math.floor(value/10),rem=value%10;
- return tens[ten]+(rem?"-"+ones[rem]:"");
-}
-function currentDigit(){return String(current)}
-function resetInk(){pointer=null;activeStroke=null;strokes=[]}
-function canvasSize(){
- const box=canvas.getBoundingClientRect();
- width=Math.max(1,box.width);height=Math.max(1,box.height);
- dpr=Math.min(2,window.devicePixelRatio||1);
- canvas.width=Math.round(width*dpr);canvas.height=Math.round(height*dpr);
- ctx.setTransform(dpr,0,0,dpr,0,0);draw();
-}
-function drawGlyph(char,x,scale){
- const paths=DIGITS[char];
- if(!paths)return;
- ctx.save();
- ctx.translate(x, (height-110*scale)/2);
- ctx.scale(scale,scale);
- ctx.lineWidth=4.5;ctx.strokeStyle="#2686AD";
- ctx.lineJoin="round";ctx.lineCap="round";ctx.setLineDash([2.8,4.1]);
- paths.forEach(path=>ctx.stroke(new Path2D(path)));
- ctx.setLineDash([]);
- paths.forEach((path,i)=>{
-  const tokens=path.match(/[A-Za-z]|-?\d+(?:\.\d+)?/g);
-  if(!tokens||tokens.length<6)return;
-  const px=Number(tokens[1]),py=Number(tokens[2]),x2=Number(tokens[4]),y2=Number(tokens[5]);
-  const len=Math.hypot(x2-px,y2-py)||1,dx=(x2-px)/len,dy=(y2-py)/len;
-  ctx.beginPath();ctx.arc(px,py,5.5,0,Math.PI*2);
-  ctx.fillStyle="#216F9B";ctx.fill();
-  ctx.fillStyle="#FFF";ctx.font="900 7.5px system-ui";
-  ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText(String(i+1),px,py);
-  const ex=px+dx*18,ey=py+dy*18;
-  ctx.beginPath();ctx.moveTo(ex,ey);
-  ctx.lineTo(ex-dx*7-dy*4,ey-dy*7+dx*4);
-  ctx.lineTo(ex-dx*7+dy*4,ey-dy*7-dx*4);
-  ctx.closePath();ctx.fillStyle="#227D9B";ctx.fill();
- });
- ctx.restore();
-}
-function draw(){
- ctx.clearRect(0,0,width,height);
- const digits=currentDigit().split(""),unit=110;
- const advance=104;
- const scale=Math.min((width-30)/(digits.length*advance),(height-18)/97);
- const start=(width-digits.length*advance*scale)/2;
- digits.forEach((char,i)=>drawGlyph(char,start+i*advance*scale,scale));
- ctx.save();ctx.lineWidth=11;ctx.strokeStyle="#236C91";ctx.lineCap="round";ctx.lineJoin="round";
- for(const stroke of strokes){
-  if(!stroke.length)continue;
-  ctx.beginPath();ctx.moveTo(stroke[0].x*width,stroke[0].y*height);
-  for(let i=1;i<stroke.length;i++)ctx.lineTo(stroke[i].x*width,stroke[i].y*height);
-  if(stroke.length===1)ctx.lineTo(stroke[0].x*width+.1,stroke[0].y*height+.1);
-  ctx.stroke();
- }
- ctx.restore();
-}
-function point(event){
- const box=canvas.getBoundingClientRect();
- return{x:Math.min(1,Math.max(0,(event.clientX-box.left)/box.width)),
-  y:Math.min(1,Math.max(0,(event.clientY-box.top)/box.height))};
-}
-function down(event){
- if(pointer!==null||(event.pointerType==="mouse"&&event.button!==0))return;
- event.preventDefault();pointer=event.pointerId;
- try{canvas.setPointerCapture(event.pointerId)}catch(_){}
- activeStroke=[point(event)];strokes.push(activeStroke);draw();
-}
-function move(event){
- if(pointer!==event.pointerId||!activeStroke)return;
- event.preventDefault();activeStroke.push(point(event));draw();
-}
-function end(event){
- if(pointer!==event.pointerId)return;
- pointer=null;activeStroke=null;message("neutral","Keep tracing, or tap Done ⭐ when you finish.");
-}
-function setNumber(number){
- const r=ranges[rangeIndex];
- current=Math.min(r.end,Math.max(r.start,number));
- resetInk();heading.textContent="Trace "+current;numberWord.textContent=numberName(current);
- canvas.setAttribute("aria-label","Trace number "+current+" with your finger, stylus or mouse");
- voice.textContent="";message("idle","");
- draw();
-}
-function setRange(idx){
- rangeIndex=idx;
- setNumber(ranges[rangeIndex].start);
- selector.value=String(rangeIndex);
-}
-function hasPractised(){
- for(const stroke of strokes)for(let i=1;i<stroke.length;i++){
-  const dx=(stroke[i].x-stroke[i-1].x)*width,dy=(stroke[i].y-stroke[i-1].y)*height;
-  if(Math.hypot(dx,dy)>=5)return true;
- }
- return strokes.some(a=>a.length>=3);
-}
-canvas.addEventListener("pointerdown",down);
-canvas.addEventListener("pointermove",move);
-canvas.addEventListener("pointerup",end);
-canvas.addEventListener("pointercancel",end);
-window.addEventListener("pointerup",end);window.addEventListener("pointercancel",end);
-window.addEventListener("resize",canvasSize);
-document.getElementById("np-clear").addEventListener("click",()=>{
- resetInk();draw();message("neutral","Board cleared. Try again.");
-});
-document.getElementById("np-hear").addEventListener("click",()=>{
- window.PSVoice?.speak("Trace the number "+current+". Start at the numbered dot and follow the dashed line.",voice);
-});
-document.getElementById("np-done").addEventListener("click",()=>{
- if(!hasPractised()){message("neutral","Trace a little of the number first.");return}
- const firstPractice=!marked.has(current);
- marked.add(current);save();updateProgress();
- if(firstPractice)window.PSNumbersProgress?.record(marked.size%5===0);
- message("good","⭐ Nice practice! Tap Next when you're ready.");
-});
-document.getElementById("np-prev").addEventListener("click",()=>{
- const r=ranges[rangeIndex];setNumber(current===r.start?r.end:current-1);
-});
-document.getElementById("np-next").addEventListener("click",()=>{
- const r=ranges[rangeIndex];setNumber(current===r.end?r.start:current+1);
-});
-selector.disabled=simple();
-document.getElementById("np-range-note").textContent=simple()
- ?"Simple Play uses numbers 0–10. Switch it off in Parent Zone for more ranges."
- :"Choose a range to practise larger numbers.";
-selector.addEventListener("change",()=>{
- if(simple()){selector.value="0";return}
- setRange(Number(selector.value)||0);
-});
-document.getElementById("np-reset").addEventListener("click",()=>{
- if(!window.confirm("Clear all saved Number Tracing practice stars?"))return;
- marked.clear();save();updateProgress();message("neutral","Saved practice cleared.");
-});
-window.addEventListener("keydown",e=>{
- if(e.altKey||e.ctrlKey||e.metaKey||["INPUT","TEXTAREA","SELECT"].includes(document.activeElement?.tagName))return;
- if(e.key==="ArrowLeft"){e.preventDefault();document.getElementById("np-prev").click()}
- if(e.key==="ArrowRight"){e.preventDefault();document.getElementById("np-next").click()}
-});
-if(!ctx||typeof Path2D==="undefined"){
- feedback.textContent="This browser cannot display the number tracing board.";
- return;
-}
-updateProgress();canvasSize();setRange(0);
-})();
-</script>
 </body>
 </html>
