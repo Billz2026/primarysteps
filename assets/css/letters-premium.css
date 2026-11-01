@@ -1252,3 +1252,54 @@ html.ps-unified.ps-letter-premium[data-letter-game="trace"] :is(.pl-settings sum
 :root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="trace"] :is(.pl-heading h1,.pl-heading p,.pl-eyebrow,.pl-trace-topline__hint,#pl-trace-help,.pl-settings summary){
  color:#101820!important;
 }
+
+
+/* Find the Letter v8 — keep answer and next action together on small screens. */
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choices[data-choice-count="4"]{
+ grid-template-columns:repeat(4,minmax(0,1fr));
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] #pl-next.is-ready{
+ background:#116B60!important;
+ border-color:#116B60!important;
+ box-shadow:0 0 0 3px #BCE8D5,0 5px 0 rgba(22,94,105,.22);
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-footer{
+ gap:12px;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choice:disabled{
+ cursor:default;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-feedback[data-state="try"]{
+ border-style:solid;
+}
+html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-task-label{
+ scroll-margin-top:118px;
+}
+:root.ps-unified.ps-letter-premium[data-theme="dark"][data-letter-game="find"] #pl-next.is-ready{
+ box-shadow:0 0 0 3px #7CBDA7,0 5px 0 rgba(0,0,0,.2);
+}
+:root.ps-unified.ps-letter-premium[data-contrast="high"][data-letter-game="find"] #pl-next.is-ready{
+ background:#085562!important;border-color:#085562!important;color:#FFFFFF!important;
+}
+@media(max-width:899px){
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choices[data-choice-count="4"]{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+}
+@media(max-width:640px){
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-footer{
+  margin:13px auto 0;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] #pl-next{
+  width:100%;min-height:60px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-find-progress{
+  margin-top:14px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-feedback{
+  margin-top:14px;
+ }
+ html.ps-unified.ps-letter-premium[data-letter-game="find"] .pl-choices[data-choice-count="4"] .pl-choice{
+  min-height:98px;
+ }
+}
