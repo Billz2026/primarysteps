@@ -1,542 +1,97 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="ps-unified ps-shapes-page" data-section="games" data-page="game-shapesort.html">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#F3FAF8">
+<meta name="description" content="Shape Sort on Primary Steps. Match circles, squares and triangles with a calm, easy-to-use learning game.">
 <title>Shape Sort • Primary Steps</title>
-<style>
-:root{
-    --bg0:#0b0d12; --bg1:#0f1320;
-    --panel:#121621; --panel2:#0d1c36;
-    --text:#eef2ff; --muted:rgba(238,242,255,.72);
-    --line:rgba(255,255,255,.12);
-    --accent:#7dd3fc; --accent2:#a78bfa; --good:#34d399; --bad:#fb7185;
-    --ring:rgba(125,211,252,.30);
-    --shadow:0 18px 40px rgba(0,0,0,.35);
-    --r:18px;
-    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; color:var(--text);
-    background:
-      radial-gradient(1200px 700px at 20% 10%, rgba(125,211,252,.18), transparent 55%),
-      radial-gradient(900px 600px at 80% 0%, rgba(167,139,250,.16), transparent 55%),
-      linear-gradient(180deg, var(--bg0), var(--bg1));
-    min-height:100vh;
-  }
-
-  header{
-    position:sticky; top:0; z-index:10;
-    backdrop-filter: blur(10px);
-    background: rgba(18,22,33,.72);
-    border-bottom:1px solid var(--line);
-  }
-  .wrap{max-width:1100px;margin:0 auto;padding:14px 16px;}
-  .top{display:flex; align-items:center; justify-content:space-between; gap:12px;}
-  .brand{display:flex; align-items:center; gap:10px; min-width:0; text-decoration:none; color:var(--text);}
-  .brand img{height:52px;width:auto;display:block; filter: drop-shadow(0 16px 30px rgba(125,211,252,.10));}
-  .brand .title{font-weight:850; letter-spacing:.2px; font-size:14px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;}
-  .brand .sub{display:block; font-size:12px; color:var(--muted); margin-top:2px}
-  nav{display:flex; gap:10px; flex-wrap:wrap; justify-content:flex-end;}
-  nav a{
-    color:var(--text); text-decoration:none; font-weight:700; font-size:13px;
-    padding:8px 10px; border-radius:12px;
-    border:1px solid transparent;
-    opacity:.92;
-  }
-  nav a:hover{border-color:var(--line); background:rgba(255,255,255,.04); opacity:1;}
-  nav a.active{border-color:rgba(125,211,252,.35); background:rgba(125,211,252,.10); opacity:1;}
-
-  .hero{padding:22px 16px 10px;}
-  .hwrap{max-width:1100px;margin:0 auto;}
-  h1{margin:0 0 6px; font-size:32px; letter-spacing:-.4px;}
-  p.lead{margin:0; color:var(--muted); max-width:85ch; font-size:14px; line-height:1.45;}
-
-  .grid{
-    max-width:1100px; margin:14px auto 28px; padding:0 16px;
-    display:grid; grid-template-columns: 1.15fr .85fr; gap:14px;
-  }
-  @media (max-width: 980px){ .grid{grid-template-columns:1fr; } nav{justify-content:flex-start;} }
-
-  .card{
-    background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-    border:1px solid var(--line);
-    border-radius:var(--r);
-    box-shadow: var(--shadow);
-    overflow:hidden;
-  }
-  .card .head{
-    padding:14px 14px 10px;
-    border-bottom:1px solid var(--line);
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-  }
-  .pill{
-    font-size:12px; font-weight:850;
-    padding:6px 10px; border-radius:999px;
-    background: rgba(125,211,252,.14);
-    border:1px solid rgba(125,211,252,.25);
-    color: var(--text);
-    white-space:nowrap;
-  }
-  .body{padding:14px;}
-  .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center;}
-  .btn{
-    appearance:none; border:1px solid var(--line);
-    background: rgba(255,255,255,.05);
-    color:var(--text); font-weight:850;
-    padding:10px 12px; border-radius:14px;
-    cursor:pointer;
-    text-decoration:none;
-    display:inline-flex; align-items:center; gap:8px;
-  }
-  .btn:hover{background: rgba(255,255,255,.08);}
-  .btn.primary{
-    border-color: rgba(125,211,252,.35);
-    background: linear-gradient(180deg, rgba(125,211,252,.18), rgba(125,211,252,.07));
-  }
-  .btn.good{
-    border-color: rgba(52,211,153,.35);
-    background: linear-gradient(180deg, rgba(52,211,153,.18), rgba(52,211,153,.06));
-  }
-  .btn.danger{
-    border-color: rgba(251,113,133,.35);
-    background: linear-gradient(180deg, rgba(251,113,133,.18), rgba(251,113,133,.06));
-  }
-
-  .field{display:flex; flex-direction:column; gap:6px; min-width:240px;}
-  label{font-size:12px; color:var(--muted); font-weight:800; letter-spacing:.02em;}
-  select{
-    width:100%;
-    appearance:none;
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.05);
-    color:var(--text);
-    padding:10px 12px;
-    border-radius:14px;
-    font-weight:800;
-    cursor:pointer;
-    outline:none;
-  }
-  select:focus{box-shadow: 0 0 0 6px var(--ring);}
-
-  .stat{
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-    padding:10px 12px; border-radius:14px;
-    border:1px dashed rgba(238,242,255,.22);
-    color: var(--muted);
-  }
-  .small{font-size:12px;color:var(--muted);}
-  .msg{
-    padding:10px 12px; border-radius:14px;
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.04);
-    color: var(--muted);
-    margin-top:10px;
-  }
-  .msg.good{border-color:rgba(52,211,153,.35); background: rgba(52,211,153,.10); color: rgba(238,242,255,.92);}
-  .msg.bad{border-color:rgba(251,113,133,.35); background: rgba(251,113,133,.10); color: rgba(238,242,255,.92);}
-
-  /* Game stage */
-  .stage{
-    border:1px solid var(--line);
-    border-radius:16px;
-    padding:12px;
-    background:
-      radial-gradient(900px 500px at 10% 0%, rgba(125,211,252,.10), transparent 60%),
-      linear-gradient(180deg, rgba(13,28,54,.65), rgba(13,28,54,.35));
-  }
-
-  /* Game cards selector */
-  .selectorGrid{
-    display:grid; grid-template-columns:1fr; gap:10px;
-  }
-  .gameCard{
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.04);
-    border-radius:16px;
-    padding:12px;
-    display:flex; align-items:flex-start; justify-content:space-between; gap:10px;
-  }
-  .gameCard strong{display:block; font-size:14px; font-weight:950;}
-  .gameCard .desc{font-size:12px; color:var(--muted); line-height:1.35; margin-top:4px;}
-  .gameCard .tag{
-    font-size:12px; font-weight:950;
-    padding:6px 10px; border-radius:999px;
-    border:1px solid rgba(255,255,255,.14);
-    color: var(--muted);
-    background: rgba(0,0,0,.10);
-    white-space:nowrap;
-  }
-  .gameCard.active{
-    border-color: rgba(125,211,252,.40);
-    background: rgba(125,211,252,.08);
-  }
-
-  /* Connect 4 */
-  .c4Wrap{display:grid; gap:12px; justify-items:center;}
-  .c4Board{
-    width:min(420px, 100%);
-    aspect-ratio: 7 / 6;
-    display:grid;
-    grid-template-columns: repeat(7, 1fr);
-    grid-template-rows: repeat(6, 1fr);
-    gap:10px;
-    padding:12px;
-    border-radius:18px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(0,0,0,.16);
-  }
-  .c4Cell{
-    border-radius:999px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.06);
-    display:flex; align-items:center; justify-content:center;
-    cursor:pointer;
-    position:relative;
-  }
-  .c4Disc{
-    width:100%; height:100%;
-    border-radius:999px;
-    transform: scale(.82);
-    background: rgba(255,255,255,.06);
-    box-shadow: inset 0 10px 20px rgba(0,0,0,.28);
-  }
-  .c4Disc.r{ background: rgba(251,113,133,.70); }
-  .c4Disc.y{ background: rgba(253,224,71,.65); }
-  .c4Top{
-    width:min(420px, 100%);
-    display:grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap:10px;
-  }
-  .c4Top button{
-    height:42px;
-    border-radius:14px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.04);
-    color:var(--text);
-    font-weight:950;
-    cursor:pointer;
-  }
-  .c4Top button:hover{background: rgba(255,255,255,.07);}
-  .seg{
-    display:flex; gap:8px; flex-wrap:wrap;
-    padding:6px; border:1px solid var(--line);
-    border-radius:16px; background:rgba(255,255,255,.03);
-  }
-  .seg button{border-radius:12px; padding:9px 12px;}
-  .seg button.on{border-color:rgba(125,211,252,.45); background:rgba(125,211,252,.12);}
-
-  /* Shape Sort */
-  .shapeWrap{display:grid; gap:12px;}
-  .bins{
-    display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:10px;
-  }
-  @media (max-width: 560px){ .bins{grid-template-columns:1fr;} .brand .title{display:none;} }
-
-  .bin{
-    border:1px dashed rgba(238,242,255,.22);
-    border-radius:16px;
-    padding:12px;
-    min-height:120px;
-    display:flex; flex-direction:column; gap:10px;
-    background: rgba(0,0,0,.10);
-  }
-  .binTitle{display:flex; align-items:center; justify-content:space-between; gap:10px;}
-  .binTitle strong{font-size:13px; font-weight:950;}
-  .binTitle .mini{font-size:12px; color:var(--muted); font-weight:900;}
-  .dropArea{
-    flex:1;
-    border:1px solid rgba(255,255,255,.10);
-    border-radius:14px;
-    display:flex; align-items:center; justify-content:center;
-    background: rgba(255,255,255,.04);
-  }
-  .tray{
-    border:1px solid rgba(255,255,255,.12);
-    border-radius:16px;
-    padding:12px;
-    background: rgba(0,0,0,.10);
-  }
-  .shapes{
-    display:flex; gap:10px; flex-wrap:wrap;
-  }
-  .shape{
-    width:56px; height:56px;
-    border-radius:16px;
-    border:1px solid rgba(255,255,255,.14);
-    background: rgba(255,255,255,.06);
-    display:flex; align-items:center; justify-content:center;
-    cursor:grab;
-    user-select:none;
-    touch-action:none;
-  }
-  .shape:active{cursor:grabbing;}
-  .shape svg{width:34px; height:34px; display:block;}
-  .bin.over{outline: 2px solid rgba(125,211,252,.45); outline-offset: 2px;}
-
-  /* Coin game answer buttons (shared) */
-  .choices{display:grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap:10px;}
-  @media (max-width: 560px){ .choices{grid-template-columns:1fr;} }
-  .choice{
-    border:1px solid var(--line);
-    background: rgba(255,255,255,.05);
-    border-radius:16px;
-    padding:12px;
-    cursor:pointer;
-    user-select:none;
-    text-align:left;
-    display:flex; align-items:center; justify-content:space-between; gap:10px;
-    font-weight:950;
-    color:var(--text);
-  }
-  .choice:hover{background: rgba(255,255,255,.08);}
-  .choice .tag{
-    font-size:12px; font-weight:950;
-    padding:6px 10px; border-radius:999px;
-    border:1px solid rgba(255,255,255,.14);
-    color: var(--muted);
-    background: rgba(0,0,0,.10);
-    white-space:nowrap;
-  }
-</style>
 <script src="assets/js/ps-settings.js?v=2"></script>
-<script>document.documentElement.classList.add("ps-unified");</script>
-<link rel="stylesheet" href="assets/css/primary-steps.css?v=7">
-<script src="assets/js/primary-steps.js?v=7" defer></script>
-
-
+<link rel="stylesheet" href="assets/css/primary-steps.css?v=10">
+<link rel="stylesheet" href="assets/css/shape-sort.css?v=1">
+<script src="assets/js/primary-steps.js?v=9" defer></script>
+<script src="assets/js/shape-sort.js?v=1" defer></script>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
-<script>document.documentElement.classList.add("ps-v4");document.documentElement.dataset.section="games";document.documentElement.dataset.page="game-shapesort.html";</script>
-<link rel="stylesheet" href="assets/css/remaining-uniform.css?v=1">
-<style>
-/* Children see the sorting activity first; parents keep difficulty choices in full mode. */
-:root[data-simple-play="on"] #soundBtn,
-:root[data-simple-play="on"] #resetBtn,
-:root[data-simple-play="on"] .grid.two > .card:nth-child(2){display:none!important}
-:root[data-simple-play="on"] .grid.two{grid-template-columns:minmax(0,1fr)!important;max-width:1020px;margin-left:auto;margin-right:auto}
-:root[data-simple-play="on"] #newBtn{min-height:55px;font-size:17px!important}
-</style>
 </head>
 <body>
-<header>
-  <div class="wrap">
-    <div class="top">
-      <a class="brand" href="index.html" aria-label="Primary Steps home">
-        <img src="assets/primary-steps-mark.svg" alt="Primary Steps logo" onerror="this.style.display='none'">
-        <div>
-          <div class="title">Primary Steps</div>
-          <span class="sub">Simple, calm learning activities</span>
-        </div>
-      </a>
-      <nav aria-label="Primary">
-        <a href="index.html">Home</a>
-        <a href="letters.html">Letters</a>
-        <a href="numbers.html">Numbers</a>
-        <a href="phonics.html">Phonics</a>
-        <a href="maths.html">Maths</a>
-        <a href="memory.html">Memory</a>
-        <a href="games.html" class="active">Games</a>
-        <a href="puzzles.html">Puzzles</a>
-        <a href="handwriting.html">Handwriting</a>
-        <a href="clock.html">Clock</a>
-        <a href="progress.html">Progress</a>
-        <a href="settings.html">Settings</a>
-      </nav>
+<main class="ps-shape-main">
+  <section class="ps-shape-hero" aria-labelledby="ps-shape-title">
+    <div class="ps-shape-hero__text">
+      <span class="ps-shape-eyebrow">LET'S PLAY &amp; LEARN</span>
+      <h1 id="ps-shape-title">Shape Sort</h1>
+      <p>Every shape has a home. Can you find it?</p>
+      <div class="ps-shape-hero__actions">
+        <button type="button" class="ps-spoken-help ps-shape-hear" id="ps-shape-hear" aria-label="Hear how to play Shape Sort"><span aria-hidden="true">🔊</span> Hear how to play</button>
+        <a class="ps-shape-all-games" href="games.html">All games <span aria-hidden="true">›</span></a>
+      </div>
+      <span class="ps-shape-voice-status" id="ps-shape-voice-status" role="status"></span>
     </div>
-  </div>
-</header>
+    <div class="ps-shape-hero__art" aria-hidden="true">
+      <svg viewBox="0 0 230 165" focusable="false">
+        <circle cx="57" cy="75" r="37" fill="#69C6C9" stroke="#4199A2" stroke-width="5"/>
+        <rect x="103" y="34" width="74" height="74" rx="15" fill="#BAA8EA" stroke="#9481CE" stroke-width="5" transform="rotate(8 140 71)"/>
+        <path d="M158 145 L192 85 L226 145 Z" fill="#F5C66D" stroke="#D8A450" stroke-width="5" stroke-linejoin="round"/>
+        <path d="M14 139 Q55 155 94 139" stroke="#91CBBB" stroke-width="7" stroke-linecap="round" fill="none"/>
+        <circle cx="205" cy="29" r="7" fill="#E6A196"/><circle cx="27" cy="22" r="6" fill="#F4C77B"/>
+      </svg>
+    </div>
+  </section>
 
-<section class="hero">
-  <div class="hwrap">
-    <h1>Shape Sort</h1>
-    <p class="lead">Drag shapes into bins. On touch: tap shape, then tap bin.</p>
-  </div>
-</section>
-
-
-<section class="grid two">
-  <div class="card">
-    <div class="head">
-      <div class="pill">Play</div>
-      <div class="row">
-        <button class="btn" id="soundBtn" type="button" aria-pressed="false">Sound: Off</button>
-        <button class="btn primary" id="newBtn" type="button">New</button>
-        <button class="btn" id="resetBtn" type="button">Reset</button>
+  <section class="ps-shape-play" aria-labelledby="ps-shape-game-title">
+    <div class="ps-shape-play__heading">
+      <div>
+        <h2 id="ps-shape-game-title">Let's match the shapes!</h2>
+        <p>Choose a shape, then tap its matching home.</p>
+      </div>
+      <div class="ps-shape-meter" aria-label="Round progress">
+        <span id="ps-shape-count">0 of 6 sorted</span>
+        <div class="ps-shape-meter__track" id="ps-shape-progress" role="progressbar" aria-label="Shapes sorted" aria-valuemin="0" aria-valuemax="6" aria-valuenow="0" aria-valuetext="0 of 6 shapes sorted"><span id="ps-shape-progress-fill"></span></div>
       </div>
     </div>
-    <div class="body">
-      <div class="stage" id="stage"></div>
-      <div class="msg" id="message">Press <strong>New</strong> to start.</div>
-      <div class="row" style="margin-top:10px;">
-        <a class="btn" href="games.html">Back to Games</a>
+
+    <div class="ps-shape-step">
+      <div class="ps-shape-step__heading"><span class="ps-shape-step__number" aria-hidden="true">1</span><h3 id="ps-shape-pick-title">Pick a shape</h3></div>
+      <div class="ps-shape-tray" id="ps-shape-tray" role="group" aria-labelledby="ps-shape-pick-title"></div>
+    </div>
+
+    <div class="ps-shape-step ps-shape-step--homes">
+      <div class="ps-shape-step__heading"><span class="ps-shape-step__number" aria-hidden="true">2</span><h3 id="ps-shape-homes-title">Find its home</h3></div>
+      <div class="ps-shape-homes" role="group" aria-labelledby="ps-shape-homes-title">
+        <button class="ps-shape-home ps-shape-home--circle" type="button" data-home="circle" aria-label="Circle home">
+          <svg viewBox="0 0 100 86" aria-hidden="true" focusable="false"><circle cx="50" cy="43" r="30" fill="none" stroke="currentColor" stroke-width="5" stroke-dasharray="9 6"/></svg>
+          <span class="ps-shape-home__name">Circle</span>
+          <span class="ps-shape-home__count" data-count="circle" aria-hidden="true">0</span>
+        </button>
+        <button class="ps-shape-home ps-shape-home--square" type="button" data-home="square" aria-label="Square home">
+          <svg viewBox="0 0 100 86" aria-hidden="true" focusable="false"><rect x="20" y="13" width="60" height="60" rx="8" fill="none" stroke="currentColor" stroke-width="5" stroke-dasharray="9 6"/></svg>
+          <span class="ps-shape-home__name">Square</span>
+          <span class="ps-shape-home__count" data-count="square" aria-hidden="true">0</span>
+        </button>
+        <button class="ps-shape-home ps-shape-home--triangle" type="button" data-home="triangle" aria-label="Triangle home">
+          <svg viewBox="0 0 100 86" aria-hidden="true" focusable="false"><path d="M50 12 L83 72 H17 Z" fill="none" stroke="currentColor" stroke-width="5" stroke-dasharray="9 6" stroke-linejoin="round"/></svg>
+          <span class="ps-shape-home__name">Triangle</span>
+          <span class="ps-shape-home__count" data-count="triangle" aria-hidden="true">0</span>
+        </button>
       </div>
     </div>
-  </div>
 
-  <div class="card">
-    <div class="head">
-      <div class="pill">Difficulty</div>
+    <div class="ps-shape-feedback" id="ps-shape-feedback" role="status" aria-live="polite" aria-atomic="true">Ready! Pick a shape to start.</div>
+    <div class="ps-shape-actions">
+      <button type="button" class="ps-shape-restart" id="ps-shape-restart">↻ New round</button>
+      <a href="index.html" class="ps-shape-home-link">⌂ Back to home</a>
     </div>
-    <div class="body">
-      <div class="row">
-        <button class="btn" id="easyBtn" type="button">Easy</button>
-        <button class="btn on" id="medBtn" type="button">Medium</button>
-        <button class="btn" id="hardBtn" type="button">Hard</button>
+    <details class="ps-shape-options" id="ps-shape-options">
+      <summary>Choose a level</summary>
+      <div class="ps-shape-levels" role="group" aria-label="Difficulty level">
+        <button type="button" data-level="easy" aria-pressed="true">Easy · 6</button>
+        <button type="button" data-level="medium" aria-pressed="false">Medium · 9</button>
+        <button type="button" data-level="hard" aria-pressed="false">Hard · 12</button>
       </div>
-      <div class="msg">On touch: tap a shape, then tap the correct bin.</div>
-    </div>
-  </div>
-</section>
-
-
-
-<script>
-(() => {
-  const $ = (id)=>document.getElementById(id);
-  const ui = { stage:$('stage'), msg:$('message'), newBtn:$('newBtn'), resetBtn:$('resetBtn'),
-              soundBtn:$('soundBtn'), easyBtn:$('easyBtn'), medBtn:$('medBtn'), hardBtn:$('hardBtn') };
-
-  let soundOn=false, audioCtx=null;
-  function beep(freq=700, ms=70, gain=0.03){
-    if(!soundOn || window.PSSettings?.load?.().soundEnabled===false) return;
-    if(!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const o=audioCtx.createOscillator(), g=audioCtx.createGain();
-    o.frequency.value=freq; g.gain.value=gain;
-    o.connect(g); g.connect(audioCtx.destination);
-    o.start(); setTimeout(()=>o.stop(), ms);
-  }
-  function setMsg(type, html){
-    ui.msg.className = 'msg' + (type ? ' ' + type : '');
-    ui.msg.innerHTML = html;
-  }
-  function randInt(a,b){ return Math.floor(Math.random()*(b-a+1))+a; }
-  function cap(s){ return s[0].toUpperCase()+s.slice(1); }
-
-  function shapeIcon(type){
-    if(type==='circle') return `<svg viewBox="0 0 48 48" aria-hidden="true"><circle cx="24" cy="24" r="16" fill="rgba(125,211,252,.65)" stroke="rgba(255,255,255,.35)" stroke-width="2"/></svg>`;
-    if(type==='square') return `<svg viewBox="0 0 48 48" aria-hidden="true"><rect x="10" y="10" width="28" height="28" rx="6" fill="rgba(167,139,250,.60)" stroke="rgba(255,255,255,.35)" stroke-width="2"/></svg>`;
-    return `<svg viewBox="0 0 48 48" aria-hidden="true"><path d="M24 10 L38 36 H10 Z" fill="rgba(52,211,153,.60)" stroke="rgba(255,255,255,.35)" stroke-width="2" /></svg>`;
-  }
-  function binIcon(type){
-    if(type==='circle') return `<svg viewBox="0 0 48 48" aria-hidden="true" style="opacity:.6"><circle cx="24" cy="24" r="16" fill="none" stroke="rgba(238,242,255,.35)" stroke-width="2"/></svg>`;
-    if(type==='square') return `<svg viewBox="0 0 48 48" aria-hidden="true" style="opacity:.6"><rect x="10" y="10" width="28" height="28" rx="6" fill="none" stroke="rgba(238,242,255,.35)" stroke-width="2"/></svg>`;
-    return `<svg viewBox="0 0 48 48" aria-hidden="true" style="opacity:.6"><path d="M24 10 L38 36 H10 Z" fill="none" stroke="rgba(238,242,255,.35)" stroke-width="2" /></svg>`;
-  }
-
-  let difficulty='medium';
-  let shapes=[], total=0, placed=0, picked=null;
-
-  function buildRound(){
-    const counts = {easy:6, medium:10, hard:14};
-    total = counts[difficulty] || 10;
-    placed = 0;
-    picked = null;
-    const types = ['circle','square','triangle'];
-    shapes = Array.from({length:total}, (_,i)=>({
-      id: 's' + Math.random().toString(16).slice(2) + i,
-      type: types[randInt(0, types.length-1)]
-    }));
-  }
-
-  function render(){
-    ui.stage.innerHTML = `
-      <div class="bins">
-        ${['circle','square','triangle'].map(t=>`
-          <div class="bin" data-bin="${t}">
-            <div class="binTitle">
-              <strong>${cap(t)}</strong>
-              <span class="mini">Drop here</span>
-            </div>
-            <div class="dropArea" aria-label="${t} bin">${binIcon(t)}</div>
-          </div>
-        `).join('')}
-      </div>
-
-      <div class="tray" style="margin-top:12px;">
-        <div class="row" style="justify-content:space-between;">
-          <strong style="font-size:14px;font-weight:950;">Shape Tray</strong>
-          <span class="pill" id="countPill">${placed} / ${total}</span>
-        </div>
-        <div class="shapes" id="shapeTray" style="margin-top:10px;"></div>
-      </div>
-    `;
-
-    const tray = ui.stage.querySelector('#shapeTray');
-    tray.innerHTML = '';
-    shapes.forEach(s=>{
-      const el = document.createElement('div');
-      el.className = 'shape';
-      el.draggable = true;
-      el.dataset.id = s.id;
-      el.dataset.type = s.type;
-      el.innerHTML = shapeIcon(s.type);
-      el.addEventListener('dragstart', (e)=>{ e.dataTransfer.setData('text/plain', s.id); beep(520,40,0.02); });
-      el.addEventListener('click', ()=>{ picked = s.id; setMsg('', `Picked <strong>${cap(s.type)}</strong>. Tap the matching bin.`); beep(640,40,0.02); });
-      tray.appendChild(el);
-    });
-
-    ui.stage.querySelectorAll('.bin').forEach(bin=>{
-      const type = bin.dataset.bin;
-      bin.addEventListener('dragover', (e)=>{ e.preventDefault(); bin.classList.add('over'); });
-      bin.addEventListener('dragleave', ()=> bin.classList.remove('over'));
-      bin.addEventListener('drop', (e)=>{
-        e.preventDefault(); bin.classList.remove('over');
-        const id = e.dataTransfer.getData('text/plain');
-        place(id, type);
-      });
-      bin.addEventListener('click', ()=>{ if(picked){ place(picked, type); picked=null; } });
-    });
-  }
-
-  function place(id, binType){
-    const idx = shapes.findIndex(x=>x.id===id);
-    if(idx === -1) return;
-    const s = shapes[idx];
-    if(s.type !== binType){
-      setMsg('bad', `Not quite — that shape goes in <strong>${cap(s.type)}</strong>.`);
-      beep(220,120,0.05);
-      return;
-    }
-    shapes.splice(idx,1);
-    placed++;
-    setMsg('good', `✅ Nice!`);
-    beep(880,80,0.04);
-    if(shapes.length===0){
-      setMsg('good', `🎉 All sorted! Press <strong>New</strong> for another.`);
-    }
-    render();
-  }
-
-  function setDifficulty(d){
-    difficulty=d;
-    ui.easyBtn.classList.toggle('on', d==='easy');
-    ui.medBtn.classList.toggle('on', d==='medium');
-    ui.hardBtn.classList.toggle('on', d==='hard');
-    buildRound();
-    render();
-    setMsg('', window.PSSettings?.load?.().simplePlay ? 'Tap a shape, then tap the matching box.' : `Difficulty: <strong>${d}</strong>.`);
-    beep(720,60,0.02);
-  }
-
-  ui.newBtn.addEventListener('click', ()=>{ buildRound(); render(); setMsg('', 'Go!'); beep(820,60,0.03); });
-  ui.resetBtn.addEventListener('click', ()=>{ buildRound(); render(); setMsg('', 'Reset done.'); beep(520,60,0.02); });
-  ui.soundBtn.addEventListener('click', ()=>{
-    soundOn=!soundOn;
-    ui.soundBtn.setAttribute('aria-pressed', String(soundOn));
-    ui.soundBtn.textContent = 'Sound: ' + (soundOn ? 'On' : 'Off');
-    beep(880,60,0.03);
-  });
-  ui.easyBtn.addEventListener('click', ()=> setDifficulty('easy'));
-  ui.medBtn.addEventListener('click', ()=> setDifficulty('medium'));
-  ui.hardBtn.addEventListener('click', ()=> setDifficulty('hard'));
-
-  setDifficulty(window.PSSettings?.load?.().simplePlay ? 'easy' : 'medium');
-})();
-</script>
-
+      <p>Choosing a level starts a new round.</p>
+    </details>
+  </section>
+  <noscript><p>Shape Sort needs JavaScript enabled to play.</p></noscript>
+</main>
 </body>
 </html>
