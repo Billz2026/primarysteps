@@ -18,6 +18,7 @@
  const funToggle=document.getElementById("ds-fun-toggle");
  const extraTools=document.getElementById("ds-extra-tools");
  const extraToolsLabel=document.getElementById("ds-extra-tools-label");
+ const activeToolLabel=document.getElementById("ds-active-tool");
  const funMenu=document.getElementById("ds-fun-menu");
  const funLabel=document.getElementById("ds-fun-label");
  const funIcon=document.getElementById("ds-fun-icon");
@@ -72,6 +73,7 @@
  const toolButtons={pencil:pencilBtn,brush:brushBtn,marker:markerBtn,crayon:crayonBtn,spray:sprayBtn,fill:fillBtn,
   rainbow:rainbowBtn,glitter:glitterBtn,stamp:stampBtn,eraser:eraserBtn};
  const funNames=["rainbow","glitter","stamp"];
+ const toolIcons={brush:"🖌️",pencil:"✏️",eraser:"◻️",marker:"🖍️",crayon:"🌈",spray:"💨",fill:"🪣",rainbow:"🌈",glitter:"✨",stamp:"⭐"};
  const stampChoices=[...stampControls.querySelectorAll("[data-stamp]")];
  const toolSizes={pencil:5,brush:16,marker:28,crayon:24,spray:48,rainbow:42,glitter:42,stamp:65};
  let currentTool="brush",colour="#62A8E2",eraserSize=200,currentStamp="star",pointerId=null,active=null;
@@ -88,7 +90,9 @@
   redoBtn.disabled=redoStack.length===0;
   const funSelected=funNames.includes(currentTool);
   const advancedSelected=!["pencil","brush","eraser"].includes(currentTool);
-  extraToolsLabel.textContent=advancedSelected?tools[currentTool].name+" · More tools":"More tools";
+  extraToolsLabel.textContent="More";
+  activeToolLabel.textContent=toolIcons[currentTool]+" "+tools[currentTool].name+" selected";
+  extraTools.classList.toggle("ds-extra-tools--selected",advancedSelected);
   funToggle.setAttribute("aria-pressed",String(funSelected));
   funToggle.classList.toggle("ds-button--active",funSelected);
   funIcon.textContent=currentTool==="rainbow"?"🌈":currentTool==="glitter"?"✨":currentTool==="stamp"?"⭐":"✨";
@@ -330,6 +334,7 @@
  funToggle.addEventListener("click",()=>toggleFun(funMenu.hidden));
  document.addEventListener("pointerdown",(ev)=>{
   if(!funMenu.hidden&&!funToggle.contains(ev.target)&&!funMenu.contains(ev.target))toggleFun(false);
+  if(extraTools.open&&!extraTools.contains(ev.target))extraTools.open=false;
  });
  extraTools.addEventListener("toggle",()=>{
   if(!extraTools.open)toggleFun(false);
@@ -428,6 +433,7 @@
   if(ev.key==="Escape"){
    if(root.classList.contains("ds-immersive")){toggleImmersive(false);expandBtn.focus();return}
    if(!funMenu.hidden){toggleFun(false);funToggle.focus();return}
+   if(extraTools.open){extraTools.open=false;extraTools.querySelector("summary")?.focus();return}
   }
   const tag=document.activeElement?.tagName;
   if(["INPUT","TEXTAREA","SELECT"].includes(tag)||document.activeElement?.isContentEditable)return;
