@@ -8,7 +8,7 @@
 <title>Primary Steps | Learn Through Play</title>
 
 <script src="assets/js/ps-settings.js?v=3"></script>
-<link rel="stylesheet" href="assets/css/primary-steps.css?v=7">
+<link rel="stylesheet" href="assets/css/primary-steps.css?v=10">
 <script src="assets/js/primary-steps.js?v=7" defer></script>
 <link rel="icon" type="image/x-icon" sizes="16x16 32x32" href="favicon.ico?v=20261023">
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
@@ -57,28 +57,62 @@
 </section>
 <section id="activities" aria-labelledby="activities-heading">
 <div class="ps-section-head">
-<div><h2 id="activities-heading">Pick a picture to play</h2><p class="ps-section-head__hint">Choose what you'd like to learn.</p></div>
+<div><h2 id="activities-heading">Pick a picture to play</h2><p class="ps-section-head__hint">Tap a picture to start playing.</p></div>
 <a id="ps-continue" class="ps-continue" href="index.html#activities" hidden aria-label="Continue your last learning activity"><span class="ps-continue__icon" aria-hidden="true">▶</span><span><strong id="ps-continue-title">Continue learning</strong></span></a>
 </div>
 <div class="ps-home-grid ps-home-grid--featured" id="ps-favourites">
-<a data-activity="letters" class="ps-tile ps-tile--teal" href="letters.html" aria-label="Open Letters"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-letters"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">Letters</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
-<a data-activity="numbers" class="ps-tile ps-tile--blue" href="numbers.html" aria-label="Open Numbers"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-numbers"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">Numbers</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
-<a data-activity="drawing" class="ps-tile ps-tile--peach" href="drawing.html" aria-label="Open Drawing"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-drawing"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">Drawing</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
-<a data-activity="games" class="ps-tile ps-tile--yellow" href="games.html" aria-label="Open Games"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-games"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">Games</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
+<div class="ps-home-card" data-activity="letters">
+<a class="ps-tile ps-tile--teal" href="letters-find.html" aria-label="Play Find the Letter"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-letters"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">Letters</span><span class="ps-tile__starter">Find letters</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+<a class="ps-home-card__more" href="letters.html" aria-label="Explore Letters activities">More Letters <span aria-hidden="true">›</span></a>
+</div>
+<div class="ps-home-card" data-activity="numbers">
+<a class="ps-tile ps-tile--blue" href="numbers-count.html" aria-label="Play Count Numbers"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-numbers"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">Numbers</span><span class="ps-tile__starter">Count dots</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+<a class="ps-home-card__more" href="numbers.html" aria-label="Explore Numbers activities">More Numbers <span aria-hidden="true">›</span></a>
+</div>
+<div class="ps-home-card" data-activity="drawing">
+<a class="ps-tile ps-tile--peach" href="drawing-studio.html" aria-label="Start Free Drawing"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-drawing"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">Drawing</span><span class="ps-tile__starter">Draw freely</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+<a class="ps-home-card__more" href="drawing.html" aria-label="Explore Drawing activities">More Drawing <span aria-hidden="true">›</span></a>
+</div>
+<div class="ps-home-card" data-activity="games">
+<a class="ps-tile ps-tile--yellow" href="game-shapesort.html" aria-label="Play Shape Sort"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-games"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">Games</span><span class="ps-tile__starter">Sort shapes</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+<a class="ps-home-card__more" href="games.html" aria-label="Explore Games activities">More Games <span aria-hidden="true">›</span></a>
+</div>
 </div>
 </section>
 <button id="ps-more-toggle" type="button" class="ps-more-btn ps-all-activities-btn" aria-expanded="false" aria-controls="ps-more"><span aria-hidden="true">🧩</span> <span class="ps-more-btn__label">See all 12 activities</span> <span class="ps-more-btn__chevron" aria-hidden="true">↓</span></button>
 <section id="ps-more" class="ps-more-section" aria-labelledby="ps-more-heading" hidden>
 <div class="ps-more-header"><h2 id="ps-more-heading">More to explore</h2><p>Tap any picture to start.</p></div>
 <div class="ps-home-grid ps-home-grid--extra" id="ps-extra-activities">
-<a data-activity="phonics" class="ps-tile ps-tile--lavender" href="phonics.html" aria-label="Open Phonics"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-phonics"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">Phonics</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
-<a data-activity="maths" class="ps-tile ps-tile--mint" href="maths.html" aria-label="Open Maths"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-maths"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">Maths</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
-<a data-activity="spelling" class="ps-tile ps-tile--lavender" href="spelling.html" aria-label="Open Spelling"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-spelling"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">Spelling</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
-<a data-activity="handwriting" class="ps-tile ps-tile--teal" href="handwriting.html" aria-label="Open Writing"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-handwriting"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">Writing</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
-<a data-activity="memory" class="ps-tile ps-tile--blue" href="memory.html" aria-label="Open Memory"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-memory"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">Memory</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
-<a data-activity="puzzles" class="ps-tile ps-tile--mint" href="puzzles.html" aria-label="Open Puzzles"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-puzzles"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">Puzzles</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
-<a data-activity="clock" class="ps-tile ps-tile--yellow" href="clock.html" aria-label="Open Clock"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-clock"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">Clock</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
-<a data-activity="progress" class="ps-tile ps-tile--peach" href="progress.html" aria-label="Open My Stars"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-progress"></use></svg><span class="ps-tile__footer"><span class="ps-tile__label">My Stars</span><span class="ps-tile__go" aria-hidden="true">→</span></span></a>
+<div class="ps-home-card" data-activity="phonics">
+<a class="ps-tile ps-tile--lavender" href="phonics-play.html?activity=soundmatch" aria-label="Play Match Sounds"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-phonics"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">Phonics</span><span class="ps-tile__starter">Match sounds</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+<a class="ps-home-card__more" href="phonics.html" aria-label="Explore Phonics activities">More Phonics <span aria-hidden="true">›</span></a>
+</div>
+<div class="ps-home-card" data-activity="maths">
+<a class="ps-tile ps-tile--mint" href="maths-play.html?activity=quickadd" aria-label="Play Add Numbers"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-maths"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">Maths</span><span class="ps-tile__starter">Add numbers</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+<a class="ps-home-card__more" href="maths.html" aria-label="Explore Maths activities">More Maths <span aria-hidden="true">›</span></a>
+</div>
+<div class="ps-home-card" data-activity="spelling">
+<a class="ps-tile ps-tile--lavender" href="spelling-play.html" aria-label="Play Spell Words"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-spelling"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">Spelling</span><span class="ps-tile__starter">Spell words</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+<a class="ps-home-card__more" href="spelling.html" aria-label="Explore Spelling activities">More Spelling <span aria-hidden="true">›</span></a>
+</div>
+<div class="ps-home-card ps-home-card--single" data-activity="handwriting">
+<a class="ps-tile ps-tile--teal" href="handwriting.html" aria-label="Practise Writing"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-handwriting"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">Writing</span><span class="ps-tile__starter">Trace words</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+</div>
+<div class="ps-home-card" data-activity="memory">
+<a class="ps-tile ps-tile--blue" href="memory-play.html?activity=pairs" aria-label="Play Match Pairs"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-memory"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">Memory</span><span class="ps-tile__starter">Match pairs</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+<a class="ps-home-card__more" href="memory.html" aria-label="Explore Memory activities">More Memory <span aria-hidden="true">›</span></a>
+</div>
+<div class="ps-home-card" data-activity="puzzles">
+<a class="ps-tile ps-tile--mint" href="puzzles-play.html?puzzle=jigsaw" aria-label="Play Jigsaw"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-puzzles"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">Puzzles</span><span class="ps-tile__starter">Build a puzzle</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+<a class="ps-home-card__more" href="puzzles.html" aria-label="Explore Puzzles activities">More Puzzles <span aria-hidden="true">›</span></a>
+</div>
+<div class="ps-home-card" data-activity="clock">
+<a class="ps-tile ps-tile--yellow" href="clock-play.html?activity=read" aria-label="Play Read the Clock"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-clock"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">Clock</span><span class="ps-tile__starter">Read the clock</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+<a class="ps-home-card__more" href="clock.html" aria-label="Explore Clock activities">More Clock <span aria-hidden="true">›</span></a>
+</div>
+<div class="ps-home-card ps-home-card--single" data-activity="progress">
+<a class="ps-tile ps-tile--peach" href="progress.html" aria-label="Open My Stars"><svg class="ps-tile__picture" viewBox="0 0 280 210" aria-hidden="true" focusable="false"><use href="#ps-art-progress"></use></svg><span class="ps-tile__footer"><span class="ps-tile__copy"><span class="ps-tile__label">My Stars</span><span class="ps-tile__starter">See your stars</span></span><span class="ps-tile__go" aria-hidden="true">▶</span></span></a>
+</div>
 </div>
 </section>
 <footer class="ps-home-footer"><a href="settings.html">Parent settings</a></footer>
