@@ -122,7 +122,11 @@
       button.setAttribute('aria-pressed', 'false');
       button.setAttribute('aria-label', 'Select ' + shape.type);
       button.innerHTML = icons[shape.type] + '<span>' + displayName[shape.type] + '</span>';
-      button.addEventListener('click', () => chooseShape(shape.id));
+      button.addEventListener('click', (event) => {
+        chooseShape(shape.id);
+        // Keyboard activation jumps to the matching destinations, avoiding extra Tab presses.
+        if (event.detail === 0 && selectedId === shape.id) homes[0].focus();
+      });
       tray.appendChild(button);
     });
     levelButtons.forEach((button) => button.setAttribute('aria-pressed', String(button.dataset.level === level)));
