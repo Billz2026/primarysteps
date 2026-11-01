@@ -635,3 +635,12 @@
  :root.ds-studio .ds-paper-area{grid-area:paper}
  :root.ds-studio .ds-colours-rail{grid-area:colours}
 }
+
+
+/* The persistent activity dock must never cover canvas controls or Start over. */
+:root.ds-studio .ds-main{
+ padding-bottom:calc(110px + env(safe-area-inset-bottom,0px));
+}
+:root.ds-studio.ds-immersive .ds-main{
+ padding-bottom:20px;
+}
