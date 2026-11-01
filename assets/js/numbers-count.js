@@ -11,7 +11,7 @@ const LEVELS=[
 const GOAL=5,KEY="ps_numbers_count_progress_v1",STARS_KEY="ps_progress_stars";
 const byId=x=>document.getElementById(x);
 const visual=byId("np-visual"),answers=byId("np-answers");
-const feedback=byId("np-feedback"),level=byId("np-level");
+const feedback=byId("np-feedback"),announcement=byId("np-announcement"),level=byId("np-level");
 const next=byId("np-next"),hear=byId("np-hear"),hint=byId("np-hint");
 const voice=byId("np-voice-note"),heading=byId("np-count-heading");
 const visualCaption=byId("np-visual-caption");
@@ -70,6 +70,7 @@ function updateProgress(){
 }
 function message(state,text){
  feedback.dataset.state=state;feedback.textContent=text;feedback.hidden=state==="neutral";
+ announcement.textContent=state==="neutral"?"":text;
 }
 function randint(min,max){return min+Math.floor(Math.random()*(max-min+1))}
 function shuffle(items){
@@ -193,12 +194,18 @@ function answersForTarget(){
   const b=document.createElement("button");b.type="button";
   b.className="np-option";b.textContent=String(value);
   b.setAttribute("aria-label","Answer "+value);
-  b.addEventListener("click",()=>{
+  b.addEventListener("click",(event)=>{
    if(solved||b.disabled)return;
    data.tries++;
    if(value===target){
     solved=true;data.correct++;data.streak++;wins=Math.min(GOAL,wins+1);
     b.classList.add("is-correct");
+    const willAdvance=level.value==="auto"&&step<LEVELS.length-1&&!(simple()&&step>=1)&&wins>=GOAL;
+    next.textContent=willAdvance?"Start step "+(step+2)+" →":
+     (wins===GOAL?"More numbers →":"Next question →");
+    next.classList.add("is-ready");
+    // Keyboard activation must not leave focus on a newly disabled answer.
+    if(event.detail===0)next.focus();
     answers.querySelectorAll("button").forEach(button=>button.disabled=true);
     // Verified My Stars rewards are tied to distinct numbers, not repeated answers.
     window.PSProgress?.record("numbersCount",String(target));
@@ -209,6 +216,10 @@ function answersForTarget(){
    }else{
     data.streak=0;mistakes++;
     b.disabled=true;b.classList.add("is-try");
+    if(event.detail===0){
+     const available=Array.from(answers.querySelectorAll("button")).find(button=>!button.disabled);
+     if(available)available.focus();
+    }
     message("try",step<3
      ?"Try again. Tap each dot as you count."
      :"Try again. Each ten block is 10. Count the ones too.");
@@ -229,19 +240,29 @@ function setLevelControls(){
   "Simple Play starts with 1–5 and 6–10. Larger numbers are available when Simple Play is off in Parent Zone.":
   "Automatic play introduces larger numbers gradually. Grown-ups can select a step above.";
 }
-function newRound(){
- if(level.value==="auto"&&wins>=GOAL&&step<LEVELS.length-1&&!(simple()&&step>=1)){
-  step++;wins=0;queue=[];
+function newRound(options){
+ if(wins>=GOAL){
+  // Final stages can repeat in fresh groups instead of remaining permanently at 5/5.
+  if(level.value==="auto"&&step<LEVELS.length-1&&!(simple()&&step>=1))step++;
+  wins=0;queue=[];
  }
  previous=target||previous;
  target=pickTarget();solved=false;mistakes=0;
  voice.textContent="";draw();answersForTarget();updateProgress();
+ next.textContent="Skip this question →";next.classList.remove("is-ready");
  message("neutral","");hint.textContent="💡 Help me count";
  save();
+ // A fresh question comes with a visible, spoken-friendly cue, without revealing the answer.
+ if(options?.fromNext){
+  announcement.textContent="New question. Count the dots, then choose a number.";
+  if(options.keyboard)heading.focus();
+  else if(window.matchMedia?.("(max-width: 899px)").matches)
+   heading.scrollIntoView?.({block:"start",behavior:"auto"});
+ }
 }
-next.addEventListener("click",()=>{
+next.addEventListener("click",(event)=>{
  if(!solved){data.streak=0;syncStats();}
- newRound();
+ newRound({fromNext:true,keyboard:event.detail===0});
 });
 hear.addEventListener("click",()=>{
  const text=step<3?
