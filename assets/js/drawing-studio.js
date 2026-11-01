@@ -1,4 +1,4 @@
-/* Primary Steps — Free Drawing Studio v6. Expanded creative tools and deterministic artwork. */
+/* Primary Steps — Free Drawing Studio v7. Premium canvas-first tools with undo/redo. */
 (() => {
  "use strict";
  const root=document.documentElement;
@@ -8,6 +8,7 @@
  const sizeInput=document.getElementById("ds-size");
  const sizeReadout=document.getElementById("ds-size-value");
  const undoBtn=document.getElementById("ds-undo");
+ const redoBtn=document.getElementById("ds-redo");
  const brushBtn=document.getElementById("ds-brush");
  const pencilBtn=document.getElementById("ds-pencil");
  const markerBtn=document.getElementById("ds-marker");
@@ -53,7 +54,7 @@
  ];
  if(!ctx){if(status)status.textContent="This device cannot open the drawing canvas.";return}
  canvas.width=W;canvas.height=H;
- const actions=[];
+ const actions=[],redoStack=[];
  const tools={
   pencil:{name:"Pencil",help:"Fine, precise lines for sketches"},
   brush:{name:"Paintbrush",help:"Smooth, bright paint strokes"},
@@ -82,6 +83,7 @@
    button.classList.toggle("ds-button--active",selected);
   }
   undoBtn.disabled=actions.length===0;
+  redoBtn.disabled=redoStack.length===0;
   const funSelected=funNames.includes(currentTool);
   funToggle.setAttribute("aria-pressed",String(funSelected));
   funToggle.classList.toggle("ds-button--active",funSelected);
@@ -275,14 +277,14 @@
  function begin(ev){
   if(pointerId!==null||(ev.pointerType==="mouse"&&ev.button!==0))return;
   if(pencilOnly.checked&&ev.pointerType!=="pen"){
-   say("Pencil-only mode is on. Use an Apple Pencil or turn it off in More Tools.");return
+   say("Stylus-only mode is on. Use a supported stylus or turn it off in Drawing settings.");return
   }
   ev.preventDefault();
   const p=point(ev);
   if(currentTool==="fill"){
    const action={type:"fill",x:p.x,y:p.y,colour};
    if(fillArea(action)){
-    actions.push(action);changedSinceLoad=true;updateControls();
+    redoStack.length=0;actions.push(action);changedSinceLoad=true;updateControls();
     say("Area coloured. Tap Undo to change it.");saveSoon();
    }else say("Choose a different colour or tap inside another area.");
    return;
@@ -293,7 +295,7 @@
    size:currentTool==="eraser"?eraserSize:toolSizes[currentTool],
    stamp:currentTool==="stamp"?currentStamp:undefined,
    seed:(Math.random()*4294967296)>>>0,points:[p]};
-  actions.push(active);paintSegment(active,p,p,0);
+  redoStack.length=0;actions.push(active);paintSegment(active,p,p,0);
   changedSinceLoad=true;updateControls();
  }
  function move(ev){
@@ -363,9 +365,14 @@
   else chooseColour(hexInput.value);
  });
  undoBtn.addEventListener("click",()=>{
-  if(!actions.length)return;
-  actions.pop();render();changedSinceLoad=true;
-  say("Last action undone.");saveSoon();
+  if(!actions.length||active)return;
+  redoStack.push(actions.pop());render();changedSinceLoad=true;
+  say("Last action undone. Tap Redo to bring it back.");saveSoon();
+ });
+ redoBtn.addEventListener("click",()=>{
+  if(!redoStack.length||active)return;
+  actions.push(redoStack.pop());render();changedSinceLoad=true;
+  say("Last action restored.");saveSoon();
  });
  sizeInput.addEventListener("input",()=>{
   if(currentTool==="eraser"||currentTool==="fill")return;
@@ -389,7 +396,7 @@
   else if(window.confirm("Clear your drawing? You can undo this afterwards."))clearDrawing();
  });
  function clearDrawing(){
-  actions.push({type:"clear"});render();changedSinceLoad=true;saveSoon();
+  redoStack.length=0;actions.push({type:"clear"});render();changedSinceLoad=true;saveSoon();
   say("Canvas cleared. Use Undo to bring your picture back.");
  }
  confirmCancel.addEventListener("click",()=>confirmDialog.close());
@@ -405,11 +412,18 @@
  }
  expandBtn.addEventListener("click",()=>toggleImmersive());
  document.addEventListener("keydown",ev=>{
-  if(ev.key==="Escape"&&root.classList.contains("ds-immersive")){toggleImmersive(false);return}
-  if(["INPUT","TEXTAREA","SELECT"].includes(document.activeElement?.tagName))return;
+  if(ev.key==="Escape"){
+   if(root.classList.contains("ds-immersive")){toggleImmersive(false);expandBtn.focus();return}
+   if(!funMenu.hidden){toggleFun(false);funToggle.focus();return}
+  }
+  const tag=document.activeElement?.tagName;
+  if(["INPUT","TEXTAREA","SELECT"].includes(tag)||document.activeElement?.isContentEditable)return;
   const key=ev.key.toLowerCase();
-  if((ev.ctrlKey||ev.metaKey)&&key==="z"){ev.preventDefault();undoBtn.click()}
-  else if(!ev.ctrlKey&&!ev.metaKey&&!ev.altKey){
+  if((ev.ctrlKey||ev.metaKey)&&((key==="z"&&ev.shiftKey)||key==="y")){
+   ev.preventDefault();redoBtn.click();
+  }else if((ev.ctrlKey||ev.metaKey)&&key==="z"){
+   ev.preventDefault();undoBtn.click();
+  }else if(!ev.ctrlKey&&!ev.metaKey&&!ev.altKey&&!["BUTTON","SUMMARY","A"].includes(tag)){
    if(key==="b")brushBtn.click();
    if(key==="e")eraserBtn.click();
   }
@@ -465,7 +479,7 @@
    if(!previous)previous=JSON.parse(localStorage.getItem(DRAFT_KEY)||"null");
   }catch(_){}
   if(!validRecord(previous)||changedSinceLoad)return;
-  actions.length=0;
+  actions.length=0;redoStack.length=0;
   for(const a of previous.actions){
    if(a&&a.type==="clear")actions.push({type:"clear"});
    else if(a&&a.type==="fill"&&Number.isFinite(a.x)&&Number.isFinite(a.y)&&
