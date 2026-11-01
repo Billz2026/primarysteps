@@ -135,7 +135,15 @@
     say('Ready! Pick a shape to start.');
   }
 
-  homes.forEach((button) => button.addEventListener('click', () => putInHome(button.dataset.home)));
+  homes.forEach((button) => button.addEventListener('click', (event) => {
+    const previousCount = remaining.length;
+    putInHome(button.dataset.home);
+    // Keep keyboard-only play efficient without moving focus for touch users.
+    if (event.detail === 0 && remaining.length < previousCount) {
+      if (remaining.length) tray.querySelector('[data-shape-id]')?.focus();
+      else restart.focus();
+    }
+  }));
   levelButtons.forEach((button) => button.addEventListener('click', () => {
     if (!Object.prototype.hasOwnProperty.call(totals, button.dataset.level)) return;
     level = button.dataset.level;
