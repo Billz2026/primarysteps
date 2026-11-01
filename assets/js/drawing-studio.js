@@ -17,6 +17,7 @@
  const fillBtn=document.getElementById("ds-fill");
  const funToggle=document.getElementById("ds-fun-toggle");
  const extraTools=document.getElementById("ds-extra-tools");
+ const extraToolsLabel=document.getElementById("ds-extra-tools-label");
  const funMenu=document.getElementById("ds-fun-menu");
  const funLabel=document.getElementById("ds-fun-label");
  const funIcon=document.getElementById("ds-fun-icon");
@@ -86,6 +87,8 @@
   undoBtn.disabled=actions.length===0;
   redoBtn.disabled=redoStack.length===0;
   const funSelected=funNames.includes(currentTool);
+  const advancedSelected=!["pencil","brush","eraser"].includes(currentTool);
+  extraToolsLabel.textContent=advancedSelected?tools[currentTool].name+" · More tools":"More tools";
   funToggle.setAttribute("aria-pressed",String(funSelected));
   funToggle.classList.toggle("ds-button--active",funSelected);
   funIcon.textContent=currentTool==="rainbow"?"🌈":currentTool==="glitter"?"✨":currentTool==="stamp"?"⭐":"✨";
@@ -333,7 +336,10 @@
  });
  function setTool(tool){
   if(!tools[tool])return;
-  currentTool=tool;toggleFun(false);updateControls();
+  currentTool=tool;toggleFun(false);
+  // An advanced selection should not keep the tools menu covering the canvas.
+  if(!["pencil","brush","eraser"].includes(tool))extraTools.open=false;
+  updateControls();
   say(tools[tool].name+" ready. "+tools[tool].help+".");
   changedSinceLoad=true;saveSoon();
  }
@@ -512,7 +518,7 @@
   }
   if(Number.isFinite(previous.eraserSize))eraserSize=Math.max(20,Math.min(520,previous.eraserSize));
   if(typeof previous.currentTool==="string"&&tools[previous.currentTool])currentTool=previous.currentTool;
-  if(!["brush","pencil","eraser"].includes(currentTool))extraTools.open=true;
+  // Restore the chosen tool without expanding the optional panel on page load.
   if(["star","heart","flower"].includes(previous.currentStamp))currentStamp=previous.currentStamp;
   render();if(actions.length)say("Your last drawing has been restored.");
  }
