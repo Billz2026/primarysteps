@@ -10,11 +10,11 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <script src="assets/js/ps-progress.js?v=1"></script>
-<link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
+<link rel="stylesheet" href="assets/css/primary-steps.css?v=10">
 <link rel="stylesheet" href="assets/css/numbers-premium.css?v=4">
-<link rel="stylesheet" href="assets/css/numbers-count.css?v=1">
+<link rel="stylesheet" href="assets/css/numbers-count.css?v=2">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
-<script src="assets/js/numbers-count.js?v=2" defer></script>
+<script src="assets/js/numbers-count.js?v=3" defer></script>
 </head>
 <body>
 <main class="np-main">
@@ -32,7 +32,7 @@
  <div class="np-content">
   <div class="np-count-layout">
    <section aria-labelledby="np-count-heading" class="np-count-column">
-    <h2 class="np-question np-question--with-icon" id="np-count-heading"><span class="np-step-icon" aria-hidden="true">①</span> How many dots?</h2>
+    <h2 class="np-question np-question--with-icon" id="np-count-heading" tabindex="-1"><span class="np-step-icon" aria-hidden="true">①</span> How many dots?</h2>
     <div class="np-count-visual" id="np-visual" role="group" aria-label="Count the dots and mark each one by tapping."></div>
     <p class="np-visual-caption" id="np-visual-caption">Tap each dot to count</p>
     <div class="np-count-tools np-buttons">
@@ -43,10 +43,11 @@
    <section aria-labelledby="np-choices-heading" class="np-answer-column">
     <h2 class="np-question np-question--with-icon" id="np-choices-heading"><span class="np-step-icon" aria-hidden="true">②</span> Tap the number</h2>
     <div class="np-answers" id="np-answers" role="group" aria-label="Choose the correct number"></div>
-    <div class="np-feedback" id="np-feedback" role="status" aria-live="polite" hidden></div>
+    <span class="ps-sr-only" id="np-announcement" role="status" aria-live="polite" aria-atomic="true"></span>
+    <div class="np-feedback" id="np-feedback" hidden></div>
     <div class="np-count-actions">
      <span class="np-count-actions__hint">No timer. Take your time.</span>
-     <button class="np-btn np-btn--primary" type="button" id="np-next">Next question →</button>
+     <button class="np-btn np-btn--primary" type="button" id="np-next">Skip this question →</button>
     </div>
    </section>
   </div>
