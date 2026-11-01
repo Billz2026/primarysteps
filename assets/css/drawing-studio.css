@@ -493,3 +493,145 @@
 :root.ds-studio[data-theme="dark"] .ds-colours-rail .ds-rail__mobiletip{
  background:var(--ds-pale);border-color:var(--ds-line);color:var(--ds-ink);
 }
+
+
+/* v8 — unfolded-tablet canvas-first layout.
+   Keep the actual drawing surface above the fold, with tools beside rather
+   than stacked in front of the paper. Scope all overrides to Drawing Studio. */
+@media(min-width:680px) and (max-width:930px){
+ html.ps-unified.ds-studio .ps-shell__inner{
+  min-height:66px;padding:5px 14px;gap:10px;
+ }
+ html.ps-unified.ds-studio .ps-brand{gap:8px}
+ html.ps-unified.ds-studio .ps-brand__new-icon{
+  width:55px;height:54px;
+ }
+ html.ps-unified.ds-studio .ps-brand__name{font-size:24px;line-height:.92}
+ html.ps-unified.ds-studio .ps-brand__tagline{font-size:9px}
+ html.ps-unified.ds-studio .ps-shell__actions{gap:6px}
+ html.ps-unified.ds-studio .ps-shell__button{
+  min-height:43px;padding:8px 10px;border-radius:13px;font-size:12px;
+ }
+ :root.ds-studio .ds-main{width:calc(100% - 22px);margin:9px auto 20px}
+ :root.ds-studio .ds-top{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;
+  align-items:center;gap:8px 14px;
+  min-height:0;margin-bottom:11px;padding:12px 17px;border-radius:20px;
+ }
+ :root.ds-studio .ds-eyebrow{font-size:10px;margin-bottom:2px}
+ :root.ds-studio .ds-titlebox h1{
+  font-size:clamp(23px,2.9vw,28px);line-height:1.14;
+ }
+ :root.ds-studio .ds-titlebox p{font-size:12px;margin-top:3px;max-width:450px}
+ :root.ds-studio .ds-top__actions{gap:6px;flex-wrap:nowrap}
+ :root.ds-studio .ds-top__actions .ds-button{
+  min-height:43px;padding:8px 10px;font-size:12px!important;white-space:nowrap;
+ }
+ :root.ds-studio .ds-workspace{
+  display:grid;grid-template-columns:minmax(0,1fr) 182px;
+  grid-template-areas:"paper tools" "paper colours";
+  grid-template-rows:auto 1fr;gap:10px;align-items:start;
+ }
+ :root.ds-studio .ds-paper-area{
+  grid-area:paper;grid-row:1/span 2;min-width:0;gap:8px;
+ }
+ :root.ds-studio .ds-tools-rail{grid-area:tools}
+ :root.ds-studio .ds-colours-rail{grid-area:colours}
+ :root.ds-studio .ds-rail{
+  display:flex;flex-direction:column;align-items:stretch;
+  flex-wrap:nowrap;gap:8px;padding:9px;border-radius:17px;
+ }
+ :root.ds-studio .ds-rail__head{
+  display:flex;flex-direction:row;align-items:center;justify-content:space-between;
+  flex:0 0 auto;text-align:left;gap:5px;
+ }
+ :root.ds-studio .ds-rail__title{font-size:10px}
+ :root.ds-studio .ds-rail__subtitle{display:none}
+ :root.ds-studio .ds-primary-tools{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:6px;flex:0 0 auto;width:100%;
+ }
+ :root.ds-studio .ds-tool{
+  display:flex;flex-direction:column;gap:1px;
+  width:100%;min-height:51px;padding:5px 2px;
+  font-size:10px!important;border-radius:12px!important;
+ }
+ :root.ds-studio .ds-tool__icon{font-size:19px}
+ :root.ds-studio .ds-extra-tools{
+  position:relative;flex:0 0 auto;width:100%;padding:0;border:0;
+ }
+ :root.ds-studio .ds-extra-tools[open]{flex-basis:auto}
+ :root.ds-studio .ds-extra-tools summary{
+  min-height:39px;font-size:11px;
+ }
+ :root.ds-studio .ds-extra-tools__grid{
+  position:absolute;z-index:29;top:calc(100% + 8px);right:0;
+  width:260px;max-width:calc(100vw - 24px);
+  box-sizing:border-box;
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:7px;padding:11px;border:1px solid var(--ds-line);
+  border-radius:16px;background:var(--ds-surface);
+  box-shadow:0 16px 35px rgba(32,77,88,.19);
+ }
+ :root.ds-studio .ds-extra-tools__grid .ds-tool{
+  min-height:60px;
+ }
+ :root.ds-studio .ds-fun-wrapper{height:auto}
+ :root.ds-studio .ds-fun-menu{
+  position:absolute;left:auto;right:0;top:calc(100% + 5px);
+  width:240px;max-width:calc(100vw - 28px);
+  padding:8px;z-index:31;
+ }
+ :root.ds-studio .ds-colours-rail .ds-rail__mobiletip{display:none}
+ :root.ds-studio .ds-palette{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  justify-items:center;overflow:visible;
+  gap:7px;padding:3px 0;max-width:100%;width:100%;
+ }
+ :root.ds-studio .ds-swatch{
+  width:42px;height:42px;border-radius:12px;
+ }
+ :root.ds-studio .ds-custom-palette{
+  flex:0 0 auto;border-top:1px solid var(--ds-line);
+  padding:8px 0 0;width:100%;
+ }
+ :root.ds-studio .ds-custom-palette summary{
+  min-height:40px;font-size:11px;
+ }
+ :root.ds-studio .ds-paper{
+  width:100%;max-width:100%;
+  border-width:3px;border-radius:20px;
+ }
+ :root.ds-studio .ds-canvas-bar{
+  padding:7px 10px;gap:6px;min-height:44px;border-radius:15px;
+ }
+ :root.ds-studio .ds-canvas-bar__title{font-size:11px}
+ :root.ds-studio .ds-canvas-bar__spark{width:25px;height:25px}
+ :root.ds-studio .ds-tool-size-wrap{flex:0 1 auto;gap:7px}
+ :root.ds-studio .ds-tool-size-wrap label{font-size:11px}
+ :root.ds-studio .ds-size{width:clamp(90px,12vw,120px)}
+ :root.ds-studio .ds-tool-hint{
+  padding:7px 9px;font-size:12px;min-height:32px;
+ }
+ :root.ds-studio .ds-status{font-size:11px}
+ :root.ds-studio .ds-bottom{padding-top:9px}
+}
+@media(max-width:679px){
+ /* On narrow phones, make the tools compact, then show the paper before
+    the optional colour palette. Never place every advanced tool above the canvas. */
+ :root.ds-studio .ds-workspace{
+  grid-template-columns:minmax(0,1fr);
+  grid-template-areas:"tools" "paper" "colours";gap:8px;
+ }
+ :root.ds-studio .ds-extra-tools__grid{
+  position:absolute;z-index:29;left:0;right:0;top:calc(100% + 6px);
+  width:100%;box-sizing:border-box;
+  padding:8px;border:1px solid var(--ds-line);border-radius:15px;
+  background:var(--ds-surface);
+  box-shadow:0 13px 30px rgba(32,77,88,.18);
+ }
+ :root.ds-studio .ds-primary-tools .ds-tool{min-height:49px}
+ :root.ds-studio .ds-rail__mobiletip{display:none!important}
+ :root.ds-studio .ds-paper-area{grid-area:paper}
+ :root.ds-studio .ds-colours-rail{grid-area:colours}
+}
