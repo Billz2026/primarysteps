@@ -11,7 +11,7 @@
 <script src="assets/js/ps-settings.js?v=2"></script>
 <script src="assets/js/ps-progress.js?v=1"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
-<link rel="stylesheet" href="assets/css/letters-premium.css?v=7">
+<link rel="stylesheet" href="assets/css/letters-premium.css?v=8">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
 </head>
 <body>
@@ -37,7 +37,12 @@
   </div>
   <h2 class="pl-choice-label" id="pl-choice-instruction">Which one matches?</h2>
   <div class="pl-choices" id="pl-choices" role="group" aria-label="Choose the matching letter"></div>
-  <div class="pl-feedback" id="pl-feedback" data-state="neutral" role="status" aria-live="polite" hidden></div>
+  <span id="pl-announcement" class="ps-sr-only" role="status" aria-live="polite" aria-atomic="true"></span>
+  <div class="pl-feedback" id="pl-feedback" data-state="neutral" hidden></div>
+  <div class="pl-footer">
+   <span class="pl-footer__hint">No timer. Take your time.</span>
+   <button type="button" class="pl-button pl-button--primary" id="pl-next">Next letter →</button>
+  </div>
   <div class="pl-find-progress" aria-label="Letter matching progress">
    <div class="pl-find-progress__labels">
     <span id="pl-step-label">Step 1 of 4 · Big letters</span>
@@ -47,10 +52,6 @@
    <div class="pl-find-progress__track" id="pl-progress-track" role="progressbar" aria-label="Letters matched in this step" aria-valuemin="0" aria-valuemax="5" aria-valuenow="0">
     <span id="pl-progress-fill" class="pl-find-progress__fill"></span>
    </div>
-  </div>
-  <div class="pl-footer">
-   <span class="pl-footer__hint">No timer. Take your time.</span>
-   <button type="button" class="pl-button pl-button--primary" id="pl-next">Next letter →</button>
   </div>
   <details class="pl-settings" id="pl-settings">
    <summary>Grown-ups: learning steps</summary>
@@ -63,7 +64,7 @@
     <option value="3">Step 4 · More small letters (4 choices)</option>
    </select>
    <button type="button" id="pl-reset-progress">Start automatic practice again</button>
-   <p>Automatic practice moves up a step after five successful matches. A child can skip any question using Next; skipped questions do not count. Progress is saved on this device. This practice is not linked to My Stars yet.</p>
+   <p>Automatic practice moves up a step after five successful matches. A child can skip any question using Next; skipped questions do not count. Progress is saved on this device. Successful matches also contribute to My Stars once per unique letter and step.</p>
   </details>
  </div>
 </section>
@@ -90,6 +91,7 @@
  const task=document.getElementById("pl-task");
  const choiceInstruction=document.getElementById("pl-choice-instruction");
  const feedback=document.getElementById("pl-feedback");
+ const announcement=document.getElementById("pl-announcement");
  const next=document.getElementById("pl-next");
  const hear=document.getElementById("pl-hear");
  const voiceNote=document.getElementById("pl-voice-note");
@@ -130,6 +132,7 @@
  function message(state,text){
   feedback.dataset.state=state;feedback.textContent=text;
   feedback.hidden=state==="neutral";
+  announcement.textContent=state==="neutral"?"":text;
  }
  function showProgress(){
   const title=STEPS[step].title;
@@ -147,7 +150,7 @@
   if(!queue.length)queue=shuffle(bank);
   return queue.shift();
  }
- function newRound(){
+ function newRound(options){
   if(level.value==="auto"&&wins>=GOAL&&step<STEPS.length-1){
    step++;wins=0;queue=[];
   }
@@ -159,6 +162,9 @@
   target.setAttribute("aria-label","Capital letter "+current);
   choiceInstruction.textContent=config.small?"Find the small letter":"Which one matches?";
   choices.setAttribute("aria-label",config.small?"Choose the matching lowercase letter":"Choose the matching capital letter");
+  choices.dataset.choiceCount=String(config.choices);
+  next.classList.remove("is-ready");
+  next.textContent="Skip this letter →";
   hear.setAttribute("aria-label","Hear the letter "+current);
   voiceNote.textContent="";
   const distractors=shuffle(bank.filter(letter=>letter!==current)).slice(0,config.choices-1);
@@ -168,10 +174,15 @@
    button.type="button";button.className="pl-choice";
    button.textContent=config.small?letter.toLowerCase():letter;
    button.setAttribute("aria-label",(config.small?"Small letter ":"Capital letter ")+letter);
-   button.addEventListener("click",function(){
+   button.addEventListener("click",function(event){
     if(solved||button.disabled)return;
     if(letter===current){
      solved=true;button.classList.add("is-correct");
+     const nextStep=wins+1>=GOAL&&level.value==="auto"&&step<STEPS.length-1;
+     next.textContent=nextStep?"Start step "+(step+2)+" →": "Next letter →";
+     next.classList.add("is-ready");
+     // Do not strand keyboard focus on an answer that is about to be disabled.
+     if(event.detail===0)next.focus();
      choices.querySelectorAll("button").forEach(b=>b.disabled=true);
      wins=Math.min(GOAL,wins+1);
      window.PSProgress?.record("lettersFind",String(step)+":"+current);
@@ -185,6 +196,11 @@
      wrongAnswers++;
      button.classList.add("is-incorrect");
      button.disabled=true;
+     // A wrong choice must not leave keyboard users focused on a disabled answer.
+     if(event.detail===0){
+      const available=Array.from(choices.querySelectorAll("button")).find(b=>!b.disabled);
+      if(available)available.focus();
+     }
      if(config.small&&wrongAnswers>=2){
       message("try","Capital "+current+" matches small "+current.toLowerCase()+". Take your time.");
      }else{
@@ -195,6 +211,10 @@
    choices.appendChild(button);
   });
   showProgress();saveProgress();message("neutral","");
+  // Keyboard users continue straight to an answer. Touch users see the new target first.
+  if(options?.focusChoices)choices.querySelector("button")?.focus();
+  else if(options?.scrollToTask&&window.matchMedia?.("(max-width: 899px)").matches)
+   task.scrollIntoView?.({block:"start",behavior:"auto"});
  }
  hear.addEventListener("click",function(){
   if(!window.PSVoice){voiceNote.textContent="Speech unavailable.";return;}
@@ -204,7 +224,9 @@
    voiceNote
   );
  });
- next.addEventListener("click",newRound);
+ next.addEventListener("click",function(event){
+  newRound({focusChoices:event.detail===0,scrollToTask:event.detail!==0});
+ });
  level.addEventListener("change",function(){
   if(level.value==="auto"){
    const resume=readProgress();
