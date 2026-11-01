@@ -473,3 +473,23 @@
  :root.ds-studio *{transition:none!important;animation:none!important}
 }
 :root.ds-studio[data-reduce-motion] *{transition:none!important;animation:none!important}
+
+
+/* Keep the horizontal mobile palette discoverable without adding a second row. */
+:root.ds-studio .ds-rail__mobiletip{display:none}
+@media(max-width:930px){
+ :root.ds-studio .ds-colours-rail .ds-rail__mobiletip{
+  display:inline-flex;align-items:center;justify-content:center;
+  color:#356D70;background:#E4F4F0;border:1px solid #C2E1D8;
+  border-radius:999px;white-space:nowrap;padding:4px 8px;
+  font:850 11px/1.2 var(--ds-font);
+ }
+}
+@media(max-width:620px){
+ :root.ds-studio .ds-colours-rail .ds-rail__mobiletip{
+  margin-left:auto;
+ }
+}
+:root.ds-studio[data-theme="dark"] .ds-colours-rail .ds-rail__mobiletip{
+ background:var(--ds-pale);border-color:var(--ds-line);color:var(--ds-ink);
+}
