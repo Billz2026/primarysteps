@@ -539,3 +539,49 @@ html.ps-unified.ps-number-premium[data-number-game="count"] :is(.np-ten-block,.n
   animation:none!important;transition:none!important;
  }
 }
+
+/* Count Numbers v2 — visible actions and keyboard-friendly round transitions. */
+html.ps-unified.ps-number-premium[data-number-game="count"] #np-count-heading{
+ scroll-margin-top:110px;
+}
+html.ps-unified.ps-number-premium[data-number-game="count"] #np-next.is-ready{
+ background:#116B60!important;border-color:#116B60!important;
+ box-shadow:0 0 0 3px #BCE8D5,0 5px 0 rgba(22,94,105,.22);
+}
+html.ps-unified.ps-number-premium[data-number-game="count"] .np-count-actions{
+ align-items:center;
+}
+html.ps-unified.ps-number-premium[data-number-game="count"] .np-option:disabled{
+ cursor:default;
+}
+:root.ps-unified.ps-number-premium[data-theme="dark"][data-number-game="count"] #np-next.is-ready{
+ box-shadow:0 0 0 3px #7CBDA7,0 5px 0 rgba(0,0,0,.2);
+}
+:root.ps-unified.ps-number-premium[data-contrast="high"][data-number-game="count"] #np-next.is-ready{
+ background:#085562!important;border-color:#085562!important;color:#FFF!important;
+}
+@media(max-width:899px){
+ html.ps-unified.ps-number-premium[data-number-game="count"] .np-count-actions{
+  margin-top:13px;
+ }
+ html.ps-unified.ps-number-premium[data-number-game="count"] #np-next{
+  min-height:58px;
+ }
+}
+@media(max-width:640px){
+ html.ps-unified.ps-number-premium[data-number-game="count"] #np-next{
+  width:100%;min-height:60px;
+ }
+ html.ps-unified.ps-number-premium[data-number-game="count"] .np-count-actions__hint{
+  display:none;
+ }
+ html.ps-unified.ps-number-premium[data-number-game="count"] .np-feedback{
+  margin-top:12px;
+ }
+ html.ps-unified.ps-number-premium[data-number-game="count"] .np-answers[data-count="4"]{
+  grid-template-columns:repeat(2,minmax(0,1fr));
+ }
+ html.ps-unified.ps-number-premium[data-number-game="count"] .np-answers[data-count="4"] .np-option{
+  min-height:92px!important;
+ }
+}
