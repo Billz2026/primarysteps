@@ -838,3 +838,55 @@ html.ps-play-page .ps-audio-word-tile__hear{
 html.ps-play-page .ps-audio-word-choice__hear:focus-visible,
 html.ps-play-page .ps-audio-word-tile__hear:focus-visible{outline:3px solid #24858C!important;outline-offset:3px}
 :root.ps-unified[data-theme="dark"].ps-play-page :is(.ps-audio-word-choice__hear,.ps-audio-word-tile__hear){background:var(--ps-surface)!important;color:var(--ps-ink)!important}
+
+
+/* Primary Steps: one-tap starter cards, with a separate route to each subject menu. */
+html.ps-home .ps-home-card{
+ min-width:0;display:flex;flex-direction:column;align-items:stretch;gap:5px;
+}
+html.ps-home .ps-home-card > .ps-tile{
+ flex:1 0 auto;width:100%;box-sizing:border-box;
+}
+html.ps-home .ps-tile__copy{
+ min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:5px;
+}
+html.ps-home .ps-tile__starter{
+ color:#486776;font:750 clamp(13px,1.15vw,16px)/1.25 var(--ps-title-font);
+ letter-spacing:0;overflow-wrap:break-word;
+}
+html.ps-home .ps-tile__go{
+ font-size:22px;line-height:1;
+}
+html.ps-home .ps-home-card__more{
+ display:flex;align-items:center;justify-content:center;gap:6px;
+ min-height:44px;box-sizing:border-box;width:100%;padding:8px 12px;
+ border:1px solid transparent;border-radius:13px;text-decoration:none;
+ color:#295E6B;font:800 14px/1.25 var(--ps-title-font);
+ transition:background-color .15s ease,border-color .15s ease;
+}
+html.ps-home .ps-home-card__more span{font-size:22px;line-height:1}
+html.ps-home .ps-home-card__more:hover{
+ background:#E9F6F3;border-color:#C4DDD6;
+}
+html.ps-home .ps-home-card__more:focus-visible{
+ background:#E9F6F3;outline:3px solid #237B83;outline-offset:2px;
+}
+:root.ps-unified[data-theme="dark"].ps-home .ps-tile__starter,
+:root.ps-unified[data-theme="dark"].ps-home .ps-home-card__more{
+ color:var(--ps-ink);
+}
+:root.ps-unified[data-theme="dark"].ps-home .ps-home-card__more:is(:hover,:focus-visible){
+ background:var(--ps-surface);border-color:var(--ps-edge);
+}
+:root.ps-unified[data-contrast="high"].ps-home .ps-tile__starter,
+:root.ps-unified[data-contrast="high"].ps-home .ps-home-card__more{color:#101820}
+@media(max-width:660px){
+ html.ps-home .ps-tile__copy{gap:2px}
+ html.ps-home .ps-tile__starter{font-size:13px}
+ html.ps-home .ps-tile__go{font-size:16px}
+ html.ps-home .ps-home-card__more{font-size:13px;min-height:44px}
+}
+@media(prefers-reduced-motion:reduce){
+ html.ps-home .ps-home-card__more{transition:none}
+}
+:root.ps-unified[data-reduce-motion].ps-home .ps-home-card__more{transition:none}
