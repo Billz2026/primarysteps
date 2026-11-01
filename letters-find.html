@@ -10,7 +10,7 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <script src="assets/js/ps-progress.js?v=1"></script>
-<link rel="stylesheet" href="assets/css/primary-steps.css?v=8">
+<link rel="stylesheet" href="assets/css/primary-steps.css?v=10">
 <link rel="stylesheet" href="assets/css/letters-premium.css?v=8">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
 </head>
@@ -151,8 +151,10 @@
   return queue.shift();
  }
  function newRound(options){
-  if(level.value==="auto"&&wins>=GOAL&&step<STEPS.length-1){
-   step++;wins=0;queue=[];
+  if(level.value==="auto"&&wins>=GOAL){
+   // The last learning step can repeat in fresh groups of five without getting stuck at 5/5.
+   if(step<STEPS.length-1)step++;
+   wins=0;queue=[];
   }
   const config=STEPS[step],bank=config.bank.split("");
   current=takeNextLetter(bank);
@@ -179,7 +181,8 @@
     if(letter===current){
      solved=true;button.classList.add("is-correct");
      const nextStep=wins+1>=GOAL&&level.value==="auto"&&step<STEPS.length-1;
-     next.textContent=nextStep?"Start step "+(step+2)+" →": "Next letter →";
+     next.textContent=nextStep?"Start step "+(step+2)+" →":
+      (level.value==="auto"&&step===STEPS.length-1&&wins+1>=GOAL?"More letters →":"Next letter →");
      next.classList.add("is-ready");
      // Do not strand keyboard focus on an answer that is about to be disabled.
      if(event.detail===0)next.focus();
