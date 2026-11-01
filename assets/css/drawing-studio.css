@@ -644,3 +644,151 @@
 :root.ds-studio.ds-immersive .ds-main{
  padding-bottom:20px;
 }
+
+
+/* v9 — final Fold layout refinement. The children’s paper is the main event.
+   A condensed, six-action toolbar and four-across colours fit alongside it. */
+:root.ds-studio .ds-rail__active{
+ color:#1C716D;white-space:normal;min-width:0;
+ font:850 11px/1.25 var(--ds-font);
+}
+:root.ds-studio .ds-extra-tools--selected summary{
+ background:#E9F6F0;border-color:#85C6B3;color:#1E655E;
+}
+:root.ds-studio .ds-extra-tools summary:focus-visible,
+:root.ds-studio .ds-custom-palette summary:focus-visible{
+ outline:3px solid #287C91!important;outline-offset:3px;
+}
+:root.ds-studio[data-theme="dark"] .ds-rail__active{color:#9DE5D9}
+:root.ds-studio[data-theme="dark"] .ds-extra-tools--selected summary{
+ background:#2E5552!important;color:#F4FAFC!important;border-color:#72D0D5!important;
+}
+@media(min-width:680px) and (max-width:930px){
+ /* Tighter opening: give the drawing surface priority over a large hero. */
+ :root.ds-studio .ds-main{margin:7px auto 16px}
+ :root.ds-studio .ds-top{
+  min-height:0;padding:10px 15px;margin-bottom:9px;
+  border-radius:18px;gap:7px 12px;
+  background:var(--ds-surface);
+ }
+ :root.ds-studio .ds-eyebrow{display:none}
+ :root.ds-studio .ds-titlebox h1{
+  font-size:clamp(22px,2.85vw,27px);
+ }
+ :root.ds-studio .ds-titlebox p{
+  max-width:none;margin-top:3px;font-size:11px;line-height:1.3;
+ }
+ :root.ds-studio .ds-top__actions .ds-button{
+  min-height:43px;padding:8px 10px;font-size:12px!important;
+ }
+ :root.ds-studio .ds-workspace{
+  grid-template-columns:minmax(0,1fr) 209px;
+  grid-template-rows:auto 1fr;gap:8px;
+ }
+ :root.ds-studio .ds-rail{gap:7px;padding:8px;border-radius:16px}
+ :root.ds-studio .ds-rail__head{
+  display:flex;align-items:center;flex-wrap:wrap;justify-content:space-between;
+  gap:4px;
+ }
+ :root.ds-studio .ds-rail__title{font-size:10px;letter-spacing:.08em}
+ :root.ds-studio .ds-rail__active{
+  flex:1 1 auto;text-align:right;font-size:10px;
+ }
+ :root.ds-studio .ds-primary-tools{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  flex:none;width:100%;gap:6px;
+ }
+ :root.ds-studio .ds-tool{
+  min-height:56px;padding:5px 2px;gap:2px;
+  border-radius:12px!important;font-size:10px!important;
+ }
+ :root.ds-studio .ds-tool__icon{font-size:19px}
+ :root.ds-studio .ds-extra-tools{
+  position:relative;min-width:0;min-height:0;flex:auto;
+  border:0;padding:0;margin:0;align-self:stretch;
+ }
+ :root.ds-studio .ds-extra-tools summary{
+  height:100%;min-height:56px;width:100%;box-sizing:border-box;
+  flex-direction:column;gap:2px;line-height:1.2;
+  border:2px solid #BFDCD8;border-radius:12px;
+  background:#F2F8FC;padding:5px 1px;
+  font-size:10px;
+ }
+ :root.ds-studio .ds-extra-tools summary>span:first-child{font-size:18px;line-height:1.05}
+ :root.ds-studio .ds-extra-tools summary::after{display:none}
+ :root.ds-studio .ds-extra-tools__grid{
+  position:absolute;top:calc(100% + 7px);right:0;left:auto;
+  width:265px;max-width:calc(100vw - 24px);
+  gap:7px;grid-template-columns:repeat(3,minmax(0,1fr));
+  padding:10px;
+ }
+ :root.ds-studio .ds-extra-tools__grid .ds-tool{min-height:57px}
+ :root.ds-studio .ds-palette{
+  display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:6px 4px;padding:2px 0;overflow:visible;
+  width:100%;justify-items:center;min-width:0;
+ }
+ :root.ds-studio .ds-swatch{
+  width:44px;height:44px;border-radius:13px;
+ }
+ :root.ds-studio .ds-colours-rail .ds-rail__head{
+  justify-content:flex-start;
+ }
+ :root.ds-studio .ds-custom-palette{padding:7px 0 0}
+ :root.ds-studio .ds-custom-palette summary{min-height:38px}
+ :root.ds-studio .ds-paper-area{gap:7px}
+ :root.ds-studio .ds-paper{
+  border-width:3px;border-radius:18px;
+ }
+ :root.ds-studio .ds-paper__corner{
+  top:8px;left:8px;padding:5px 9px;font-size:10px;
+ }
+ :root.ds-studio .ds-canvas-bar{min-height:42px;padding:6px 10px}
+ :root.ds-studio .ds-tool-hint{min-height:0;padding:7px 9px}
+ :root.ds-studio .ds-bottom{margin-top:5px}
+ /* A compact fixed dock retains child-friendly touch targets. */
+ html.ps-unified.ds-studio .ps-dock{
+  padding:4px 10px calc(4px + env(safe-area-inset-bottom));
+ }
+ html.ps-unified.ds-studio .ps-dock a{
+  min-height:47px;gap:0;font-size:11px;
+ }
+ html.ps-unified.ds-studio .ps-dock__icon{font-size:18px;line-height:1.15}
+}
+@media(max-width:679px){
+ /* Three by two keeps every everyday tool immediately visible on phones. */
+ :root.ds-studio .ds-main{margin:6px auto 16px}
+ :root.ds-studio .ds-top{padding:11px 13px}
+ :root.ds-studio .ds-eyebrow{display:none}
+ :root.ds-studio .ds-titlebox h1{font-size:clamp(22px,5.8vw,27px)}
+ :root.ds-studio .ds-titlebox p{margin-top:3px;line-height:1.3}
+ :root.ds-studio .ds-primary-tools{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px;
+ }
+ :root.ds-studio .ds-tools-rail{gap:6px}
+ :root.ds-studio .ds-rail__head{gap:7px}
+ :root.ds-studio .ds-rail__active{font-size:11px;text-align:right}
+ :root.ds-studio .ds-primary-tools .ds-tool{
+  min-height:51px;gap:2px;flex-direction:row;
+  align-items:center;font-size:11px!important;
+ }
+ :root.ds-studio .ds-primary-tools .ds-tool__icon{font-size:19px}
+ :root.ds-studio .ds-extra-tools{
+  width:100%;min-width:0;align-self:stretch;flex:0 0 auto;
+  border:0;padding:0;
+ }
+ :root.ds-studio .ds-extra-tools summary{
+  display:flex;align-items:center;justify-content:center;gap:4px;
+  min-height:51px;width:100%;padding:5px 2px;
+  border:2px solid #C2DDDB;border-radius:13px;font-size:11px;
+ }
+ :root.ds-studio .ds-extra-tools summary::after{display:none}
+ :root.ds-studio .ds-extra-tools__grid{
+  position:absolute;top:calc(100% + 6px);left:0;
+  width:min(335px,calc(100vw - 24px));padding:8px;
+ }
+ html.ps-unified.ds-studio .ps-dock{
+  padding:3px 8px calc(3px + env(safe-area-inset-bottom));
+ }
+ html.ps-unified.ds-studio .ps-dock a{min-height:50px}
+}
