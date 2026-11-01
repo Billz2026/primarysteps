@@ -682,7 +682,7 @@
   min-height:43px;padding:8px 10px;font-size:12px!important;
  }
  :root.ds-studio .ds-workspace{
-  grid-template-columns:minmax(0,1fr) 209px;
+  grid-template-columns:minmax(0,1fr) 196px;
   grid-template-rows:auto 1fr;gap:8px;
  }
  :root.ds-studio .ds-rail{gap:7px;padding:8px;border-radius:16px}
@@ -725,11 +725,11 @@
  :root.ds-studio .ds-extra-tools__grid .ds-tool{min-height:57px}
  :root.ds-studio .ds-palette{
   display:grid;grid-template-columns:repeat(4,minmax(0,1fr));
-  gap:6px 4px;padding:2px 0;overflow:visible;
+  gap:6px 3px;padding:2px 0;overflow:visible;
   width:100%;justify-items:center;min-width:0;
  }
  :root.ds-studio .ds-swatch{
-  width:44px;height:44px;border-radius:13px;
+  width:42px;height:42px;border-radius:12px;
  }
  :root.ds-studio .ds-colours-rail .ds-rail__head{
   justify-content:flex-start;
