@@ -16,6 +16,7 @@
  const sprayBtn=document.getElementById("ds-spray");
  const fillBtn=document.getElementById("ds-fill");
  const funToggle=document.getElementById("ds-fun-toggle");
+ const extraTools=document.getElementById("ds-extra-tools");
  const funMenu=document.getElementById("ds-fun-menu");
  const funLabel=document.getElementById("ds-fun-label");
  const funIcon=document.getElementById("ds-fun-icon");
@@ -324,6 +325,12 @@
   funToggle.setAttribute("aria-expanded",String(open));
  }
  funToggle.addEventListener("click",()=>toggleFun(funMenu.hidden));
+ document.addEventListener("pointerdown",(ev)=>{
+  if(!funMenu.hidden&&!funToggle.contains(ev.target)&&!funMenu.contains(ev.target))toggleFun(false);
+ });
+ extraTools.addEventListener("toggle",()=>{
+  if(!extraTools.open)toggleFun(false);
+ });
  function setTool(tool){
   if(!tools[tool])return;
   currentTool=tool;toggleFun(false);updateControls();
@@ -505,6 +512,7 @@
   }
   if(Number.isFinite(previous.eraserSize))eraserSize=Math.max(20,Math.min(520,previous.eraserSize));
   if(typeof previous.currentTool==="string"&&tools[previous.currentTool])currentTool=previous.currentTool;
+  if(!["brush","pencil","eraser"].includes(currentTool))extraTools.open=true;
   if(["star","heart","flower"].includes(previous.currentStamp))currentStamp=previous.currentStamp;
   render();if(actions.length)say("Your last drawing has been restored.");
  }
