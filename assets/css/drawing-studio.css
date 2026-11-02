@@ -154,6 +154,12 @@ html.ps-unified.ds-studio .ds-more-symbol{
  width:24px;height:24px;stroke:currentColor;stroke-width:1.7;fill:none;
  stroke-linecap:round;stroke-linejoin:round;
 }
+/* Keep disclosure content out of layout until a parent opens it. */
+html.ps-unified.ds-studio .ds-extra-tools:not([open]) .ds-extra-tools__grid,
+html.ps-unified.ds-studio .ds-custom-palette:not([open]) .ds-custom-palette__body,
+html.ps-unified.ds-studio .ds-tools:not([open]) > :not(summary){
+ display:none!important;
+}
 html.ps-unified.ds-studio .ds-extra-tools__grid{
  position:absolute;z-index:129;top:calc(100% + 10px);left:0;
  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;
