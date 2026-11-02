@@ -1020,3 +1020,13 @@
  }
  :root.ds-studio .ds-eraser-size{width:min(35vw,155px)}
 }
+
+
+/* Keep Focus mode larger than the normal canvas, not constrained to the
+   old viewport-height width formula. */
+:root.ds-studio.ds-immersive .ds-paper{
+ width:100%;
+ max-width:1180px;
+ aspect-ratio:8/5;
+ height:auto;
+}
