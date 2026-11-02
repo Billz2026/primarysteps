@@ -10,7 +10,7 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=10">
-<link rel="stylesheet" href="assets/css/drawing-studio.css?v=10">
+<link rel="stylesheet" href="assets/css/drawing-studio.css?v=11">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
 <script src="assets/js/drawing-studio.js?v=10" defer></script>
 </head>
@@ -79,10 +79,6 @@
      <input id="ds-size" class="ds-size" type="range" min="2" max="90" value="16" step="1" aria-label="Adjust selected drawing tool size">
     </div>
    </div>
-   <div class="ds-paper">
-    <canvas id="ds-canvas" width="1600" height="1000" role="img" aria-label="Drawing canvas. Draw with your finger, stylus or mouse. Tools and colours can be chosen using the controls around it."></canvas>
-    <span class="ds-paper__corner" aria-hidden="true">Made by me ✦</span>
-   </div>
    <div class="ds-stamp-controls" id="ds-stamp-controls" role="group" aria-label="Choose a stamp shape" hidden>
     <span class="ds-stamp-title">Choose a stamp</span>
     <button type="button" class="ds-stamp-choice" data-stamp="star" aria-pressed="true">⭐ Star</button>
@@ -99,6 +95,10 @@
     </div>
     <label class="ds-eraser-slider-label" for="ds-eraser-size">Size <output id="ds-eraser-size-value">200</output></label>
     <input id="ds-eraser-size" class="ds-size ds-eraser-size" type="range" min="20" max="520" value="200" step="10" aria-label="Adjust eraser size">
+   </div>
+   <div class="ds-paper">
+    <canvas id="ds-canvas" width="1600" height="1000" role="img" aria-label="Drawing canvas. Draw with your finger, stylus or mouse. Tools and colours can be chosen using the controls around it."></canvas>
+    <span class="ds-paper__corner" aria-hidden="true">Made by me ✦</span>
    </div>
    <p class="ds-tool-hint" id="ds-tool-hint">Paintbrush · smooth, colourful strokes</p>
    <p class="ds-status" id="ds-status" role="status" aria-live="polite">Your picture saves automatically on this device as you draw.</p>
