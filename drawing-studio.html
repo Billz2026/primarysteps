@@ -10,7 +10,7 @@
 <link rel="icon" type="image/svg+xml" sizes="any" href="assets/primary-steps-favicon-v2.svg?v=20261023">
 <script src="assets/js/ps-settings.js?v=2"></script>
 <link rel="stylesheet" href="assets/css/primary-steps.css?v=10">
-<link rel="stylesheet" href="assets/css/drawing-studio.css?v=11">
+<link rel="stylesheet" href="assets/css/drawing-studio.css?v=12">
 <script src="assets/js/primary-steps.js?v=9" defer></script>
 <script src="assets/js/drawing-studio.js?v=10" defer></script>
 </head>
@@ -32,13 +32,13 @@
   <div class="ds-rail ds-tools-rail" role="group" aria-label="Drawing tools">
    <div class="ds-rail__head"><span class="ds-rail__title">TOOLS</span><strong id="ds-active-tool" class="ds-rail__active" aria-live="off">🖌️ Brush selected</strong></div>
    <div class="ds-primary-tools">
-    <button id="ds-brush" type="button" class="ds-button ds-tool ds-button--active" aria-pressed="true" aria-label="Paintbrush tool"><span class="ds-tool__icon" aria-hidden="true">🖌️</span><span>Brush</span></button>
-    <button id="ds-pencil" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Pencil tool"><span class="ds-tool__icon" aria-hidden="true">✏️</span><span>Pencil</span></button>
-    <button id="ds-eraser" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Eraser tool"><span class="ds-tool__icon" aria-hidden="true">◻️</span><span>Eraser</span></button>
-    <button id="ds-undo" type="button" class="ds-button ds-tool ds-tool--history" disabled aria-label="Undo last action"><span class="ds-tool__icon" aria-hidden="true">↶</span><span>Undo</span></button>
-    <button id="ds-redo" type="button" class="ds-button ds-tool ds-tool--history" disabled aria-label="Redo last undone action"><span class="ds-tool__icon" aria-hidden="true">↷</span><span>Redo</span></button>
+    <button id="ds-brush" type="button" class="ds-button ds-tool ds-button--active" aria-pressed="true" aria-label="Paintbrush tool"><svg class="ds-tool__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m14 7 3-3a2.12 2.12 0 0 1 3 3l-8 8-4-4 6-6" /><path d="M9 15c-1 1-2.5 1.1-3 3-1 2-2.5 2.7-4 2 2-1.7 1-3.1 3-4 1.8-.6 2-1 3-2"/></svg><span>Brush</span></button>
+    <button id="ds-pencil" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Pencil tool"><svg class="ds-tool__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 5 4 4M4 20l4.5-1 11-11a2.8 2.8 0 0 0-4-4l-11 11L4 20Z"/></svg><span>Pencil</span></button>
+    <button id="ds-eraser" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Eraser tool"><svg class="ds-tool__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m20 20-8-8M3.8 14.2 13.2 4.8a2.7 2.7 0 0 1 3.8 0l3.2 3.2a2.7 2.7 0 0 1 0 3.8l-7.9 7.9H8l-4.2-4.2a2 2 0 0 1 0-2.8Z"/><path d="M12 20h9"/></svg><span>Eraser</span></button>
+    <button id="ds-undo" type="button" class="ds-button ds-tool ds-tool--history" disabled aria-label="Undo last action"><svg class="ds-tool__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 14 4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-2"/></svg><span>Undo</span></button>
+    <button id="ds-redo" type="button" class="ds-button ds-tool ds-tool--history" disabled aria-label="Redo last undone action"><svg class="ds-tool__icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m15 14 5-5-5-5"/><path d="M20 9H10a6 6 0 0 0 0 12h2"/></svg><span>Redo</span></button>
    <details class="ds-extra-tools" id="ds-extra-tools">
-    <summary><span aria-hidden="true">✦</span> <span id="ds-extra-tools-label">More</span></summary>
+    <summary><svg class="ds-more-symbol" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 3v18M3 12h18M5.6 5.6l12.8 12.8M18.4 5.6 5.6 18.4"/></svg><span id="ds-extra-tools-label">More</span></summary>
     <div class="ds-extra-tools__grid">
      <button id="ds-marker" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Marker pen tool"><span class="ds-tool__icon" aria-hidden="true">🖍️</span><span>Marker</span></button>
      <button id="ds-crayon" type="button" class="ds-button ds-tool" aria-pressed="false" aria-label="Crayon tool"><span class="ds-tool__icon" aria-hidden="true">🌈</span><span>Crayon</span></button>
