@@ -339,17 +339,20 @@
  extraTools.addEventListener("toggle",()=>{
   if(!extraTools.open)toggleFun(false);
  });
- function setTool(tool){
+ function setTool(tool,fromKeyboard=false){
   if(!tools[tool])return;
   currentTool=tool;toggleFun(false);
-  // An advanced selection should not keep the tools menu covering the canvas.
-  if(!["pencil","brush","eraser"].includes(tool))extraTools.open=false;
+  // Advanced menus close after choosing a tool. Restore focus when activated by keyboard.
+  if(!["pencil","brush","eraser"].includes(tool)){
+   extraTools.open=false;
+   if(fromKeyboard)extraTools.querySelector("summary")?.focus();
+  }
   updateControls();
   say(tools[tool].name+" ready. "+tools[tool].help+".");
   changedSinceLoad=true;saveSoon();
  }
  for(const [name,button] of Object.entries(toolButtons)){
-  button.addEventListener("click",()=>setTool(name));
+  button.addEventListener("click",(event)=>setTool(name,event.detail===0));
  }
  for(const button of stampChoices){
   button.addEventListener("click",()=>{
@@ -426,7 +429,7 @@
   const on=typeof force==="boolean"?force:!root.classList.contains("ds-immersive");
   root.classList.toggle("ds-immersive",on);
   expandBtn.setAttribute("aria-pressed",String(on));
-  expandBtn.textContent=on?"↙ Exit canvas view":"⛶ Expand canvas";
+  expandBtn.textContent=on?"↙ Exit focus mode":"⛶ Focus mode";
  }
  expandBtn.addEventListener("click",()=>toggleImmersive());
  document.addEventListener("keydown",ev=>{
