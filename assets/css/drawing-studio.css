@@ -927,3 +927,15 @@
  :root.ds-studio *{transition:none!important;animation:none!important}
 }
 :root.ds-studio[data-reduce-motion] *{transition:none!important;animation:none!important}
+
+
+/* A closed colour picker must not reserve space in the tool strip. */
+:root.ds-studio .ds-custom-palette:not([open]) .ds-custom-palette__body{
+ display:none!important;
+}
+:root.ds-studio .ds-custom-palette[open]{
+ flex:0 0 116px;width:auto;max-width:none;min-width:0;
+}
+@media(max-width:679px){
+ :root.ds-studio .ds-custom-palette[open]{flex:0 0 103px;width:auto;max-width:none}
+}
